@@ -31,7 +31,7 @@ public class LoginService {
             if (doPasswordsMatch) {
                 Optional<Users> loggedInUser = userRepository.findByEmailAndPassword(request.getEmail(), passwordHash);
                 if (loggedInUser.isPresent()) {
-                    return loggedInUser.get().getFirstName();
+                    return loggedInUser.get().getUuid().toString();
                 } else {
                     throw new IllegalStateException("User not found");
                 }

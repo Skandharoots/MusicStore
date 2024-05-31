@@ -8,6 +8,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -27,6 +28,7 @@ public class Users implements UserDetails {
             generator = "user_sequence"
     )
     private Long id;
+    private UUID uuid = UUID.randomUUID();
     private String firstName;
     private String lastName;
     private String email;

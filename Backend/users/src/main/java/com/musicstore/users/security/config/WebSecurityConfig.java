@@ -27,12 +27,13 @@ public class WebSecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers(new AntPathRequestMatcher("/api/v*/register/**"))
+                        .requestMatchers(new AntPathRequestMatcher("/api/v*/register/**"),
+                                new AntPathRequestMatcher("/api/v*/login"))
                         .permitAll()
                         .anyRequest()
                         .authenticated()
                 )
-                .formLogin(Customizer.withDefaults())
+                .formLogin(AbstractHttpConfigurer::disable)
                 .authenticationProvider(daoAuthenticationProvider());
         return http.build();
     }

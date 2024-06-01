@@ -38,4 +38,9 @@ public interface UserRepository extends JpaRepository<Users, Long> {
             "SET u.enabled = TRUE " +
             "WHERE u.email = ?1")
     void enableUser(String email);
+
+    @Transactional
+    @Modifying
+    @Query("DELETE FROM Users u WHERE u.uuid = ?1")
+    void deleteUser(UUID uuid);
 }

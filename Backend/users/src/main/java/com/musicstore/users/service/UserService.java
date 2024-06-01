@@ -6,6 +6,7 @@ import com.musicstore.users.model.Users;
 import com.musicstore.users.repository.UserRepository;
 import com.musicstore.users.token.ConfirmationToken;
 import com.musicstore.users.token.ConfirmationTokenService;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -70,6 +71,7 @@ public class UserService implements UserDetailsService {
         userRepository.enableUser(email);
     }
 
+    @Transactional
     public String updateUser(UUID uuid, RegisterRequest request) {
 
         boolean userExists = userRepository.findByUuid(uuid).isPresent();
@@ -83,6 +85,20 @@ public class UserService implements UserDetailsService {
                 bCryptPasswordEncoder.encode(request.getPassword()));
 
         return "User successfully updated";
+    }
+
+    @Transactional
+    public String deleteUser(UUID uuid) {
+        boolean userExists = userRepository.findByUuid(uuid).isPresent();
+
+        if (!userExists) {
+            throw new IllegalStateException("Cannot delete user, user not found");
+        }
+
+        confirmationTokenService.deleteConfirmationToken(uuid);
+        userRepository.deleteUser(uuid);
+
+        return "User successfully deleted";
     }
 
 }

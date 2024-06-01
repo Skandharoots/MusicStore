@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @AllArgsConstructor
@@ -22,6 +23,18 @@ public class ConfirmationTokenService {
 
     public void setConfirmationDate(String token) {
         confirmationTokenRepository.updateConfirmationToken(token, LocalDateTime.now());
+    }
+
+    public String deleteConfirmationToken(UUID uuid) {
+        boolean tokenExists = confirmationTokenRepository.findByUserUUID(uuid).isPresent();
+
+        if (!tokenExists) {
+            throw new IllegalStateException("Token does not exist");
+        }
+
+        confirmationTokenRepository.deleteConfirmationToken(uuid);
+
+        return "Token deleted";
     }
 
 }

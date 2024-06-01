@@ -45,5 +45,10 @@ public class RegisterController {
         return userService.updateUser(uuid, request);
     }
 
+    @DeleteMapping(path = "delete/{uuid}")
+    public String deleteUser(@PathVariable("uuid") UUID uuid) {
+        return userService.deleteUser(uuid);
+    }
+
 
 }

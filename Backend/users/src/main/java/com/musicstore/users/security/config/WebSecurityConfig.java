@@ -29,7 +29,8 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers(new AntPathRequestMatcher("/api/v*/register/**"),
                                 new AntPathRequestMatcher("/api/v*/login"),
-                                new AntPathRequestMatcher("/api/v*/update/**"))
+                                new AntPathRequestMatcher("/api/v*/update/**"),
+                                new AntPathRequestMatcher("/api/v*/delete/**"))
                         .permitAll()
                         .anyRequest()
                         .authenticated()

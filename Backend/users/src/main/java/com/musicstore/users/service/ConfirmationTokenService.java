@@ -27,14 +27,18 @@ public class ConfirmationTokenService {
         confirmationTokenRepository.updateConfirmationToken(token, LocalDateTime.now());
     }
 
+    public Optional<ConfirmationToken> getConfirmationTokenByUserUuid(UUID userUuid) {
+        return confirmationTokenRepository.findByUser_Uuid(userUuid);
+    }
+
     public String deleteConfirmationToken(UUID uuid) {
-        boolean tokenExists = confirmationTokenRepository.findByUserUUID(uuid).isPresent();
+        boolean tokenExists = confirmationTokenRepository.findByUser_Uuid(uuid).isPresent();
 
         if (!tokenExists) {
             throw new IllegalStateException("Token does not exist");
         }
 
-        confirmationTokenRepository.deleteConfirmationToken(uuid);
+        confirmationTokenRepository.deleteByUser_Uuid(uuid);
 
         return "Token deleted";
     }

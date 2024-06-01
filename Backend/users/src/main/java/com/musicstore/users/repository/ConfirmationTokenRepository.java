@@ -16,8 +16,11 @@ public interface ConfirmationTokenRepository extends JpaRepository<ConfirmationT
 
     Optional<ConfirmationToken> findByToken(String token);
 
-    @Query("SELECT DISTINCT c.id FROM ConfirmationToken c WHERE c.user.uuid = ?1")
-    Optional<ConfirmationToken> findByUserUUID(UUID uuid);
+    Optional<ConfirmationToken> findByUser_Uuid(UUID user_uuid);
+
+    @Transactional
+    @Modifying
+    void deleteByUser_Uuid(UUID user_uuid);
 
     @Transactional
     @Modifying
@@ -26,8 +29,4 @@ public interface ConfirmationTokenRepository extends JpaRepository<ConfirmationT
             "WHERE token.token = ?1")
     void updateConfirmationToken(String token, LocalDateTime confirmedAt);
 
-    @Transactional
-    @Modifying
-    @Query("DELETE FROM ConfirmationToken c WHERE c.user.uuid = ?1")
-    void deleteConfirmationToken(UUID uuid);
 }

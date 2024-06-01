@@ -32,7 +32,8 @@ public class WebSecurityConfig {
                         .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
                 )
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers(HttpMethod.POST, "/api/v*/register/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v*/register").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v*/register/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v*/login").permitAll()
                         .requestMatchers(HttpMethod.PUT, "/api/v*/update/**").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/api/v*/delete/**").permitAll()

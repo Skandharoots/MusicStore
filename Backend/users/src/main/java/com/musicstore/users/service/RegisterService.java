@@ -1,8 +1,6 @@
 package com.musicstore.users.service;
 
 import com.musicstore.users.mail.EmailSender;
-import com.musicstore.users.mail.EmailService;
-import com.musicstore.users.model.LoginRequest;
 import com.musicstore.users.model.RegisterRequest;
 import com.musicstore.users.model.UserRole;
 import com.musicstore.users.model.Users;
@@ -14,6 +12,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Service
 @AllArgsConstructor
@@ -50,8 +49,6 @@ public class RegisterService {
                 link));
         return token;
     }
-
-
 
     @Transactional
     public String confirmToken(String token) {

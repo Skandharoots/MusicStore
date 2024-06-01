@@ -28,7 +28,8 @@ public class WebSecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers(new AntPathRequestMatcher("/api/v*/register/**"),
-                                new AntPathRequestMatcher("/api/v*/login"))
+                                new AntPathRequestMatcher("/api/v*/login"),
+                                new AntPathRequestMatcher("/api/v*/update/**"))
                         .permitAll()
                         .anyRequest()
                         .authenticated()

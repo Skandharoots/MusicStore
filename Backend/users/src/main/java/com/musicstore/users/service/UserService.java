@@ -1,6 +1,7 @@
 package com.musicstore.users.service;
 
 
+import com.musicstore.users.model.RegisterRequest;
 import com.musicstore.users.model.Users;
 import com.musicstore.users.repository.UserRepository;
 import com.musicstore.users.token.ConfirmationToken;
@@ -11,7 +12,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -22,6 +22,7 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final static String USER_NOT_FOUND_MESSAGE = "User with email %s not found";
+    private final static String USER_UUID_NOT_FOUND_MESSAGE = "User with uuid %s not found";
     private final ConfirmationTokenService confirmationTokenService;
 
 
@@ -65,8 +66,23 @@ public class UserService implements UserDetailsService {
         return tokenUUID;
     }
 
-    public int enableUser(String email) {
-        return userRepository.enableUser(email);
+    public void enableUser(String email) {
+        userRepository.enableUser(email);
+    }
+
+    public String updateUser(UUID uuid, RegisterRequest request) {
+
+        boolean userExists = userRepository.findByUuid(uuid).isPresent();
+
+        if (!userExists) {
+            throw new IllegalStateException("Cannot update user, user not found");
+        }
+
+        userRepository.updateUser(uuid, request.getFirstName(),
+                request.getLastName(), request.getEmail(),
+                bCryptPasswordEncoder.encode(request.getPassword()));
+
+        return "User successfully updated";
     }
 
 }

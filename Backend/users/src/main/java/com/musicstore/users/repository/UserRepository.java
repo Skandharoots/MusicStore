@@ -1,13 +1,16 @@
 package com.musicstore.users.repository;
 
 
+import com.musicstore.users.model.LoginResponse;
 import com.musicstore.users.model.Users;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 @Transactional
@@ -17,10 +20,22 @@ public interface UserRepository extends JpaRepository<Users, Long> {
 
     Optional<Users> findByEmailAndPassword(String email, String password);
 
+    Optional<Users> findByUuid(UUID uuid);
+
+    @Query("SELECT new com.musicstore.users.model.LoginResponse(u.uuid, u.firstName, u.lastName) FROM Users u WHERE u.email = ?1")
+    LoginResponse findAllByEmail(String email);
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE Users u SET u.firstName = ?2, " +
+            "u.lastName = ?3, u.email = ?4, u.password = ?5 " +
+            "WHERE u.uuid = ?1")
+    void updateUser(UUID uuid, String firstName, String lastName, String email, String password);
+
     @Transactional
     @Modifying
     @Query("UPDATE Users u " +
             "SET u.enabled = TRUE " +
             "WHERE u.email = ?1")
-    int enableUser(String email);
+    void enableUser(String email);
 }

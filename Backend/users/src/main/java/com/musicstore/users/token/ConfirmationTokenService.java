@@ -20,8 +20,8 @@ public class ConfirmationTokenService {
         return confirmationTokenRepository.findByToken(token);
     }
 
-    public int setConfirmationDate(String token) {
-        return confirmationTokenRepository.updateConfirmationToken(token, LocalDateTime.now());
+    public void setConfirmationDate(String token) {
+        confirmationTokenRepository.updateConfirmationToken(token, LocalDateTime.now());
     }
 
 }

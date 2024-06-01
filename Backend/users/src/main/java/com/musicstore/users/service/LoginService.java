@@ -1,12 +1,15 @@
 package com.musicstore.users.service;
 
 import com.musicstore.users.model.LoginRequest;
+import com.musicstore.users.model.LoginResponse;
 import com.musicstore.users.model.Users;
 import com.musicstore.users.repository.UserRepository;
 import lombok.AllArgsConstructor;
+import net.minidev.json.JSONObject;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -19,7 +22,7 @@ public class LoginService {
     private final UserRepository userRepository;
 
 
-    public String loginUser(LoginRequest request) {
+    public LoginResponse loginUser(LoginRequest request) {
 
         Users user = (Users) userService.loadUserByUsername(request.getEmail());
 
@@ -31,7 +34,7 @@ public class LoginService {
             if (doPasswordsMatch) {
                 Optional<Users> loggedInUser = userRepository.findByEmailAndPassword(request.getEmail(), passwordHash);
                 if (loggedInUser.isPresent()) {
-                    return loggedInUser.get().getUuid().toString();
+                    return userRepository.findAllByEmail(request.getEmail());
                 } else {
                     throw new IllegalStateException("User not found");
                 }

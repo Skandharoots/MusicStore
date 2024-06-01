@@ -1,5 +1,7 @@
-package com.musicstore.users.token;
+package com.musicstore.users.service;
 
+import com.musicstore.users.model.ConfirmationToken;
+import com.musicstore.users.repository.ConfirmationTokenRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

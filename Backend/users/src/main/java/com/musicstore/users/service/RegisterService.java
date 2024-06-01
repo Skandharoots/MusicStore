@@ -1,18 +1,16 @@
 package com.musicstore.users.service;
 
 import com.musicstore.users.mail.EmailSender;
-import com.musicstore.users.model.RegisterRequest;
+import com.musicstore.users.dto.RegisterRequest;
 import com.musicstore.users.model.UserRole;
 import com.musicstore.users.model.Users;
 import com.musicstore.users.security.EmailValidator;
-import com.musicstore.users.token.ConfirmationToken;
-import com.musicstore.users.token.ConfirmationTokenService;
+import com.musicstore.users.model.ConfirmationToken;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Service
 @AllArgsConstructor

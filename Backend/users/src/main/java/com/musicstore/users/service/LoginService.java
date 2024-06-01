@@ -1,15 +1,13 @@
 package com.musicstore.users.service;
 
-import com.musicstore.users.model.LoginRequest;
-import com.musicstore.users.model.LoginResponse;
+import com.musicstore.users.dto.LoginRequest;
+import com.musicstore.users.dto.LoginResponse;
 import com.musicstore.users.model.Users;
 import com.musicstore.users.repository.UserRepository;
 import lombok.AllArgsConstructor;
-import net.minidev.json.JSONObject;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 

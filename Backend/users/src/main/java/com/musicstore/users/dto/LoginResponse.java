@@ -1,4 +1,4 @@
-package com.musicstore.users.model;
+package com.musicstore.users.dto;
 
 import lombok.*;
 

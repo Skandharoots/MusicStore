@@ -1,11 +1,10 @@
 package com.musicstore.users.service;
 
 
-import com.musicstore.users.model.RegisterRequest;
+import com.musicstore.users.dto.RegisterRequest;
 import com.musicstore.users.model.Users;
 import com.musicstore.users.repository.UserRepository;
-import com.musicstore.users.token.ConfirmationToken;
-import com.musicstore.users.token.ConfirmationTokenService;
+import com.musicstore.users.model.ConfirmationToken;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;

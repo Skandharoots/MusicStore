@@ -1,6 +1,5 @@
-package com.musicstore.users.token;
+package com.musicstore.users.model;
 
-import com.musicstore.users.model.Users;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

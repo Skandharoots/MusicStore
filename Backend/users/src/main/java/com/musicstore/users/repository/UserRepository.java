@@ -41,6 +41,5 @@ public interface UserRepository extends JpaRepository<Users, Long> {
 
     @Transactional
     @Modifying
-    @Query("DELETE FROM Users u WHERE u.uuid = ?1")
-    void deleteUser(UUID uuid);
+    void deleteByUuid(UUID uuid);
 }

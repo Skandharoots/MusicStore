@@ -105,16 +105,15 @@ public class UserService implements UserDetailsService {
 
     @Transactional
     public String deleteUser(UUID uuid) {
-        boolean userExists = userRepository.findByUuid(uuid).isPresent();
-
-        if (!userExists) {
+        Optional<Users> user = userRepository.findByUuid(uuid);
+        if (user.isEmpty()) {
             throw new IllegalStateException("Cannot delete user, user not found");
+        } else {
+            Users userToDelete = user.get();
+            confirmationTokenService.deleteConfirmationToken(userToDelete.getId());
+            userRepository.deleteByUuid(uuid);
+            return "User successfully deleted";
         }
-
-        confirmationTokenService.deleteConfirmationToken(uuid);
-        userRepository.deleteUser(uuid);
-
-        return "User successfully deleted";
     }
 
     private String buildEmail(String name, String link) {

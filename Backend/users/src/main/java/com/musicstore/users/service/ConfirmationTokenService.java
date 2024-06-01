@@ -31,14 +31,14 @@ public class ConfirmationTokenService {
         return confirmationTokenRepository.findByUser_Uuid(userUuid);
     }
 
-    public String deleteConfirmationToken(UUID uuid) {
-        boolean tokenExists = confirmationTokenRepository.findByUser_Uuid(uuid).isPresent();
+    public String deleteConfirmationToken(Long id) {
+        boolean tokenExists = confirmationTokenRepository.findByUser_Id(id).isPresent();
 
         if (!tokenExists) {
             throw new IllegalStateException("Token does not exist");
         }
 
-        confirmationTokenRepository.deleteByUser_Uuid(uuid);
+        confirmationTokenRepository.deleteByUser_Id(id);
 
         return "Token deleted";
     }

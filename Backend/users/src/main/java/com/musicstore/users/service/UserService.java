@@ -51,8 +51,11 @@ public class UserService implements UserDetailsService {
                 Optional<ConfirmationToken> token = confirmationTokenService.getConfirmationTokenByUserUuid(existingUser.getUuid());
                 if (token.isPresent()) {
                     ConfirmationToken confirmationToken = token.get();
-                    String link = "http://localhost:8080/api/v1/register/confirm?token=" + confirmationToken.getToken();
-                    emailService.send(existingUser.getEmail(), buildEmail(existingUser.getFirstName(), link));
+
+                    String link = "http://localhost:8080/api/v1/users/register/confirm?token=" + confirmationToken.getToken();
+                    emailService.send(existingUser.getEmail(),
+                            buildEmail(existingUser.getFirstName(), link));
+
                     return confirmationToken.getToken();
                 } else {
                     throw new IllegalStateException("Confirmation token not found");
@@ -78,6 +81,13 @@ public class UserService implements UserDetailsService {
             );
 
             confirmationTokenService.saveConfirmationToken(token);
+
+            String link = "http://localhost:8080/api/v1/users/register/confirm?token=" + token;
+
+            emailService.send(
+                    users.getEmail(),
+                    buildEmail(users.getFirstName(),
+                            link));
 
             return tokenUUID;
         }

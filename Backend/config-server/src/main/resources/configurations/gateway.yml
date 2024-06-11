@@ -1,0 +1,16 @@
+server:
+  port: 8222
+eureka:
+  client:
+    register-with-eureka: false
+spring:
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: false
+      routes:
+        - id: users
+          uri: http://localhost:8090
+          predicates:
+            - Path=/api/v1/users/**

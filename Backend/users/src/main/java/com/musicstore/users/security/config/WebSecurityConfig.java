@@ -13,7 +13,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @AllArgsConstructor
@@ -32,12 +31,12 @@ public class WebSecurityConfig {
                         .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
                 )
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers(HttpMethod.POST, "/api/v*/register").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v*/register/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/v*/login").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/api/v*/update/**").permitAll()
-                        .requestMatchers(HttpMethod.DELETE, "/api/v*/delete/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/csrf/token").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v*/users/register").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v*/users/register/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v*/users/login").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/api/v*/users/update/**").permitAll()
+                        .requestMatchers(HttpMethod.DELETE, "/api/v*/users/delete/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v*/users/csrf/token").permitAll()
                         .anyRequest()
                         .authenticated()
                 )

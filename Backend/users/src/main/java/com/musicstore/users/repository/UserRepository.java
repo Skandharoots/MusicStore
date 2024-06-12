@@ -1,7 +1,6 @@
 package com.musicstore.users.repository;
 
 
-import com.musicstore.users.dto.LoginResponse;
 import com.musicstore.users.model.Users;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,12 +17,7 @@ public interface UserRepository extends JpaRepository<Users, Long> {
 
     Optional<Users> findByEmail(String email);
 
-    Optional<Users> findByEmailAndPassword(String email, String password);
-
     Optional<Users> findByUuid(UUID uuid);
-
-    @Query("SELECT new com.musicstore.users.dto.LoginResponse(u.uuid, u.firstName, u.lastName) FROM Users u WHERE u.email = ?1")
-    LoginResponse findAllByEmail(String email);
 
     @Transactional
     @Modifying

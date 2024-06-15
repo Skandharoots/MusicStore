@@ -26,7 +26,6 @@ public class UserService implements UserDetailsService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final static String USER_NOT_FOUND_MESSAGE = "User with email %s not found";
     private final ConfirmationTokenService confirmationTokenService;
-    private final ConfirmationTokenRepository confirmationTokenRepository;
     private final EmailService emailService;
 
 
@@ -52,7 +51,7 @@ public class UserService implements UserDetailsService {
                 if (token.isPresent()) {
                     ConfirmationToken confirmationToken = token.get();
 
-                    String link = "http://localhost:8080/api/v1/users/register/confirm?token=" + confirmationToken.getToken();
+                    String link = "http://localhost:8222/api/v1/users/register/confirm?token=" + confirmationToken.getToken();
                     emailService.send(existingUser.getEmail(),
                             buildEmail(existingUser.getFirstName(), link));
 
@@ -82,7 +81,7 @@ public class UserService implements UserDetailsService {
 
             confirmationTokenService.saveConfirmationToken(token);
 
-            String link = "http://localhost:8080/api/v1/users/register/confirm?token=" + token;
+            String link = "http://localhost:8222/api/v1/users/register/confirm?token=" + token.getToken();
 
             emailService.send(
                     users.getEmail(),

@@ -1,10 +1,11 @@
 package com.musicstore.users.service;
 
+import com.musicstore.users.dto.LoginRequest;
 import com.musicstore.users.dto.LoginResponse;
 import com.musicstore.users.model.Users;
-import com.musicstore.users.repository.UserRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 
 
@@ -14,18 +15,32 @@ public class LoginService {
 
     private final UserService userService;
     private final JWTService jwtService;
+    private final AuthenticationManager authenticationManager;
 
-    public LoginResponse loginUser(String username) {
+    public LoginResponse loginUser(LoginRequest request) {
 
-        Users user = (Users) userService.loadUserByUsername(username);
-        String token = jwtService.generateToken(username);
-
-        return new LoginResponse(user.getUuid(), user.getFirstName(), user.getLastName(), user.getUserRole(), token);
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        request.getEmail(),
+                        request.getPassword()
+                )
+        );
+        var user = (Users) userService.loadUserByUsername(request.getEmail());
+        var userDetails = userService.loadUserByUsername(request.getEmail());
+        return LoginResponse.builder()
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .uuid(user.getUuid())
+                .role(user.getUserRole())
+                .token(jwtService.generateToken(userDetails))
+                .build();
 
     }
 
-    public void validateLoginRequest(String username) {
-        jwtService.validateToken(username);
+    public Boolean validateLoginRequest(String token) {
+        var user = userService.loadUserByUsername(jwtService.getUsername(token));
+        return jwtService.validateToken(token, user);
+
     }
 
 }

@@ -16,3 +16,9 @@ spring:
             - Path=/api/v1/users/**
           filters:
             - JwtAuthFilter
+        - id: products
+          uri: http://localhost:8693
+          predicates:
+            - Path=/api/v1/products/**
+          filters:
+            - JwtAuthFilter

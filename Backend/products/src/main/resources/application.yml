@@ -1,5 +1,5 @@
 spring:
   application:
-    name: users
+    name: products
   config:
     import: optional:configserver:http://localhost:8888

@@ -1,5 +1,6 @@
 package com.musicstore.users.security.config;
 
+import com.musicstore.users.security.JwtFilter;
 import com.musicstore.users.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -8,18 +9,21 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 
 @Configuration
 @AllArgsConstructor
 @EnableWebSecurity
+@EnableMethodSecurity
 public class WebSecurityConfig {
 
     private final UserService userService;
@@ -33,20 +37,21 @@ public class WebSecurityConfig {
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                         .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
                 )
-                .sessionManagement(customizer -> customizer.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers(HttpMethod.POST, "/api/v*/users/register").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v*/users/register/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/v*/users/login").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/api/v*/users/update/**").permitAll()
-                        .requestMatchers(HttpMethod.DELETE, "/api/v*/users/delete/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v*/users/csrf/token").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v*/users/validate").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v*/users/login").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v*/users/csrf/token").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/api/v*/users/update/**").permitAll()
+                        .requestMatchers(HttpMethod.DELETE, "api/v*/users/delete/**").permitAll()
                         .anyRequest()
                         .authenticated()
                 )
+                .sessionManagement(customizer -> customizer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .formLogin(AbstractHttpConfigurer::disable)
-                .authenticationProvider(daoAuthenticationProvider());
+                .authenticationProvider(daoAuthenticationProvider())
+                .addFilterBefore(authenticationTokenFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
@@ -63,5 +68,10 @@ public class WebSecurityConfig {
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
+    }
+
+    @Bean
+    public JwtFilter authenticationTokenFilter() {
+        return new JwtFilter();
     }
 }

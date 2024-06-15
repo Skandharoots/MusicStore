@@ -8,61 +8,56 @@ import com.musicstore.users.service.RegisterService;
 import com.musicstore.users.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
 @RestController
-@RequestMapping(path = "api/v1/users")
+@RequestMapping( "/api/v1/users")
 @AllArgsConstructor
 public class RegisterController {
 
     private final RegisterService registerService;
     private final LoginService loginService;
     private final UserService userService;
-    private final AuthenticationManager authenticationManager;
 
-    @PostMapping(path = "register")
+    @PostMapping( "/register")
     @ResponseStatus(HttpStatus.CREATED)
     public String register(@RequestBody RegisterRequest request) {
         return registerService.register(request);
     }
 
-    @GetMapping(path = "register/confirm")
+    @GetMapping( "/register/confirm")
     @ResponseStatus(HttpStatus.OK)
     public String confirm(@RequestParam("token") String token) {
         return registerService.confirmToken(token);
     }
 
-    @PostMapping(path = "login")
+    @PostMapping( "/login")
     @ResponseStatus(HttpStatus.OK)
-    public LoginResponse login(@RequestBody LoginRequest request) {
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
-        if (authentication.isAuthenticated()) {
-            return loginService.loginUser(request.getEmail());
-        } else {
-            throw new RuntimeException("Invalid email or password");
-        }
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
+        return ResponseEntity.ok(loginService.loginUser(request));
     }
 
-    @GetMapping("validate")
+    @GetMapping( "/validate")
     @ResponseStatus(HttpStatus.OK)
-    public String validateToken(@RequestParam("token") String token) {
-        loginService.validateLoginRequest(token);
-        return "Token is valid";
+    public Boolean validateToken(@RequestParam("token") String token) {
+        return loginService.validateLoginRequest(token);
     }
 
-    @PutMapping(path = "update/{uuid}")
+    @PutMapping( "/update/{uuid}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
     public String updateUser(@PathVariable("uuid") UUID uuid, @RequestBody RegisterRequest request) {
         return userService.updateUser(uuid, request);
     }
 
-    @DeleteMapping(path = "delete/{uuid}")
+    @DeleteMapping( "/delete/{uuid}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
     public String deleteUser(@PathVariable("uuid") UUID uuid) {
         return userService.deleteUser(uuid);
     }

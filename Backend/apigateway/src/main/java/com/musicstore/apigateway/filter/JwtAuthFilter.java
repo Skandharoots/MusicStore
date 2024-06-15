@@ -1,9 +1,12 @@
 package com.musicstore.apigateway.filter;
 
+import com.musicstore.apigateway.config.GatewayConfig;
 import org.apache.http.HttpHeaders;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.Objects;
 
@@ -12,12 +15,12 @@ public class JwtAuthFilter extends AbstractGatewayFilterFactory<JwtAuthFilter.Co
 
     private final RouteValidator routeValidator;
 
-    private final JwtUtility jwtUtility;
+    @Autowired
+    private RestTemplate restTemplate;
 
-    public JwtAuthFilter(RouteValidator routeValidator, JwtUtility jwtUtility) {
+    public JwtAuthFilter(RouteValidator routeValidator) {
         super(Config.class);
         this.routeValidator = routeValidator;
-        this.jwtUtility = jwtUtility;
     }
 
     public static class Config {
@@ -39,7 +42,9 @@ public class JwtAuthFilter extends AbstractGatewayFilterFactory<JwtAuthFilter.Co
                     authorization = authorization.substring("Bearer ".length());
                 }
                 try {
-                    jwtUtility.validateToken(authorization);
+                    if (!Objects.equals(restTemplate.getForObject("http://localhost:8090/api/v1/users/validate?token=" + authorization, Boolean.class), true)) {
+                        throw new IllegalStateException("Invalid token");
+                    }
                 } catch (Exception e) {
                     throw new IllegalStateException("Invalid access", e);
                 }

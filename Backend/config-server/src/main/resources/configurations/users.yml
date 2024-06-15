@@ -5,7 +5,7 @@ spring:
     password: lapunia2121
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
   mail:
     host: smtp.gmail.com
     port: 587
@@ -22,3 +22,8 @@ eureka:
       defaultZone: http://localhost:8761/eureka
 server:
   port: 8090
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG

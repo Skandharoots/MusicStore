@@ -17,6 +17,7 @@ public class RouteValidator {
             "/api/v1/users/register/**",
             "/api/v1/users/csrf/token",
             "/api/v1/products/test",
+            "/api/v*/users/adminauthorize",
             "/eureka"
     );
 

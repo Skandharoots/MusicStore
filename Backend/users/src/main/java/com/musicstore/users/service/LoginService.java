@@ -6,6 +6,7 @@ import com.musicstore.users.model.Users;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
 
@@ -41,6 +42,11 @@ public class LoginService {
         var user = userService.loadUserByUsername(jwtService.getUsername(token));
         return jwtService.validateToken(token, user);
 
+    }
+
+    public Boolean adminAuthorize(String token) {
+        var user = userService.loadUserByUsername(jwtService.getUsername(token));
+        return user.getAuthorities().contains(new SimpleGrantedAuthority("ADMIN"));
     }
 
 }

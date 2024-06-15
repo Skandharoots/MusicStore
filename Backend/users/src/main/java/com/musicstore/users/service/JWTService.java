@@ -76,16 +76,4 @@ public class JWTService {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-//    public UsernamePasswordAuthenticationToken getAuthenticationToken(final String token, final Authentication existingAuthentication, final UserDetails user) {
-//
-//        Claims claims = getAllClaims(token);
-//
-//        final Collection<? extends GrantedAuthority> authorities =
-//                Arrays.stream(claims.get("role").toString().split(","))
-//                        .map(SimpleGrantedAuthority::new)
-//                        .toList();
-//        return new UsernamePasswordAuthenticationToken(user, "", authorities);
-//    }
-
-
 }

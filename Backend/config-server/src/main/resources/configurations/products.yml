@@ -6,6 +6,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create-drop
+    database-platform: org.hibernate.dialect.MySQLDialect
 eureka:
   instance:
     hostname: localhost

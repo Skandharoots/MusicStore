@@ -45,6 +45,7 @@ public class WebSecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/v*/users/csrf/token").permitAll()
                         .requestMatchers(HttpMethod.PUT, "/api/v*/users/update/**").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "api/v*/users/delete/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v*/users/adminauthorize").permitAll()
                         .anyRequest()
                         .authenticated()
                 )

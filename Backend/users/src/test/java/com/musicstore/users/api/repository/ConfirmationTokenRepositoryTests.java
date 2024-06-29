@@ -159,11 +159,25 @@ public class ConfirmationTokenRepositoryTests {
                 user
         );
         confirmationTokenRepository.save(confirmationToken);
-        confirmationTokenRepository.updateConfirmationToken(tokenUUID, LocalDateTime.of(2030, 06, 29, 20, 00, 00));
+        confirmationTokenRepository.updateConfirmationToken(tokenUUID, LocalDateTime.of(
+                2030,
+                06,
+                29,
+                20,
+                00,
+                00
+        ));
         testEntityManager.clear();
 
         Optional<ConfirmationToken> updatedToken = confirmationTokenRepository.findByToken(tokenUUID);
         Assertions.assertThat(updatedToken.isPresent()).isTrue();
-        Assertions.assertThat(updatedToken.get().getConfirmedAt()).isEqualTo(LocalDateTime.of(2030, 06, 29, 20, 00, 00).toString());
+        Assertions.assertThat(updatedToken.get().getConfirmedAt()).isEqualTo(LocalDateTime.of(
+                2030,
+                06,
+                29,
+                20,
+                00,
+                00
+        ).toString());
     }
 }

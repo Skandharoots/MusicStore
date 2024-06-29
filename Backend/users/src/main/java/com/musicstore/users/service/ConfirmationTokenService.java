@@ -24,6 +24,13 @@ public class ConfirmationTokenService {
     }
 
     public void setConfirmationDate(String token) {
+
+        boolean tokenExists = confirmationTokenRepository.findByToken(token).isPresent();
+
+        if (!tokenExists) {
+            throw new IllegalStateException("Token does not exist");
+        }
+
         confirmationTokenRepository.updateConfirmationToken(token, LocalDateTime.now());
     }
 

@@ -25,7 +25,13 @@ public class UsersRepositoryTests {
     @Test
     public void createUserTest() {
 
-        Users user = new Users("Marek", "Kopania", "test@test.com", "testpasswd", UserRole.USER);
+        Users user = new Users(
+                "Marek",
+                "Kopania",
+                "test@test.com",
+                "testpasswd",
+                UserRole.USER
+        );
         Users savedUser = userRepository.save(user);
         Assertions.assertThat(savedUser).isNotNull();
         Assertions.assertThat(savedUser.getId()).isGreaterThan(0);
@@ -37,23 +43,45 @@ public class UsersRepositoryTests {
 
     @Test
     public void findByEmailTest() {
-        Users user = new Users("Marek", "Kopania", "test@test.com", "testpasswd", UserRole.USER);
+        Users user = new Users(
+                "Marek",
+                "Kopania",
+                "test@test.com",
+                "testpasswd",
+                UserRole.USER
+        );
         Optional<Users> savedUser = Optional.of(userRepository.save(user));
         Assertions.assertThat(userRepository.findByEmail(user.getEmail())).isEqualTo(savedUser);
     }
 
     @Test
     public void findByUuidTest() {
-        Users user = new Users("Marek", "Kopania", "test@test.com", "testpasswd", UserRole.USER);
+        Users user = new Users("Marek",
+                "Kopania",
+                "test@test.com",
+                "testpasswd",
+                UserRole.USER
+        );
         Optional<Users> savedUser = Optional.of(userRepository.save(user));
         Assertions.assertThat(userRepository.findByUuid(user.getUuid())).isEqualTo(savedUser);
     }
 
     @Test
     public void updateUserInformationTest() {
-        Users user = new Users("Marek", "Kopania", "test@test.com", "testpasswd", UserRole.USER);
+        Users user = new Users(
+                "Marek",
+                "Kopania",
+                "test@test.com",
+                "testpasswd",
+                UserRole.USER
+        );
         Optional<Users> savedUser = Optional.of(userRepository.save(user));
-        userRepository.updateUser(user.getUuid(), "Konrad", "Kurzejamski", "test@test.com", "testpasswd");
+        userRepository.updateUser(
+                user.getUuid(),
+                "Konrad",
+                "Kurzejamski",
+                "test@test.com",
+                "testpasswd");
         testEntityManager.clear();
         Optional<Users> updatedUser = userRepository.findByEmail(savedUser.get().getEmail());
         Assertions.assertThat(updatedUser.isPresent()).isTrue();
@@ -63,7 +91,13 @@ public class UsersRepositoryTests {
 
     @Test
     public void enableUserTest() {
-        Users user = new Users("Marek", "Kopania", "test@test.com", "testpasswd", UserRole.USER);
+        Users user = new Users(
+                "Marek",
+                "Kopania",
+                "test@test.com",
+                "testpasswd",
+                UserRole.USER
+        );
         Optional<Users> savedUser = Optional.of(userRepository.save(user));
         userRepository.enableUser(user.getEmail());
         testEntityManager.clear();
@@ -75,7 +109,13 @@ public class UsersRepositoryTests {
 
     @Test
     public void deleteUserTest() {
-        Users user = new Users("Marek", "Kopania", "test@test.com", "testpasswd", UserRole.USER);
+        Users user = new Users(
+                "Marek",
+                "Kopania",
+                "test@test.com",
+                "testpasswd",
+                UserRole.USER
+        );
         userRepository.save(user);
         userRepository.deleteByUuid(user.getUuid());
         Assertions.assertThat(userRepository.findByEmail(user.getEmail())).isEmpty();

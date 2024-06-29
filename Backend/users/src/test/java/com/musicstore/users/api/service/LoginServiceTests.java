@@ -112,17 +112,7 @@ public class LoginServiceTests {
                 UserRole.ADMIN
         );
 
-        UserDetails userDetails = Mockito.mock(UserDetails.class);
-
         String tokenUUID = UUID.randomUUID().toString();
-
-        ConfirmationToken confirmationToken = new ConfirmationToken(
-                tokenUUID,
-                LocalDateTime.now(),
-                LocalDateTime.now().plusMinutes(20),
-                admin
-        );
-
 
         when(jwtService.getUsername(tokenUUID)).thenReturn("test@test.com");
         when(userService.loadUserByUsername("test@test.com")).thenReturn(admin);

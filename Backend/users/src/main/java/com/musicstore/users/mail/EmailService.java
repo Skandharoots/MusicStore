@@ -17,7 +17,7 @@ public class EmailService implements EmailSender {
     private final static Logger logger = LoggerFactory.getLogger(EmailService.class);
 
     @Autowired
-    private final JavaMailSender mailSender;
+    private JavaMailSender mailSender;
 
     @Override
     public void send(String to, String email) {

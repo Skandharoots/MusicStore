@@ -14,6 +14,7 @@ spring:
     properties.mail.smtp:
       auth: true
       starttls.enable: true
+      starttls.required: true
 eureka:
   instance:
     hostname: localhost

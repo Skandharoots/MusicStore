@@ -57,8 +57,8 @@ public class RegisterController {
     @PutMapping( "/update/{uuid}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
-    public String updateUser(@PathVariable("uuid") UUID uuid, @RequestBody RegisterRequest request) {
-        return userService.updateUser(uuid, request);
+    public ResponseEntity<LoginResponse> updateUser(@PathVariable("uuid") UUID uuid, @RequestBody RegisterRequest request) {
+        return ResponseEntity.ok(userService.updateUser(uuid, request));
     }
 
     @DeleteMapping( "/delete/{uuid}")

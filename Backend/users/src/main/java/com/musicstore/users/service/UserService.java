@@ -1,6 +1,7 @@
 package com.musicstore.users.service;
 
 
+import com.musicstore.users.dto.LoginResponse;
 import com.musicstore.users.dto.RegisterRequest;
 import com.musicstore.users.mail.EmailService;
 import com.musicstore.users.model.Users;
@@ -27,6 +28,7 @@ public class UserService implements UserDetailsService {
     private final static String USER_NOT_FOUND_MESSAGE = "User with email %s not found";
     private final ConfirmationTokenService confirmationTokenService;
     private final EmailService emailService;
+    private final JWTService jwtService;
 
 
     @Override
@@ -97,7 +99,7 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public String updateUser(UUID uuid, RegisterRequest request) {
+    public LoginResponse updateUser(UUID uuid, RegisterRequest request) {
 
         boolean userExists = userRepository.findByUuid(uuid).isPresent();
 
@@ -109,7 +111,15 @@ public class UserService implements UserDetailsService {
                 request.getLastName(), request.getEmail(),
                 bCryptPasswordEncoder.encode(request.getPassword()));
 
-        return "User successfully updated";
+        var updatedUser = userRepository.findByUuid(uuid);
+        var userDetails = loadUserByUsername(request.getEmail());
+
+        return LoginResponse.builder()
+                .firstName(updatedUser.get().getFirstName())
+                .lastName(updatedUser.get().getLastName())
+                .uuid(uuid)
+                .token(jwtService.generateToken(userDetails))
+                .build();
     }
 
     @Transactional

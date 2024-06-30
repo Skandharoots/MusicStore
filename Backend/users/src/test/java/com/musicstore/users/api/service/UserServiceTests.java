@@ -1,11 +1,13 @@
 package com.musicstore.users.api.service;
 
+import com.musicstore.users.dto.LoginResponse;
 import com.musicstore.users.dto.RegisterRequest;
 import com.musicstore.users.mail.EmailService;
 import com.musicstore.users.model.UserRole;
 import com.musicstore.users.model.Users;
 import com.musicstore.users.repository.UserRepository;
 import com.musicstore.users.service.ConfirmationTokenService;
+import com.musicstore.users.service.JWTService;
 import com.musicstore.users.service.UserService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -38,6 +40,9 @@ public class UserServiceTests {
 
     @Mock
     private ConfirmationTokenService confirmationTokenService;
+
+    @Mock
+    private JWTService jwtService;
 
 
     @Test
@@ -95,9 +100,10 @@ public class UserServiceTests {
         );
 
         when(userRepository.findByUuid(user.getUuid())).thenReturn(userOptional);
+        when(userRepository.findByEmail(user.getEmail())).thenReturn(userOptional);
 
-        String successMsg = userService.updateUser(user.getUuid(), registerRequest);
-        Assertions.assertThat(successMsg).isNotNull();
+        LoginResponse loginResponse = userService.updateUser(user.getUuid(), registerRequest);
+        Assertions.assertThat(loginResponse).isNotNull();
     }
 
     @Test

@@ -7,8 +7,10 @@ import com.musicstore.users.dto.LoginResponse;
 import com.musicstore.users.dto.RegisterRequest;
 import com.musicstore.users.model.UserRole;
 import com.musicstore.users.service.*;
+import org.apache.tomcat.util.digester.DocumentProperties;
 import org.junit.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.runner.Result;
 import org.junit.runner.RunWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +26,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import java.util.UUID;
 
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 
 @WebMvcTest(controllers = RegisterController.class)
@@ -110,5 +111,95 @@ public class RegistryControllerTests {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.uuid").value(loginResponse.getUuid().toString()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.role").value(UserRole.USER.toString()));
 
+    }
+
+    @Test
+    public void registerConfirmationTokenTest() throws Exception {
+
+        String token = UUID.randomUUID().toString();
+
+        when(registerService.confirmToken(token)).thenReturn(token);
+
+        ResultActions resultActions = mockMvc.perform(get("/api/v1/users/register/confirm")
+                .param("token", token));
+
+        resultActions
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string(token));
+    }
+
+    @Test
+    public void validateTokenTest() throws Exception {
+        String token = UUID.randomUUID().toString();
+        when(loginService.validateLoginRequest(token)).thenReturn(true);
+
+        ResultActions resultActions = mockMvc.perform(get("/api/v1/users/validate")
+        .param("token", token));
+
+        resultActions
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.content().string("true"));
+    }
+
+    @Test
+    public void adminAuthorizationTest() throws Exception {
+        String token = UUID.randomUUID().toString();
+        when(loginService.adminAuthorize(token)).thenReturn(true);
+
+        ResultActions resultActions = mockMvc.perform(get("/api/v1/users/adminauthorize")
+        .param("token", token));
+
+        resultActions
+                .andExpect(MockMvcResultMatchers.status().isAccepted())
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.content().string("true"));
+    }
+
+    @Test
+    public void userInformationUpdateTest() throws Exception {
+        UUID uuid = UUID.randomUUID();
+
+        RegisterRequest registerRequest = RegisterRequest.builder()
+                .firstName("Marek")
+                .lastName("Kopania")
+                .email("test@test.com")
+                .password("testpass")
+                .build();
+
+        LoginResponse loginResponse = LoginResponse.builder()
+                .firstName("Marek")
+                .lastName("Kopania")
+                .uuid(uuid)
+                .role(UserRole.USER)
+                .token("test")
+                .build();
+
+        when(userService.updateUser(uuid, registerRequest)).thenReturn(loginResponse);
+
+        ResultActions resultActions = mockMvc.perform(put("/api/v1/users/update/{uuid}", uuid)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(registerRequest))
+        );
+
+        resultActions
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value("Marek"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.lastName").value("Kopania"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.uuid").value(uuid.toString()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.role").value(UserRole.USER.toString()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.token").value("test"));
+    }
+
+    @Test
+    public void deleteUserTest() throws Exception {
+        UUID uuid = UUID.randomUUID();
+
+        when(userService.deleteUser(uuid)).thenReturn(String.valueOf(String.class));
+
+        ResultActions resultActions = mockMvc.perform(delete("/api/v1/users/delete/{uuid}", uuid));
+        resultActions
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("text/plain;charset=UTF-8"));
     }
 }

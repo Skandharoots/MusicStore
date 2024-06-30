@@ -37,7 +37,7 @@ public class ConfirmationTokenRepositoryTests {
                 "test@test.com",
                 "testpasswd",
                 UserRole.USER);
-        Users savedUser = userRepository.save(user);
+        userRepository.save(user);
 
         String tokenUUID = UUID.randomUUID().toString();
         ConfirmationToken confirmationToken = new ConfirmationToken(
@@ -59,7 +59,7 @@ public class ConfirmationTokenRepositoryTests {
                 "test@test.com",
                 "testpasswd",
                 UserRole.USER);
-        Users savedUser = userRepository.save(user);
+        userRepository.save(user);
 
         String tokenUUID = UUID.randomUUID().toString();
         ConfirmationToken confirmationToken = new ConfirmationToken(
@@ -68,7 +68,7 @@ public class ConfirmationTokenRepositoryTests {
                 LocalDateTime.now().plusMinutes(20),
                 user
         );
-        ConfirmationToken savedToken = confirmationTokenRepository.save(confirmationToken);
+        confirmationTokenRepository.save(confirmationToken);
         Optional<ConfirmationToken> searchedToken = confirmationTokenRepository.findByToken(tokenUUID);
         Assertions.assertThat(searchedToken.isPresent()).isTrue();
     }
@@ -81,7 +81,7 @@ public class ConfirmationTokenRepositoryTests {
                 "test@test.com",
                 "testpasswd",
                 UserRole.USER);
-        Users savedUser = userRepository.save(user);
+        userRepository.save(user);
 
         String tokenUUID = UUID.randomUUID().toString();
         ConfirmationToken confirmationToken = new ConfirmationToken(
@@ -90,7 +90,7 @@ public class ConfirmationTokenRepositoryTests {
                 LocalDateTime.now().plusMinutes(20),
                 user
         );
-        ConfirmationToken savedToken = confirmationTokenRepository.save(confirmationToken);
+        confirmationTokenRepository.save(confirmationToken);
         Optional<ConfirmationToken> searchedToken = confirmationTokenRepository.findByUser_Id(user.getId());
         Assertions.assertThat(searchedToken.isPresent()).isTrue();
     }
@@ -112,7 +112,7 @@ public class ConfirmationTokenRepositoryTests {
                 LocalDateTime.now().plusMinutes(20),
                 user
         );
-        ConfirmationToken savedToken = confirmationTokenRepository.save(confirmationToken);
+        confirmationTokenRepository.save(confirmationToken);
         Optional<ConfirmationToken> searchedToken = confirmationTokenRepository.findByUser_Uuid(savedUser.getUuid());
         Assertions.assertThat(searchedToken.isPresent()).isTrue();
     }
@@ -137,6 +137,7 @@ public class ConfirmationTokenRepositoryTests {
         );
         ConfirmationToken savedToken = confirmationTokenRepository.save(confirmationToken);
         Assertions.assertThat(savedToken.getToken()).isEqualTo(tokenUUID);
+        testEntityManager.clear();
         confirmationTokenRepository.deleteById(savedUser.getId());
         Assertions.assertThat(confirmationTokenRepository.findByToken(tokenUUID)).isEmpty();
     }
@@ -149,7 +150,7 @@ public class ConfirmationTokenRepositoryTests {
                 "test@test.com",
                 "testpasswd",
                 UserRole.USER);
-        Users savedUser = userRepository.save(user);
+        userRepository.save(user);
 
         String tokenUUID = UUID.randomUUID().toString();
         ConfirmationToken confirmationToken = new ConfirmationToken(
@@ -161,11 +162,11 @@ public class ConfirmationTokenRepositoryTests {
         confirmationTokenRepository.save(confirmationToken);
         confirmationTokenRepository.updateConfirmationToken(tokenUUID, LocalDateTime.of(
                 2030,
-                06,
+                6,
                 29,
                 20,
-                00,
-                00
+                0,
+                0
         ));
         testEntityManager.clear();
 
@@ -173,11 +174,11 @@ public class ConfirmationTokenRepositoryTests {
         Assertions.assertThat(updatedToken.isPresent()).isTrue();
         Assertions.assertThat(updatedToken.get().getConfirmedAt()).isEqualTo(LocalDateTime.of(
                 2030,
-                06,
+                6,
                 29,
                 20,
-                00,
-                00
+                0,
+                0
         ).toString());
     }
 }

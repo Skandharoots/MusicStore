@@ -2,12 +2,11 @@ package com.musicstore.users.service;
 
 import com.musicstore.users.model.ConfirmationToken;
 import com.musicstore.users.repository.ConfirmationTokenRepository;
-import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor

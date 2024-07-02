@@ -7,7 +7,7 @@ import com.musicstore.users.model.UserRole;
 import com.musicstore.users.model.Users;
 import com.musicstore.users.repository.UserRepository;
 import com.musicstore.users.service.ConfirmationTokenService;
-import com.musicstore.users.service.JWTService;
+import com.musicstore.users.service.JwtService;
 import com.musicstore.users.service.UserService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -42,7 +42,7 @@ public class UserServiceTests {
     private ConfirmationTokenService confirmationTokenService;
 
     @Mock
-    private JWTService jwtService;
+    private JwtService jwtService;
 
 
     @Test

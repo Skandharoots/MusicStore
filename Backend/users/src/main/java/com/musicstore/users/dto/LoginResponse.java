@@ -1,11 +1,17 @@
 package com.musicstore.users.dto;
 
 import com.musicstore.users.model.UserRole;
-import lombok.*;
-
 import java.util.UUID;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
+
 
 @Data
+@Getter
 @Builder
 @AllArgsConstructor
 @EqualsAndHashCode

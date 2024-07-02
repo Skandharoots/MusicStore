@@ -2,7 +2,7 @@ package com.musicstore.users.api.service;
 
 import com.musicstore.users.model.UserRole;
 import com.musicstore.users.model.Users;
-import com.musicstore.users.service.JWTService;
+import com.musicstore.users.service.JwtService;
 import io.jsonwebtoken.Claims;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -12,10 +12,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 
 @ExtendWith(MockitoExtension.class)
-public class JWTServiceTests {
+public class JwtServiceTests {
 
     @InjectMocks
-    private JWTService jwtService;
+    private JwtService jwtService;
 
     @Test
     public void generateTokenTest() {

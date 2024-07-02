@@ -1,16 +1,15 @@
 package com.musicstore.users.service;
 
-import com.musicstore.users.mail.EmailSender;
 import com.musicstore.users.dto.RegisterRequest;
+import com.musicstore.users.mail.EmailSender;
+import com.musicstore.users.model.ConfirmationToken;
 import com.musicstore.users.model.UserRole;
 import com.musicstore.users.model.Users;
 import com.musicstore.users.security.EmailValidator;
-import com.musicstore.users.model.ConfirmationToken;
 import jakarta.transaction.Transactional;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
 
 @Service
 @AllArgsConstructor
@@ -22,8 +21,8 @@ public class RegisterService {
     private final EmailSender emailSender;
 
     public String register(RegisterRequest request) {
-        boolean isValidEmail = emailValidator.
-                test(request.getEmail());
+        boolean isValidEmail = emailValidator
+                .test(request.getEmail());
 
         if (!isValidEmail) {
             throw new IllegalStateException("Email not valid");

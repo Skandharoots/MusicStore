@@ -27,7 +27,7 @@ import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 public class WebSecurityConfig {
 
     private final UserService userService;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final BCryptPasswordEncoder bcryptPasswordEncoder;
 
 
     @Bean
@@ -49,10 +49,12 @@ public class WebSecurityConfig {
                         .anyRequest()
                         .authenticated()
                 )
-                .sessionManagement(customizer -> customizer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionManagement(customizer -> customizer
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .formLogin(AbstractHttpConfigurer::disable)
                 .authenticationProvider(daoAuthenticationProvider())
-                .addFilterBefore(authenticationTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(authenticationTokenFilter(),
+                        UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
@@ -61,13 +63,14 @@ public class WebSecurityConfig {
     public DaoAuthenticationProvider daoAuthenticationProvider() {
         DaoAuthenticationProvider provider =
                 new DaoAuthenticationProvider();
-        provider.setPasswordEncoder(bCryptPasswordEncoder);
+        provider.setPasswordEncoder(bcryptPasswordEncoder);
         provider.setUserDetailsService(userService);
         return provider;
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config)
+            throws Exception {
         return config.getAuthenticationManager();
     }
 

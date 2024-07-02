@@ -7,10 +7,8 @@ import com.musicstore.users.dto.LoginResponse;
 import com.musicstore.users.dto.RegisterRequest;
 import com.musicstore.users.model.UserRole;
 import com.musicstore.users.service.*;
-import org.apache.tomcat.util.digester.DocumentProperties;
 import org.junit.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.Result;
 import org.junit.runner.RunWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +20,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-
 import java.util.UUID;
-
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
@@ -51,7 +47,7 @@ public class RegistryControllerTests {
     private UserService userService;
 
     @MockBean
-    private JWTService jwtService;
+    private JwtService jwtService;
 
     @MockBean
     private ConfirmationTokenService confirmationTokenService;

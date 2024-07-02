@@ -4,7 +4,7 @@ import com.musicstore.users.dto.LoginRequest;
 import com.musicstore.users.dto.LoginResponse;
 import com.musicstore.users.model.UserRole;
 import com.musicstore.users.model.Users;
-import com.musicstore.users.service.JWTService;
+import com.musicstore.users.service.JwtService;
 import com.musicstore.users.service.LoginService;
 import com.musicstore.users.service.UserService;
 import org.assertj.core.api.Assertions;
@@ -28,7 +28,7 @@ public class LoginServiceTests {
     private UserService userService;
 
     @Mock
-    private JWTService jwtService;
+    private JwtService jwtService;
 
     @Mock
     private AuthenticationManager authenticationManager;

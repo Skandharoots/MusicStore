@@ -121,6 +121,7 @@ public class UserService implements UserDetailsService {
                 .lastName(updatedUser.get().getLastName())
                 .uuid(uuid)
                 .token(jwtService.generateToken(userDetails))
+                .role(updatedUser.get().getUserRole())
                 .build();
     }
 

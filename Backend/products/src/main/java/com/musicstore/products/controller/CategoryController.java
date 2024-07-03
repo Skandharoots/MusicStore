@@ -3,6 +3,7 @@ package com.musicstore.products.controller;
 import com.musicstore.products.dto.CategoryRequestBody;
 import com.musicstore.products.model.Category;
 import com.musicstore.products.service.CategoryService;
+import jakarta.ws.rs.core.HttpHeaders;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -16,8 +17,8 @@ public class CategoryController {
 
 
 	@PostMapping
-	public String addCategory(@RequestBody CategoryRequestBody categories) {
-		return categoryService.createCategories(categories);
+	public String addCategory(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @RequestBody CategoryRequestBody categories) {
+		return categoryService.createCategories(token, categories);
 	}
 
 	@GetMapping

@@ -6,15 +6,6 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create
-  mail:
-    host: smtp.gmail.com
-    port: 587
-    username: mardok1825@gmail.com
-    password: gybmmfyodcprfedo
-    properties.mail.smtp:
-      auth: true
-      starttls.enable: true
-      starttls.required: true
 eureka:
   instance:
     hostname: localhost

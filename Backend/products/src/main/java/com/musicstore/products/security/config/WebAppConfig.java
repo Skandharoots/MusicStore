@@ -1,4 +1,4 @@
-package com.musicstore.products;
+package com.musicstore.products.security.config;
 
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -28,6 +28,8 @@ public class WebAppConfig {
                 )
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers(HttpMethod.GET, "/api/v*/products/test").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v*/products/categories").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v*/products/categories").permitAll()
                         .anyRequest()
                         .authenticated()
                 )

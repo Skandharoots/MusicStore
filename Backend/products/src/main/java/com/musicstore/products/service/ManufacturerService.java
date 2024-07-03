@@ -1,0 +1,63 @@
+package com.musicstore.products.service;
+
+import com.musicstore.products.dto.ManufacturerRequest;
+import com.musicstore.products.dto.ManufacturerRequestBody;
+import com.musicstore.products.model.Manufacturer;
+import com.musicstore.products.repository.ManufacturerRepository;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.List;
+
+@Service
+@AllArgsConstructor
+public class ManufacturerService {
+
+	private final ManufacturerRepository manufacturerRepository;
+
+	private final RestTemplate restTemplate;
+
+	public String createManufacturers(String token, ManufacturerRequestBody manufacturers) {
+		//TODO: Uncomment this for prod
+//		if (token.isEmpty() || token == null || !token.startsWith("Bearer ")) {
+//			throw new RuntimeException("Invalid token");
+//		}
+//
+//		String jwtToken = token.substring("Bearer ".length());
+
+
+//		if(!Objects.equals(
+//				restTemplate
+//						.getForObject("http://localhost:8222/api/v1/users/adminauthorize?token="
+//								+ jwtToken, Boolean.class), true)) {
+//
+//			throw new IllegalArgumentException("No admin permissions");
+//
+//		}
+
+		for (ManufacturerRequest manufacturer: manufacturers.getManufacturers()) {
+			Manufacturer newManufacturer = new Manufacturer(manufacturer.getName());
+
+			if (newManufacturer.getManufacturerName().isEmpty()) {
+				throw new IllegalArgumentException("Manufacturer name cannot be empty");
+			}
+
+			manufacturerRepository.save(newManufacturer);
+		}
+
+		return "Manufacturers created";
+	}
+
+	public List<Manufacturer> getAllManufacturers() {
+		return manufacturerRepository.findAll();
+	}
+
+	public Manufacturer getManufacturerById(Long id) {
+		return manufacturerRepository.findById(id).orElse(null);
+	}
+
+	public Manufacturer getManufacturerByName(String name) {
+		return manufacturerRepository.findByManufacturerName(name).orElse(null);
+	}
+}

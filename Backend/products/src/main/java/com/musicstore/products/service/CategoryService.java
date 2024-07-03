@@ -38,7 +38,7 @@ public class CategoryService {
 //
 //		}
 
-		for(CategoryRequest categoryRequest : categories.getCategories()) {
+		for (CategoryRequest categoryRequest : categories.getCategories()) {
 			Category category = new Category(categoryRequest.getCategoryName());
 
 			if (category.getCategoryName().isEmpty()) {

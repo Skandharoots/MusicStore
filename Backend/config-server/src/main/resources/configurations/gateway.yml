@@ -22,3 +22,9 @@ spring:
             - Path=/api/v1/products/**
           filters:
             - JwtAuthFilter
+        - id: azure
+          uri: http://localhost:8745
+          predicates:
+            - Path=/api/azure/**
+          filters:
+            - JwtAuthFilter

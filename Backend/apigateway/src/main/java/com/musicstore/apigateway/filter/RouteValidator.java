@@ -18,6 +18,11 @@ public class RouteValidator {
             "/api/v1/users/csrf/token",
             "/api/v1/products/categories",
             "/api/v1/users/adminauthorize",
+            "/api/azure/upload",
+            "/api/azure/read",
+            "/api/azure/list",
+            "/api/azure/update",
+            "/api/azure/delete",
             "/eureka"
     );
 

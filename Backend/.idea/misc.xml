@@ -10,7 +10,16 @@
         <option value="$PROJECT_DIR$/discovery-server/pom.xml" />
         <option value="$PROJECT_DIR$/config-server/pom.xml" />
         <option value="$PROJECT_DIR$/products/pom.xml" />
+        <option value="$PROJECT_DIR$/azure/pom.xml" />
+        <option value="$PROJECT_DIR$/apigateway/azure-service/pom.xml" />
+        <option value="$PROJECT_DIR$/azure-service/pom.xml" />
       </list>
+    </option>
+    <option name="ignoredFiles">
+      <set>
+        <option value="$PROJECT_DIR$/apigateway/azure-service/pom.xml" />
+        <option value="$PROJECT_DIR$/azure/pom.xml" />
+      </set>
     </option>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_17" default="true" project-jdk-name="corretto-17" project-jdk-type="JavaSDK">

@@ -1,4 +1,4 @@
-package com.musicstore.azure.exceptions;
+package org.musicstore.azureservice.exceptions;
 
 public class AzureBlobStorageException extends Exception {
 

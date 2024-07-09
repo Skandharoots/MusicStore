@@ -1,4 +1,4 @@
-package com.musicstore.azure.config;
+package org.musicstore.azureservice.config;
 
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;

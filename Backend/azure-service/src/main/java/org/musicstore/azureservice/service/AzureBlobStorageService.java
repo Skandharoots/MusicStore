@@ -1,4 +1,4 @@
-package com.musicstore.azure.service;
+package org.musicstore.azureservice.service;
 
 import com.azure.core.http.rest.PagedIterable;
 import com.azure.storage.blob.BlobClient;
@@ -6,7 +6,7 @@ import com.azure.storage.blob.BlobContainerClient;
 import com.azure.storage.blob.BlobServiceClient;
 import com.azure.storage.blob.models.BlobItem;
 import com.azure.storage.blob.models.BlobStorageException;
-import com.musicstore.azure.exceptions.AzureBlobStorageException;
+import org.musicstore.azureservice.exceptions.AzureBlobStorageException;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

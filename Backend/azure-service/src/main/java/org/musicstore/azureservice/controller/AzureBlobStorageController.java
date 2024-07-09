@@ -1,8 +1,7 @@
-package com.musicstore.azure.controller;
+package org.musicstore.azureservice.controller;
 
-import com.musicstore.azure.dto.FileDto;
-import com.musicstore.azure.exceptions.AzureBlobStorageException;
-import com.musicstore.azure.service.AzureBlobStorageService;
+import org.musicstore.azureservice.exceptions.AzureBlobStorageException;
+import org.musicstore.azureservice.service.AzureBlobStorageService;
 import jakarta.ws.rs.core.HttpHeaders;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;

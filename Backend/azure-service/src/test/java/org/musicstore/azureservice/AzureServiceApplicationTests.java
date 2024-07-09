@@ -1,10 +1,10 @@
-package com.musicstore.azure;
+package org.musicstore.azureservice;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class AzureApplicationTests {
+class AzureServiceApplicationTests {
 
 	@Test
 	void contextLoads() {

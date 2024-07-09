@@ -11,19 +11,19 @@ spring:
           enabled: false
       routes:
         - id: users
-          uri: http://localhost:8090
+          uri: lb://users
           predicates:
             - Path=/api/v1/users/**
           filters:
             - JwtAuthFilter
         - id: products
-          uri: http://localhost:8693
+          uri: lb://products
           predicates:
             - Path=/api/v1/products/**
           filters:
             - JwtAuthFilter
         - id: azure
-          uri: http://localhost:8745
+          uri: lb://azure-service
           predicates:
             - Path=/api/azure/**
           filters:

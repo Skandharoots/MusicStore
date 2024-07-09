@@ -5,7 +5,7 @@ eureka:
     service-url:
       defaultZone: http://localhost:8761/eureka
 server:
-  port: 8745
+  port: 0
 logging:
   level:
     org:

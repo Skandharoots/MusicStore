@@ -1,4 +1,4 @@
-package com.musicstore.azure.config;
+package org.musicstore.azureservice.config;
 
 import com.azure.storage.blob.BlobContainerClient;
 import com.azure.storage.blob.BlobServiceClient;

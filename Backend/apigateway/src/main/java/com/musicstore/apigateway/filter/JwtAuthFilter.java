@@ -7,6 +7,7 @@ import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.Objects;
 
@@ -15,13 +16,13 @@ public class JwtAuthFilter extends AbstractGatewayFilterFactory<JwtAuthFilter.Co
 
     private final RouteValidator routeValidator;
 
-    @Autowired
-    private RestTemplate restTemplate;
+    private final WebClient.Builder webClient;
 
-    public JwtAuthFilter(RouteValidator routeValidator) {
+    public JwtAuthFilter(RouteValidator routeValidator, WebClient.Builder webClient) {
         super(Config.class);
         this.routeValidator = routeValidator;
-    }
+		this.webClient = webClient;
+	}
 
     public static class Config {
 
@@ -41,16 +42,24 @@ public class JwtAuthFilter extends AbstractGatewayFilterFactory<JwtAuthFilter.Co
                 } else {
                     authorization = authorization.substring("Bearer ".length());
                 }
-                try {
-                    if (!Objects.equals(restTemplate.getForObject("http://localhost:8090/api/v1/users/validate?token=" + authorization, Boolean.class), true)) {
-                        throw new IllegalStateException("Invalid token");
-                    }
-                } catch (Exception e) {
-                    throw new IllegalStateException("Invalid access", e);
+                return webClient
+                        .build()
+                        .get()
+                        .uri("http://USERS/api/v1/users/validate?token=" + authorization)
+                        .retrieve()
+                        .bodyToMono(Boolean.class)
+                        .flatMap(response -> {
+                            if (response) {
+                                return chain.filter(exchange);
+                            } else {
+                                return reactor.core.publisher.Mono.error(new RuntimeException("Unauthorized access"));
+                            }
+                        })
+                        .onErrorResume(throwable -> {
+                            throw new RuntimeException("Unauthorized access", throwable);
+                        });
                 }
-
-            }
-            return chain.filter(exchange);
-        });
+                return chain.filter(exchange);
+            });
+        }
     }
-}

@@ -1,4 +1,4 @@
-package org.musicstore.azureservice;
+package com.musicstore.azureservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

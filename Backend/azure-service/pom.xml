@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.musicstore</groupId>
-	<artifactId>azure</artifactId>
+	<artifactId>azure-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>azure-service</name>
 	<description>Music Store Azure Blob Storage Microservice</description>

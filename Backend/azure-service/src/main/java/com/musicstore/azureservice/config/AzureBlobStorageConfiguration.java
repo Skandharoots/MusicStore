@@ -1,4 +1,4 @@
-package org.musicstore.azureservice.config;
+package com.musicstore.azureservice.config;
 
 import com.azure.storage.blob.BlobContainerClient;
 import com.azure.storage.blob.BlobServiceClient;
@@ -19,17 +19,15 @@ public class AzureBlobStorageConfiguration {
 
 	@Bean
 	public BlobServiceClient getBlobServiceClient(){
-		BlobServiceClient serviceClient = new BlobServiceClientBuilder()
+		return new BlobServiceClientBuilder()
 				.connectionString(connectionString).buildClient();
-		return serviceClient;
 
 	}
 
 	@Bean
 	public BlobContainerClient getBlobContainerClient(){
-		BlobContainerClient containerClient = getBlobServiceClient()
+		return getBlobServiceClient()
 				.getBlobContainerClient(containerName);
-		return containerClient;
 	}
 
 	@Bean

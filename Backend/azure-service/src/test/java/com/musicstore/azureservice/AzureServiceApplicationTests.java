@@ -1,4 +1,4 @@
-package org.musicstore.azureservice;
+package com.musicstore.azureservice;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

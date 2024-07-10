@@ -1,6 +1,6 @@
-package org.musicstore.azureservice.service;
+package com.musicstore.azureservice.service;
 
-import org.musicstore.azureservice.exceptions.AzureBlobStorageException;
+import com.musicstore.azureservice.exceptions.AzureBlobStorageException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;

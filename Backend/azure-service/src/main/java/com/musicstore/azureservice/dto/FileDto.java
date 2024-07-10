@@ -1,4 +1,4 @@
-package org.musicstore.azureservice.dto;
+package com.musicstore.azureservice.dto;
 
 import lombok.*;
 

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/products/manufacturers")
+@RequestMapping("/api/products/manufacturers")
 @AllArgsConstructor
 public class ManufacturerController {
 

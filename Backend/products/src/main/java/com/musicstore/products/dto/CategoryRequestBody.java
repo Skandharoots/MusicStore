@@ -13,7 +13,4 @@ public class CategoryRequestBody {
 
 	private List<CategoryRequest> categories;
 
-	public List<CategoryRequest> getCategories() {
-		return categories;
-	}
 }

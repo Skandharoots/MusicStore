@@ -57,11 +57,11 @@ public class ManufacturerService {
 	}
 
 	public Manufacturer getManufacturerById(Long id) {
-		return manufacturerRepository.findById(id).orElse(null);
-	}
-
-	public Manufacturer getManufacturerByName(String name) {
-		return manufacturerRepository.findByManufacturerName(name).orElse(null);
+		return manufacturerRepository
+				.findById(id)
+				.orElseThrow(
+						() -> new IllegalArgumentException("Manufacturer not found")
+				);
 	}
 
 	public String updateManufacturer(Long id, ManufacturerRequest manufacturer) {
@@ -86,7 +86,8 @@ public class ManufacturerService {
 //		}
 
 		Manufacturer manufacurerToUpdate = manufacturerRepository
-				.findById(id).orElseThrow(
+				.findById(id)
+				.orElseThrow(
 						() -> new IllegalArgumentException("Manufacturer not found")
 				);
 

@@ -13,7 +13,4 @@ public class CountryRequestBody {
 
 	private List<CountryRequest> countries;
 
-	public List<CountryRequest> getCountries() {
-		return countries;
-	}
 }

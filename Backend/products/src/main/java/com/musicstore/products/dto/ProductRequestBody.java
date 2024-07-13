@@ -9,8 +9,8 @@ import java.util.List;
 @Data
 @Getter
 @Setter
-public class ManufacturerRequestBody {
+public class ProductRequestBody {
 
-	private List<ManufacturerRequest> manufacturers;
+    private List<ProductRequest> products;
 
 }

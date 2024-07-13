@@ -7,10 +7,10 @@ import lombok.Setter;
 import java.util.List;
 
 @Data
-@Getter
 @Setter
-public class ManufacturerRequestBody {
+@Getter
+public class ProductResponseBody {
 
-	private List<ManufacturerRequest> manufacturers;
+    private List<ProductResponse> products;
 
 }

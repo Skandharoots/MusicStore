@@ -19,7 +19,7 @@ spring:
         - id: products
           uri: lb://products
           predicates:
-            - Path=/api/v1/products/**
+            - Path=/api/products/**
           filters:
             - JwtAuthFilter
         - id: azure

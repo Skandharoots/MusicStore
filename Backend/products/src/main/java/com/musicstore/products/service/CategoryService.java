@@ -59,11 +59,11 @@ public class CategoryService {
 	}
 
 	public Category getCategoryById(Long id) {
-		return categoryRepository.findById(id).orElse(null);
-	}
-
-	public Category getCategoryByName(String name) {
-		return categoryRepository.findByCategoryName(name).orElse(null);
+		return categoryRepository
+				.findById(id)
+				.orElseThrow(
+						() -> new IllegalArgumentException("Category not found")
+				);
 	}
 
 	public String updateCategory(Long id, CategoryRequest category) {
@@ -88,7 +88,8 @@ public class CategoryService {
 //		}
 
 		Category categoryToUpdate = categoryRepository
-				.findById(id).orElseThrow(
+				.findById(id)
+				.orElseThrow(
 						() -> new IllegalArgumentException("Category not found")
 				);
 

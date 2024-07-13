@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 @Data
 @Builder
@@ -16,8 +17,8 @@ public class ProductRequest {
 	private String productName;
 	private String description;
 	private BigDecimal price;
-	private String manufacturer;
-	private String country;
-	private String category;
+	private Long manufacturerId;
+	private Long countryId;
+	private Long categoryId;
 
 }

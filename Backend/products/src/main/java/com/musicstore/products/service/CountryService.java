@@ -57,11 +57,11 @@ public class CountryService {
 	}
 
 	public Country getCountryById(Long id) {
-		return countryRepository.findById(id).orElse(null);
-	}
-
-	public Country getCountryByName(String name) {
-		return countryRepository.findByCountryName(name).orElse(null);
+		return countryRepository
+				.findById(id)
+				.orElseThrow(
+						() -> new IllegalArgumentException("Country not found")
+				);
 	}
 
 	public String updateCountry(Long id, CountryRequest country) {
@@ -86,7 +86,8 @@ public class CountryService {
 //		}
 
 		Country countryToUpdate = countryRepository
-				.findById(id).orElseThrow(
+				.findById(id)
+				.orElseThrow(
 						() -> new IllegalArgumentException("Country not found")
 				);
 

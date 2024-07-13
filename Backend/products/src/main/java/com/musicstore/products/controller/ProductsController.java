@@ -1,15 +1,33 @@
 package com.musicstore.products.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.musicstore.products.dto.ProductRequestBody;
+import com.musicstore.products.dto.ProductResponseBody;
+import com.musicstore.products.service.ProductService;
+import jakarta.ws.rs.core.HttpHeaders;
+import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/products")
+@RequestMapping("/api/products/items")
+@AllArgsConstructor
 public class ProductsController {
 
-    @GetMapping("/test")
-    public String test() {
-        return "Products!";
+    private final ProductService productService;
+
+    @PostMapping("/create")
+    public String createProducts(@RequestHeader(HttpHeaders.AUTHORIZATION) String token,
+                                 @RequestBody ProductRequestBody products) {
+        return productService.createProducts(token, products);
     }
+
+    @GetMapping("/get")
+    public ResponseEntity<ProductResponseBody> getAllProducts(
+            @RequestParam(value = "page", defaultValue = "0", required = false) int page,
+            @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize
+    ) {
+        return ResponseEntity.ok(productService.getAllProducts(page, pageSize));
+    }
+
+
 }

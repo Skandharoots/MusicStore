@@ -1,5 +1,6 @@
 package com.musicstore.products.controller;
 
+import com.musicstore.products.dto.CategoryRequest;
 import com.musicstore.products.dto.CategoryRequestBody;
 import com.musicstore.products.model.Category;
 import com.musicstore.products.service.CategoryService;
@@ -34,6 +35,11 @@ public class CategoryController {
 	@GetMapping("/{categoryName}")
 	public Category getCategoryByName(@PathVariable(name = "categoryName") String categoryName) {
 		return categoryService.getCategoryByName(categoryName);
+	}
+
+	@PutMapping("/{categoryId}")
+	public String updateCategory(@PathVariable(name = "categoryId") Long id, @RequestBody CategoryRequest category) {
+		return categoryService.updateCategory(id, category);
 	}
 
 }

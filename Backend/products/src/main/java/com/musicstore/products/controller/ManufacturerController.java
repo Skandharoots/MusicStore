@@ -1,5 +1,7 @@
 package com.musicstore.products.controller;
 
+import com.musicstore.products.dto.CategoryRequest;
+import com.musicstore.products.dto.ManufacturerRequest;
 import com.musicstore.products.dto.ManufacturerRequestBody;
 import com.musicstore.products.model.Manufacturer;
 import com.musicstore.products.service.ManufacturerService;
@@ -37,4 +39,8 @@ public class ManufacturerController {
 		return manufacturerService.getManufacturerByName(manufacturerName);
 	}
 
+	@PutMapping("/{manufacturerId}")
+	public String updateCategory(@PathVariable(name = "manufacturerId") Long id, @RequestBody ManufacturerRequest manufacturer) {
+		return manufacturerService.updateManufacturer(id, manufacturer);
+	}
 }

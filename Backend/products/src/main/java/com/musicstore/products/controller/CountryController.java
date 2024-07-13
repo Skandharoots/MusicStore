@@ -1,5 +1,6 @@
 package com.musicstore.products.controller;
 
+import com.musicstore.products.dto.CountryRequest;
 import com.musicstore.products.dto.CountryRequestBody;
 import com.musicstore.products.model.Country;
 import com.musicstore.products.service.CountryService;
@@ -35,5 +36,10 @@ public class CountryController {
 	@GetMapping("/{countryName}")
 	public Country getCountryByName(@PathVariable(name = "countryName") String countryName) {
 		return countryService.getCountryByName(countryName);
+	}
+
+	@PutMapping("/{countryId}")
+	public String updateCategory(@PathVariable(name = "countryId") Long id, @RequestBody CountryRequest country) {
+		return countryService.updateCountry(id, country);
 	}
 }

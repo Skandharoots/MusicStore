@@ -63,4 +63,37 @@ public class CountryService {
 	public Country getCountryByName(String name) {
 		return countryRepository.findByCountryName(name).orElse(null);
 	}
+
+	public String updateCountry(Long id, CountryRequest country) {
+
+		//TODO: Uncomment this for prod
+//		if (token.isEmpty() || token == null || !token.startsWith("Bearer ")) {
+//			throw new RuntimeException("Invalid token");
+//		}
+//
+//		String jwtToken = token.substring("Bearer ".length());
+//
+//		Boolean authorized = webClient
+//				.build()
+//				.get()
+//				.uri("http://USERS/api/v1/users/adminauthorize?token=" + jwtToken)
+//				.retrieve()
+//				.bodyToMono(Boolean.class)
+//				.block();
+//
+//		if (Boolean.FALSE.equals(authorized)) {
+//			throw new RuntimeException("No admin authority");
+//		}
+
+		Country countryToUpdate = countryRepository
+				.findById(id).orElseThrow(
+						() -> new IllegalArgumentException("Country not found")
+				);
+
+		countryToUpdate.setCountryName(country.getName());
+
+		countryRepository.save(countryToUpdate);
+
+		return "Country updated";
+	}
 }

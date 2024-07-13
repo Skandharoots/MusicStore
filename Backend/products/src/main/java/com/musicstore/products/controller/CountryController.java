@@ -17,28 +17,23 @@ public class CountryController {
 
 	private final CountryService countryService;
 
-	@PostMapping
+	@PostMapping("/create")
 	public String addCountry(@RequestHeader(HttpHeaders.AUTHORIZATION) String token,
 							 @RequestBody CountryRequestBody countryRequestBody) {
 		return countryService.createCountry(token, countryRequestBody);
 	}
 
-	@GetMapping
+	@GetMapping("/get")
 	public List<Country> getAllCountries() {
 		return countryService.getAllCountries();
 	}
 
-	@GetMapping("/{id}")
+	@GetMapping("/get/{id}")
 	public Country getCountryById(@PathVariable(name = "id") Long id) {
 		return countryService.getCountryById(id);
 	}
 
-	@GetMapping("/{countryName}")
-	public Country getCountryByName(@PathVariable(name = "countryName") String countryName) {
-		return countryService.getCountryByName(countryName);
-	}
-
-	@PutMapping("/{countryId}")
+	@PutMapping("/update/{countryId}")
 	public String updateCategory(@PathVariable(name = "countryId") Long id, @RequestBody CountryRequest country) {
 		return countryService.updateCountry(id, country);
 	}

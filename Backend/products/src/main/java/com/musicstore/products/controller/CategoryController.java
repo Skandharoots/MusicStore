@@ -17,24 +17,19 @@ public class CategoryController {
 	private final CategoryService categoryService;
 
 
-	@PostMapping
+	@PostMapping("/create")
 	public String addCategory(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @RequestBody CategoryRequestBody categories) {
 		return categoryService.createCategories(token, categories);
 	}
 
-	@GetMapping
+	@GetMapping("/get")
 	public List<Category> getAllCategories() {
 		return categoryService.getAllCategories();
 	}
 
-	@GetMapping("/{id}")
+	@GetMapping("/get/{id}")
 	public Category getCategoryById(@PathVariable(name = "id") Long id) {
 		return categoryService.getCategoryById(id);
-	}
-
-	@GetMapping("/{categoryName}")
-	public Category getCategoryByName(@PathVariable(name = "categoryName") String categoryName) {
-		return categoryService.getCategoryByName(categoryName);
 	}
 
 	@PutMapping("/{categoryId}")

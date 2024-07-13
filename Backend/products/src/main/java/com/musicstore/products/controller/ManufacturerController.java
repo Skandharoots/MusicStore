@@ -18,28 +18,23 @@ public class ManufacturerController {
 
 	private final ManufacturerService manufacturerService;
 
-	@PostMapping
+	@PostMapping("/create")
 	public String addManufacturer(@RequestHeader(HttpHeaders.AUTHORIZATION) String token,
 			@RequestBody ManufacturerRequestBody manufacturerRequestBody) {
 		return manufacturerService.createManufacturers(token, manufacturerRequestBody);
 	}
 
-	@GetMapping
+	@GetMapping("/get")
 	public List<Manufacturer> getAllManufacturers() {
 		return manufacturerService.getAllManufacturers();
 	}
 
-	@GetMapping("/{id}")
+	@GetMapping("/get/{id}")
 	public Manufacturer getManufacturerById(@PathVariable(name = "id") Long id) {
 		return manufacturerService.getManufacturerById(id);
 	}
 
-	@GetMapping("/{manufacturerName}")
-	public Manufacturer getManufacturerByName(@PathVariable(name = "manufacturerName") String manufacturerName) {
-		return manufacturerService.getManufacturerByName(manufacturerName);
-	}
-
-	@PutMapping("/{manufacturerId}")
+	@PutMapping("/update/{manufacturerId}")
 	public String updateCategory(@PathVariable(name = "manufacturerId") Long id, @RequestBody ManufacturerRequest manufacturer) {
 		return manufacturerService.updateManufacturer(id, manufacturer);
 	}

@@ -58,7 +58,7 @@ public class RegisterController {
 
     @GetMapping("/adminauthorize")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public boolean adminAuthorize(@RequestParam("token") String token) {
+    public Boolean adminAuthorize(@RequestParam("token") String token) {
 
         return loginService.adminAuthorize(token);
     }

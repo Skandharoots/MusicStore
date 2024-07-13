@@ -7,6 +7,7 @@ import com.musicstore.products.repository.CountryRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
 
@@ -16,7 +17,7 @@ public class CountryService {
 
 	private final CountryRepository countryRepository;
 
-	private final RestTemplate restTemplate;
+	private final WebClient.Builder webClient;
 
 	public String createCountry(String token, CountryRequestBody countries) {
 		//TODO: Uncomment this for prod
@@ -25,15 +26,17 @@ public class CountryService {
 //		}
 //
 //		String jwtToken = token.substring("Bearer ".length());
-
-
-//		if(!Objects.equals(
-//				restTemplate
-//						.getForObject("http://localhost:8222/api/v1/users/adminauthorize?token="
-//								+ jwtToken, Boolean.class), true)) {
 //
-//			throw new IllegalArgumentException("No admin permissions");
+//		Boolean authorized = webClient
+//				.build()
+//				.get()
+//				.uri("http://USERS/api/v1/users/adminauthorize?token=" + jwtToken)
+//				.retrieve()
+//				.bodyToMono(Boolean.class)
+//				.block();
 //
+//		if (Boolean.FALSE.equals(authorized)) {
+//			throw new RuntimeException("No admin authority");
 //		}
 
 		for (CountryRequest country : countries.getCountries()) {

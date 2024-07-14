@@ -17,6 +17,7 @@ public class RouteValidator {
             "/api/v1/users/register/**",
             "/api/v1/users/csrf/token",
             "/api/products/items/get",
+            "/api/products/items/get/**",
             "/api/products/categories/get",
             "/api/products/countries/get",
             "/api/products/manufacturers/get",

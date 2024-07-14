@@ -29,6 +29,7 @@ public class WebAppConfig {
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers(HttpMethod.POST, "/api/products/items/create").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/products/items/get").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/products/items/get/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/products/categories/create").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/products/categories/get").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/products/categories/get/**").permitAll()

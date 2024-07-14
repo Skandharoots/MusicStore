@@ -20,9 +20,9 @@ public class Category {
 	)
 	private Long id;
 	@NonNull
-	private String categoryName;
+	private String name;
 
 	public Category(String categoryName) {
-		this.categoryName = categoryName;
+		this.name = categoryName;
 	}
 }

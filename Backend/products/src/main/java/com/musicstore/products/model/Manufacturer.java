@@ -20,10 +20,10 @@ public class Manufacturer {
 	)
 	private Long id;
 	@NonNull
-	private String manufacturerName;
+	private String name;
 
 	public Manufacturer(String manufacturerName) {
-		this.manufacturerName = manufacturerName;
+		this.name = manufacturerName;
 	}
 
 }

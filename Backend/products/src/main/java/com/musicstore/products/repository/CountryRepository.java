@@ -12,7 +12,7 @@ import java.util.Optional;
 @Transactional
 public interface CountryRepository extends JpaRepository<Country, Long> {
 
-	Optional<Country> findByCountryName(String name);
+	Optional<Country> findByName(String name);
 
 	Optional<Country> findById(Long id);
 

@@ -2,7 +2,10 @@ package com.musicstore.products.repository;
 
 import com.musicstore.products.model.Product;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -17,7 +20,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
 	Optional<Product> findById(Long id);
 
-	Optional<Product> findByProductSgid(UUID productSgid);
-
+	Page<Product> findAllByCategory_NameContainingAndBuiltinCountry_NameContainingAndManufacturer_NameContaining(String category, String country, String manufacturer, Pageable pageable);
 
 }

@@ -20,10 +20,10 @@ public class Country {
 	)
 	private Long id;
 	@NonNull
-	private String countryName;
+	private String name;
 
 	public Country(String countryName) {
-		this.countryName = countryName;
+		this.name = countryName;
 	}
 
 }

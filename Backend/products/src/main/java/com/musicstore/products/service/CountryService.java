@@ -42,7 +42,7 @@ public class CountryService {
 		for (CountryRequest country : countries.getCountries()) {
 			Country newCountry = new Country(country.getName());
 
-			if (newCountry.getCountryName().isEmpty()) {
+			if (newCountry.getName().isEmpty()) {
 				throw new IllegalArgumentException("Country name cannot be empty");
 			}
 
@@ -91,7 +91,7 @@ public class CountryService {
 						() -> new IllegalArgumentException("Country not found")
 				);
 
-		countryToUpdate.setCountryName(country.getName());
+		countryToUpdate.setName(country.getName());
 
 		countryRepository.save(countryToUpdate);
 

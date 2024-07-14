@@ -44,7 +44,7 @@ public class CategoryService {
 		for (CategoryRequest categoryRequest : categories.getCategories()) {
 			Category category = new Category(categoryRequest.getCategoryName());
 
-			if (category.getCategoryName().isEmpty()) {
+			if (category.getName().isEmpty()) {
 				throw new IllegalArgumentException("Category name cannot be empty");
 			}
 
@@ -93,7 +93,7 @@ public class CategoryService {
 						() -> new IllegalArgumentException("Category not found")
 				);
 
-		categoryToUpdate.setCategoryName(category.getCategoryName());
+		categoryToUpdate.setName(category.getCategoryName());
 
 		categoryRepository.save(categoryToUpdate);
 

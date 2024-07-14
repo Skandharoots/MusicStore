@@ -42,7 +42,7 @@ public class ManufacturerService {
 		for (ManufacturerRequest manufacturer: manufacturers.getManufacturers()) {
 			Manufacturer newManufacturer = new Manufacturer(manufacturer.getName());
 
-			if (newManufacturer.getManufacturerName().isEmpty()) {
+			if (newManufacturer.getName().isEmpty()) {
 				throw new IllegalArgumentException("Manufacturer name cannot be empty");
 			}
 
@@ -91,7 +91,7 @@ public class ManufacturerService {
 						() -> new IllegalArgumentException("Manufacturer not found")
 				);
 
-		manufacurerToUpdate.setManufacturerName(manufacturer.getName());
+		manufacurerToUpdate.setName(manufacturer.getName());
 
 		manufacturerRepository.save(manufacurerToUpdate);
 

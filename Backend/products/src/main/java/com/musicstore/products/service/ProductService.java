@@ -90,9 +90,9 @@ public class ProductService {
 					.name(product.getProductName())
 					.description(product.getProductDescription())
 					.price(product.getProductPrice())
-					.category(product.getCategory().getCategoryName())
-					.country(product.getBuiltinCountry().getCountryName())
-					.manufacturer(product.getManufacturer().getManufacturerName())
+					.category(product.getCategory().getName())
+					.country(product.getBuiltinCountry().getName())
+					.manufacturer(product.getManufacturer().getName())
 					.build();
 
 			productResponses.add(response);
@@ -103,6 +103,43 @@ public class ProductService {
 		productResponseBody.setProducts(productResponses);
 		return productResponseBody;
 
+	}
+
+	public ProductResponseBody getAllProductsByCategoryAndCountryAndManufacturer(Integer page,
+																				 Integer pageSize,
+																				 String category,
+																				 String country,
+																				 String manufacturer
+	) {
+
+		Pageable pageable = PageRequest.of(page, pageSize);
+		Page<Product> products = productRepository
+				.findAllByCategory_NameContainingAndBuiltinCountry_NameContainingAndManufacturer_NameContaining(
+						category, country, manufacturer, pageable);
+
+		List<ProductResponse> productResponses = new ArrayList<>();
+
+		for (Product product : products.getContent()) {
+
+			ProductResponse response = ProductResponse
+					.builder()
+					.id(product.getId())
+					.productSgid(product.getProductSgid())
+					.name(product.getProductName())
+					.description(product.getProductDescription())
+					.price(product.getProductPrice())
+					.category(product.getCategory().getName())
+					.country(product.getBuiltinCountry().getName())
+					.manufacturer(product.getManufacturer().getName())
+					.build();
+
+			productResponses.add(response);
+
+		}
+
+		ProductResponseBody productResponseBody = new ProductResponseBody();
+		productResponseBody.setProducts(productResponses);
+		return productResponseBody;
 	}
 
 

@@ -3,6 +3,7 @@ package com.musicstore.products.controller;
 import com.musicstore.products.dto.ProductRequestBody;
 import com.musicstore.products.dto.ProductResponseBody;
 import com.musicstore.products.service.ProductService;
+import jakarta.ws.rs.OPTIONS;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.HttpHeaders;
 import lombok.AllArgsConstructor;
@@ -35,6 +36,8 @@ public class ProductsController {
             @RequestParam(value = "category") String category,
             @RequestParam(value = "country") String country,
             @RequestParam(value = "manufacturer") String manufacturer,
+            @RequestParam(value = "sortBy", defaultValue = "id") String sortBy,
+            @RequestParam(value = "direction", defaultValue = "DESC") String direction,
             @RequestParam(value = "page", defaultValue = "0", required = false) int page,
             @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize
     ) {
@@ -42,6 +45,8 @@ public class ProductsController {
                 .getAllProductsByCategoryAndCountryAndManufacturer(
                         page,
                         pageSize,
+                        sortBy,
+                        direction,
                         category,
                         country,
                         manufacturer

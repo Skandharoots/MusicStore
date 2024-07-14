@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -107,12 +108,20 @@ public class ProductService {
 
 	public ProductResponseBody getAllProductsByCategoryAndCountryAndManufacturer(Integer page,
 																				 Integer pageSize,
+																				 String sortBy,
+																				 String direction,
 																				 String category,
 																				 String country,
 																				 String manufacturer
 	) {
 
-		Pageable pageable = PageRequest.of(page, pageSize);
+		Pageable pageable;
+		if (direction.equals("asc")) {
+			 pageable = PageRequest.of(page, pageSize, Sort.by(sortBy).ascending());
+		} else {
+			pageable = PageRequest.of(page, pageSize, Sort.by(sortBy).descending());
+		}
+
 		Page<Product> products = productRepository
 				.findAllByCategory_NameContainingAndBuiltinCountry_NameContainingAndManufacturer_NameContaining(
 						category, country, manufacturer, pageable);
@@ -136,7 +145,6 @@ public class ProductService {
 			productResponses.add(response);
 
 		}
-
 		ProductResponseBody productResponseBody = new ProductResponseBody();
 		productResponseBody.setProducts(productResponses);
 		return productResponseBody;

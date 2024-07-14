@@ -20,6 +20,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
 	Optional<Product> findById(Long id);
 
-	Page<Product> findAllByCategory_NameContainingAndBuiltinCountry_NameContainingAndManufacturer_NameContaining(String category, String country, String manufacturer, Pageable pageable);
+	Page<Product> findAllByCategory_IdAndBuiltinCountry_NameContainingAndManufacturer_NameContaining(Long category, String country, String manufacturer, Pageable pageable);
 
 }

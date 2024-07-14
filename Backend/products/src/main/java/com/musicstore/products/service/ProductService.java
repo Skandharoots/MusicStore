@@ -75,42 +75,20 @@ public class ProductService {
 		return "Categories created";
 	}
 
-	public ProductResponseBody getAllProducts(Integer page, Integer pageSize) {
+	public Page<Product> getAllProducts(Integer page, Integer pageSize) {
 
 		Pageable pageable = PageRequest.of(page, pageSize, Sort.by("dateAdded").descending());
 		Page<Product> products = productRepository.findAll(pageable);
 
-		List<ProductResponse> productResponses = new ArrayList<>();
-
-		for (Product product : products.getContent()) {
-
-			ProductResponse response = ProductResponse
-					.builder()
-					.id(product.getId())
-					.productSgid(product.getProductSgid())
-					.name(product.getProductName())
-					.description(product.getProductDescription())
-					.price(product.getProductPrice())
-					.category(product.getCategory().getName())
-					.country(product.getBuiltinCountry().getName())
-					.manufacturer(product.getManufacturer().getName())
-					.build();
-
-			productResponses.add(response);
-
-		}
-
-		ProductResponseBody productResponseBody = new ProductResponseBody();
-		productResponseBody.setProducts(productResponses);
-		return productResponseBody;
+		return products;
 
 	}
 
-	public ProductResponseBody getAllProductsByCategoryAndCountryAndManufacturer(Integer page,
+	public Page<Product> getAllProductsByCategoryAndCountryAndManufacturer(Integer page,
 																				 Integer pageSize,
 																				 String sortBy,
 																				 String direction,
-																				 String category,
+																				 Long category,
 																				 String country,
 																				 String manufacturer
 	) {
@@ -123,31 +101,11 @@ public class ProductService {
 		}
 
 		Page<Product> products = productRepository
-				.findAllByCategory_NameContainingAndBuiltinCountry_NameContainingAndManufacturer_NameContaining(
+				.findAllByCategory_IdAndBuiltinCountry_NameContainingAndManufacturer_NameContaining(
 						category, country, manufacturer, pageable);
 
-		List<ProductResponse> productResponses = new ArrayList<>();
 
-		for (Product product : products.getContent()) {
-
-			ProductResponse response = ProductResponse
-					.builder()
-					.id(product.getId())
-					.productSgid(product.getProductSgid())
-					.name(product.getProductName())
-					.description(product.getProductDescription())
-					.price(product.getProductPrice())
-					.category(product.getCategory().getName())
-					.country(product.getBuiltinCountry().getName())
-					.manufacturer(product.getManufacturer().getName())
-					.build();
-
-			productResponses.add(response);
-
-		}
-		ProductResponseBody productResponseBody = new ProductResponseBody();
-		productResponseBody.setProducts(productResponses);
-		return productResponseBody;
+		return products;
 	}
 
 

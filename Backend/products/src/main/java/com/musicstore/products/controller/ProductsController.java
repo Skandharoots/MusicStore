@@ -2,11 +2,13 @@ package com.musicstore.products.controller;
 
 import com.musicstore.products.dto.ProductRequestBody;
 import com.musicstore.products.dto.ProductResponseBody;
+import com.musicstore.products.model.Product;
 import com.musicstore.products.service.ProductService;
 import jakarta.ws.rs.OPTIONS;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.HttpHeaders;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,16 +26,16 @@ public class ProductsController {
     }
 
     @GetMapping("/get")
-    public ResponseEntity<ProductResponseBody> getAllProducts(
+    public ResponseEntity<Page<Product>> getAllProducts(
             @RequestParam(value = "page", defaultValue = "0", required = false) int page,
             @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize
     ) {
         return ResponseEntity.ok(productService.getAllProducts(page, pageSize));
     }
 
-    @GetMapping("/get/values")
-    public ResponseEntity<ProductResponseBody> getAllProductsByCategory(
-            @RequestParam(value = "category") String category,
+    @GetMapping("/get/values/{category}")
+    public ResponseEntity<Page<Product>> getAllProductsByCategory(
+            @PathVariable(value = "category") Long category,
             @RequestParam(value = "country") String country,
             @RequestParam(value = "manufacturer") String manufacturer,
             @RequestParam(value = "sortBy", defaultValue = "id") String sortBy,
@@ -53,6 +55,5 @@ public class ProductsController {
                 )
         );
     }
-
 
 }

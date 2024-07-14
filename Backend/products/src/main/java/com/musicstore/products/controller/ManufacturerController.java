@@ -19,8 +19,10 @@ public class ManufacturerController {
 	private final ManufacturerService manufacturerService;
 
 	@PostMapping("/create")
-	public String addManufacturer(@RequestHeader(HttpHeaders.AUTHORIZATION) String token,
-			@RequestBody ManufacturerRequestBody manufacturerRequestBody) {
+	public String addManufacturer(
+			@RequestHeader(HttpHeaders.AUTHORIZATION) String token,
+			@RequestBody ManufacturerRequestBody manufacturerRequestBody
+	) {
 		return manufacturerService.createManufacturers(token, manufacturerRequestBody);
 	}
 
@@ -43,7 +45,11 @@ public class ManufacturerController {
 	}
 
 	@PutMapping("/update/{manufacturerId}")
-	public String updateCategory(@PathVariable(name = "manufacturerId") Long id, @RequestBody ManufacturerRequest manufacturer) {
-		return manufacturerService.updateManufacturer(id, manufacturer);
+	public String updateCategory(
+			@RequestHeader(HttpHeaders.AUTHORIZATION) String token,
+			@PathVariable(name = "manufacturerId") Long id,
+			@RequestBody ManufacturerRequest manufacturer
+	) {
+		return manufacturerService.updateManufacturer(token, id, manufacturer);
 	}
 }

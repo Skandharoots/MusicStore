@@ -19,8 +19,10 @@ public class CountryController {
 	private final CountryService countryService;
 
 	@PostMapping("/create")
-	public String addCountry(@RequestHeader(HttpHeaders.AUTHORIZATION) String token,
-							 @RequestBody CountryRequestBody countryRequestBody) {
+	public String addCountry(
+			@RequestHeader(HttpHeaders.AUTHORIZATION) String token,
+			@RequestBody CountryRequestBody countryRequestBody
+	) {
 		return countryService.createCountry(token, countryRequestBody);
 	}
 
@@ -43,7 +45,11 @@ public class CountryController {
 	}
 
 	@PutMapping("/update/{countryId}")
-	public String updateCategory(@PathVariable(name = "countryId") Long id, @RequestBody CountryRequest country) {
-		return countryService.updateCountry(id, country);
+	public String updateCategory(
+			@RequestHeader(HttpHeaders.AUTHORIZATION) String token,
+			@PathVariable(name = "countryId") Long id,
+			@RequestBody CountryRequest country
+	) {
+		return countryService.updateCountry(token, id, country);
 	}
 }

@@ -2,6 +2,7 @@ package com.musicstore.azureservice.controller;
 
 import com.musicstore.azureservice.exceptions.AzureBlobStorageException;
 import com.musicstore.azureservice.service.AzureBlobStorageService;
+import jakarta.ws.rs.core.HttpHeaders;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,10 +17,13 @@ public class AzureBlobStorageController {
 	private final AzureBlobStorageService azureBlobStorageService;
 
 	@PostMapping("/upload")
-	public String uploadFile(@RequestPart(name = "path") String path,
-							 @RequestPart(name = "fileName") String fileName,
-							 @RequestPart(name = "file") MultipartFile file) throws AzureBlobStorageException {
-		return azureBlobStorageService.write(path, fileName, file);
+	public String uploadFile(
+			@RequestHeader(HttpHeaders.AUTHORIZATION) String token,
+			@RequestPart(name = "path") String path,
+			@RequestPart(name = "fileName") String fileName,
+			@RequestPart(name = "file") MultipartFile file
+	) throws AzureBlobStorageException {
+		return azureBlobStorageService.write(token, path, fileName, file);
 	}
 
 	@GetMapping("/read")
@@ -33,14 +37,20 @@ public class AzureBlobStorageController {
 	}
 
 	@PutMapping("/update")
-	public String updateFile(@RequestPart(name = "path") String path,
-							 @RequestPart(name = "fileName") String name,
-							 @RequestPart(name = "file") MultipartFile file) throws AzureBlobStorageException {
-		return azureBlobStorageService.update(path, name, file);
+	public String updateFile(
+			@RequestHeader(HttpHeaders.AUTHORIZATION) String token,
+			@RequestPart(name = "path") String path,
+			@RequestPart(name = "fileName") String name,
+			@RequestPart(name = "file") MultipartFile file
+	) throws AzureBlobStorageException {
+		return azureBlobStorageService.update(token, path, name, file);
 	}
 
 	@DeleteMapping("/delete")
-	public void deleteFile(@RequestParam(name = "path") String path) throws AzureBlobStorageException {
-		azureBlobStorageService.delete(path);
+	public void deleteFile(
+			@RequestHeader(HttpHeaders.AUTHORIZATION) String token,
+			@RequestParam(name = "path") String path
+	) throws AzureBlobStorageException {
+		azureBlobStorageService.delete(token, path);
 	}
 }

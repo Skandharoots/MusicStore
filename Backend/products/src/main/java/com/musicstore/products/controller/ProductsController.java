@@ -22,8 +22,10 @@ public class ProductsController {
     private final ProductService productService;
 
     @PostMapping("/create")
-    public String createProducts(@RequestHeader(HttpHeaders.AUTHORIZATION) String token,
-                                 @RequestBody ProductRequestBody products) {
+    public String createProducts(
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String token,
+            @RequestBody ProductRequestBody products
+    ) {
         return productService.createProducts(token, products);
     }
 

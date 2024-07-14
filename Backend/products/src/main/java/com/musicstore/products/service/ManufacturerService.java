@@ -54,7 +54,7 @@ public class ManufacturerService {
 		return manufacturerRepository.findAllBySearchParameters(categoryId, country);
 	}
 
-	public String updateManufacturer(Long id, ManufacturerRequest manufacturer) {
+	public String updateManufacturer(String token, Long id, ManufacturerRequest manufacturer) {
 
 		//TODO: Uncomment this for prod
 //		if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {

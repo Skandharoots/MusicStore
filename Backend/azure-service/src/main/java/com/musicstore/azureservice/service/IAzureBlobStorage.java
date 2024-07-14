@@ -7,15 +7,15 @@ import java.util.List;
 
 public interface IAzureBlobStorage {
 
-	String write(String path, String fileName, MultipartFile file) throws AzureBlobStorageException;
+	String write(String token, String path, String fileName, MultipartFile file) throws AzureBlobStorageException;
 
-	String update(String path, String fileName, MultipartFile file) throws AzureBlobStorageException;
+	String update(String token, String path, String fileName, MultipartFile file) throws AzureBlobStorageException;
 
 	byte[] read(String path) throws AzureBlobStorageException;
 
 	List<String> listFiles(String path) throws AzureBlobStorageException;
 
-	void delete(String path) throws AzureBlobStorageException;
+	void delete(String token, String path) throws AzureBlobStorageException;
 
 	void createContainer() throws AzureBlobStorageException;
 

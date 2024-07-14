@@ -32,7 +32,7 @@ public class AzureBlobStorageService implements IAzureBlobStorage {
 	private String containerName;
 
 	@Override
-	public String write(String path, String fileName, MultipartFile file) throws AzureBlobStorageException {
+	public String write(String token, String path, String fileName, MultipartFile file) throws AzureBlobStorageException {
 
 		//TODO: Uncomment this for prod
 //		if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
@@ -44,8 +44,6 @@ public class AzureBlobStorageService implements IAzureBlobStorage {
 			return path;
 		} catch (BlobStorageException e) {
 			throw new AzureBlobStorageException(e.getServiceMessage());
-		} catch (RuntimeException e) {
-			throw new AzureBlobStorageException(e.getMessage());
 		} catch (Exception e) {
 			throw new AzureBlobStorageException(e.getMessage());
 		}
@@ -61,8 +59,6 @@ public class AzureBlobStorageService implements IAzureBlobStorage {
 			return bytes;
 		} catch(BlobStorageException e){
 			throw new AzureBlobStorageException(e.getServiceMessage());
-		} catch(RuntimeException e){
-			throw new AzureBlobStorageException(e.getMessage());
 		} catch (Exception e){
 			throw new AzureBlobStorageException(e.getMessage());
 		}
@@ -79,15 +75,13 @@ public class AzureBlobStorageService implements IAzureBlobStorage {
 			return blobNamesList;
 		} catch(BlobStorageException e){
 			throw new AzureBlobStorageException(e.getServiceMessage());
-		} catch(RuntimeException e){
-			throw new AzureBlobStorageException(e.getMessage());
 		} catch (Exception e){
 			throw new AzureBlobStorageException(e.getMessage());
 		}
 	}
 
 	@Override
-	public String update(String path, String name, MultipartFile file) throws AzureBlobStorageException {
+	public String update(String token, String path, String name, MultipartFile file) throws AzureBlobStorageException {
 
 		//TODO: Uncomment this for prod
 //		if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
@@ -103,15 +97,13 @@ public class AzureBlobStorageService implements IAzureBlobStorage {
 			return path;
 		} catch(BlobStorageException e){
 			throw new AzureBlobStorageException(e.getServiceMessage());
-		} catch(RuntimeException e){
-			throw new AzureBlobStorageException(e.getMessage());
 		} catch (Exception e){
 			throw new AzureBlobStorageException(e.getMessage());
 		}
 	}
 
 	@Override
-	public void delete(String path) throws AzureBlobStorageException {
+	public void delete(String token, String path) throws AzureBlobStorageException {
 
 		//TODO: Uncomment this for prod
 //		if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
@@ -123,8 +115,6 @@ public class AzureBlobStorageService implements IAzureBlobStorage {
 			client.delete();
 		} catch(BlobStorageException e){
 			throw new AzureBlobStorageException(e.getServiceMessage());
-		} catch(RuntimeException e){
-			throw new AzureBlobStorageException(e.getMessage());
 		} catch (Exception e){
 			throw new AzureBlobStorageException(e.getMessage());
 		}
@@ -149,8 +139,6 @@ public class AzureBlobStorageService implements IAzureBlobStorage {
 			blobServiceClient.deleteBlobContainer(containerName);
 		} catch(BlobStorageException e){
 			throw new AzureBlobStorageException(e.getServiceMessage());
-		} catch(RuntimeException e){
-			throw new AzureBlobStorageException(e.getMessage());
 		} catch (Exception e){
 			throw new AzureBlobStorageException(e.getMessage());
 		}

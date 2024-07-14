@@ -54,7 +54,7 @@ public class CountryService {
 		return countryRepository.findAllBySearchParameters(categoryId, manufacturer);
 	}
 
-	public String updateCountry(Long id, CountryRequest country) {
+	public String updateCountry(String token, Long id, CountryRequest country) {
 
 		//TODO: Uncomment this for prod
 //		if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {

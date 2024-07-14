@@ -14,6 +14,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.math.BigDecimal;
+
 @Service
 @AllArgsConstructor
 public class ProductService {
@@ -74,7 +76,9 @@ public class ProductService {
 			String direction,
 			Long category,
 			String country,
-			String manufacturer
+			String manufacturer,
+			BigDecimal lowPrice,
+			BigDecimal highPrice
 	) {
 
 		Pageable pageable;
@@ -85,8 +89,8 @@ public class ProductService {
 		}
 
 		Page<Product> products = productRepository
-				.findAllByCategory_IdAndBuiltinCountry_NameContainingAndManufacturer_NameContaining(
-						category, country, manufacturer, pageable);
+				.findAllByCategory_IdAndBuiltinCountry_NameContainingAndManufacturer_NameContainingAndProductPriceBetween(
+						category, country, manufacturer, lowPrice, highPrice, pageable);
 
 
 		return products;

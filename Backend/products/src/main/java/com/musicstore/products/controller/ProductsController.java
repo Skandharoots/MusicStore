@@ -12,6 +12,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+
 @RestController
 @RequestMapping("/api/products/items")
 @AllArgsConstructor
@@ -27,8 +29,8 @@ public class ProductsController {
 
     @GetMapping("/get")
     public ResponseEntity<Page<Product>> getAllProducts(
-            @RequestParam(value = "page", defaultValue = "0", required = false) int page,
-            @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize
+            @RequestParam(value = "p", defaultValue = "0", required = false) int page,
+            @RequestParam(value = "ps", defaultValue = "10", required = false) int pageSize
     ) {
         return ResponseEntity.ok(productService.getAllProducts(page, pageSize));
     }
@@ -36,12 +38,14 @@ public class ProductsController {
     @GetMapping("/get/values/{category}")
     public ResponseEntity<Page<Product>> getAllProductsByCategory(
             @PathVariable(value = "category") Long category,
-            @RequestParam(value = "country") String country,
-            @RequestParam(value = "manufacturer") String manufacturer,
-            @RequestParam(value = "sortBy", defaultValue = "id") String sortBy,
-            @RequestParam(value = "direction", defaultValue = "DESC") String direction,
-            @RequestParam(value = "page", defaultValue = "0", required = false) int page,
-            @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize
+            @RequestParam(value = "co") String country,
+            @RequestParam(value = "ma") String manufacturer,
+            @RequestParam(value = "lp", defaultValue = "0.00", required = false) BigDecimal lp,
+            @RequestParam(value = "hp", defaultValue = "1000000.00", required = false) BigDecimal hp,
+            @RequestParam(value = "sb", defaultValue = "id", required = false) String sortBy,
+            @RequestParam(value = "dir", defaultValue = "DESC", required = false) String direction,
+            @RequestParam(value = "p", defaultValue = "0", required = false) int page,
+            @RequestParam(value = "ps", defaultValue = "10", required = false) int pageSize
     ) {
         return ResponseEntity.ok(productService
                 .getAllProductsByCategoryAndCountryAndManufacturer(
@@ -51,16 +55,18 @@ public class ProductsController {
                         direction,
                         category,
                         country,
-                        manufacturer
+                        manufacturer,
+                        lp,
+                        hp
                 )
         );
     }
 
     @GetMapping("/get/search")
     public ResponseEntity<Page<Product>> getAllProductsBySearchName(
-            @RequestParam(value = "name") String productName,
-            @RequestParam(value = "page", defaultValue = "0", required = false) int page,
-            @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize
+            @RequestParam(value = "n") String productName,
+            @RequestParam(value = "p", defaultValue = "0", required = false) int page,
+            @RequestParam(value = "ps", defaultValue = "10", required = false) int pageSize
     ) {
         return ResponseEntity.ok(productService.getAllProductsBySearchedName(page, pageSize, productName));
     }

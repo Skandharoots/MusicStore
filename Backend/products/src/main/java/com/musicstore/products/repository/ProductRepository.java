@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -20,7 +21,11 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
 	Optional<Product> findById(Long id);
 
-	Page<Product> findAllByCategory_IdAndBuiltinCountry_NameContainingAndManufacturer_NameContaining(Long category, String country, String manufacturer, Pageable pageable);
+	Page<Product> findAllByCategory_IdAndBuiltinCountry_NameContainingAndManufacturer_NameContainingAndProductPriceBetween(
+			Long category, String country, String manufacturer, BigDecimal lp, BigDecimal hp, Pageable pageable
+	);
 
-	Page<Product> findAllByProductNameContainingIgnoreCaseOrProductDescriptionContainingIgnoreCase(String productName, String description, Pageable pageable);
+	Page<Product> findAllByProductNameContainingIgnoreCaseOrProductDescriptionContainingIgnoreCase(
+			String productName, String description, Pageable pageable
+	);
 }

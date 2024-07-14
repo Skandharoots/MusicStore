@@ -56,4 +56,13 @@ public class ProductsController {
         );
     }
 
+    @GetMapping("/get/search")
+    public ResponseEntity<Page<Product>> getAllProductsBySearchName(
+            @RequestParam(value = "name") String productName,
+            @RequestParam(value = "page", defaultValue = "0", required = false) int page,
+            @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize
+    ) {
+        return ResponseEntity.ok(productService.getAllProductsBySearchedName(page, pageSize, productName));
+    }
+
 }

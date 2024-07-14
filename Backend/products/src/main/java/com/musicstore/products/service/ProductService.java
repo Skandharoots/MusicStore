@@ -94,6 +94,15 @@ public class ProductService {
 		return products;
 	}
 
+	public Page<Product> getAllProductsBySearchedName(Integer page, Integer pageSize, String productName) {
+
+		Pageable pageable = PageRequest.of(page, pageSize, Sort.by("dateAdded").descending());
+		Page<Product> products = productRepository
+				.findAllByProductNameContainingIgnoreCaseOrProductDescriptionContainingIgnoreCase(productName, productName, pageable);
+
+		return products;
+	}
+
 	private Boolean doesUserHaveAdminAuthorities(String token) {
 
 		if (token.isEmpty() || token == null || !token.startsWith("Bearer ")) {

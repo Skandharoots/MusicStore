@@ -22,4 +22,5 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
 	Page<Product> findAllByCategory_IdAndBuiltinCountry_NameContainingAndManufacturer_NameContaining(Long category, String country, String manufacturer, Pageable pageable);
 
+	Page<Product> findAllByProductNameContainingIgnoreCaseOrProductDescriptionContainingIgnoreCase(String productName, String description, Pageable pageable);
 }

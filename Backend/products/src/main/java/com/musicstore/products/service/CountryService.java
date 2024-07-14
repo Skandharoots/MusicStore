@@ -64,6 +64,10 @@ public class CountryService {
 				);
 	}
 
+	public List<Country> findAllBySearchParameters(Long categoryId, String manufacturer) {
+		return countryRepository.findAllBySearchParameters(categoryId, manufacturer);
+	}
+
 	public String updateCountry(Long id, CountryRequest country) {
 
 		//TODO: Uncomment this for prod

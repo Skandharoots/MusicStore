@@ -11,6 +11,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.reactive.function.client.WebClient;
+
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,11 +26,18 @@ public class AzureBlobStorageService implements IAzureBlobStorage {
 
 	private final BlobContainerClient blobContainerClient;
 
+	private final WebClient.Builder webClient;
+
 	@Value("${spring.cloud.azure.storage.blob.container-name}")
 	private String containerName;
 
 	@Override
 	public String write(String path, String fileName, MultipartFile file) throws AzureBlobStorageException {
+
+		//TODO: Uncomment this for prod
+//		if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
+//			throw new RuntimeException("No admin authority");
+//		}
 		try {
 			BlobClient blobClient = blobContainerClient.getBlobClient(path + "/" + fileName);
 			blobClient.upload(file.getInputStream(), false);
@@ -79,6 +88,12 @@ public class AzureBlobStorageService implements IAzureBlobStorage {
 
 	@Override
 	public String update(String path, String name, MultipartFile file) throws AzureBlobStorageException {
+
+		//TODO: Uncomment this for prod
+//		if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
+//			throw new RuntimeException("No admin authority");
+//		}
+
 		try {
 			BlobClient client = blobContainerClient.getBlobClient(path);
 			client.delete();
@@ -97,6 +112,12 @@ public class AzureBlobStorageService implements IAzureBlobStorage {
 
 	@Override
 	public void delete(String path) throws AzureBlobStorageException {
+
+		//TODO: Uncomment this for prod
+//		if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
+//			throw new RuntimeException("No admin authority");
+//		}
+
 		try {
 			BlobClient client = blobContainerClient.getBlobClient(path);
 			client.delete();
@@ -133,5 +154,23 @@ public class AzureBlobStorageService implements IAzureBlobStorage {
 		} catch (Exception e){
 			throw new AzureBlobStorageException(e.getMessage());
 		}
+	}
+
+	private Boolean doesUserHaveAdminAuthorities(String token) {
+
+		if (token.isEmpty() || !token.startsWith("Bearer ")) {
+			throw new RuntimeException("Invalid token");
+		}
+
+		String jwtToken = token.substring("Bearer ".length());
+
+		return webClient
+				.build()
+				.get()
+				.uri("http://USERS/api/v1/users/adminauthorize?token=" + jwtToken)
+				.retrieve()
+				.bodyToMono(Boolean.class)
+				.block();
+
 	}
 }

@@ -31,8 +31,6 @@ public class ProductService {
 	public String createProducts(String token, ProductRequestBody products) {
 
 		//TODO: Uncomment this for prod
-
-
 //		if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
 //			throw new RuntimeException("No admin authority");
 //		}
@@ -105,7 +103,7 @@ public class ProductService {
 
 	private Boolean doesUserHaveAdminAuthorities(String token) {
 
-		if (token.isEmpty() || token == null || !token.startsWith("Bearer ")) {
+		if (token.isEmpty() || !token.startsWith("Bearer ")) {
 			throw new RuntimeException("Invalid token");
 		}
 

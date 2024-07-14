@@ -21,21 +21,7 @@ public class ManufacturerService {
 
 	public String createManufacturers(String token, ManufacturerRequestBody manufacturers) {
 		//TODO: Uncomment this for prod
-//		if (token.isEmpty() || token == null || !token.startsWith("Bearer ")) {
-//			throw new RuntimeException("Invalid token");
-//		}
-//
-//		String jwtToken = token.substring("Bearer ".length());
-//
-//		Boolean authorized = webClient
-//				.build()
-//				.get()
-//				.uri("http://USERS/api/v1/users/adminauthorize?token=" + jwtToken)
-//				.retrieve()
-//				.bodyToMono(Boolean.class)
-//				.block();
-//
-//		if (Boolean.FALSE.equals(authorized)) {
+//		if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
 //			throw new RuntimeException("No admin authority");
 //		}
 
@@ -71,21 +57,7 @@ public class ManufacturerService {
 	public String updateManufacturer(Long id, ManufacturerRequest manufacturer) {
 
 		//TODO: Uncomment this for prod
-//		if (token.isEmpty() || token == null || !token.startsWith("Bearer ")) {
-//			throw new RuntimeException("Invalid token");
-//		}
-//
-//		String jwtToken = token.substring("Bearer ".length());
-//
-//		Boolean authorized = webClient
-//				.build()
-//				.get()
-//				.uri("http://USERS/api/v1/users/adminauthorize?token=" + jwtToken)
-//				.retrieve()
-//				.bodyToMono(Boolean.class)
-//				.block();
-//
-//		if (Boolean.FALSE.equals(authorized)) {
+//		if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
 //			throw new RuntimeException("No admin authority");
 //		}
 
@@ -100,5 +72,24 @@ public class ManufacturerService {
 		manufacturerRepository.save(manufacurerToUpdate);
 
 		return "Manufacturer updated";
+	}
+
+	private Boolean doesUserHaveAdminAuthorities(String token) {
+
+		if (token.isEmpty() || !token.startsWith("Bearer ")) {
+			throw new RuntimeException("Invalid token");
+		}
+
+		String jwtToken = token.substring("Bearer ".length());
+
+		Boolean authorized = webClient
+				.build()
+				.get()
+				.uri("http://USERS/api/v1/users/adminauthorize?token=" + jwtToken)
+				.retrieve()
+				.bodyToMono(Boolean.class)
+				.block();
+
+		return authorized;
 	}
 }

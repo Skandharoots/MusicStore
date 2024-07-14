@@ -64,6 +64,10 @@ public class ManufacturerService {
 				);
 	}
 
+	public List<Manufacturer> findAllBySearchParameters(Long categoryId, String country) {
+		return manufacturerRepository.findAllBySearchParameters(categoryId, country);
+	}
+
 	public String updateManufacturer(Long id, ManufacturerRequest manufacturer) {
 
 		//TODO: Uncomment this for prod

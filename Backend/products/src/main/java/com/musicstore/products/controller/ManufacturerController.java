@@ -34,6 +34,14 @@ public class ManufacturerController {
 		return manufacturerService.getManufacturerById(id);
 	}
 
+	@GetMapping("/get/search/{category}")
+	public List<Manufacturer> getAllBySearchParameters(
+			@PathVariable(value = "category") Long categoryId,
+			@RequestParam(value = "country") String country
+	) {
+		return manufacturerService.findAllBySearchParameters(categoryId, country);
+	}
+
 	@PutMapping("/update/{manufacturerId}")
 	public String updateCategory(@PathVariable(name = "manufacturerId") Long id, @RequestBody ManufacturerRequest manufacturer) {
 		return manufacturerService.updateManufacturer(id, manufacturer);

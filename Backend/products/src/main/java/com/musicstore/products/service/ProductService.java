@@ -72,7 +72,7 @@ public class ProductService {
 			productRepository.save(product);
 		}
 
-		return "Categories created";
+		return "Products created";
 	}
 
 	public Page<Product> getAllProducts(Integer page, Integer pageSize) {
@@ -84,13 +84,14 @@ public class ProductService {
 
 	}
 
-	public Page<Product> getAllProductsByCategoryAndCountryAndManufacturer(Integer page,
-																				 Integer pageSize,
-																				 String sortBy,
-																				 String direction,
-																				 Long category,
-																				 String country,
-																				 String manufacturer
+	public Page<Product> getAllProductsByCategoryAndCountryAndManufacturer(
+			Integer page,
+			Integer pageSize,
+			String sortBy,
+			String direction,
+			Long category,
+			String country,
+			String manufacturer
 	) {
 
 		Pageable pageable;

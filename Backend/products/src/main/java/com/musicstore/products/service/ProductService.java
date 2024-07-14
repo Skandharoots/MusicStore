@@ -14,9 +14,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Service
 @AllArgsConstructor
 public class ProductService {
@@ -34,20 +31,8 @@ public class ProductService {
 	public String createProducts(String token, ProductRequestBody products) {
 
 		//TODO: Uncomment this for prod
-//		if (token.isEmpty() || token == null || !token.startsWith("Bearer ")) {
-//			throw new RuntimeException("Invalid token");
-//		}
 //
-//		String jwtToken = token.substring("Bearer ".length());
-//
-//		Boolean authorized = webClient
-//				.build()
-//				.get()
-//				.uri("http://USERS/api/v1/users/adminauthorize?token=" + jwtToken)
-//				.retrieve()
-//				.bodyToMono(Boolean.class)
-//				.block();
-//
+//		Boolean authorized = doesUserHaveAdminAuthorities(token);
 //		if (Boolean.FALSE.equals(authorized)) {
 //			throw new RuntimeException("No admin authority");
 //		}
@@ -109,5 +94,23 @@ public class ProductService {
 		return products;
 	}
 
+	private Boolean doesUserHaveAdminAuthorities(String token) {
+
+		if (token.isEmpty() || token == null || !token.startsWith("Bearer ")) {
+			throw new RuntimeException("Invalid token");
+		}
+
+		String jwtToken = token.substring("Bearer ".length());
+
+		Boolean authorized = webClient
+				.build()
+				.get()
+				.uri("http://USERS/api/v1/users/adminauthorize?token=" + jwtToken)
+				.retrieve()
+				.bodyToMono(Boolean.class)
+				.block();
+
+		return authorized;
+	}
 
 }

@@ -77,7 +77,7 @@ public class ProductService {
 
 	public ProductResponseBody getAllProducts(Integer page, Integer pageSize) {
 
-		Pageable pageable = PageRequest.of(page, pageSize);
+		Pageable pageable = PageRequest.of(page, pageSize, Sort.by("dateAdded").descending());
 		Page<Product> products = productRepository.findAll(pageable);
 
 		List<ProductResponse> productResponses = new ArrayList<>();

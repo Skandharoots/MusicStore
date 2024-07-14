@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import java.math.BigDecimal;
+import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
@@ -23,25 +25,34 @@ public class Product {
 			strategy = GenerationType.IDENTITY
 	)
 	private Long id;
+
 	private UUID productSgid = UUID.randomUUID();
+
 	@NonNull
 	private String productName;
+
 	@NonNull
 	private String productDescription;
+
 	@NonNull
 	private BigDecimal productPrice;
+
+	private LocalDateTime dateAdded = LocalDateTime.now();
+
 	@ManyToOne
 	@JoinColumn(
 			nullable = false,
 			name = "manufacturer_id"
 	)
 	private Manufacturer manufacturer;
+
 	@ManyToOne
 	@JoinColumn(
 			nullable = false,
 			name = "country_id"
 	)
 	private Country builtinCountry;
+
 	@ManyToOne
 	@JoinColumn(
 			nullable = false,

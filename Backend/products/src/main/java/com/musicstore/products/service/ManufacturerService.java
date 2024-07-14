@@ -82,7 +82,7 @@ public class ManufacturerService {
 
 		String jwtToken = token.substring("Bearer ".length());
 
-		Boolean authorized = webClient
+		return webClient
 				.build()
 				.get()
 				.uri("http://USERS/api/v1/users/adminauthorize?token=" + jwtToken)
@@ -90,6 +90,5 @@ public class ManufacturerService {
 				.bodyToMono(Boolean.class)
 				.block();
 
-		return authorized;
 	}
 }

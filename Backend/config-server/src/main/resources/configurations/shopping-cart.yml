@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/products
+    url: jdbc:mysql://localhost:3306/shoppingcarts
     username: root
     password: lapunia2121
   jpa:

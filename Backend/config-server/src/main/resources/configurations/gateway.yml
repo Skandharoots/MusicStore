@@ -28,3 +28,9 @@ spring:
             - Path=/api/azure/**
           filters:
             - JwtAuthFilter
+        - id: shopping-cart
+          uri: lb://shopping-cart
+          predicates:
+            - Path=/api/cart/**
+          filters:
+            - JwtAuthFilter

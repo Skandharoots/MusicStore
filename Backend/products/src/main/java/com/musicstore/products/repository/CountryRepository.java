@@ -25,4 +25,5 @@ public interface CountryRepository extends JpaRepository<Country, Long> {
 			"JOIN category ca ON p.category_id=ca.id " +
 			"WHERE ca.id = ?1 AND m.name LIKE %?2%")
 	List<Country> findAllBySearchParameters(Long categoryId, String manufacturer);
+
 }

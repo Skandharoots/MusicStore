@@ -1,11 +1,9 @@
 package com.musicstore.products.controller;
 
+import com.musicstore.products.dto.ProductRequest;
 import com.musicstore.products.dto.ProductRequestBody;
-import com.musicstore.products.dto.ProductResponseBody;
 import com.musicstore.products.model.Product;
 import com.musicstore.products.service.ProductService;
-import jakarta.ws.rs.OPTIONS;
-import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.HttpHeaders;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -72,5 +70,23 @@ public class ProductsController {
     ) {
         return ResponseEntity.ok(productService.getAllProductsBySearchedName(page, pageSize, productName));
     }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<String> updateProduct(
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String token,
+            @PathVariable(name = "id") Long id,
+            @RequestBody ProductRequest product
+    ) {
+        return productService.updateProduct(token, id, product);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteProduct(
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String token,
+            @PathVariable(name = "id") Long id
+    ) {
+        return productService.deleteProduct(token, id);
+    }
+    
 
 }

@@ -4,13 +4,13 @@ import com.musicstore.products.dto.CategoryRequest;
 import com.musicstore.products.dto.CategoryRequestBody;
 import com.musicstore.products.model.Category;
 import com.musicstore.products.repository.CategoryRepository;
+import jakarta.ws.rs.NotFoundException;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
-import java.util.Objects;
 
 @Service
 @AllArgsConstructor
@@ -48,11 +48,11 @@ public class CategoryService {
 		return categoryRepository
 				.findById(id)
 				.orElseThrow(
-						() -> new IllegalArgumentException("Category not found")
+						() -> new NotFoundException("Category not found")
 				);
 	}
 
-	public String updateCategory(Long id, CategoryRequest category) {
+	public ResponseEntity<String> updateCategory(String token, Long id, CategoryRequest category) {
 
 		//TODO: Uncomment this for prod
 //		if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
@@ -62,19 +62,36 @@ public class CategoryService {
 		Category categoryToUpdate = categoryRepository
 				.findById(id)
 				.orElseThrow(
-						() -> new IllegalArgumentException("Category not found")
+						() -> new NotFoundException("Category not found")
 				);
 
 		categoryToUpdate.setName(category.getCategoryName());
 
 		categoryRepository.save(categoryToUpdate);
 
-		return "Category updated";
+		return ResponseEntity.ok("Category updated");
+	}
+
+	public ResponseEntity<String> deleteCategory(String token, Long id) {
+
+		//TODO: Uncomment this for prod
+//		if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
+//			throw new RuntimeException("No admin authority");
+//		}
+
+		Category category = categoryRepository.findById(id)
+						.orElseThrow(
+								() -> new NotFoundException("Category not found")
+						);
+
+		categoryRepository.delete(category);
+
+		return ResponseEntity.ok("Category deleted successfully");
 	}
 
 	private Boolean doesUserHaveAdminAuthorities(String token) {
 
-		if (token.isEmpty() || !token.startsWith("Bearer ")) {
+		if (!token.startsWith("Bearer ")) {
 			throw new RuntimeException("Invalid token");
 		}
 

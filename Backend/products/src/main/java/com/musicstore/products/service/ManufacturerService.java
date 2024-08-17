@@ -4,9 +4,10 @@ import com.musicstore.products.dto.ManufacturerRequest;
 import com.musicstore.products.dto.ManufacturerRequestBody;
 import com.musicstore.products.model.Manufacturer;
 import com.musicstore.products.repository.ManufacturerRepository;
+import jakarta.ws.rs.NotFoundException;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
@@ -46,7 +47,7 @@ public class ManufacturerService {
 		return manufacturerRepository
 				.findById(id)
 				.orElseThrow(
-						() -> new IllegalArgumentException("Manufacturer not found")
+						() -> new NotFoundException("Manufacturer not found")
 				);
 	}
 
@@ -54,7 +55,7 @@ public class ManufacturerService {
 		return manufacturerRepository.findAllBySearchParameters(categoryId, country);
 	}
 
-	public String updateManufacturer(String token, Long id, ManufacturerRequest manufacturer) {
+	public ResponseEntity<String> updateManufacturer(String token, Long id, ManufacturerRequest manufacturer) {
 
 		//TODO: Uncomment this for prod
 //		if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
@@ -64,19 +65,36 @@ public class ManufacturerService {
 		Manufacturer manufacurerToUpdate = manufacturerRepository
 				.findById(id)
 				.orElseThrow(
-						() -> new IllegalArgumentException("Manufacturer not found")
+						() -> new NotFoundException("Manufacturer not found")
 				);
 
 		manufacurerToUpdate.setName(manufacturer.getName());
 
 		manufacturerRepository.save(manufacurerToUpdate);
 
-		return "Manufacturer updated";
+		return ResponseEntity.ok("Manufacturer updated");
+	}
+
+	public ResponseEntity<String> deleteManufacturer(String token, Long id) {
+		//TODO: Uncomment this for prod
+//		if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
+//			throw new RuntimeException("No admin authority");
+//		}
+
+		Manufacturer manufacurerToDelete = manufacturerRepository
+				.findById(id)
+				.orElseThrow(
+						() -> new NotFoundException("Manufacturer not found")
+				);
+
+		manufacturerRepository.delete(manufacurerToDelete);
+
+		return ResponseEntity.ok("Manufacturer deleted");
 	}
 
 	private Boolean doesUserHaveAdminAuthorities(String token) {
 
-		if (token.isEmpty() || !token.startsWith("Bearer ")) {
+		if (!token.startsWith("Bearer ")) {
 			throw new RuntimeException("Invalid token");
 		}
 

@@ -1,12 +1,12 @@
 package com.musicstore.products.controller;
 
-import com.musicstore.products.dto.CategoryRequest;
 import com.musicstore.products.dto.ManufacturerRequest;
 import com.musicstore.products.dto.ManufacturerRequestBody;
 import com.musicstore.products.model.Manufacturer;
 import com.musicstore.products.service.ManufacturerService;
 import jakarta.ws.rs.core.HttpHeaders;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -45,11 +45,19 @@ public class ManufacturerController {
 	}
 
 	@PutMapping("/update/{manufacturerId}")
-	public String updateCategory(
+	public ResponseEntity<String> updateCategory(
 			@RequestHeader(HttpHeaders.AUTHORIZATION) String token,
 			@PathVariable(name = "manufacturerId") Long id,
 			@RequestBody ManufacturerRequest manufacturer
 	) {
 		return manufacturerService.updateManufacturer(token, id, manufacturer);
+	}
+
+	@DeleteMapping("/delete/{id}")
+	public ResponseEntity<String> deleteManufacturer(
+			@RequestHeader(HttpHeaders.AUTHORIZATION) String token,
+			@PathVariable(name = "id") Long id
+	) {
+		return manufacturerService.deleteManufacturer(token, id);
 	}
 }

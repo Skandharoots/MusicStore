@@ -6,6 +6,7 @@ import com.musicstore.products.model.Category;
 import com.musicstore.products.service.CategoryService;
 import jakarta.ws.rs.core.HttpHeaders;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -33,8 +34,19 @@ public class CategoryController {
 	}
 
 	@PutMapping("/{categoryId}")
-	public String updateCategory(@PathVariable(name = "categoryId") Long id, @RequestBody CategoryRequest category) {
-		return categoryService.updateCategory(id, category);
+	public ResponseEntity<String> updateCategory(
+			@RequestHeader(HttpHeaders.AUTHORIZATION) String token,
+			@PathVariable(name = "categoryId") Long id,
+			@RequestBody CategoryRequest category
+	) {
+		return categoryService.updateCategory(token, id, category);
+	}
+
+	@DeleteMapping("/delete/{id}")
+	public ResponseEntity<String> deleteCategory(
+			@RequestHeader(HttpHeaders.AUTHORIZATION) String token,
+			@PathVariable(name = "id") Long id) {
+		return categoryService.deleteCategory(token, id);
 	}
 
 }

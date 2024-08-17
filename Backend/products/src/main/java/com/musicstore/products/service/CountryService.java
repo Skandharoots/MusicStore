@@ -4,9 +4,10 @@ import com.musicstore.products.dto.CountryRequest;
 import com.musicstore.products.dto.CountryRequestBody;
 import com.musicstore.products.model.Country;
 import com.musicstore.products.repository.CountryRepository;
+import jakarta.ws.rs.NotFoundException;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
@@ -46,7 +47,7 @@ public class CountryService {
 		return countryRepository
 				.findById(id)
 				.orElseThrow(
-						() -> new IllegalArgumentException("Country not found")
+						() -> new NotFoundException("Country not found")
 				);
 	}
 
@@ -54,7 +55,7 @@ public class CountryService {
 		return countryRepository.findAllBySearchParameters(categoryId, manufacturer);
 	}
 
-	public String updateCountry(String token, Long id, CountryRequest country) {
+	public ResponseEntity<String> updateCountry(String token, Long id, CountryRequest country) {
 
 		//TODO: Uncomment this for prod
 //		if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
@@ -64,19 +65,36 @@ public class CountryService {
 		Country countryToUpdate = countryRepository
 				.findById(id)
 				.orElseThrow(
-						() -> new IllegalArgumentException("Country not found")
+						() -> new NotFoundException("Country not found")
 				);
 
 		countryToUpdate.setName(country.getName());
 
 		countryRepository.save(countryToUpdate);
 
-		return "Country updated";
+		return ResponseEntity.ok("Country updated");
+	}
+
+	public ResponseEntity<String> deleteCountry(String token, Long id) {
+		//TODO: Uncomment this for prod
+//		if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
+//			throw new RuntimeException("No admin authority");
+//		}
+
+		Country country = countryRepository
+				.findById(id)
+				.orElseThrow(
+						() -> new NotFoundException("Country not found")
+				);
+
+		countryRepository.delete(country);
+
+		return ResponseEntity.ok("Country deleted");
 	}
 
 	private Boolean doesUserHaveAdminAuthorities(String token) {
 
-		if (token.isEmpty() || !token.startsWith("Bearer ")) {
+		if (!token.startsWith("Bearer ")) {
 			throw new RuntimeException("Invalid token");
 		}
 

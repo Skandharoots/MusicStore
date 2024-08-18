@@ -8,6 +8,7 @@ import com.musicstore.products.model.Product;
 import com.musicstore.products.repository.ProductRepository;
 import jakarta.ws.rs.NotFoundException;
 import lombok.AllArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -70,6 +71,15 @@ public class ProductService {
 
 	}
 
+	public ResponseEntity<Product> getProductById(Long id) {
+		Product product = productRepository.findById(id)
+				.orElseThrow(
+						() -> new NotFoundException("Product not found")
+				);
+
+		return ResponseEntity.ok(product);
+	}
+
 	public Page<Product> getAllProductsByCategoryAndCountryAndManufacturer(
 			Integer page,
 			Integer pageSize,
@@ -101,6 +111,10 @@ public class ProductService {
 
         return productRepository
 				.findAllByProductNameContainingIgnoreCaseOrProductDescriptionContainingIgnoreCase(productName, productName, pageable);
+	}
+
+	public ResponseEntity<BigDecimal> getMaxPriceForProducts(Long category, String country, String manufacturer) {
+		return ResponseEntity.ok(productRepository.findMaxProductPrice(category, country, manufacturer));
 	}
 
 	public ResponseEntity<String> updateProduct(String token, Long id, ProductRequest product) {

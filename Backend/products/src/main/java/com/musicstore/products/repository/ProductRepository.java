@@ -28,4 +28,11 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 	Page<Product> findAllByProductNameContainingIgnoreCaseOrProductDescriptionContainingIgnoreCase(
 			String productName, String description, Pageable pageable
 	);
+
+	@Query(nativeQuery = true, value = "SELECT MAX(p.product_price) FROM product p " +
+			"LEFT JOIN category ca ON p.category_id = ca.id " +
+			"LEFT JOIN country co ON p.country_id = co.id " +
+			"LEFT JOIN manufacturer ma ON p.manufacturer_id = ma.id " +
+			"WHERE p.category_id = ?1 AND co.name LIKE %?2% AND ma.name LIKE %?3%")
+	BigDecimal findMaxProductPrice(Long category, String country, String manufacturer);
 }

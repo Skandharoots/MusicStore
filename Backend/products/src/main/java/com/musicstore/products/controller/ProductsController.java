@@ -35,6 +35,22 @@ public class ProductsController {
         return ResponseEntity.ok(productService.getAllProducts(page, pageSize));
     }
 
+    @GetMapping("/get/{id}")
+    public ResponseEntity<Product> getProductById(
+            @PathVariable(name = "id") Long id
+    ) {
+        return productService.getProductById(id);
+    }
+
+    @GetMapping("/get/max_price/{category}")
+    public ResponseEntity<BigDecimal> getMaxPrice(
+            @PathVariable(value = "category") Long category,
+            @RequestParam(value = "co") String country,
+            @RequestParam(value = "ma") String manufacturer
+    ) {
+        return productService.getMaxPriceForProducts(category, country, manufacturer);
+    }
+
     @GetMapping("/get/values/{category}")
     public ResponseEntity<Page<Product>> getAllProductsByCategory(
             @PathVariable(value = "category") Long category,

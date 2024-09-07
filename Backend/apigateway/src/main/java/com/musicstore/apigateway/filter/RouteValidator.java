@@ -30,6 +30,7 @@ public class RouteValidator {
             "/api/azure/list",
             "/api/azure/update",
             "/api/azure/delete",
+            "/api/order/get/**",
             "/eureka"
     );
 

@@ -4,6 +4,7 @@ import com.musicstore.shoppingcart.dto.CartRequest;
 import com.musicstore.shoppingcart.dto.CartUpdateRequest;
 import com.musicstore.shoppingcart.model.Cart;
 import com.musicstore.shoppingcart.repository.CartRepository;
+import jakarta.ws.rs.NotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -20,13 +21,11 @@ public class CartService {
 
     private final WebClient.Builder webClient;
 
-    private Optional<Cart> findById(Long id) {
+    private Cart findById(Long id) {
 
-        Optional<Cart> cart = cartRepository.findCartById(id);
-        if (!cart.isPresent()) {
-            throw new RuntimeException("Cart not found");
-        }
-        return cart;
+        return cartRepository.findCartById(id).orElseThrow(
+                () -> new NotFoundException("Cart not found")
+        );
     }
 
     public ResponseEntity<List<Cart>> findAllCartsByUserUuid(UUID userUuid) {
@@ -51,6 +50,7 @@ public class CartService {
             Cart newCart = new Cart(
                     cartRequest.getUserUuid(),
                     cartRequest.getProductSgid(),
+                    cartRequest.getProductPrice(),
                     cartRequest.getProductName(),
                     cartRequest.getQuantity()
             );
@@ -63,10 +63,10 @@ public class CartService {
 
     public String updateCart(Long id, CartUpdateRequest cartUpdateRequest) {
 
-        Optional<Cart> cart = findById(id);
+        Cart cart = findById(id);
 
-        cart.get().setQuantity(cartUpdateRequest.getQuantity());
-        cartRepository.save(cart.get());
+        cart.setQuantity(cartUpdateRequest.getQuantity());
+        cartRepository.save(cart);
 
         return "Cart item updated successfully";
     }

@@ -34,3 +34,7 @@ spring:
             - Path=/api/cart/**
           filters:
             - JwtAuthFilter
+        - id: orders
+          uri: lb://orders
+          predicates:
+            - Path=/api/order/**

@@ -26,7 +26,7 @@ public class Product {
 	)
 	private Long id;
 
-	private UUID productSgid = UUID.randomUUID();
+	private UUID productSkuId = UUID.randomUUID();
 
 	@NonNull
 	private String productName;

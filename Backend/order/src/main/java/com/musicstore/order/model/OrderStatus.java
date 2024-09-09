@@ -1,4 +1,4 @@
-package com.example.order.model;
+package com.musicstore.order.model;
 
 public enum OrderStatus {
 

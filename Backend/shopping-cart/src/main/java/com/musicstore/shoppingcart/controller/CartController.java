@@ -39,12 +39,12 @@ public class CartController {
         return cartService.updateCart(id, cartRequest);
     }
 
-    @DeleteMapping("/delete/{userUuid}/{productSgid}")
+    @DeleteMapping("/delete/{userUuid}/{productSkuId}")
     public String deleteCartByUserUuidAndProductSgId(
             @PathVariable(value = "userUuid") UUID userUuid,
-            @PathVariable(value = "productSgid") UUID productSgid
+            @PathVariable(value = "productSkuId") UUID productSkuId
     ) {
-        return cartService.deleteCartByUserUuidAndProductUuid(userUuid, productSgid);
+        return cartService.deleteCartByUserUuidAndProductUuid(userUuid, productSkuId);
     }
 
     @DeleteMapping("/clear/{userUuid}")

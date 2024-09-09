@@ -43,6 +43,7 @@ public class WebAppConfig {
                         .requestMatchers(HttpMethod.PUT, "/api/products/manufacturers/update/**").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/api/products/manufacturers/delete/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/products/countries/create").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/products/items/verify_availability").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/products/countries/get").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/products/countries/get/**").permitAll()
                         .requestMatchers(HttpMethod.PUT, "/api/products/countries/update/**").permitAll()

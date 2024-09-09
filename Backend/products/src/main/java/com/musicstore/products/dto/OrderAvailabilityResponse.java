@@ -1,17 +1,18 @@
-package com.example.order.dto;
+package com.musicstore.products.dto;
 
-import com.example.order.model.OrderStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderUpdateRequest {
+public class OrderAvailabilityResponse {
 
-    private OrderStatus status;
+    private List<OrderAvailabilityListItem> availableItems;
 
 }

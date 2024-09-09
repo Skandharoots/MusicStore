@@ -1,10 +1,11 @@
-package com.example.order.dto;
+package com.musicstore.order.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -31,6 +32,8 @@ public class OrderRequest {
     private String city;
 
     private String zipCode;
+
+    private BigDecimal orderTotalPrice;
 
     private List<OrderLineItemsDTO> items;
 }

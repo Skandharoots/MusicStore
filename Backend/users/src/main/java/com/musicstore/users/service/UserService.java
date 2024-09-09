@@ -7,6 +7,7 @@ import com.musicstore.users.mail.EmailService;
 import com.musicstore.users.model.ConfirmationToken;
 import com.musicstore.users.model.Users;
 import com.musicstore.users.repository.UserRepository;
+import com.musicstore.users.security.config.VariablesConfiguration;
 import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -28,6 +29,7 @@ public class UserService implements UserDetailsService {
     private final ConfirmationTokenService confirmationTokenService;
     private final EmailService emailService;
     private final JwtService jwtService;
+    private final VariablesConfiguration variablesConfiguration;
 
 
     @Override
@@ -53,7 +55,7 @@ public class UserService implements UserDetailsService {
                 if (token.isPresent()) {
                     ConfirmationToken confirmationToken = token.get();
 
-                    String link = "http://localhost:8222/api/v1/users/register/confirm?token="
+                    String link = variablesConfiguration.getAccountConfirmUrl()
                             + confirmationToken.getToken();
 
                     emailService.send(existingUser.getEmail(),
@@ -85,7 +87,7 @@ public class UserService implements UserDetailsService {
 
             confirmationTokenService.saveConfirmationToken(token);
 
-            String link = "http://localhost:8222/api/v1/users/register/confirm?token=" + token.getToken();
+            String link = variablesConfiguration.getAccountConfirmUrl() + token.getToken();
 
             emailService.send(
                     users.getEmail(),

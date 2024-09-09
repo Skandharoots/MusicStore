@@ -1,4 +1,4 @@
-package com.example.order.security;
+package com.musicstore.order.security;
 
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;

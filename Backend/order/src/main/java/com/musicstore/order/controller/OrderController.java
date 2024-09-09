@@ -1,10 +1,10 @@
-package com.example.order.controller;
+package com.musicstore.order.controller;
 
-import com.example.order.dto.OrderRequest;
-import com.example.order.dto.OrderResponse;
-import com.example.order.dto.OrderUpdateRequest;
-import com.example.order.model.Order;
-import com.example.order.service.OrderService;
+import com.musicstore.order.dto.OrderRequest;
+import com.musicstore.order.dto.OrderResponse;
+import com.musicstore.order.dto.OrderUpdateRequest;
+import com.musicstore.order.model.Order;
+import com.musicstore.order.service.OrderService;
 import jakarta.ws.rs.core.HttpHeaders;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,8 +21,12 @@ public class OrderController {
     private final OrderService orderService;
 
     @PostMapping("/create")
-    public String createOrder(@RequestBody OrderRequest orderRequest) {
-        return orderService.createOrder(orderRequest);
+    public String createOrder(
+            @RequestBody OrderRequest orderRequest,
+            @CookieValue("XSRF-TOKEN") String csrfToken,
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String jwtToken
+    ) {
+        return orderService.createOrder(orderRequest, csrfToken, jwtToken);
     }
 
     @GetMapping("/get/all/{user-id}")

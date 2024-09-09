@@ -1,4 +1,4 @@
-package com.example.order.model;
+package com.musicstore.order.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -44,6 +45,8 @@ public class Order {
 
     private String zipCode;
 
+    private BigDecimal totalPrice;
+
     private OrderStatus status = OrderStatus.IN_PROGRESS;
 
     @OneToMany(cascade = CascadeType.ALL)
@@ -59,6 +62,7 @@ public class Order {
             String streetAddress,
             String city,
             String zipCode,
+            BigDecimal totalPrice,
             List<OrderLineItems> orderItems
     ) {
         this.userIdentifier = userIdentifier;
@@ -70,6 +74,7 @@ public class Order {
         this.streetAddress = streetAddress;
         this.city = city;
         this.zipCode = zipCode;
+        this.totalPrice = totalPrice;
         this.orderItems = orderItems;
     }
 }

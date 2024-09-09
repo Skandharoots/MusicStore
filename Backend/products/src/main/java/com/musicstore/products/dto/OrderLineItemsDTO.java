@@ -1,5 +1,6 @@
 package com.musicstore.products.dto;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,14 +13,9 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductRequest {
+public class OrderLineItemsDTO {
 
-	private String productName;
-	private String description;
-	private BigDecimal price;
-	private Integer quantity;
-	private Long manufacturerId;
-	private Long countryId;
-	private Long categoryId;
-
+    private UUID productSkuId;
+    private Integer quantity;
+    private BigDecimal unitPrice;
 }

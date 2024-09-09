@@ -1,5 +1,6 @@
 package com.musicstore.users.service;
 
+import com.musicstore.users.security.config.VariablesConfiguration;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -11,17 +12,19 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 @Component
 public class JwtService {
 
-    public static final String SECRET =
-            "5367566B59703373367639792F423F4528482B4D6251655468576D5A71347437";
+    private final VariablesConfiguration variablesConfiguration;
 
-    public JwtService() {
+    public JwtService(VariablesConfiguration variablesConfiguration) {
 
+        this.variablesConfiguration = variablesConfiguration;
     }
 
     public String generateToken(UserDetails userDetails) {
@@ -75,7 +78,7 @@ public class JwtService {
     }
 
     private Key getSignKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(SECRET);
+        byte[] keyBytes = Decoders.BASE64.decode(variablesConfiguration.getJwtSecret());
         return Keys.hmacShaKeyFor(keyBytes);
     }
 

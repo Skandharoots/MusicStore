@@ -1,18 +1,18 @@
-package com.example.order.service;
+package com.musicstore.order.service;
 
-import com.example.order.dto.OrderLineItemsDTO;
-import com.example.order.dto.OrderRequest;
-import com.example.order.dto.OrderResponse;
-import com.example.order.dto.OrderUpdateRequest;
-import com.example.order.model.Order;
-import com.example.order.model.OrderLineItems;
-import com.example.order.repository.OrderRepository;
+import com.musicstore.order.dto.*;
+import com.musicstore.order.model.Order;
+import com.musicstore.order.model.OrderLineItems;
+import com.musicstore.order.repository.OrderRepository;
+import com.musicstore.order.security.config.VariablesConfiguration;
 import jakarta.ws.rs.NotFoundException;
 import lombok.AllArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,8 +24,43 @@ public class OrderService {
 
     private final WebClient.Builder webClient;
 
+    private final VariablesConfiguration variablesConfiguration;
 
-    public String createOrder(OrderRequest request) {
+    public String createOrder(OrderRequest request, String csrfToken, String jwtToken) {
+
+        List<String> itemsNotAvailable = new ArrayList<>();
+
+        if (!jwtToken.startsWith("Bearer ")) {
+            throw new RuntimeException("Invalid token");
+        }
+
+        String jwt = jwtToken.substring("Bearer ".length());
+
+        OrderAvailabilityResponse response = webClient.build()
+                .post()
+                .uri(variablesConfiguration.getOrderCheckUrl())
+                .headers(httpHeaders -> {
+                    httpHeaders.setBearerAuth(jwt);
+                    httpHeaders.set("X-XSRF-TOKEN", csrfToken);
+                })
+                .cookie("XSRF-TOKEN", csrfToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(request)
+                .retrieve()
+                .bodyToMono(OrderAvailabilityResponse.class)
+                .block();
+
+        assert response != null;
+        response.getAvailableItems().forEach(
+                item -> {
+                    if (!item.getIsAvailable()) {
+                        itemsNotAvailable.add(item.getProductSkuId().toString());
+                    }
+                });
+
+        if (!itemsNotAvailable.isEmpty()) {
+            throw new IllegalArgumentException("Not all items are available. Items not available - " + itemsNotAvailable);
+        }
 
         Order order = new Order(
                 request.getUserIdentifier(),
@@ -37,6 +72,7 @@ public class OrderService {
                 request.getStreetAddress(),
                 request.getCity(),
                 request.getZipCode(),
+                request.getOrderTotalPrice(),
                 request.getItems()
                         .stream()
                         .map(this::mapToDto)
@@ -131,7 +167,7 @@ public class OrderService {
         return webClient
                 .build()
                 .get()
-                .uri("http://USERS/api/v1/users/adminauthorize?token=" + jwtToken)
+                .uri(variablesConfiguration.getAdminVerificationUrl() + jwtToken)
                 .retrieve()
                 .bodyToMono(Boolean.class)
                 .block();

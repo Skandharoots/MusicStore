@@ -12,7 +12,7 @@ import java.util.UUID;
 public class CartRequest {
 
     private UUID userUuid;
-    private UUID productSgid;
+    private UUID productSkuId;
     private BigDecimal productPrice;
     private String productName;
     private Integer quantity;

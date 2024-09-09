@@ -6,9 +6,9 @@ import com.musicstore.products.model.Country;
 import com.musicstore.products.model.Manufacturer;
 import com.musicstore.products.model.Product;
 import com.musicstore.products.repository.ProductRepository;
+import com.musicstore.products.security.config.VariablesConfiguration;
 import jakarta.ws.rs.NotFoundException;
 import lombok.AllArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +18,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @Service
 @AllArgsConstructor
@@ -32,6 +36,8 @@ public class ProductService {
 	private final ManufacturerService manufacturerService;
 
 	private final WebClient.Builder webClient;
+
+	private final VariablesConfiguration variablesConfiguration;
 
 	public String createProducts(String token, ProductRequestBody products) {
 
@@ -52,6 +58,7 @@ public class ProductService {
 					productRequest.getProductName(),
 					productRequest.getDescription(),
 					productRequest.getPrice(),
+					productRequest.getQuantity(),
 					manufacturer,
 					country,
 					category
@@ -71,8 +78,8 @@ public class ProductService {
 
 	}
 
-	public ResponseEntity<Product> getProductById(Long id) {
-		Product product = productRepository.findById(id)
+	public ResponseEntity<Product> getProductById(UUID id) {
+		Product product = productRepository.findByProductSkuId(id)
 				.orElseThrow(
 						() -> new NotFoundException("Product not found")
 				);
@@ -105,16 +112,73 @@ public class ProductService {
 						category, country, manufacturer, lowPrice, highPrice, pageable);
 	}
 
-	public Page<Product> getAllProductsBySearchedName(Integer page, Integer pageSize, String productName) {
+	public Page<Product> getAllProductsBySearchedPhrase(Integer page, Integer pageSize, String searchPhrase) {
 
 		Pageable pageable = PageRequest.of(page, pageSize, Sort.by("dateAdded").descending());
 
         return productRepository
-				.findAllByProductNameContainingIgnoreCaseOrProductDescriptionContainingIgnoreCase(productName, productName, pageable);
+				.findAllByProductNameContainingIgnoreCaseOrProductDescriptionContainingIgnoreCase(
+						searchPhrase,
+						searchPhrase,
+						pageable
+				);
+	}
+
+	public ResponseEntity<OrderAvailabilityResponse> verifyAvailabilityOfOrderProducts(OrderRequest orderRequest) {
+
+		OrderAvailabilityResponse orderAvailabilityResponse = new OrderAvailabilityResponse();
+		List<OrderAvailabilityListItem> items = new ArrayList<>();
+		AtomicBoolean allAreAvailable = new AtomicBoolean(true);
+
+		orderRequest.getItems()
+				.forEach(orderLineItemsDTO -> {
+					Product product = productRepository.findByProductSkuId(
+							orderLineItemsDTO.getProductSkuId())
+							.orElseThrow(
+									() -> new NotFoundException("Product not found")
+							);
+					OrderAvailabilityListItem orderAvailabilityListItem;
+					if (product.getInStock() - orderLineItemsDTO.getQuantity() >= 0) {
+							orderAvailabilityListItem =
+								new OrderAvailabilityListItem(
+										product.getProductSkuId(),
+										true
+								);
+					} else {
+							orderAvailabilityListItem =
+								new OrderAvailabilityListItem(
+										product.getProductSkuId(),
+										false
+								);
+							allAreAvailable.set(false);
+					}
+					items.add(orderAvailabilityListItem);
+				});
+		orderAvailabilityResponse.setAvailableItems(items);
+
+		if (allAreAvailable.get()) {
+			orderRequest.getItems()
+					.forEach(orderLineItemsDTO -> {
+						Product product = productRepository.findByProductSkuId(
+										orderLineItemsDTO.getProductSkuId())
+								.orElseThrow(
+										() -> new NotFoundException("Product not found")
+								);
+						product.setInStock(product.getInStock() - orderLineItemsDTO.getQuantity());
+						productRepository.save(product);
+					});
+		}
+
+		return ResponseEntity.ok(orderAvailabilityResponse);
+
 	}
 
 	public ResponseEntity<BigDecimal> getMaxPriceForProducts(Long category, String country, String manufacturer) {
-		return ResponseEntity.ok(productRepository.findMaxProductPrice(category, country, manufacturer));
+		return ResponseEntity.ok(productRepository
+				.findMaxProductPrice(
+						category,
+						country,
+						manufacturer));
 	}
 
 	public ResponseEntity<String> updateProduct(String token, Long id, ProductRequest product) {
@@ -168,7 +232,7 @@ public class ProductService {
 		return webClient
 				.build()
 				.get()
-				.uri("http://USERS/api/v1/users/adminauthorize?token=" + jwtToken)
+				.uri(variablesConfiguration.getAdminUrl() + jwtToken)
 				.retrieve()
 				.bodyToMono(Boolean.class)
 				.block();

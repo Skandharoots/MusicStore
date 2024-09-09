@@ -1,4 +1,4 @@
-package com.example.order.security.config;
+package com.musicstore.order.security.config;
 
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;

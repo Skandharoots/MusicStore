@@ -1,6 +1,6 @@
-package com.example.order.repository;
+package com.musicstore.order.repository;
 
-import com.example.order.model.Order;
+import com.musicstore.order.model.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

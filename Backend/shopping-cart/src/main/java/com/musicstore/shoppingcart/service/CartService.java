@@ -19,8 +19,6 @@ public class CartService {
 
     private final CartRepository cartRepository;
 
-    private final WebClient.Builder webClient;
-
     private Cart findById(Long id) {
 
         return cartRepository.findCartById(id).orElseThrow(
@@ -36,9 +34,9 @@ public class CartService {
     public String addCart(CartRequest cartRequest) {
 
         Optional<Cart> foundCart = cartRepository
-                .findCartByUserUuidAndProductSgid(
+                .findCartByUserUuidAndProductSkuId(
                         cartRequest.getUserUuid(),
-                        cartRequest.getProductSgid()
+                        cartRequest.getProductSkuId()
                 );
 
         if (foundCart.isPresent()) {
@@ -49,7 +47,7 @@ public class CartService {
         } else {
             Cart newCart = new Cart(
                     cartRequest.getUserUuid(),
-                    cartRequest.getProductSgid(),
+                    cartRequest.getProductSkuId(),
                     cartRequest.getProductPrice(),
                     cartRequest.getProductName(),
                     cartRequest.getQuantity()
@@ -71,9 +69,9 @@ public class CartService {
         return "Cart item updated successfully";
     }
 
-    public String deleteCartByUserUuidAndProductUuid(UUID userUuid, UUID productSgid) {
+    public String deleteCartByUserUuidAndProductUuid(UUID userUuid, UUID productSkuId) {
 
-        cartRepository.deleteCartByUserUuidAndProductSgid(userUuid, productSgid);
+        cartRepository.deleteCartByUserUuidAndProductSkuId(userUuid, productSkuId);
 
         return "Cart item deleted successfully";
     }

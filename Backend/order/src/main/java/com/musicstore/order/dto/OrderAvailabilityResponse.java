@@ -1,0 +1,19 @@
+package com.musicstore.order.dto;
+
+import com.musicstore.order.dto.OrderAvailabilityListItem;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.List;
+
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class OrderAvailabilityResponse {
+
+    private List<OrderAvailabilityListItem> availableItems;
+
+}

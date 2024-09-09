@@ -1,4 +1,4 @@
-package com.example.order.model;
+package com.musicstore.order.model;
 
 import jakarta.persistence.*;
 import lombok.*;

@@ -26,7 +26,7 @@ public class Cart {
     private UUID userUuid;
 
     @NonNull
-    private UUID productSgid;
+    private UUID productSkuId;
 
     @NonNull
     private BigDecimal productPrice;
@@ -37,9 +37,9 @@ public class Cart {
     @NonNull
     private Integer quantity;
 
-    public Cart(UUID userUuid, UUID productSgid, BigDecimal productPrice, String productName, Integer quantity) {
+    public Cart(UUID userUuid, UUID productSkuId, BigDecimal productPrice, String productName, Integer quantity) {
         this.userUuid = userUuid;
-        this.productSgid = productSgid;
+        this.productSkuId = productSkuId;
         this.productPrice = productPrice;
         this.productName = productName;
         this.quantity = quantity;

@@ -39,6 +39,8 @@ public class Product {
 
 	private LocalDateTime dateAdded = LocalDateTime.now();
 
+	private Integer inStock = 0;
+
 	@ManyToOne
 	@JoinColumn(
 			nullable = false,
@@ -64,6 +66,7 @@ public class Product {
 			String productName,
 			String productDescription,
 			BigDecimal productPrice,
+			Integer inStock,
 			Manufacturer manufacturer,
 			Country builtInCountry,
 			Category category
@@ -71,6 +74,7 @@ public class Product {
 		this.productName = productName;
 		this.productDescription = productDescription;
 		this.productPrice = productPrice;
+		this.inStock = inStock;
 		this.manufacturer = manufacturer;
 		this.builtinCountry = builtInCountry;
 		this.category = category;

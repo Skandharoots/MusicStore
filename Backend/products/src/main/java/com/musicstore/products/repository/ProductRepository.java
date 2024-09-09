@@ -19,7 +19,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
 	List<Product> findAll();
 
-	Optional<Product> findById(Long id);
+	Optional<Product> findByProductSkuId(UUID id);
 
 	Page<Product> findAllByCategory_IdAndBuiltinCountry_NameContainingAndManufacturer_NameContainingAndProductPriceBetween(
 			Long category, String country, String manufacturer, BigDecimal lp, BigDecimal hp, Pageable pageable

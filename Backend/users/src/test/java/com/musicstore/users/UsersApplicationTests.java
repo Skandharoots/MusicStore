@@ -42,4 +42,9 @@ class UsersApplicationTests {
 		assertNotNull("foo");
 	}
 
+	@Test
+	public void main() {
+		UsersApplication.main(new String[] {});
+	}
+
 }

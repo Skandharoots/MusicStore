@@ -3,6 +3,7 @@ package com.musicstore.users.api.service;
 import com.musicstore.users.dto.LoginResponse;
 import com.musicstore.users.dto.RegisterRequest;
 import com.musicstore.users.mail.EmailService;
+import com.musicstore.users.model.ConfirmationToken;
 import com.musicstore.users.model.UserRole;
 import com.musicstore.users.model.Users;
 import com.musicstore.users.repository.UserRepository;
@@ -20,7 +21,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.mockito.Mockito.when;
 
@@ -48,6 +51,14 @@ public class UserServiceTests {
     @Mock
     private JwtService jwtService;
 
+    private ConfirmationToken confirmationToken;
+
+    @Test
+    public void loadUserByUsernameExceptionTest() {
+
+        when(userRepository.findByEmail(Mockito.anyString())).thenReturn(Optional.empty());
+        Assertions.assertThatThrownBy(() -> userService.loadUserByUsername(Mockito.anyString()));
+    }
 
     @Test
     public void userServiceSignUpUserTestReturnsConfirmationToken() {
@@ -64,6 +75,61 @@ public class UserServiceTests {
         String token = userService.signUpUser(user);
         Assertions.assertThat(token).isNotNull();
 
+    }
+
+    @Test
+    public void singUpUserAlreadyRegisteredTest() {
+
+        Users user = new Users(
+                "Marek",
+                "Kopania",
+                "test@test.com",
+                "testpasswd",
+                UserRole.USER
+        );
+
+        String tokenUUID = UUID.randomUUID().toString();
+        confirmationToken = new ConfirmationToken(
+                tokenUUID,
+                LocalDateTime.now(),
+                LocalDateTime.now().plusMinutes(20),
+                user
+        );
+        when(userRepository.findByEmail("test@test.com")).thenReturn(Optional.of(user));
+        when(confirmationTokenService.getConfirmationTokenByUserUuid(user.getUuid())).thenReturn(Optional.of(confirmationToken));
+        Assertions.assertThat(userService.signUpUser(user)).isEqualTo(confirmationToken.getToken());
+    }
+
+    @Test
+    public void signUpUserExceptionEmailTakenTest() {
+
+        Users user = new Users(
+                "Marek",
+                "Kopania",
+                "test@test.com",
+                "testpasswd",
+                UserRole.USER
+        );
+        user.setEnabled(true);
+        when(userRepository.findByEmail("test@test.com")).thenReturn(Optional.of(user));
+        Assertions.assertThatThrownBy(() -> userService.signUpUser(user)).isNotNull();
+
+    }
+
+    @Test
+    public void singUpUserExceptionConfirmationTokenNotFoundTest() {
+
+        Users user = new Users(
+                "Marek",
+                "Kopania",
+                "test@test.com",
+                "testpasswd",
+                UserRole.USER
+        );
+
+        when(userRepository.findByEmail("test@test.com")).thenReturn(Optional.of(user));
+        when(confirmationTokenService.getConfirmationTokenByUserUuid(user.getUuid())).thenReturn(Optional.empty());
+        Assertions.assertThatThrownBy(() -> userService.signUpUser(user)).isNotNull();
     }
 
     @Test
@@ -112,6 +178,20 @@ public class UserServiceTests {
     }
 
     @Test
+    public void updateUserExceptionNotFoundTest() {
+        Users user = new Users(
+                "Marek",
+                "Kopania",
+                "test@test.com",
+                "testpasswd",
+                UserRole.USER
+        );
+
+        when(userRepository.findByUuid(user.getUuid())).thenReturn(Optional.empty());
+        Assertions.assertThatThrownBy(() -> userService.updateUser(user.getUuid(), null)).isNotNull();
+    }
+
+    @Test
     public void deleteUserByUuidTestReturnsSuccessMessage() {
         Users user = new Users(
                 "Marek",
@@ -125,6 +205,21 @@ public class UserServiceTests {
         when(userRepository.findByUuid(user.getUuid())).thenReturn(userOptional);
         String successMsg = userService.deleteUser(user.getUuid());
         Assertions.assertThat(successMsg).isNotNull();
+    }
+
+    @Test
+    public void deleteUserExceptionNotFoundTest() {
+
+        Users user = new Users(
+                "Marek",
+                "Kopania",
+                "test@test.com",
+                "testpasswd",
+                UserRole.USER
+        );
+
+        when(userRepository.findByUuid(user.getUuid())).thenReturn(Optional.empty());
+        Assertions.assertThatThrownBy(() -> userService.deleteUser(user.getUuid())).isNotNull();
     }
 
 }

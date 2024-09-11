@@ -87,6 +87,11 @@
             <version>5.11.0</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.core</groupId>
+            <artifactId>jersey-common</artifactId>
+            <version>3.1.6</version>
+        </dependency>
     </dependencies>
     <dependencyManagement>
         <dependencies>
@@ -151,7 +156,6 @@
                 <artifactId>maven-project-info-reports-plugin</artifactId>
                 <version>3.6.2</version>
             </plugin>
-
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>

@@ -11,8 +11,6 @@ import lombok.ToString;
 @Data
 @Getter
 @AllArgsConstructor
-@EqualsAndHashCode
-@ToString
 @Builder
 public class RegisterRequest {
 

@@ -108,6 +108,13 @@ public class JwtServiceTests {
                 "testpasswd",
                 UserRole.USER
         );
+        Users userFail = new Users(
+                "Marek",
+                "Kopania",
+                "testingtesting@test.com",
+                "testpasswdasd23215345",
+                UserRole.USER
+        );
         when(variablesConfiguration.getJwtSecret())
                 .thenReturn("197f63323bd49f9ed451d0ef6b93bf376d45cae7ce" +
                         "56754c45e6f519c7676632cee836f0fb10f2b326329853cf75b2" +
@@ -120,8 +127,9 @@ public class JwtServiceTests {
                         "3e1a1c87836c79838f564ed25e9af0eab7e2741cfa13aa23cb3dadc9" +
                         "23ec03a6ebdffc4813d3c656a13d64823c41859e9");
         String token = jwtService.generateToken(user);
-        Boolean validation = jwtService.validateToken(token, user);
-        Assertions.assertThat(validation).isTrue();
+        Assertions.assertThat(jwtService.validateToken(token, user)).isTrue();
+        Assertions.assertThat(jwtService.validateToken(token, userFail)).isFalse();
+
     }
 
 }

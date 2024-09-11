@@ -14,8 +14,6 @@ import lombok.ToString;
 @Getter
 @Builder
 @AllArgsConstructor
-@EqualsAndHashCode
-@ToString
 public class LoginResponse {
 
     private final UUID uuid;

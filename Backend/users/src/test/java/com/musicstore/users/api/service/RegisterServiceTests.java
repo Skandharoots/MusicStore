@@ -70,6 +70,18 @@ public class RegisterServiceTests {
     }
 
     @Test
+    public void registerUserExceptionTest() {
+        RegisterRequest registerRequest = new RegisterRequest(
+                "Marek",
+                "Kopania",
+                "mar..ek@gmail.com",
+                "testpasswd"
+        );
+        when(emailValidator.test(registerRequest.getEmail())).thenReturn(false);
+        Assertions.assertThatThrownBy(() -> registerService.register(registerRequest)).isNotNull();
+    }
+
+    @Test
     public void confirmTokenTest() {
         String tokenUUID = UUID.randomUUID().toString();
 
@@ -83,6 +95,56 @@ public class RegisterServiceTests {
         when(confirmationTokenService.getConfirmationToken(tokenUUID)).thenReturn(Optional.of(confirmationToken));
         String result = registerService.confirmToken(tokenUUID);
         Assertions.assertThat(result).isNotNull();
+    }
+
+    @Test
+    public void confirmTokenExceptionTest() {
+        String tokenUUID = UUID.randomUUID().toString();
+
+        ConfirmationToken confirmationToken = new ConfirmationToken(
+                tokenUUID,
+                LocalDateTime.now(),
+                LocalDateTime.now().plusMinutes(20),
+                user
+        );
+
+        confirmationToken.setConfirmedAt(LocalDateTime.now());
+
+        when(confirmationTokenService.getConfirmationToken(tokenUUID)).thenReturn(Optional.of(confirmationToken));
+        Assertions.assertThatThrownBy(() -> registerService.confirmToken(tokenUUID)).isNotNull();
+    }
+
+    @Test
+    public void confirmTokenException2Test() {
+        String tokenUUID = UUID.randomUUID().toString();
+
+        ConfirmationToken confirmationToken = new ConfirmationToken(
+                tokenUUID,
+                LocalDateTime.now(),
+                LocalDateTime.now().plusMinutes(20),
+                user
+        );
+
+        confirmationToken.setExpiresAt(LocalDateTime.now().minusMinutes(20));
+
+        when(confirmationTokenService.getConfirmationToken(tokenUUID)).thenReturn(Optional.of(confirmationToken));
+        Assertions.assertThatThrownBy(() -> registerService.confirmToken(tokenUUID)).isNotNull();
+    }
+
+    @Test
+    public void confirmTokenException3Test() {
+        String tokenUUID = UUID.randomUUID().toString();
+
+        ConfirmationToken confirmationToken = new ConfirmationToken(
+                tokenUUID,
+                LocalDateTime.now(),
+                LocalDateTime.now().plusMinutes(20),
+                user
+        );
+
+        when(confirmationTokenService.getConfirmationToken(tokenUUID)).thenReturn(Optional.empty());
+        Assertions.assertThatThrownBy(() -> registerService.confirmToken(tokenUUID)).isNotNull();
+
     }
 
 }

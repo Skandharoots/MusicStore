@@ -19,7 +19,7 @@ public class CartService {
 
     private final CartRepository cartRepository;
 
-    public Cart findById(Long id) {
+    public Cart findById(Long id) throws NotFoundException {
 
         return cartRepository.findCartById(id).orElseThrow(
                 () -> new NotFoundException("Cart not found")

@@ -153,9 +153,8 @@ public class CartServiceTests {
     @Test
     public void findCartByIdFailTest() {
 
-        Long nonId = 45L;
-        when(cartRepository.findCartById(nonId)).thenThrow(NotFoundException.class);
-        Assertions.assertThatExceptionOfType(NotFoundException.class).isThrownBy(() -> cartService.findById(nonId));
+        when(cartRepository.findCartById(Mockito.anyLong())).thenReturn(Optional.empty());
+        Assertions.assertThatThrownBy(() -> cartService.findById(Mockito.anyLong()));
 
     }
 

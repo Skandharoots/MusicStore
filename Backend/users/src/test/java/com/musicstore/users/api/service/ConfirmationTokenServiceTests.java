@@ -87,6 +87,14 @@ public class ConfirmationTokenServiceTests {
     }
 
     @Test
+    public void setConfirmationDateFailTest() {
+        Optional<ConfirmationToken> confirmationTokenOptional = Optional.of(confirmationToken);
+        when(confirmationTokenRepository.findByToken(tokenUUID)).thenReturn(Optional.empty());
+        Assertions.assertThatThrownBy(() -> confirmationTokenService.setConfirmationDate(tokenUUID)).isNotNull();
+
+    }
+
+    @Test
     public void getConfirmationTokenByUserUuidTestReturnsOptionalOfConfirmationToken() {
         Optional<ConfirmationToken> confirmationTokenOptional = Optional.of(confirmationToken);
         when(confirmationTokenRepository.findByUser_Uuid(user.getUuid())).thenReturn(confirmationTokenOptional);
@@ -100,5 +108,12 @@ public class ConfirmationTokenServiceTests {
         when(confirmationTokenRepository.findByUser_Id(user.getId())).thenReturn(confirmationTokenOptional);
         String successMsg = confirmationTokenService.deleteConfirmationToken(user.getId());
         Assertions.assertThat(successMsg).isNotNull();
+    }
+
+    @Test
+    public void deleteConfirmationTokenByTokenFailTest() {
+        Optional<ConfirmationToken> confirmationTokenOptional = Optional.of(confirmationToken);
+        when(confirmationTokenRepository.findByUser_Id(user.getId())).thenReturn(Optional.empty());
+        Assertions.assertThatThrownBy(() -> confirmationTokenService.deleteConfirmationToken(user.getId())).isNotNull();
     }
 }

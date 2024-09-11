@@ -26,4 +26,9 @@ class ShoppingCartApplicationTests {
         assertNotNull("foo");
     }
 
+    @Test
+    public void main() {
+        ShoppingCartApplication.main(new String[] {});
+    }
+
 }

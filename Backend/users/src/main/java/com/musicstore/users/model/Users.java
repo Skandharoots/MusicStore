@@ -20,7 +20,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 @Getter
 @Setter
-@EqualsAndHashCode
 @NoArgsConstructor
 @Entity
 public class Users implements UserDetails {

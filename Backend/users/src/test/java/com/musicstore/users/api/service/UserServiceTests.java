@@ -6,6 +6,7 @@ import com.musicstore.users.mail.EmailService;
 import com.musicstore.users.model.UserRole;
 import com.musicstore.users.model.Users;
 import com.musicstore.users.repository.UserRepository;
+import com.musicstore.users.security.config.VariablesConfiguration;
 import com.musicstore.users.service.ConfirmationTokenService;
 import com.musicstore.users.service.JwtService;
 import com.musicstore.users.service.UserService;
@@ -28,6 +29,9 @@ public class UserServiceTests {
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private VariablesConfiguration variablesConfiguration;
 
     @InjectMocks
     private UserService userService;
@@ -55,6 +59,7 @@ public class UserServiceTests {
                 "testpasswd",
                 UserRole.USER
         );
+        when(variablesConfiguration.getAccountConfirmUrl()).thenReturn("http://localhost:8222/api/v1/users/register/confirm?token=");
         when(userRepository.save(Mockito.any(Users.class))).thenReturn(user);
         String token = userService.signUpUser(user);
         Assertions.assertThat(token).isNotNull();

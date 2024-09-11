@@ -13,8 +13,6 @@ import java.util.Optional;
 @Transactional
 public interface ManufacturerRepository extends JpaRepository<Manufacturer, Long> {
 
-	Optional<Manufacturer> findByName(String manufacturerName);
-
 	Optional<Manufacturer> findById(Long id);
 
 	List<Manufacturer> findAll();

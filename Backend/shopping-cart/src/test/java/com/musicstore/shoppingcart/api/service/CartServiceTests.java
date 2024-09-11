@@ -222,6 +222,102 @@ public class CartServiceTests {
         Assertions.assertThatExceptionOfType(NotFoundException.class).isThrownBy(() -> cartService.findById(id));
         Assertions.assertThatExceptionOfType(NotFoundException.class).isThrownBy(() -> cartService.updateCart(id, cartUpdateRequest));
 
+    }
+
+    @Test
+    public void deleteCartByUserUuidAndProductSkuIdTest() {
+
+        UUID userUuid = UUID.randomUUID();
+        UUID productSkuId = UUID.randomUUID();
+        BigDecimal productPrice = BigDecimal.valueOf(269.99);
+
+        Cart cart = new Cart(
+                userUuid,
+                productSkuId,
+                productPrice,
+                "Stratocaster Player MX Modern C",
+                2
+        );
+
+        CartRequest cartRequest = CartRequest.builder()
+                .userUuid(userUuid)
+                .productSkuId(productSkuId)
+                .productPrice(productPrice)
+                .productName("Stratocaster Player MX Modern C")
+                .quantity(2)
+                .build();
+
+
+
+        when(cartRepository.save(Mockito.any(Cart.class))).thenReturn(cart);
+        cartService.addCart(cartRequest);
+
+        when(cartRepository.findCartById(cart.getId())).thenReturn(Optional.of(cart));
+        Cart cartFound = cartService.findById(cart.getId());
+        Assertions.assertThat(cartFound).isNotNull();
+
+        String successMsg = cartService.deleteCartByUserUuidAndProductUuid(userUuid, productSkuId);
+        Assertions.assertThat(successMsg).isNotNull();
+        Assertions.assertThat(successMsg).isEqualTo("Cart item deleted successfully");
+
+    }
+
+    @Test
+    public void cleanCartForUserTest() {
+
+        UUID userUuid = UUID.randomUUID();
+        UUID productSkuId = UUID.randomUUID();
+        UUID productSkuId2 = UUID.randomUUID();
+        BigDecimal productPrice = BigDecimal.valueOf(269.99);
+        BigDecimal productPrice2 = BigDecimal.valueOf(579.99);
+
+
+        Cart cart = new Cart(
+                userUuid,
+                productSkuId,
+                productPrice,
+                "Stratocaster Player MX Modern C",
+                2
+        );
+
+        Cart cart2 = new Cart(
+                userUuid,
+                productSkuId2,
+                productPrice2,
+                "Stratocaster Player MX Modern C",
+                56
+        );
+
+        CartRequest cartRequest = CartRequest.builder()
+                .userUuid(userUuid)
+                .productSkuId(productSkuId)
+                .productPrice(productPrice)
+                .productName("Stratocaster Player MX Modern C")
+                .quantity(2)
+                .build();
+
+        CartRequest cartRequest2 = CartRequest.builder()
+                .userUuid(userUuid)
+                .productSkuId(productSkuId2)
+                .productPrice(productPrice2)
+                .productName("Stratocaster Player MX Modern C")
+                .quantity(56)
+                .build();
+
+        when(cartRepository.save(Mockito.any(Cart.class))).thenReturn(cart);
+        cartService.addCart(cartRequest);
+        when(cartRepository.save(Mockito.any(Cart.class))).thenReturn(cart2);
+        cartService.addCart(cartRequest2);
+
+        List<Cart> cartList = new ArrayList<>();
+
+        cartService.cleanCartForUser(userUuid);
+
+        when(cartRepository.findAllByUserUuid(userUuid)).thenReturn(cartList);
+        ResponseEntity<List<Cart>> resultList = cartService.findAllCartsByUserUuid(userUuid);
+        Assertions.assertThat(resultList).isNotNull();
+        Assertions.assertThat(resultList.getStatusCode()).isEqualTo(HttpStatus.OK);
+        Assertions.assertThat(resultList.getBody()).isEmpty();
 
     }
 }

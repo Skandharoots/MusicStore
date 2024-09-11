@@ -1,7 +1,6 @@
 package com.musicstore.users.api.service;
 
 import com.musicstore.users.mail.EmailService;
-import com.musicstore.users.security.EmailValidator;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,9 +12,6 @@ public class EmailServiceTests {
 
     @Mock
     private EmailService emailService;
-
-    @Mock
-    private EmailValidator emailValidator;
 
     @Test
     public void sendEmailTest() throws Exception {
@@ -41,9 +37,4 @@ public class EmailServiceTests {
         Assertions.assertThat(exception).isNull();
     }
 
-    @Test
-    public void testEmailValidator() {
-        String emailFail = "te..st@test.com";
-        Assertions.assertThat(emailValidator.test(emailFail)).isFalse();
-    }
 }

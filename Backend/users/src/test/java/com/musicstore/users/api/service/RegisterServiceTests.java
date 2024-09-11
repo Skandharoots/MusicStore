@@ -4,7 +4,6 @@ import com.musicstore.users.dto.RegisterRequest;
 import com.musicstore.users.model.ConfirmationToken;
 import com.musicstore.users.model.UserRole;
 import com.musicstore.users.model.Users;
-import com.musicstore.users.security.EmailValidator;
 import com.musicstore.users.service.ConfirmationTokenService;
 import com.musicstore.users.service.RegisterService;
 import com.musicstore.users.service.UserService;
@@ -29,9 +28,6 @@ public class RegisterServiceTests {
 
     @Mock
     private UserService userService;
-
-    @Mock
-    private EmailValidator emailValidator;
 
     @Mock
     private ConfirmationTokenService confirmationTokenService;
@@ -62,7 +58,6 @@ public class RegisterServiceTests {
                 "marek@gmail.com",
                 "testpasswd"
         );
-        when(emailValidator.test(registerRequest.getEmail())).thenReturn(true);
         when(userService.signUpUser(Mockito.any(Users.class))).thenReturn(String.valueOf(String.class));
         String result = registerService.register(registerRequest);
         Assertions.assertThat(result).isNotNull();
@@ -77,7 +72,6 @@ public class RegisterServiceTests {
                 "mar..ek@gmail.com",
                 "testpasswd"
         );
-        when(emailValidator.test(registerRequest.getEmail())).thenReturn(false);
         Assertions.assertThatThrownBy(() -> registerService.register(registerRequest)).isNotNull();
     }
 

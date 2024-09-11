@@ -5,9 +5,10 @@ import com.musicstore.users.mail.EmailSender;
 import com.musicstore.users.model.ConfirmationToken;
 import com.musicstore.users.model.UserRole;
 import com.musicstore.users.model.Users;
-import com.musicstore.users.security.EmailValidator;
 import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,13 +17,18 @@ import org.springframework.stereotype.Service;
 public class RegisterService {
 
     private final UserService userService;
-    private final EmailValidator emailValidator;
     private final ConfirmationTokenService confirmationTokenService;
     private final EmailSender emailSender;
 
     public String register(RegisterRequest request) {
-        boolean isValidEmail = emailValidator
-                .test(request.getEmail());
+
+        Pattern pattern = Pattern.compile("^(?![^\"]+.*[^\"]+\\.\\.)"
+                        + "[a-zA-Z0-9 !#\"$%&'*+-/=?^_`{|}~]*"
+                        + "[a-zA-Z0-9\"]+@[a-zA-Z0-9.-]+$",
+                Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(request.getEmail());
+
+        boolean isValidEmail = matcher.matches();
 
         if (!isValidEmail) {
             throw new IllegalStateException("Email not valid");
@@ -59,5 +65,6 @@ public class RegisterService {
         userService.enableUser(confirmationToken.getUser().getEmail());
         return "Confirmed";
     }
+
 
 }

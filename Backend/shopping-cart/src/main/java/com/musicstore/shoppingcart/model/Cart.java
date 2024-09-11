@@ -13,7 +13,6 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
 @ToString
 @Entity
 public class Cart {

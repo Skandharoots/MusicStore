@@ -72,7 +72,6 @@ public class RegistryControllerTests {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(registerRequest))
         );
-        System.out.println(objectMapper.writeValueAsString(registerRequest));
         resultActions
                 .andExpect(MockMvcResultMatchers.status().isCreated());
     }

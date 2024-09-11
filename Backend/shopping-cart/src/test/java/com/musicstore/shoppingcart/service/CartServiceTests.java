@@ -1,10 +1,9 @@
-package com.musicstore.shoppingcart.api.service;
+package com.musicstore.shoppingcart.service;
 
 import com.musicstore.shoppingcart.dto.CartRequest;
 import com.musicstore.shoppingcart.dto.CartUpdateRequest;
 import com.musicstore.shoppingcart.model.Cart;
 import com.musicstore.shoppingcart.repository.CartRepository;
-import com.musicstore.shoppingcart.service.CartService;
 import jakarta.ws.rs.NotFoundException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -60,6 +59,58 @@ public class CartServiceTests {
         String response = cartService.addCart(cartRequest);
         Assertions.assertThat(response).isNotNull();
         Assertions.assertThat(response).isEqualTo("Cart item added successfully");
+
+    }
+
+    @Test
+    public void addCartThatExistsTest() {
+
+        UUID userUuid = UUID.randomUUID();
+        UUID productSkuId = UUID.randomUUID();
+        BigDecimal productPrice = BigDecimal.valueOf(269.99);
+
+        Cart cart = new Cart(
+                userUuid,
+                productSkuId,
+                productPrice,
+                "Stratocaster Player MX Modern C",
+                2
+        );
+
+        Cart cart2 = new Cart(
+                userUuid,
+                productSkuId,
+                productPrice,
+                "Stratocaster Player MX Modern C",
+                6
+        );
+
+        CartRequest cartRequest = CartRequest.builder()
+                .userUuid(userUuid)
+                .productSkuId(productSkuId)
+                .productPrice(productPrice)
+                .productName("Stratocaster Player MX Modern C")
+                .quantity(2)
+                .build();
+
+        CartRequest cartRequest2 = CartRequest.builder()
+                .userUuid(userUuid)
+                .productSkuId(productSkuId)
+                .productPrice(productPrice)
+                .productName("Stratocaster Player MX Modern C")
+                .quantity(4)
+                .build();
+
+        when(cartRepository.save(Mockito.any(Cart.class))).thenReturn(cart);
+        String response = cartService.addCart(cartRequest);
+
+        when(cartRepository.findCartByUserUuidAndProductSkuId(userUuid, productSkuId)).thenReturn(Optional.of(cart));
+        when(cartRepository.save(Mockito.any(Cart.class))).thenReturn(cart2);
+        String response2 = cartService.addCart(cartRequest2);
+
+        Assertions.assertThat(response).isNotNull();
+        Assertions.assertThat(response).isEqualTo("Cart item added successfully");
+
 
     }
 
@@ -320,4 +371,5 @@ public class CartServiceTests {
         Assertions.assertThat(resultList.getBody()).isEmpty();
 
     }
+
 }

@@ -1,7 +1,6 @@
-package com.musicstore.shoppingcart.api.repository;
+package com.musicstore.shoppingcart.repository;
 
 import com.musicstore.shoppingcart.model.Cart;
-import com.musicstore.shoppingcart.repository.CartRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

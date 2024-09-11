@@ -24,6 +24,7 @@ public class CartService {
         return cartRepository.findCartById(id).orElseThrow(
                 () -> new NotFoundException("Cart not found")
         );
+
     }
 
     public ResponseEntity<List<Cart>> findAllCartsByUserUuid(UUID userUuid) {

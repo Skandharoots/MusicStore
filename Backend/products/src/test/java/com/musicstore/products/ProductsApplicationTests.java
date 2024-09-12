@@ -1,13 +1,7 @@
 package com.musicstore.products;
 
-import com.musicstore.products.controller.CategoryController;
-import com.musicstore.products.controller.CountryController;
-import com.musicstore.products.controller.ManufacturerController;
-import com.musicstore.products.controller.ProductsController;
-import com.musicstore.products.service.CategoryService;
-import com.musicstore.products.service.CountryService;
-import com.musicstore.products.service.ManufacturerService;
-import com.musicstore.products.service.ProductService;
+import com.musicstore.products.controller.*;
+import com.musicstore.products.service.*;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -44,6 +38,12 @@ class ProductsApplicationTests {
 
 	@InjectMocks
 	private ProductsController productsController;
+
+	@Mock
+	private SubcategoryService subcategoryService;
+
+	@InjectMocks
+	private SubcategoryController subcategoryController;
 
 	@Test
 	void contextLoads() {

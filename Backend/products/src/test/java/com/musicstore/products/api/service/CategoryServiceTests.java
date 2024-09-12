@@ -122,6 +122,22 @@ public class CategoryServiceTests {
     }
 
     @Test
+    public void updateCategoryExceptionTest() {
+
+        String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpX" +
+                "VCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI" +
+                "6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.S" +
+                "flKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
+
+        CategoryRequest categoryRequest = new CategoryRequest();
+        categoryRequest.setCategoryName("Drums");
+
+        when(categoryRepository.findById(1L)).thenReturn(Optional.empty());
+        Assertions.assertThatThrownBy(() -> categoryService.updateCategory(token, 1L, categoryRequest));
+
+    }
+
+    @Test
     public void deleteCategoryTest() {
 
         String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpX" +

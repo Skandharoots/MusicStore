@@ -1,10 +1,7 @@
 package com.musicstore.products.service;
 
 import com.musicstore.products.dto.*;
-import com.musicstore.products.model.Category;
-import com.musicstore.products.model.Country;
-import com.musicstore.products.model.Manufacturer;
-import com.musicstore.products.model.Product;
+import com.musicstore.products.model.*;
 import com.musicstore.products.repository.ProductRepository;
 import com.musicstore.products.security.config.VariablesConfiguration;
 import jakarta.ws.rs.NotFoundException;
@@ -35,39 +32,42 @@ public class ProductService {
 
 	private final ManufacturerService manufacturerService;
 
+	private final SubcategoryService subcategoryService;
+
 	private final WebClient.Builder webClient;
 
 	private final VariablesConfiguration variablesConfiguration;
 
-	public String createProducts(String token, ProductRequestBody products) {
+	public String createProducts(String token, ProductRequest productRequest) {
 
 		//TODO: Uncomment this for prod
 //		if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
 //			throw new RuntimeException("No admin authority");
 //		}
 
-		for (ProductRequest productRequest : products.getProducts()) {
+		Category category = categoryService.getCategoryById(productRequest.getCategoryId());
 
-			Category category = categoryService.getCategoryById(productRequest.getCategoryId());
+		Country country = countryService.getCountryById(productRequest.getCountryId());
 
-			Country country = countryService.getCountryById(productRequest.getCountryId());
+		Manufacturer manufacturer = manufacturerService.getManufacturerById(productRequest.getManufacturerId());
 
-			Manufacturer manufacturer = manufacturerService.getManufacturerById(productRequest.getManufacturerId());
+		Subcategory subcategory = subcategoryService.getSubcategoryById(productRequest.getSubcategoryId());
 
-			Product product = new Product(
-					productRequest.getProductName(),
-					productRequest.getDescription(),
-					productRequest.getPrice(),
-					productRequest.getQuantity(),
-					manufacturer,
-					country,
-					category
-			);
+		Product product = new Product(
+				productRequest.getProductName(),
+				productRequest.getDescription(),
+				productRequest.getPrice(),
+				productRequest.getQuantity(),
+				manufacturer,
+				country,
+				category,
+				subcategory
+		);
 
-			productRepository.save(product);
-		}
+		productRepository.save(product);
 
-		return "Products created";
+
+		return "Product created";
 	}
 
 	public Page<Product> getAllProducts(Integer page, Integer pageSize) {
@@ -87,7 +87,7 @@ public class ProductService {
 		return ResponseEntity.ok(product);
 	}
 
-	public Page<Product> getAllProductsByCategoryAndCountryAndManufacturer(
+	public Page<Product> getAllProductsByCategoryAndCountryAndManufacturerAndSubcategory(
 			Integer page,
 			Integer pageSize,
 			String sortBy,
@@ -95,6 +95,7 @@ public class ProductService {
 			Long category,
 			String country,
 			String manufacturer,
+			String subcategory,
 			BigDecimal lowPrice,
 			BigDecimal highPrice
 	) {
@@ -108,8 +109,8 @@ public class ProductService {
 
 
         return productRepository
-				.findAllByCategory_IdAndBuiltinCountry_NameContainingAndManufacturer_NameContainingAndProductPriceBetween(
-						category, country, manufacturer, lowPrice, highPrice, pageable);
+				.findAllByCategory_IdAndBuiltinCountry_NameContainingAndManufacturer_NameContainingAndSubcategory_NameContainingAndProductPriceBetween(
+						category, country, manufacturer, subcategory, lowPrice, highPrice, pageable);
 	}
 
 	public Page<Product> getAllProductsBySearchedPhrase(Integer page, Integer pageSize, String searchPhrase) {
@@ -173,12 +174,15 @@ public class ProductService {
 
 	}
 
-	public ResponseEntity<BigDecimal> getMaxPriceForProducts(Long category, String country, String manufacturer) {
+	public ResponseEntity<BigDecimal> getMaxPriceForProducts(Long category, String country, String manufacturer, String subcategory) {
 		return ResponseEntity.ok(productRepository
 				.findMaxProductPrice(
 						category,
 						country,
-						manufacturer));
+						manufacturer,
+						subcategory
+				)
+		);
 	}
 
 	public ResponseEntity<String> updateProduct(String token, Long id, ProductRequest product) {
@@ -198,6 +202,7 @@ public class ProductService {
 		productToUpdate.setBuiltinCountry(countryService.getCountryById(product.getCountryId()));
 		productToUpdate.setCategory(categoryService.getCategoryById(product.getCategoryId()));
 		productToUpdate.setManufacturer(manufacturerService.getManufacturerById(product.getManufacturerId()));
+		productToUpdate.setSubcategory(subcategoryService.getSubcategoryById(product.getSubcategoryId()));
 
 		productRepository.save(productToUpdate);
 

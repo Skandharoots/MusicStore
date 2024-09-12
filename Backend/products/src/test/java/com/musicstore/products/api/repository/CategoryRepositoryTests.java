@@ -3,6 +3,7 @@ package com.musicstore.products.api.repository;
 import com.musicstore.products.model.Category;
 import com.musicstore.products.repository.CategoryRepository;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
@@ -12,6 +13,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
@@ -28,22 +30,24 @@ public class CategoryRepositoryTests {
 
         Category category = new Category("Microphones");
         Category savedCategory = categoryRepository.save(category);
+
         Assertions.assertThat(savedCategory).isNotNull();
         Assertions.assertThat(savedCategory.getName()).isEqualTo("Microphones");
-        Assertions.assertThat(savedCategory.getId()).isEqualTo(1L);
 
     }
 
     @Test
     public void findCategoryByIdTest() {
 
-        Category category = new Category("Microphones");
+
+        Category category = new Category("Guitars");
         entityManager.persist(category);
         entityManager.flush();
 
-        Optional<Category> foundCategory = categoryRepository.findById(1L);
+        Optional<Category> foundCategory = categoryRepository.findById(category.getId());
         Assertions.assertThat(foundCategory.isPresent()).isTrue();
-        Assertions.assertThat(foundCategory.get().getName()).isEqualTo("Microphones");
+        Assertions.assertThat(foundCategory.get().getName()).isEqualTo("Guitars");
+
 
     }
 
@@ -60,6 +64,8 @@ public class CategoryRepositoryTests {
         Assertions.assertThat(categories.size()).isEqualTo(2);
         Assertions.assertThat(categories.get(0).getName()).isEqualTo("Microphones");
         Assertions.assertThat(categories.get(1).getName()).isEqualTo("Fender");
+
+        entityManager.flush();
 
     }
 

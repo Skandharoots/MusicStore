@@ -6,6 +6,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.*;
 
+import java.util.UUID;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -19,6 +21,7 @@ public class Manufacturer {
 			strategy = GenerationType.IDENTITY
 	)
 	private Long id;
+
 	@NonNull
 	private String name;
 

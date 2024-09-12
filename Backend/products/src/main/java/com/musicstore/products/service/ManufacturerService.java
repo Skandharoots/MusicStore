@@ -1,7 +1,6 @@
 package com.musicstore.products.service;
 
 import com.musicstore.products.dto.ManufacturerRequest;
-import com.musicstore.products.dto.ManufacturerRequestBody;
 import com.musicstore.products.model.Manufacturer;
 import com.musicstore.products.repository.ManufacturerRepository;
 import jakarta.ws.rs.NotFoundException;
@@ -11,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @AllArgsConstructor
@@ -20,21 +20,20 @@ public class ManufacturerService {
 
 	private final WebClient.Builder webClient;
 
-	public String createManufacturers(String token, ManufacturerRequestBody manufacturers) {
+	public String createManufacturers(String token, ManufacturerRequest manufacturer) {
 		//TODO: Uncomment this for prod
 //		if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
 //			throw new RuntimeException("No admin authority");
 //		}
 
-		for (ManufacturerRequest manufacturer: manufacturers.getManufacturers()) {
-			Manufacturer newManufacturer = new Manufacturer(manufacturer.getName());
+		Manufacturer newManufacturer = new Manufacturer(manufacturer.getName());
 
-			if (newManufacturer.getName().isEmpty()) {
-				throw new IllegalArgumentException("Manufacturer name cannot be empty");
-			}
-
-			manufacturerRepository.save(newManufacturer);
+		if (newManufacturer.getName().isEmpty()) {
+			throw new IllegalArgumentException("Manufacturer name cannot be empty");
 		}
+
+		manufacturerRepository.save(newManufacturer);
+
 
 		return "Manufacturers created";
 	}
@@ -51,8 +50,8 @@ public class ManufacturerService {
 				);
 	}
 
-	public List<Manufacturer> findAllBySearchParameters(Long categoryId, String country) {
-		return manufacturerRepository.findAllBySearchParameters(categoryId, country);
+	public List<Manufacturer> findAllBySearchParameters(Long categoryId, String country, String subcategory) {
+		return manufacturerRepository.findAllBySearchParameters(categoryId, country, subcategory);
 	}
 
 	public ResponseEntity<String> updateManufacturer(String token, Long id, ManufacturerRequest manufacturer) {

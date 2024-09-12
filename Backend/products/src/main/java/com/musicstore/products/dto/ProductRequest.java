@@ -21,5 +21,6 @@ public class ProductRequest {
 	private Long manufacturerId;
 	private Long countryId;
 	private Long categoryId;
+	private Long subcategoryId;
 
 }

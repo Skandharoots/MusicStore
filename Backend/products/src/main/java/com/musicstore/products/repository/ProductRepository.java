@@ -21,8 +21,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
 	Optional<Product> findByProductSkuId(UUID id);
 
-	Page<Product> findAllByCategory_IdAndBuiltinCountry_NameContainingAndManufacturer_NameContainingAndProductPriceBetween(
-			Long category, String country, String manufacturer, BigDecimal lp, BigDecimal hp, Pageable pageable
+	Page<Product> findAllByCategory_IdAndBuiltinCountry_NameContainingAndManufacturer_NameContainingAndSubcategory_NameContainingAndProductPriceBetween(
+			Long category, String country, String manufacturer, String subcategory, BigDecimal lp, BigDecimal hp, Pageable pageable
 	);
 
 	Page<Product> findAllByProductNameContainingIgnoreCaseOrProductDescriptionContainingIgnoreCase(
@@ -33,6 +33,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 			"LEFT JOIN category ca ON p.category_id = ca.id " +
 			"LEFT JOIN country co ON p.country_id = co.id " +
 			"LEFT JOIN manufacturer ma ON p.manufacturer_id = ma.id " +
-			"WHERE p.category_id = ?1 AND co.name LIKE %?2% AND ma.name LIKE %?3%")
-	BigDecimal findMaxProductPrice(Long category, String country, String manufacturer);
+			"LEFT JOIN subcategory s ON p.subcategory_id = s.id " +
+			"WHERE p.category_id = ?1 AND co.name LIKE %?2% AND ma.name LIKE %?3% AND s.name LIKE %?4%")
+	BigDecimal findMaxProductPrice(Long category, String country, String manufacturer, String subcategory);
 }

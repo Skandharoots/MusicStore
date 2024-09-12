@@ -1,7 +1,6 @@
 package com.musicstore.products.controller;
 
 import com.musicstore.products.dto.CountryRequest;
-import com.musicstore.products.dto.CountryRequestBody;
 import com.musicstore.products.model.Country;
 import com.musicstore.products.service.CountryService;
 import jakarta.ws.rs.core.HttpHeaders;
@@ -21,9 +20,9 @@ public class CountryController {
 	@PostMapping("/create")
 	public String addCountry(
 			@RequestHeader(HttpHeaders.AUTHORIZATION) String token,
-			@RequestBody CountryRequestBody countryRequestBody
+			@RequestBody CountryRequest countryRequest
 	) {
-		return countryService.createCountry(token, countryRequestBody);
+		return countryService.createCountry(token, countryRequest);
 	}
 
 	@GetMapping("/get")
@@ -39,9 +38,10 @@ public class CountryController {
 	@GetMapping("/get/search/{category}")
 	public List<Country> getCountryBySearchParameters(
 			@PathVariable(value = "category") Long categoryId,
-			@RequestParam(value = "manufacturer") String manufacturer
+			@RequestParam(value = "manufacturer") String manufacturer,
+			@RequestParam(value = "subcategory") String subcategory
 	) {
-		return countryService.findAllBySearchParameters(categoryId, manufacturer);
+		return countryService.findAllBySearchParameters(categoryId, manufacturer, subcategory);
 	}
 
 	@PutMapping("/update/{countryId}")

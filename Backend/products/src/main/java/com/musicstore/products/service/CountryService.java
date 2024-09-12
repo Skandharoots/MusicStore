@@ -1,7 +1,6 @@
 package com.musicstore.products.service;
 
 import com.musicstore.products.dto.CountryRequest;
-import com.musicstore.products.dto.CountryRequestBody;
 import com.musicstore.products.model.Country;
 import com.musicstore.products.repository.CountryRepository;
 import jakarta.ws.rs.NotFoundException;
@@ -11,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @AllArgsConstructor
@@ -20,23 +20,22 @@ public class CountryService {
 
 	private final WebClient.Builder webClient;
 
-	public String createCountry(String token, CountryRequestBody countries) {
+	public String createCountry(String token, CountryRequest country) {
 		//TODO: Uncomment this for prod
 //		if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
 //			throw new RuntimeException("No admin authority");
 //		}
 
-		for (CountryRequest country : countries.getCountries()) {
-			Country newCountry = new Country(country.getName());
+		Country newCountry = new Country(country.getName());
 
-			if (newCountry.getName().isEmpty()) {
-				throw new IllegalArgumentException("Country name cannot be empty");
-			}
-
-			countryRepository.save(newCountry);
+		if (newCountry.getName().isEmpty()) {
+			throw new IllegalArgumentException("Country name cannot be empty");
 		}
 
-		return "Countries created";
+		countryRepository.save(newCountry);
+
+
+		return "Country created";
 	}
 
 	public List<Country> getAllCountries() {
@@ -51,8 +50,8 @@ public class CountryService {
 				);
 	}
 
-	public List<Country> findAllBySearchParameters(Long categoryId, String manufacturer) {
-		return countryRepository.findAllBySearchParameters(categoryId, manufacturer);
+	public List<Country> findAllBySearchParameters(Long categoryId, String manufacturer, String subcategory) {
+		return countryRepository.findAllBySearchParameters(categoryId, manufacturer, subcategory);
 	}
 
 	public ResponseEntity<String> updateCountry(String token, Long id, CountryRequest country) {

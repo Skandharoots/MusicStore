@@ -1,13 +1,7 @@
 package com.musicstore.products.api.repository;
 
-import com.musicstore.products.model.Category;
-import com.musicstore.products.model.Country;
-import com.musicstore.products.model.Manufacturer;
-import com.musicstore.products.model.Product;
-import com.musicstore.products.repository.CategoryRepository;
-import com.musicstore.products.repository.CountryRepository;
-import com.musicstore.products.repository.ManufacturerRepository;
-import com.musicstore.products.repository.ProductRepository;
+import com.musicstore.products.model.*;
+import com.musicstore.products.repository.*;
 import jakarta.persistence.EntityManager;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -19,6 +13,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
@@ -37,6 +32,9 @@ public class ManufacturerRespositoryTests {
     private CountryRepository countryRepository;
 
     @Autowired
+    private SubcategoryRepository subcategoryRepository;
+
+    @Autowired
     private EntityManager entityManager;
 
     @Test
@@ -47,7 +45,6 @@ public class ManufacturerRespositoryTests {
 
         Assertions.assertThat(savedManufacturer).isNotNull();
         Assertions.assertThat(savedManufacturer.getName()).isEqualTo("Gretsch");
-        Assertions.assertThat(savedManufacturer.getId()).isEqualTo(1L);
     }
 
     @Test
@@ -57,10 +54,12 @@ public class ManufacturerRespositoryTests {
         entityManager.persist(manufacturer);
         entityManager.flush();
 
-        Optional<Manufacturer> foundManufacturer = manufacturerRepository.findById(1L);
+        Optional<Manufacturer> foundManufacturer = manufacturerRepository.findById(manufacturer.getId());
         Assertions.assertThat(foundManufacturer).isPresent();
         Assertions.assertThat(foundManufacturer.get().getName()).isEqualTo("Gretsch");
-        Assertions.assertThat(foundManufacturer.get().getId()).isEqualTo(1L);
+
+        entityManager.clear();
+
     }
 
     @Test
@@ -75,24 +74,27 @@ public class ManufacturerRespositoryTests {
         Assertions.assertThat(manufacturers).isNotEmpty();
         Assertions.assertThat(manufacturers.get(1).getName()).isEqualTo("Fender");
         Assertions.assertThat(manufacturers.get(0).getName()).isEqualTo("Gretsch");
+
+        entityManager.clear();
+
     }
 
     @Test
     public void findAllManufacturersBySearchParameters() {
-        Long id = 1L;
         BigDecimal price = BigDecimal.valueOf(2699.99);
 
         Country country = new Country("Poland");
-        country.setId(id);
         countryRepository.save(country);
 
         Manufacturer manufacturer = new Manufacturer("Fender");
-        manufacturer.setId(id);
         manufacturerRepository.save(manufacturer);
 
         Category category = new Category("Guitar");
-        category.setId(id);
         categoryRepository.save(category);
+
+        Subcategory subcategory = new Subcategory("Electric");
+        subcategory.setCategory(category);
+        subcategoryRepository.save(subcategory);
 
         Product product = new Product(
                 "Stratocaster Player MX",
@@ -101,13 +103,15 @@ public class ManufacturerRespositoryTests {
                 57,
                 manufacturer,
                 country,
-                category
+                category,
+                subcategory
         );
         productRepository.save(product);
+        entityManager.flush();
 
-        List<Manufacturer> foundManufacturers = manufacturerRepository.findAllBySearchParameters(1L, "Poland");
+        List<Manufacturer> foundManufacturers = manufacturerRepository.findAllBySearchParameters(category.getId(), "Poland", "Electric");
         Assertions.assertThat(foundManufacturers).isNotEmpty();
         Assertions.assertThat(foundManufacturers.get(0).getName()).isEqualTo("Fender");
-        Assertions.assertThat(foundManufacturers.get(0).getId()).isEqualTo(id);
+
     }
 }

@@ -1,10 +1,10 @@
 package com.musicstore.products.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -19,6 +19,7 @@ public class Category {
 			strategy = GenerationType.IDENTITY
 	)
 	private Long id;
+
 	@NonNull
 	private String name;
 

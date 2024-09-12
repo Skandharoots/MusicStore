@@ -62,6 +62,12 @@ public class Product {
 	)
 	private Category category;
 
+	@ManyToOne
+	@JoinColumn(
+            name = "subcategory_id"
+	)
+	private Subcategory subcategory;
+
 	public Product(
 			String productName,
 			String productDescription,
@@ -69,7 +75,8 @@ public class Product {
 			Integer inStock,
 			Manufacturer manufacturer,
 			Country builtInCountry,
-			Category category
+			Category category,
+			Subcategory subcategory
 	) {
 		this.productName = productName;
 		this.productDescription = productDescription;
@@ -78,6 +85,7 @@ public class Product {
 		this.manufacturer = manufacturer;
 		this.builtinCountry = builtInCountry;
 		this.category = category;
+		this.subcategory = subcategory;
 	}
 
 

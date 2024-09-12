@@ -3,7 +3,6 @@ package com.musicstore.products.controller;
 import com.musicstore.products.dto.OrderAvailabilityResponse;
 import com.musicstore.products.dto.OrderRequest;
 import com.musicstore.products.dto.ProductRequest;
-import com.musicstore.products.dto.ProductRequestBody;
 import com.musicstore.products.model.Product;
 import com.musicstore.products.service.ProductService;
 import jakarta.ws.rs.core.HttpHeaders;
@@ -25,9 +24,9 @@ public class ProductsController {
     @PostMapping("/create")
     public String createProducts(
             @RequestHeader(HttpHeaders.AUTHORIZATION) String token,
-            @RequestBody ProductRequestBody products
+            @RequestBody ProductRequest product
     ) {
-        return productService.createProducts(token, products);
+        return productService.createProducts(token, product);
     }
 
     @GetMapping("/get")
@@ -49,9 +48,10 @@ public class ProductsController {
     public ResponseEntity<BigDecimal> getMaxPrice(
             @PathVariable(value = "category") Long category,
             @RequestParam(value = "country") String country,
-            @RequestParam(value = "manufacturer") String manufacturer
+            @RequestParam(value = "manufacturer") String manufacturer,
+            @RequestParam(value = "subcategory") String subcategory
     ) {
-        return productService.getMaxPriceForProducts(category, country, manufacturer);
+        return productService.getMaxPriceForProducts(category, country, manufacturer, subcategory);
     }
 
     @GetMapping("/get/values/{category}")
@@ -59,6 +59,7 @@ public class ProductsController {
             @PathVariable(value = "category") Long category,
             @RequestParam(value = "country") String country,
             @RequestParam(value = "manufacturer") String manufacturer,
+            @RequestParam(value = "subcategory") String subcategory,
             @RequestParam(value = "lowPrice", defaultValue = "0.00", required = false) BigDecimal lp,
             @RequestParam(value = "highPrice", defaultValue = "1000000.00", required = false) BigDecimal hp,
             @RequestParam(value = "sortBy", defaultValue = "id", required = false) String sortBy,
@@ -67,7 +68,7 @@ public class ProductsController {
             @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize
     ) {
         return ResponseEntity.ok(productService
-                .getAllProductsByCategoryAndCountryAndManufacturer(
+                .getAllProductsByCategoryAndCountryAndManufacturerAndSubcategory(
                         page,
                         pageSize,
                         sortBy,
@@ -75,6 +76,7 @@ public class ProductsController {
                         category,
                         country,
                         manufacturer,
+                        subcategory,
                         lp,
                         hp
                 )

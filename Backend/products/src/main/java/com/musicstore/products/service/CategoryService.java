@@ -1,8 +1,8 @@
 package com.musicstore.products.service;
 
 import com.musicstore.products.dto.CategoryRequest;
-import com.musicstore.products.dto.CategoryRequestBody;
 import com.musicstore.products.model.Category;
+import com.musicstore.products.model.Subcategory;
 import com.musicstore.products.repository.CategoryRepository;
 import jakarta.ws.rs.NotFoundException;
 import lombok.AllArgsConstructor;
@@ -10,7 +10,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.security.InvalidParameterException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @AllArgsConstructor
@@ -20,24 +23,23 @@ public class CategoryService {
 
 	private final WebClient.Builder webClient;
 
-	public String createCategories(String token, CategoryRequestBody categories) {
+	public String createCategories(String token, CategoryRequest category) {
 
 		//TODO: Uncomment this for prod
 //		if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
 //			throw new RuntimeException("No admin authority");
 //		}
 
-		for (CategoryRequest categoryRequest : categories.getCategories()) {
-			Category category = new Category(categoryRequest.getCategoryName());
-
-			if (category.getName().isEmpty()) {
-				throw new IllegalArgumentException("Category name cannot be empty");
-			}
-
-			categoryRepository.save(category);
+		if (category.getCategoryName().isEmpty()) {
+			throw new InvalidParameterException("Category name cannot be empty");
 		}
 
-		return "Categories created";
+		Category categoryEntity = new Category();
+		categoryEntity.setName(category.getCategoryName());
+
+		categoryRepository.save(categoryEntity);
+
+		return "Category created";
 	}
 
 	public List<Category> getAllCategories() {

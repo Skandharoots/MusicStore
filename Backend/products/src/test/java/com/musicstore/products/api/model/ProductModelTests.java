@@ -1,14 +1,12 @@
 package com.musicstore.products.api.model;
 
-import com.musicstore.products.model.Category;
-import com.musicstore.products.model.Country;
-import com.musicstore.products.model.Manufacturer;
-import com.musicstore.products.model.Product;
+import com.musicstore.products.model.*;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 @SpringBootTest
 public class ProductModelTests {
@@ -29,6 +27,11 @@ public class ProductModelTests {
         Category category = new Category("Guitar");
         category.setId(id);
 
+        Subcategory subcategory = new Subcategory();
+        subcategory.setId(id);
+        subcategory.setCategory(category);
+        subcategory.setName("Electric");
+
         Product product = new Product(
                 "Stratocaster Player MX",
                 "Something about this guitar",
@@ -36,7 +39,8 @@ public class ProductModelTests {
                 57,
                 manufacturer,
                 country,
-                category
+                category,
+                subcategory
         );
 
         product.setId(id);
@@ -52,6 +56,8 @@ public class ProductModelTests {
         Assertions.assertThat(product.getCategory().getId()).isEqualTo(id);
         Assertions.assertThat(product.getBuiltinCountry().getName()).isEqualTo("Poland");
         Assertions.assertThat(product.getBuiltinCountry().getId()).isEqualTo(id);
+        Assertions.assertThat(product.getSubcategory().getName()).isEqualTo("Electric");
+        Assertions.assertThat(product.getSubcategory().getId()).isEqualTo(id);
 
         product.setProductName("Telecaster");
         product.setProductDescription("Telecaster new description");
@@ -60,6 +66,7 @@ public class ProductModelTests {
         product.setManufacturer(manufacturer);
         product.setCategory(category);
         product.setBuiltinCountry(country);
+        product.setSubcategory(subcategory);
 
         Assertions.assertThat(product.getId()).isEqualTo(id);
         Assertions.assertThat(product.getProductName()).isEqualTo("Telecaster");
@@ -72,5 +79,7 @@ public class ProductModelTests {
         Assertions.assertThat(product.getCategory().getId()).isEqualTo(id);
         Assertions.assertThat(product.getBuiltinCountry().getName()).isEqualTo("Poland");
         Assertions.assertThat(product.getBuiltinCountry().getId()).isEqualTo(id);
+        Assertions.assertThat(product.getSubcategory().getName()).isEqualTo("Electric");
+        Assertions.assertThat(product.getSubcategory().getId()).isEqualTo(id);
     }
 }

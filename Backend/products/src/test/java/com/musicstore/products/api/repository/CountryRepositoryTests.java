@@ -1,13 +1,7 @@
 package com.musicstore.products.api.repository;
 
-import com.musicstore.products.model.Category;
-import com.musicstore.products.model.Country;
-import com.musicstore.products.model.Manufacturer;
-import com.musicstore.products.model.Product;
-import com.musicstore.products.repository.CategoryRepository;
-import com.musicstore.products.repository.CountryRepository;
-import com.musicstore.products.repository.ManufacturerRepository;
-import com.musicstore.products.repository.ProductRepository;
+import com.musicstore.products.model.*;
+import com.musicstore.products.repository.*;
 import jakarta.persistence.EntityManager;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -19,6 +13,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
@@ -38,6 +33,8 @@ public class CountryRepositoryTests {
 
     @Autowired
     private EntityManager entityManager;
+    @Autowired
+    private SubcategoryRepository subcategoryRepository;
 
     @Test
     public void createCountryTest() {
@@ -47,18 +44,20 @@ public class CountryRepositoryTests {
 
         Assertions.assertThat(country).isNotNull();
         Assertions.assertThat(savedCountry.getName()).isEqualTo("Poland");
-        Assertions.assertThat(savedCountry.getId()).isEqualTo(1L);
     }
 
     @Test
     public void findCountryByIdTest() {
+
         Country country = new Country("Poland");
+
         entityManager.persist(country);
         entityManager.flush();
 
-        Optional<Country> foundCountry = countryRepository.findById(1L);
+        Optional<Country> foundCountry = countryRepository.findById(country.getId());
         Assertions.assertThat(foundCountry.isPresent()).isTrue();
         Assertions.assertThat(foundCountry.get().getName()).isEqualTo("Poland");
+
 
     }
 
@@ -81,21 +80,20 @@ public class CountryRepositoryTests {
     @Test
     public void findAllBySearchParametersTest() {
 
-        Long id = 1L;
         BigDecimal price = BigDecimal.valueOf(2699.99);
 
         Country country = new Country("Poland");
-        country.setId(id);
         countryRepository.save(country);
 
         Manufacturer manufacturer = new Manufacturer("Fender");
-        manufacturer.setId(id);
         manufacturerRepository.save(manufacturer);
 
         Category category = new Category("Guitar");
-        category.setId(id);
         categoryRepository.save(category);
 
+        Subcategory subcategory = new Subcategory("Electric");
+        subcategory.setCategory(category);
+        subcategoryRepository.save(subcategory);
         Product product = new Product(
                 "Stratocaster Player MX",
                 "Something about this guitar",
@@ -103,15 +101,15 @@ public class CountryRepositoryTests {
                 57,
                 manufacturer,
                 country,
-                category
+                category,
+                subcategory
         );
         productRepository.save(product);
 
-        List<Country> countries = countryRepository.findAllBySearchParameters(1L, "Fender");
+        List<Country> countries = countryRepository.findAllBySearchParameters(category.getId(), "Fender", "Electric");
         Assertions.assertThat(countries).isNotEmpty();
         Assertions.assertThat(countries.size()).isEqualTo(1);
         Assertions.assertThat(countries.get(0).getName()).isEqualTo("Poland");
-        Assertions.assertThat(countries.get(0).getId()).isEqualTo(id);
 
     }
 }

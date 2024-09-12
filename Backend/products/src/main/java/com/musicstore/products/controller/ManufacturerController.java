@@ -1,14 +1,12 @@
 package com.musicstore.products.controller;
 
 import com.musicstore.products.dto.ManufacturerRequest;
-import com.musicstore.products.dto.ManufacturerRequestBody;
 import com.musicstore.products.model.Manufacturer;
 import com.musicstore.products.service.ManufacturerService;
 import jakarta.ws.rs.core.HttpHeaders;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
@@ -21,9 +19,9 @@ public class ManufacturerController {
 	@PostMapping("/create")
 	public String addManufacturer(
 			@RequestHeader(HttpHeaders.AUTHORIZATION) String token,
-			@RequestBody ManufacturerRequestBody manufacturerRequestBody
+			@RequestBody ManufacturerRequest manufacturerRequest
 	) {
-		return manufacturerService.createManufacturers(token, manufacturerRequestBody);
+		return manufacturerService.createManufacturers(token, manufacturerRequest);
 	}
 
 	@GetMapping("/get")
@@ -39,9 +37,10 @@ public class ManufacturerController {
 	@GetMapping("/get/search/{category}")
 	public List<Manufacturer> getAllBySearchParameters(
 			@PathVariable(value = "category") Long categoryId,
-			@RequestParam(value = "country") String country
+			@RequestParam(value = "country") String country,
+			@RequestParam(value = "subcategory") String subcategory
 	) {
-		return manufacturerService.findAllBySearchParameters(categoryId, country);
+		return manufacturerService.findAllBySearchParameters(categoryId, country, subcategory);
 	}
 
 	@PutMapping("/update/{manufacturerId}")

@@ -1,7 +1,6 @@
 package com.musicstore.products.controller;
 
 import com.musicstore.products.dto.CategoryRequest;
-import com.musicstore.products.dto.CategoryRequestBody;
 import com.musicstore.products.model.Category;
 import com.musicstore.products.service.CategoryService;
 import jakarta.ws.rs.core.HttpHeaders;
@@ -19,8 +18,10 @@ public class CategoryController {
 
 
 	@PostMapping("/create")
-	public String addCategory(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @RequestBody CategoryRequestBody categories) {
-		return categoryService.createCategories(token, categories);
+	public String addCategory(
+			@RequestHeader(HttpHeaders.AUTHORIZATION) String token,
+			@RequestBody CategoryRequest category) {
+		return categoryService.createCategories(token, category);
 	}
 
 	@GetMapping("/get")

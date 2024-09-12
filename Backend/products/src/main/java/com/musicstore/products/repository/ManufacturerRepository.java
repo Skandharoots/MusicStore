@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 @Transactional
@@ -21,6 +22,7 @@ public interface ManufacturerRepository extends JpaRepository<Manufacturer, Long
 			"JOIN product p ON p.manufacturer_id = m.id " +
 			"JOIN category ca ON p.category_id = ca.id " +
 			"JOIN country c ON p.country_id = c.id " +
-			"WHERE ca.id = ?1 AND c.name LIKE %?2%")
-	List<Manufacturer> findAllBySearchParameters(Long categoryId, String country);
+			"JOIN subcategory s ON p.subcategory_id=s.id " +
+			"WHERE ca.id = ?1 AND c.name LIKE %?2% AND s.name LIKE %?3%")
+	List<Manufacturer> findAllBySearchParameters(Long categoryId, String country, String subcategory);
 }

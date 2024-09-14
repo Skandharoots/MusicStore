@@ -2,7 +2,6 @@ package com.musicstore.products.service;
 
 import com.musicstore.products.dto.CategoryRequest;
 import com.musicstore.products.model.Category;
-import com.musicstore.products.model.Subcategory;
 import com.musicstore.products.repository.CategoryRepository;
 import jakarta.ws.rs.NotFoundException;
 import lombok.AllArgsConstructor;
@@ -11,9 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.security.InvalidParameterException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @AllArgsConstructor

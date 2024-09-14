@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import java.math.BigDecimal;
-import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.UUID;
 

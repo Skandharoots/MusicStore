@@ -17,7 +17,7 @@ import java.util.UUID;
 @Transactional
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
-	List<Product> findAll();
+	Page<Product> findAll(Pageable pageable);
 
 	Optional<Product> findByProductSkuId(UUID id);
 

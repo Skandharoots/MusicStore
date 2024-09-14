@@ -15,7 +15,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -104,8 +103,11 @@ public class ProductRepositoryTests {
         );
         entityManager.persist(product);
 
-        List<Product> products = productRepository.findAll();
-        Assertions.assertThat(products.size()).isEqualTo(1);
+
+        Pageable pageable = (Pageable) PageRequest.of(0, 10, Sort.by("productPrice").ascending());
+
+        Page<Product> products = productRepository.findAll(pageable);
+        Assertions.assertThat(products.getTotalElements()).isEqualTo(1);
 
     }
 

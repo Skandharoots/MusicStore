@@ -40,10 +40,18 @@ public class ProductService {
 
 	public String createProducts(String token, ProductRequest productRequest) {
 
-		//TODO: Uncomment this for prod
-//		if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
-//			throw new RuntimeException("No admin authority");
-//		}
+
+		if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
+			throw new RuntimeException("No admin authority");
+		}
+
+		if (productRequest.getProductName() == null || productRequest.getProductName().isEmpty()
+				|| productRequest.getPrice() == null || productRequest.getQuantity() == null
+				|| productRequest.getDescription() == null || productRequest.getDescription().isEmpty()
+				|| productRequest.getManufacturerId() == null || productRequest.getCategoryId() == null
+				|| productRequest.getCountryId() == null || productRequest.getSubcategoryId() == null) {
+			throw new IllegalArgumentException("Invalid and empty product request parameters");
+		}
 
 		Category category = categoryService.getCategoryById(productRequest.getCategoryId());
 
@@ -130,6 +138,7 @@ public class ProductService {
 		OrderAvailabilityResponse orderAvailabilityResponse = new OrderAvailabilityResponse();
 		List<OrderAvailabilityListItem> items = new ArrayList<>();
 		AtomicBoolean allAreAvailable = new AtomicBoolean(true);
+		List<Product> productsToUpdateIfAllAvailable = new ArrayList<>();
 
 		orderRequest.getItems()
 				.forEach(orderLineItemsDTO -> {
@@ -145,6 +154,7 @@ public class ProductService {
 										product.getProductSkuId(),
 										true
 								);
+							productsToUpdateIfAllAvailable.add(product);
 					} else {
 							orderAvailabilityListItem =
 								new OrderAvailabilityListItem(
@@ -158,13 +168,10 @@ public class ProductService {
 		orderAvailabilityResponse.setAvailableItems(items);
 
 		if (allAreAvailable.get()) {
+			int index = 0;
 			orderRequest.getItems()
 					.forEach(orderLineItemsDTO -> {
-						Product product = productRepository.findByProductSkuId(
-										orderLineItemsDTO.getProductSkuId())
-								.orElseThrow(
-										() -> new NotFoundException("Product not found")
-								);
+						Product product = productsToUpdateIfAllAvailable.get(index);
 						product.setInStock(product.getInStock() - orderLineItemsDTO.getQuantity());
 						productRepository.save(product);
 					});
@@ -186,10 +193,18 @@ public class ProductService {
 	}
 
 	public ResponseEntity<String> updateProduct(String token, Long id, ProductRequest product) {
-		//TODO: Uncomment this for prod
-//		if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
-//			throw new RuntimeException("No admin authority");
-//		}
+
+		if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
+			throw new RuntimeException("No admin authority");
+		}
+
+		if (product.getProductName() == null || product.getProductName().isEmpty()
+				|| product.getPrice() == null || product.getQuantity() == null
+				|| product.getDescription() == null || product.getDescription().isEmpty()
+				|| product.getManufacturerId() == null || product.getCategoryId() == null
+				|| product.getCountryId() == null || product.getSubcategoryId() == null) {
+			throw new IllegalArgumentException("Invalid and empty product request parameters");
+		}
 
 		Product productToUpdate = productRepository.findById(id)
 				.orElseThrow(
@@ -211,10 +226,9 @@ public class ProductService {
 
 	public ResponseEntity<String> deleteProduct(String token, Long id) {
 
-		//TODO: Uncomment this for prod
-//		if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
-//			throw new RuntimeException("No admin authority");
-//		}
+		if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
+			throw new RuntimeException("No admin authority");
+		}
 
 		Product productToDelete = productRepository.findById(id)
 				.orElseThrow(

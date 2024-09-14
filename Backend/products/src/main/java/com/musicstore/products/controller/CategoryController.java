@@ -5,6 +5,7 @@ import com.musicstore.products.model.Category;
 import com.musicstore.products.service.CategoryService;
 import jakarta.ws.rs.core.HttpHeaders;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -18,6 +19,7 @@ public class CategoryController {
 
 
 	@PostMapping("/create")
+	@ResponseStatus(HttpStatus.CREATED)
 	public String addCategory(
 			@RequestHeader(HttpHeaders.AUTHORIZATION) String token,
 			@RequestBody CategoryRequest category) {

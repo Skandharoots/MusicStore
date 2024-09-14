@@ -60,7 +60,7 @@ public class ManufacturerControllerTests {
                 .content(objectMapper.writeValueAsString(manufacturerRequest))
         );
 
-        resultActions.andExpect(MockMvcResultMatchers.status().isOk());
+        resultActions.andExpect(MockMvcResultMatchers.status().isCreated());
         resultActions.andExpect(MockMvcResultMatchers.content().string("Manufacturer created"));
     }
 

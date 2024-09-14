@@ -61,7 +61,7 @@ public class SubcategoryControllerTests {
                 .content(objectMapper.writeValueAsString(subcategoryRequest))
         );
 
-        resultActions.andExpect(MockMvcResultMatchers.status().isOk());
+        resultActions.andExpect(MockMvcResultMatchers.status().isCreated());
         resultActions.andExpect(MockMvcResultMatchers.content().string("Subcategory created"));
     }
 

@@ -8,6 +8,7 @@ import com.musicstore.products.service.ProductService;
 import jakarta.ws.rs.core.HttpHeaders;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,6 +23,7 @@ public class ProductsController {
     private final ProductService productService;
 
     @PostMapping("/create")
+    @ResponseStatus(HttpStatus.CREATED)
     public String createProducts(
             @RequestHeader(HttpHeaders.AUTHORIZATION) String token,
             @RequestBody ProductRequest product

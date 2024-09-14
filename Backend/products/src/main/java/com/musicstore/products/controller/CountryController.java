@@ -5,6 +5,7 @@ import com.musicstore.products.model.Country;
 import com.musicstore.products.service.CountryService;
 import jakarta.ws.rs.core.HttpHeaders;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,6 +19,7 @@ public class CountryController {
 	private final CountryService countryService;
 
 	@PostMapping("/create")
+	@ResponseStatus(HttpStatus.CREATED)
 	public String addCountry(
 			@RequestHeader(HttpHeaders.AUTHORIZATION) String token,
 			@RequestBody CountryRequest countryRequest

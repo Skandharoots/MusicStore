@@ -56,7 +56,7 @@ public class CategoryControllerTests {
                 .content(objectMapper.writeValueAsString(categoryRequest))
         );
 
-        resultActions.andExpect(MockMvcResultMatchers.status().isOk());
+        resultActions.andExpect(MockMvcResultMatchers.status().isCreated());
     }
 
     @Test

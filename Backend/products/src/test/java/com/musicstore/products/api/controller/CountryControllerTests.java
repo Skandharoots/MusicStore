@@ -61,7 +61,7 @@ public class CountryControllerTests {
                 .content(objectMapper.writeValueAsString(countryRequest))
         );
 
-        resultActions.andExpect(MockMvcResultMatchers.status().isOk());
+        resultActions.andExpect(MockMvcResultMatchers.status().isCreated());
         resultActions.andExpect(MockMvcResultMatchers.content().string("Country created"));
 
     }

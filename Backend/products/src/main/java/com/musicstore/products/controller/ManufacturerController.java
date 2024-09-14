@@ -5,6 +5,7 @@ import com.musicstore.products.model.Manufacturer;
 import com.musicstore.products.service.ManufacturerService;
 import jakarta.ws.rs.core.HttpHeaders;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -17,6 +18,7 @@ public class ManufacturerController {
 	private final ManufacturerService manufacturerService;
 
 	@PostMapping("/create")
+	@ResponseStatus(HttpStatus.CREATED)
 	public String addManufacturer(
 			@RequestHeader(HttpHeaders.AUTHORIZATION) String token,
 			@RequestBody ManufacturerRequest manufacturerRequest

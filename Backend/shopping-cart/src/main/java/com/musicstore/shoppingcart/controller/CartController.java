@@ -5,6 +5,7 @@ import com.musicstore.shoppingcart.dto.CartUpdateRequest;
 import com.musicstore.shoppingcart.model.Cart;
 import com.musicstore.shoppingcart.service.CartService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,6 +20,7 @@ public class CartController {
     private final CartService cartService;
 
     @PostMapping("/create")
+    @ResponseStatus(HttpStatus.CREATED)
     public String createCart(@RequestBody CartRequest cartRequest) {
 
         return cartService.addCart(cartRequest);

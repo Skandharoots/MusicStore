@@ -63,7 +63,7 @@ public class CartControllerTests {
                 .content(objectMapper.writeValueAsString(cartRequest))
         );
         resultActions.andExpect(
-                MockMvcResultMatchers.status().isOk()
+                MockMvcResultMatchers.status().isCreated()
         );
     }
 

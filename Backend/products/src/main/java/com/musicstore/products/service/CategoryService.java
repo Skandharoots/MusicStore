@@ -25,10 +25,9 @@ public class CategoryService {
 
 	public String createCategories(String token, CategoryRequest category) {
 
-		//TODO: Uncomment this for prod
-//		if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
-//			throw new RuntimeException("No admin authority");
-//		}
+		if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
+			throw new RuntimeException("No admin authority");
+		}
 
 		if (category.getCategoryName().isEmpty()) {
 			throw new InvalidParameterException("Category name cannot be empty");
@@ -56,10 +55,9 @@ public class CategoryService {
 
 	public ResponseEntity<String> updateCategory(String token, Long id, CategoryRequest category) {
 
-		//TODO: Uncomment this for prod
-//		if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
-//			throw new RuntimeException("No admin authority");
-//		}
+		if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
+			throw new RuntimeException("No admin authority");
+		}
 
 		Category categoryToUpdate = categoryRepository
 				.findById(id)
@@ -76,10 +74,9 @@ public class CategoryService {
 
 	public ResponseEntity<String> deleteCategory(String token, Long id) {
 
-		//TODO: Uncomment this for prod
-//		if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
-//			throw new RuntimeException("No admin authority");
-//		}
+		if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
+			throw new RuntimeException("No admin authority");
+		}
 
 		Category category = categoryRepository.findById(id)
 						.orElseThrow(

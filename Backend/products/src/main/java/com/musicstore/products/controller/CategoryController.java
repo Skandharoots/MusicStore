@@ -34,7 +34,7 @@ public class CategoryController {
 		return categoryService.getCategoryById(id);
 	}
 
-	@PutMapping("/{categoryId}")
+	@PutMapping("/update/{categoryId}")
 	public ResponseEntity<String> updateCategory(
 			@RequestHeader(HttpHeaders.AUTHORIZATION) String token,
 			@PathVariable(name = "categoryId") Long id,

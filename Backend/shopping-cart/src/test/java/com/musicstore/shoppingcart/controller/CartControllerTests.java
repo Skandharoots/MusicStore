@@ -5,7 +5,6 @@ import com.musicstore.shoppingcart.dto.CartRequest;
 import com.musicstore.shoppingcart.dto.CartUpdateRequest;
 import com.musicstore.shoppingcart.model.Cart;
 import com.musicstore.shoppingcart.service.CartService;
-import jakarta.ws.rs.NotFoundException;
 import org.junit.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
@@ -26,7 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 

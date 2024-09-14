@@ -5,6 +5,7 @@ import com.musicstore.products.model.Country;
 import com.musicstore.products.repository.CountryRepository;
 import com.musicstore.products.service.CountryService;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -14,6 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,24 +30,47 @@ public class CountryServiceTests {
     private CountryRepository countryRepository;
 
     @Mock
-    private WebClient.Builder webClient;
+    private WebClient.Builder webClientBuilder;
+
+    @Mock
+    private WebClient webClient;
+
+    @Mock
+    private WebClient.RequestHeadersUriSpec requestHeadersUriSpec;
+
+    @Mock
+    private WebClient.RequestHeadersSpec requestHeadersSpec;
+
+    @Mock
+    private WebClient.ResponseSpec responseSpec;
 
     @InjectMocks
     private CountryService countryService;
 
+    private String token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpX" +
+            "VCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI" +
+            "6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.S" +
+            "flKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
+
+    private Country country;
+
+    @BeforeEach
+    public void setUp() {
+        country = new Country("Poland");
+        country.setId(1L);
+    }
+
     @Test
     public void addCountryTest() {
 
-        String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpX" +
-                "VCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI" +
-                "6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.S" +
-                "flKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
-
-        Country country = new Country("Poland");
-        country.setId(1L);
-
         CountryRequest countryRequest = new CountryRequest();
         countryRequest.setName("Poland");
+
+        when(webClientBuilder.build()).thenReturn(webClient);
+        when(webClient.get()).thenReturn(requestHeadersUriSpec);
+        when(requestHeadersUriSpec.uri("http://USERS/api/v1/users/adminauthorize?token=" + token.substring(7))).thenReturn(requestHeadersSpec);
+        when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+        when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
 
         when(countryRepository.save(Mockito.any(Country.class))).thenReturn(country);
         String response = countryService.createCountry(token, countryRequest);
@@ -56,23 +81,32 @@ public class CountryServiceTests {
     }
 
     @Test
-    public void addCountryExceptionTest() {
-        String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpX" +
-                "VCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI" +
-                "6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.S" +
-                "flKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
+    public void addCountryExceptionEmptyNameTest() {
 
         CountryRequest countryRequest = new CountryRequest();
 
+        when(webClientBuilder.build()).thenReturn(webClient);
+        when(webClient.get()).thenReturn(requestHeadersUriSpec);
+        when(requestHeadersUriSpec.uri("http://USERS/api/v1/users/adminauthorize?token=" + token.substring(7))).thenReturn(requestHeadersSpec);
+        when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+        when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
 
         Assertions.assertThatThrownBy(() -> countryService.createCountry(token, countryRequest));
     }
 
     @Test
-    public void getAllCountriesTest() {
+    public void addCountryExceptionInvalidTokenTest() {
 
-        Country country = new Country("Poland");
-        country.setId(1L);
+        String faultyToken = token.substring(7);
+
+        CountryRequest countryRequest = new CountryRequest();
+        countryRequest.setName("Poland");
+
+        Assertions.assertThatThrownBy(() -> countryService.createCountry(faultyToken, countryRequest));
+    }
+
+    @Test
+    public void getAllCountriesTest() {
 
         List<Country> categories = new ArrayList<>();
         categories.add(country);
@@ -87,9 +121,6 @@ public class CountryServiceTests {
 
     @Test
     public void getCountryByIdTest() {
-
-        Country country = new Country("Poland");
-        country.setId(1L);
 
         when(countryRepository.findById(1L)).thenReturn(Optional.of(country));
         Country response = countryService.getCountryById(1L);
@@ -127,19 +158,17 @@ public class CountryServiceTests {
     @Test
     public void updateCountryTest() {
 
-        String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpX" +
-                "VCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI" +
-                "6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.S" +
-                "flKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
-
-        Country country = new Country("Poland");
-        country.setId(1L);
-
         CountryRequest countryRequest = new CountryRequest();
         countryRequest.setName("England");
 
         Country countryUpdated = new Country("England");
         country.setId(1L);
+
+        when(webClientBuilder.build()).thenReturn(webClient);
+        when(webClient.get()).thenReturn(requestHeadersUriSpec);
+        when(requestHeadersUriSpec.uri("http://USERS/api/v1/users/adminauthorize?token=" + token.substring(7))).thenReturn(requestHeadersSpec);
+        when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+        when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
 
         when(countryRepository.findById(1L)).thenReturn(Optional.of(country));
         when(countryRepository.save(Mockito.any(Country.class))).thenReturn(countryUpdated);
@@ -154,12 +183,13 @@ public class CountryServiceTests {
     @Test
     public void updateCountryExceptionTest() {
 
-        String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpX" +
-                "VCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI" +
-                "6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.S" +
-                "flKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
-
         CountryRequest countryRequest = new CountryRequest();
+
+        when(webClientBuilder.build()).thenReturn(webClient);
+        when(webClient.get()).thenReturn(requestHeadersUriSpec);
+        when(requestHeadersUriSpec.uri("http://USERS/api/v1/users/adminauthorize?token=" + token.substring(7))).thenReturn(requestHeadersSpec);
+        when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+        when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
 
         when(countryRepository.findById(1L)).thenReturn(Optional.empty());
         Assertions.assertThatThrownBy(() -> countryService.updateCountry(token, 1L, countryRequest));
@@ -169,13 +199,11 @@ public class CountryServiceTests {
     @Test
     public void deleteCountryTest() {
 
-        String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpX" +
-                "VCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI" +
-                "6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.S" +
-                "flKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
-
-        Country country = new Country("Poland");
-        country.setId(1L);
+        when(webClientBuilder.build()).thenReturn(webClient);
+        when(webClient.get()).thenReturn(requestHeadersUriSpec);
+        when(requestHeadersUriSpec.uri("http://USERS/api/v1/users/adminauthorize?token=" + token.substring(7))).thenReturn(requestHeadersSpec);
+        when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+        when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
 
         when(countryRepository.findById(1L)).thenReturn(Optional.of(country));
         ResponseEntity<String> response = countryService.deleteCountry(token, 1L);
@@ -189,10 +217,11 @@ public class CountryServiceTests {
     @Test
     public void deleteCountryExceptionTest() {
 
-        String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpX" +
-                "VCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI" +
-                "6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.S" +
-                "flKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
+        when(webClientBuilder.build()).thenReturn(webClient);
+        when(webClient.get()).thenReturn(requestHeadersUriSpec);
+        when(requestHeadersUriSpec.uri("http://USERS/api/v1/users/adminauthorize?token=" + token.substring(7))).thenReturn(requestHeadersSpec);
+        when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+        when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
 
         when(countryRepository.findById(1L)).thenReturn(Optional.empty());
         Assertions.assertThatThrownBy(() -> countryService.deleteCountry(token, 1L));

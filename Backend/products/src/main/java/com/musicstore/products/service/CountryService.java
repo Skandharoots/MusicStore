@@ -21,10 +21,9 @@ public class CountryService {
 	private final WebClient.Builder webClient;
 
 	public String createCountry(String token, CountryRequest country) {
-		//TODO: Uncomment this for prod
-//		if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
-//			throw new RuntimeException("No admin authority");
-//		}
+		if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
+			throw new RuntimeException("No admin authority");
+		}
 
 		Country newCountry = new Country(country.getName());
 
@@ -56,10 +55,9 @@ public class CountryService {
 
 	public ResponseEntity<String> updateCountry(String token, Long id, CountryRequest country) {
 
-		//TODO: Uncomment this for prod
-//		if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
-//			throw new RuntimeException("No admin authority");
-//		}
+		if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
+			throw new RuntimeException("No admin authority");
+		}
 
 		Country countryToUpdate = countryRepository
 				.findById(id)
@@ -75,10 +73,9 @@ public class CountryService {
 	}
 
 	public ResponseEntity<String> deleteCountry(String token, Long id) {
-		//TODO: Uncomment this for prod
-//		if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
-//			throw new RuntimeException("No admin authority");
-//		}
+		if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
+			throw new RuntimeException("No admin authority");
+		}
 
 		Country country = countryRepository
 				.findById(id)

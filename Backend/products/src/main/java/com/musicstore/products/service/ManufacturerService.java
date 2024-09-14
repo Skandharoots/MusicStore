@@ -21,10 +21,9 @@ public class ManufacturerService {
 	private final WebClient.Builder webClient;
 
 	public String createManufacturers(String token, ManufacturerRequest manufacturer) {
-		//TODO: Uncomment this for prod
-//		if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
-//			throw new RuntimeException("No admin authority");
-//		}
+		if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
+			throw new RuntimeException("No admin authority");
+		}
 
 		Manufacturer newManufacturer = new Manufacturer(manufacturer.getName());
 
@@ -56,10 +55,9 @@ public class ManufacturerService {
 
 	public ResponseEntity<String> updateManufacturer(String token, Long id, ManufacturerRequest manufacturer) {
 
-		//TODO: Uncomment this for prod
-//		if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
-//			throw new RuntimeException("No admin authority");
-//		}
+		if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
+			throw new RuntimeException("No admin authority");
+		}
 
 		Manufacturer manufacurerToUpdate = manufacturerRepository
 				.findById(id)
@@ -75,10 +73,9 @@ public class ManufacturerService {
 	}
 
 	public ResponseEntity<String> deleteManufacturer(String token, Long id) {
-		//TODO: Uncomment this for prod
-//		if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
-//			throw new RuntimeException("No admin authority");
-//		}
+		if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
+			throw new RuntimeException("No admin authority");
+		}
 
 		Manufacturer manufacurerToDelete = manufacturerRepository
 				.findById(id)

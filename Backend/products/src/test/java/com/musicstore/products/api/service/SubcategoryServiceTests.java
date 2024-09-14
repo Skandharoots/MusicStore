@@ -7,6 +7,7 @@ import com.musicstore.products.repository.SubcategoryRepository;
 import com.musicstore.products.service.CategoryService;
 import com.musicstore.products.service.SubcategoryService;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -16,6 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,29 +35,55 @@ public class SubcategoryServiceTests {
     private CategoryService categoryService;
 
     @Mock
-    private WebClient.Builder webClient;
+    private WebClient.Builder webClientBuilder;
+
+    @Mock
+    private WebClient webClient;
+
+    @Mock
+    private WebClient.RequestHeadersUriSpec requestHeadersUriSpec;
+
+    @Mock
+    private WebClient.RequestHeadersSpec requestHeadersSpec;
+
+    @Mock
+    private WebClient.ResponseSpec responseSpec;
 
     @InjectMocks
     private SubcategoryService subcategoryService;
 
+    private String token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpX" +
+            "VCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI" +
+            "6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.S" +
+            "flKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
+
+    private Subcategory subcategory;
+
+    private Category category;
+
+    @BeforeEach
+    public void setup() {
+        category = new Category("Guitar");
+        category.setId(1L);
+
+        subcategory = new Subcategory("Electric");
+        subcategory.setId(1L);
+        subcategory.setCategory(category);
+    }
+
     @Test
     public void addSubcategoryTest() {
 
-        String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpX" +
-                "VCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI" +
-                "6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.S" +
-                "flKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
-
-        Category category = new Category("Guitar");
-        category.setId(1L);
-
-        Subcategory subcategory = new Subcategory("Electric");
-        subcategory.setId(1L);
-        subcategory.setCategory(category);
 
         SubcategoryRequest subcategoryRequest = new SubcategoryRequest();
         subcategoryRequest.setName("Electric");
         subcategoryRequest.setCategoryId(1L);
+
+        when(webClientBuilder.build()).thenReturn(webClient);
+        when(webClient.get()).thenReturn(requestHeadersUriSpec);
+        when(requestHeadersUriSpec.uri("http://USERS/api/v1/users/adminauthorize?token=" + token.substring(7))).thenReturn(requestHeadersSpec);
+        when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+        when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
 
         when(categoryService.getCategoryById(1L)).thenReturn(category);
         when(subcategoryRepository.save(Mockito.any(Subcategory.class))).thenReturn(subcategory);
@@ -67,27 +95,33 @@ public class SubcategoryServiceTests {
     }
 
     @Test
-    public void addSubcategoryExceptionTest() {
-        String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpX" +
-                "VCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI" +
-                "6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.S" +
-                "flKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
+    public void addSubcategoryExceptionInvalidTokenTest() {
+
+        String faultyToken = token.substring(7);
+
+        SubcategoryRequest subcategoryRequest = new SubcategoryRequest();
+        subcategoryRequest.setName("Electric");
+        subcategoryRequest.setCategoryId(1L);
+
+        Assertions.assertThatThrownBy(() -> subcategoryService.createSubcategories(faultyToken, subcategoryRequest));
+
+    }
+    @Test
+    public void addSubcategoryExceptionEmptyNameTest() {
 
         SubcategoryRequest subcategoryRequest = new SubcategoryRequest();
 
+        when(webClientBuilder.build()).thenReturn(webClient);
+        when(webClient.get()).thenReturn(requestHeadersUriSpec);
+        when(requestHeadersUriSpec.uri("http://USERS/api/v1/users/adminauthorize?token=" + token.substring(7))).thenReturn(requestHeadersSpec);
+        when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+        when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
 
         Assertions.assertThatThrownBy(() -> subcategoryService.createSubcategories(token, subcategoryRequest));
     }
 
     @Test
     public void getAllSubCategoriesTest() {
-
-        Category category = new Category("Guitar");
-        category.setId(1L);
-
-        Subcategory subcategory = new Subcategory("Electric");
-        subcategory.setId(1L);
-        subcategory.setCategory(category);
 
         List<Subcategory> categories = new ArrayList<>();
         categories.add(subcategory);
@@ -102,13 +136,6 @@ public class SubcategoryServiceTests {
 
     @Test
     public void getSubcategoryByIdTest() {
-
-        Category category = new Category("Guitar");
-        category.setId(1L);
-
-        Subcategory subcategory = new Subcategory("Electric");
-        subcategory.setId(1L);
-        subcategory.setCategory(category);
 
         when(subcategoryRepository.findById(1L)).thenReturn(Optional.of(subcategory));
         Subcategory response = subcategoryService.getSubcategoryById(1L);
@@ -129,13 +156,6 @@ public class SubcategoryServiceTests {
     @Test
     public void findAllSubcategoriesBySearchParametersTest() {
 
-        Category category = new Category("Guitar");
-        category.setId(1L);
-
-        Subcategory subcategory = new Subcategory("Electric");
-        subcategory.setId(1L);
-        subcategory.setCategory(category);
-
         List<Subcategory> categories = new ArrayList<>();
         categories.add(subcategory);
 
@@ -150,23 +170,17 @@ public class SubcategoryServiceTests {
     @Test
     public void updateSubcategoryTest() {
 
-        String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpX" +
-                "VCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI" +
-                "6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.S" +
-                "flKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
-
-        Category category = new Category("Guitar");
-        category.setId(1L);
-
-        Subcategory subcategory = new Subcategory("Electric");
-        subcategory.setId(1L);
-        subcategory.setCategory(category);
-
         SubcategoryRequest subcategoryRequest = new SubcategoryRequest();
         subcategoryRequest.setName("Acoustasonic");
 
         Subcategory subcategoryUpdated = new Subcategory("Acoustasonic");
         subcategory.setId(1L);
+
+        when(webClientBuilder.build()).thenReturn(webClient);
+        when(webClient.get()).thenReturn(requestHeadersUriSpec);
+        when(requestHeadersUriSpec.uri("http://USERS/api/v1/users/adminauthorize?token=" + token.substring(7))).thenReturn(requestHeadersSpec);
+        when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+        when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
 
         when(subcategoryRepository.findById(1L)).thenReturn(Optional.of(subcategory));
         when(subcategoryRepository.save(Mockito.any(Subcategory.class))).thenReturn(subcategoryUpdated);
@@ -181,12 +195,13 @@ public class SubcategoryServiceTests {
     @Test
     public void updateSubcategoryExceptionTest() {
 
-        String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpX" +
-                "VCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI" +
-                "6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.S" +
-                "flKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
-
         SubcategoryRequest subcategoryRequest = new SubcategoryRequest();
+
+        when(webClientBuilder.build()).thenReturn(webClient);
+        when(webClient.get()).thenReturn(requestHeadersUriSpec);
+        when(requestHeadersUriSpec.uri("http://USERS/api/v1/users/adminauthorize?token=" + token.substring(7))).thenReturn(requestHeadersSpec);
+        when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+        when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
 
         when(subcategoryRepository.findById(1L)).thenReturn(Optional.empty());
         Assertions.assertThatThrownBy(() -> subcategoryService.updateSubcategory(token, 1L, subcategoryRequest));
@@ -196,13 +211,14 @@ public class SubcategoryServiceTests {
     @Test
     public void deleteSubcategoryTest() {
 
-        String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpX" +
-                "VCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI" +
-                "6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.S" +
-                "flKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
-
         Subcategory subcategory = new Subcategory("Electric");
         subcategory.setId(1L);
+
+        when(webClientBuilder.build()).thenReturn(webClient);
+        when(webClient.get()).thenReturn(requestHeadersUriSpec);
+        when(requestHeadersUriSpec.uri("http://USERS/api/v1/users/adminauthorize?token=" + token.substring(7))).thenReturn(requestHeadersSpec);
+        when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+        when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
 
         when(subcategoryRepository.findById(1L)).thenReturn(Optional.of(subcategory));
         ResponseEntity<String> response = subcategoryService.deleteSubcategory(token, 1L);
@@ -216,10 +232,11 @@ public class SubcategoryServiceTests {
     @Test
     public void deleteSubcategoryExceptionTest() {
 
-        String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpX" +
-                "VCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI" +
-                "6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.S" +
-                "flKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
+        when(webClientBuilder.build()).thenReturn(webClient);
+        when(webClient.get()).thenReturn(requestHeadersUriSpec);
+        when(requestHeadersUriSpec.uri("http://USERS/api/v1/users/adminauthorize?token=" + token.substring(7))).thenReturn(requestHeadersSpec);
+        when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+        when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
 
         when(subcategoryRepository.findById(1L)).thenReturn(Optional.empty());
         Assertions.assertThatThrownBy(() -> subcategoryService.deleteSubcategory(token, 1L));

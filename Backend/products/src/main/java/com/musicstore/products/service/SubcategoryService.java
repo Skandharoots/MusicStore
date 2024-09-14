@@ -9,9 +9,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @Transactional
@@ -25,10 +23,10 @@ public class SubcategoryService {
     private final WebClient.Builder webClient;
 
     public String createSubcategories(String token, SubcategoryRequest subcategory) {
-        //TODO: Uncomment this for prod
-//		if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
-//			throw new RuntimeException("No admin authority");
-//		}
+
+		if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
+			throw new RuntimeException("No admin authority");
+		}
 
         if (subcategory.getName().isEmpty() || subcategory.getCategoryId().toString().isEmpty()) {
             throw new IllegalArgumentException("Subcategory name or category id cannot be empty");
@@ -63,10 +61,9 @@ public class SubcategoryService {
 
     public ResponseEntity<String> updateSubcategory(String token, Long id, SubcategoryRequest subcategory) {
 
-        //TODO: Uncomment this for prod
-    //		if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
-    //			throw new RuntimeException("No admin authority");
-    //		}
+        if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
+            throw new RuntimeException("No admin authority");
+        }
 
         Subcategory subcategoryToUpdate = subcategoryRepository
                 .findById(id)
@@ -82,10 +79,10 @@ public class SubcategoryService {
     }
 
     public ResponseEntity<String> deleteSubcategory(String token, Long id) {
-        //TODO: Uncomment this for prod
-    //		if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
-    //			throw new RuntimeException("No admin authority");
-    //		}
+
+        if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
+            throw new RuntimeException("No admin authority");
+        }
 
         Subcategory subcategoryToDelete = subcategoryRepository
                 .findById(id)

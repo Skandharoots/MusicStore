@@ -5,6 +5,7 @@ import com.musicstore.products.model.Manufacturer;
 import com.musicstore.products.repository.ManufacturerRepository;
 import com.musicstore.products.service.ManufacturerService;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -14,6 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,24 +30,47 @@ public class ManufacturerServiceTests {
     private ManufacturerRepository manufacturerRepository;
 
     @Mock
-    private WebClient.Builder webClient;
+    private WebClient.Builder webClientBuilder;
+
+    @Mock
+    private WebClient webClient;
+
+    @Mock
+    private WebClient.RequestHeadersUriSpec requestHeadersUriSpec;
+
+    @Mock
+    private WebClient.RequestHeadersSpec requestHeadersSpec;
+
+    @Mock
+    private WebClient.ResponseSpec responseSpec;
 
     @InjectMocks
     private ManufacturerService manufacturerService;
 
+    private String token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpX" +
+            "VCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI" +
+            "6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.S" +
+            "flKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
+
+    private Manufacturer manufacturer;
+
+    @BeforeEach
+    public void setup() {
+        manufacturer = new Manufacturer("Fender");
+        manufacturer.setId(1L);
+    }
+
     @Test
     public void addManufacturerTest() {
 
-        String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpX" +
-                "VCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI" +
-                "6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.S" +
-                "flKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
-
-        Manufacturer manufacturer = new Manufacturer("Fender");
-        manufacturer.setId(1L);
-
         ManufacturerRequest manufacturerRequest = new ManufacturerRequest();
         manufacturerRequest.setName("Fender");
+
+        when(webClientBuilder.build()).thenReturn(webClient);
+        when(webClient.get()).thenReturn(requestHeadersUriSpec);
+        when(requestHeadersUriSpec.uri("http://USERS/api/v1/users/adminauthorize?token=" + token.substring(7))).thenReturn(requestHeadersSpec);
+        when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+        when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
 
         when(manufacturerRepository.save(Mockito.any(Manufacturer.class))).thenReturn(manufacturer);
         String response = manufacturerService.createManufacturers(token, manufacturerRequest);
@@ -56,23 +81,34 @@ public class ManufacturerServiceTests {
     }
 
     @Test
+    public void addManufacturerExceptionInvalidTokenTest() {
+
+        String faultyToken = token.substring(7);
+
+        ManufacturerRequest manufacturerRequest = new ManufacturerRequest();
+        manufacturerRequest.setName("Fender");
+
+        Assertions.assertThatThrownBy(() -> manufacturerService.createManufacturers(faultyToken, manufacturerRequest));
+
+    }
+
+    @Test
     public void addManufacturerExceptionTest() {
-        String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpX" +
-                "VCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI" +
-                "6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.S" +
-                "flKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
+
 
         ManufacturerRequest manufacturerRequest = new ManufacturerRequest();
 
+        when(webClientBuilder.build()).thenReturn(webClient);
+        when(webClient.get()).thenReturn(requestHeadersUriSpec);
+        when(requestHeadersUriSpec.uri("http://USERS/api/v1/users/adminauthorize?token=" + token.substring(7))).thenReturn(requestHeadersSpec);
+        when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+        when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
 
         Assertions.assertThatThrownBy(() -> manufacturerService.createManufacturers(token, manufacturerRequest));
     }
 
     @Test
     public void getAllManufacturersTest() {
-
-        Manufacturer manufacturer = new Manufacturer("Fender");
-        manufacturer.setId(1L);
 
         List<Manufacturer> categories = new ArrayList<>();
         categories.add(manufacturer);
@@ -88,9 +124,6 @@ public class ManufacturerServiceTests {
     @Test
     public void getManufacturerByIdTest() {
 
-        Manufacturer manufacturer = new Manufacturer("Fender");
-        manufacturer.setId(1L);
-
         when(manufacturerRepository.findById(1L)).thenReturn(Optional.of(manufacturer));
         Manufacturer response = manufacturerService.getManufacturerById(1L);
         Assertions.assertThat(response).isNotNull();
@@ -101,9 +134,6 @@ public class ManufacturerServiceTests {
 
     @Test
     public void findAllManufacturersBySearchParametersTest() {
-
-        Manufacturer manufacturer = new Manufacturer("Fender");
-        manufacturer.setId(1L);
 
         List<Manufacturer> manufacturers = new ArrayList<>();
         manufacturers.add(manufacturer);
@@ -127,19 +157,17 @@ public class ManufacturerServiceTests {
     @Test
     public void updateManufacturerTest() {
 
-        String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpX" +
-                "VCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI" +
-                "6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.S" +
-                "flKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
-
-        Manufacturer manufacturer = new Manufacturer("Fender");
-        manufacturer.setId(1L);
-
         ManufacturerRequest manufacturerRequest = new ManufacturerRequest();
         manufacturerRequest.setName("Gretsch");
 
         Manufacturer manufacturerUpdated = new Manufacturer("Gretsch");
         manufacturer.setId(1L);
+
+        when(webClientBuilder.build()).thenReturn(webClient);
+        when(webClient.get()).thenReturn(requestHeadersUriSpec);
+        when(requestHeadersUriSpec.uri("http://USERS/api/v1/users/adminauthorize?token=" + token.substring(7))).thenReturn(requestHeadersSpec);
+        when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+        when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
 
         when(manufacturerRepository.findById(1L)).thenReturn(Optional.of(manufacturer));
         when(manufacturerRepository.save(Mockito.any(Manufacturer.class))).thenReturn(manufacturerUpdated);
@@ -154,12 +182,13 @@ public class ManufacturerServiceTests {
     @Test
     public void updateManufacturerExceptionTest() {
 
-        String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpX" +
-                "VCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI" +
-                "6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.S" +
-                "flKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
-
         ManufacturerRequest manufacturerRequest = new ManufacturerRequest();
+
+        when(webClientBuilder.build()).thenReturn(webClient);
+        when(webClient.get()).thenReturn(requestHeadersUriSpec);
+        when(requestHeadersUriSpec.uri("http://USERS/api/v1/users/adminauthorize?token=" + token.substring(7))).thenReturn(requestHeadersSpec);
+        when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+        when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
 
         when(manufacturerRepository.findById(1L)).thenReturn(Optional.empty());
         Assertions.assertThatThrownBy(() -> manufacturerService.updateManufacturer(token, 1L, manufacturerRequest));
@@ -169,13 +198,11 @@ public class ManufacturerServiceTests {
     @Test
     public void deleteManufacturerTest() {
 
-        String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpX" +
-                "VCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI" +
-                "6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.S" +
-                "flKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
-
-        Manufacturer manufacturer = new Manufacturer("Fender");
-        manufacturer.setId(1L);
+        when(webClientBuilder.build()).thenReturn(webClient);
+        when(webClient.get()).thenReturn(requestHeadersUriSpec);
+        when(requestHeadersUriSpec.uri("http://USERS/api/v1/users/adminauthorize?token=" + token.substring(7))).thenReturn(requestHeadersSpec);
+        when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+        when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
 
         when(manufacturerRepository.findById(1L)).thenReturn(Optional.of(manufacturer));
         ResponseEntity<String> response = manufacturerService.deleteManufacturer(token, 1L);
@@ -189,10 +216,11 @@ public class ManufacturerServiceTests {
     @Test
     public void deleteManufacturerExceptionTest() {
 
-        String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpX" +
-                "VCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI" +
-                "6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.S" +
-                "flKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
+        when(webClientBuilder.build()).thenReturn(webClient);
+        when(webClient.get()).thenReturn(requestHeadersUriSpec);
+        when(requestHeadersUriSpec.uri("http://USERS/api/v1/users/adminauthorize?token=" + token.substring(7))).thenReturn(requestHeadersSpec);
+        when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+        when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
 
         when(manufacturerRepository.findById(1L)).thenReturn(Optional.empty());
         Assertions.assertThatThrownBy(() -> manufacturerService.deleteManufacturer(token, 1L));

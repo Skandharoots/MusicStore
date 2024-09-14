@@ -86,7 +86,15 @@ public class CategoryServiceTests {
     @Test
     public void addCategoryExceptionEmptyNameTest() {
 
+        String jwtToken = token.substring(7);
+
         CategoryRequest categoryRequest = new CategoryRequest();
+
+        when(webClientBuilder.build()).thenReturn(webClient);
+        when(webClient.get()).thenReturn(requestHeadersUriSpec);
+        when(requestHeadersUriSpec.uri("http://USERS/api/v1/users/adminauthorize?token=" + jwtToken)).thenReturn(requestHeadersSpec);
+        when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+        when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
 
         Assertions.assertThatThrownBy(() -> categoryService.createCategories(token, categoryRequest));
     }

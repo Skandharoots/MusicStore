@@ -69,7 +69,7 @@ public class CountryServiceTests {
     }
 
     @Test
-    public void getAllCategoriesTest() {
+    public void getAllCountriesTest() {
 
         Country country = new Country("Poland");
         country.setId(1L);
@@ -96,6 +96,23 @@ public class CountryServiceTests {
         Assertions.assertThat(response).isNotNull();
         Assertions.assertThat(response.getName()).isEqualTo("Poland");
         Assertions.assertThat(response.getId()).isEqualTo(1L);
+
+    }
+
+    @Test
+    public void findAllCountriesBySearchParametersTest() {
+
+        Country country = new Country("Fender");
+        country.setId(1L);
+
+        List<Country> countries = new ArrayList<>();
+        countries.add(country);
+
+        when(countryRepository.findAllBySearchParameters(1L, "Fender", "Electric")).thenReturn(countries);
+        List<Country> response = countryService.findAllBySearchParameters(1L, "Fender", "Electric");
+        Assertions.assertThat(response).isNotNull();
+        Assertions.assertThat(response.size()).isEqualTo(1);
+        Assertions.assertThat(response.get(0)).isEqualTo(country);
 
     }
 

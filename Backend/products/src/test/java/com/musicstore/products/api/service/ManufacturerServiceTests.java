@@ -69,7 +69,7 @@ public class ManufacturerServiceTests {
     }
 
     @Test
-    public void getAllCategoriesTest() {
+    public void getAllManufacturersTest() {
 
         Manufacturer manufacturer = new Manufacturer("Fender");
         manufacturer.setId(1L);
@@ -96,6 +96,23 @@ public class ManufacturerServiceTests {
         Assertions.assertThat(response).isNotNull();
         Assertions.assertThat(response.getName()).isEqualTo("Fender");
         Assertions.assertThat(response.getId()).isEqualTo(1L);
+
+    }
+
+    @Test
+    public void findAllManufacturersBySearchParametersTest() {
+
+        Manufacturer manufacturer = new Manufacturer("Fender");
+        manufacturer.setId(1L);
+
+        List<Manufacturer> manufacturers = new ArrayList<>();
+        manufacturers.add(manufacturer);
+
+        when(manufacturerRepository.findAllBySearchParameters(1L, "USA", "Electric")).thenReturn(manufacturers);
+        List<Manufacturer> response = manufacturerService.findAllBySearchParameters(1L, "USA", "Electric");
+        Assertions.assertThat(response).isNotNull();
+        Assertions.assertThat(response.size()).isEqualTo(1);
+        Assertions.assertThat(response.get(0)).isEqualTo(manufacturer);
 
     }
 

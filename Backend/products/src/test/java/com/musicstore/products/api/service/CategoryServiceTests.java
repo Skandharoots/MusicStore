@@ -56,6 +56,19 @@ public class CategoryServiceTests {
     }
 
     @Test
+    public void addCategoryExceptionTest() {
+        String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpX" +
+                "VCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI" +
+                "6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.S" +
+                "flKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
+
+        CategoryRequest categoryRequest = new CategoryRequest();
+
+
+        Assertions.assertThatThrownBy(() -> categoryService.createCategories(token, categoryRequest));
+    }
+
+    @Test
     public void getAllCategoriesTest() {
 
         Category category = new Category("Guitar");
@@ -130,7 +143,6 @@ public class CategoryServiceTests {
                 "flKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
 
         CategoryRequest categoryRequest = new CategoryRequest();
-        categoryRequest.setCategoryName("Drums");
 
         when(categoryRepository.findById(1L)).thenReturn(Optional.empty());
         Assertions.assertThatThrownBy(() -> categoryService.updateCategory(token, 1L, categoryRequest));
@@ -155,5 +167,17 @@ public class CategoryServiceTests {
         Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         Assertions.assertThat(response.getBody()).isEqualTo("Category deleted successfully");
 
+    }
+
+    @Test
+    public void deleteCategoryExceptionTest() {
+
+        String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpX" +
+                "VCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI" +
+                "6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.S" +
+                "flKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
+
+        when(categoryRepository.findById(1L)).thenReturn(Optional.empty());
+        Assertions.assertThatThrownBy(() -> categoryService.deleteCategory(token, 1L));
     }
 }

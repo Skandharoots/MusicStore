@@ -97,12 +97,22 @@ public class CountryServiceTests {
     @Test
     public void addCountryExceptionInvalidTokenTest() {
 
-        String faultyToken = token.substring(7);
-
         CountryRequest countryRequest = new CountryRequest();
         countryRequest.setName("Poland");
 
-        Assertions.assertThatThrownBy(() -> countryService.createCountry(faultyToken, countryRequest));
+        when(webClientBuilder.build()).thenReturn(webClient);
+        when(webClient.get()).thenReturn(requestHeadersUriSpec);
+        when(requestHeadersUriSpec.uri("http://USERS/api/v1/users/adminauthorize?token=" + token.substring(7))).thenReturn(requestHeadersSpec);
+        when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+        when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(false));
+
+        Assertions.assertThatThrownBy(() -> countryService.createCountry(token, countryRequest));
+
+    }
+
+    @Test
+    public void addCountryFaultyTokenTest() {
+        Assertions.assertThatThrownBy(() -> countryService.createCountry(token.substring(7), new CountryRequest("Poland")));
     }
 
     @Test
@@ -181,7 +191,7 @@ public class CountryServiceTests {
     }
 
     @Test
-    public void updateCountryExceptionTest() {
+    public void updateCountryExceptionEmptyNameTest() {
 
         CountryRequest countryRequest = new CountryRequest();
 
@@ -191,9 +201,40 @@ public class CountryServiceTests {
         when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
         when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
 
-        when(countryRepository.findById(1L)).thenReturn(Optional.empty());
         Assertions.assertThatThrownBy(() -> countryService.updateCountry(token, 1L, countryRequest));
 
+    }
+
+    @Test
+    public void updateCountryExceptionInvalidTokenTest() {
+
+        CountryRequest countryRequest = new CountryRequest();
+        countryRequest.setName("England");
+
+        when(webClientBuilder.build()).thenReturn(webClient);
+        when(webClient.get()).thenReturn(requestHeadersUriSpec);
+        when(requestHeadersUriSpec.uri("http://USERS/api/v1/users/adminauthorize?token=" + token.substring(7))).thenReturn(requestHeadersSpec);
+        when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+        when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(false));
+
+        Assertions.assertThatThrownBy(() -> countryService.updateCountry(token, 1L, countryRequest));
+
+    }
+
+    @Test
+    public void updateCountryNotFoundExceptionTest() {
+
+        CountryRequest countryRequest = new CountryRequest();
+        countryRequest.setName("England");
+
+        when(webClientBuilder.build()).thenReturn(webClient);
+        when(webClient.get()).thenReturn(requestHeadersUriSpec);
+        when(requestHeadersUriSpec.uri("http://USERS/api/v1/users/adminauthorize?token=" + token.substring(7))).thenReturn(requestHeadersSpec);
+        when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+        when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
+
+        when(countryRepository.findById(1L)).thenReturn(Optional.empty());
+        Assertions.assertThatThrownBy(() -> countryService.updateCountry(token, 1L, countryRequest));
     }
 
     @Test
@@ -215,7 +256,7 @@ public class CountryServiceTests {
     }
 
     @Test
-    public void deleteCountryExceptionTest() {
+    public void deleteCountryExceptionNotFoundTest() {
 
         when(webClientBuilder.build()).thenReturn(webClient);
         when(webClient.get()).thenReturn(requestHeadersUriSpec);
@@ -224,6 +265,19 @@ public class CountryServiceTests {
         when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
 
         when(countryRepository.findById(1L)).thenReturn(Optional.empty());
+        Assertions.assertThatThrownBy(() -> countryService.deleteCountry(token, 1L));
+
+    }
+
+    @Test
+    public void deleteCountryExceptionInvalidTokenTest() {
+
+        when(webClientBuilder.build()).thenReturn(webClient);
+        when(webClient.get()).thenReturn(requestHeadersUriSpec);
+        when(requestHeadersUriSpec.uri("http://USERS/api/v1/users/adminauthorize?token=" + token.substring(7))).thenReturn(requestHeadersSpec);
+        when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+        when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(false));
+
         Assertions.assertThatThrownBy(() -> countryService.deleteCountry(token, 1L));
     }
 }

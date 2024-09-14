@@ -29,7 +29,7 @@ public class CategoryService {
 			throw new RuntimeException("No admin authority");
 		}
 
-		if (category.getCategoryName().isEmpty()) {
+		if (category.getCategoryName() == null || category.getCategoryName().isEmpty()) {
 			throw new InvalidParameterException("Category name cannot be empty");
 		}
 
@@ -57,6 +57,10 @@ public class CategoryService {
 
 		if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
 			throw new RuntimeException("No admin authority");
+		}
+
+		if (category.getCategoryName() == null || category.getCategoryName().isEmpty()) {
+			throw new InvalidParameterException("Category name cannot be empty");
 		}
 
 		Category categoryToUpdate = categoryRepository

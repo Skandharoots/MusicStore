@@ -21,15 +21,16 @@ public class CountryService {
 	private final WebClient.Builder webClient;
 
 	public String createCountry(String token, CountryRequest country) {
+
 		if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
 			throw new RuntimeException("No admin authority");
 		}
 
-		Country newCountry = new Country(country.getName());
-
-		if (newCountry.getName().isEmpty()) {
+		if (country.getName() == null || country.getName().isEmpty()) {
 			throw new IllegalArgumentException("Country name cannot be empty");
 		}
+
+		Country newCountry = new Country(country.getName());
 
 		countryRepository.save(newCountry);
 
@@ -57,6 +58,10 @@ public class CountryService {
 
 		if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
 			throw new RuntimeException("No admin authority");
+		}
+
+		if (country.getName() == null || country.getName().isEmpty()) {
+			throw new IllegalArgumentException("Country name cannot be empty");
 		}
 
 		Country countryToUpdate = countryRepository

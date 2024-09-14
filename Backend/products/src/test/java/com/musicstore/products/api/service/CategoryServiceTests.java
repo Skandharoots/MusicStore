@@ -102,17 +102,23 @@ public class CategoryServiceTests {
     @Test
     public void addCategoryExceptionInvalidTokenTest() {
 
+        String jwtToken = token.substring(7);
         CategoryRequest categoryRequest = new CategoryRequest();
         categoryRequest.setCategoryName("Guitar");
 
         when(webClientBuilder.build()).thenReturn(webClient);
         when(webClient.get()).thenReturn(requestHeadersUriSpec);
-        when(requestHeadersUriSpec.uri("http://USERS/api/v1/users/adminauthorize?token=" + token)).thenReturn(requestHeadersSpec);
+        when(requestHeadersUriSpec.uri("http://USERS/api/v1/users/adminauthorize?token=" + jwtToken)).thenReturn(requestHeadersSpec);
         when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
-        when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
+        when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(false));
 
         Assertions.assertThatThrownBy(() -> categoryService.createCategories(token, categoryRequest));
 
+    }
+
+    @Test
+    public void addCategoryFaultyTokenTest() {
+        Assertions.assertThatThrownBy(() -> categoryService.createCategories(token.substring(7), new CategoryRequest("Guitar")));
     }
 
     @Test
@@ -176,7 +182,7 @@ public class CategoryServiceTests {
     }
 
     @Test
-    public void updateCategoryExceptionTest() {
+    public void updateCategoryExceptionEmptyNameTest() {
 
         String jwtToken = token.substring(7);
 
@@ -188,7 +194,39 @@ public class CategoryServiceTests {
         when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
         when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
 
+        Assertions.assertThatThrownBy(() -> categoryService.updateCategory(token, 1L, categoryRequest));
+
+    }
+
+    @Test
+    public void updateCategoryExceptionNotFoundTest() {
+
+        String jwtToken = token.substring(7);
+        CategoryRequest categoryRequest = new CategoryRequest("Guitar");
+
+        when(webClientBuilder.build()).thenReturn(webClient);
+        when(webClient.get()).thenReturn(requestHeadersUriSpec);
+        when(requestHeadersUriSpec.uri("http://USERS/api/v1/users/adminauthorize?token=" + jwtToken)).thenReturn(requestHeadersSpec);
+        when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+        when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
+
         when(categoryRepository.findById(1L)).thenReturn(Optional.empty());
+        Assertions.assertThatThrownBy(() -> categoryService.updateCategory(token, 1L, categoryRequest));
+
+    }
+
+    @Test
+    public void updateCategoryExceptionInvalidTokenTest() {
+
+        CategoryRequest categoryRequest = new CategoryRequest();
+        categoryRequest.setCategoryName("Drums");
+
+        when(webClientBuilder.build()).thenReturn(webClient);
+        when(webClient.get()).thenReturn(requestHeadersUriSpec);
+        when(requestHeadersUriSpec.uri("http://USERS/api/v1/users/adminauthorize?token=" + token.substring(7))).thenReturn(requestHeadersSpec);
+        when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+        when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(false));
+
         Assertions.assertThatThrownBy(() -> categoryService.updateCategory(token, 1L, categoryRequest));
 
     }
@@ -214,7 +252,7 @@ public class CategoryServiceTests {
     }
 
     @Test
-    public void deleteCategoryExceptionTest() {
+    public void deleteCategoryExceptionNotFoundTest() {
 
         String jwtToken = token.substring(7);
 
@@ -225,6 +263,19 @@ public class CategoryServiceTests {
         when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
 
         when(categoryRepository.findById(1L)).thenReturn(Optional.empty());
+        Assertions.assertThatThrownBy(() -> categoryService.deleteCategory(token, 1L));
+
+    }
+
+    @Test
+    public void deleteCategoryExceptionInvalidTokenTest() {
+
+        when(webClientBuilder.build()).thenReturn(webClient);
+        when(webClient.get()).thenReturn(requestHeadersUriSpec);
+        when(requestHeadersUriSpec.uri("http://USERS/api/v1/users/adminauthorize?token=" + token.substring(7))).thenReturn(requestHeadersSpec);
+        when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+        when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(false));
+
         Assertions.assertThatThrownBy(() -> categoryService.deleteCategory(token, 1L));
 
     }

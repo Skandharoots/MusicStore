@@ -21,15 +21,17 @@ public class ManufacturerService {
 	private final WebClient.Builder webClient;
 
 	public String createManufacturers(String token, ManufacturerRequest manufacturer) {
+
 		if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
 			throw new RuntimeException("No admin authority");
 		}
 
-		Manufacturer newManufacturer = new Manufacturer(manufacturer.getName());
-
-		if (newManufacturer.getName().isEmpty()) {
+		if (manufacturer.getName() == null || manufacturer.getName().isEmpty()) {
 			throw new IllegalArgumentException("Manufacturer name cannot be empty");
 		}
+
+		Manufacturer newManufacturer = new Manufacturer(manufacturer.getName());
+
 
 		manufacturerRepository.save(newManufacturer);
 
@@ -57,6 +59,10 @@ public class ManufacturerService {
 
 		if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
 			throw new RuntimeException("No admin authority");
+		}
+
+		if (manufacturer.getName() == null || manufacturer.getName().isEmpty()) {
+			throw new IllegalArgumentException("Manufacturer name cannot be empty");
 		}
 
 		Manufacturer manufacurerToUpdate = manufacturerRepository

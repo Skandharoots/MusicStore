@@ -83,18 +83,21 @@ public class ManufacturerServiceTests {
     @Test
     public void addManufacturerExceptionInvalidTokenTest() {
 
-        String faultyToken = token.substring(7);
-
         ManufacturerRequest manufacturerRequest = new ManufacturerRequest();
         manufacturerRequest.setName("Fender");
 
-        Assertions.assertThatThrownBy(() -> manufacturerService.createManufacturers(faultyToken, manufacturerRequest));
+        when(webClientBuilder.build()).thenReturn(webClient);
+        when(webClient.get()).thenReturn(requestHeadersUriSpec);
+        when(requestHeadersUriSpec.uri("http://USERS/api/v1/users/adminauthorize?token=" + token.substring(7))).thenReturn(requestHeadersSpec);
+        when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+        when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(false));
+
+        Assertions.assertThatThrownBy(() -> manufacturerService.createManufacturers(token, manufacturerRequest));
 
     }
 
     @Test
-    public void addManufacturerExceptionTest() {
-
+    public void addManufacturerExceptionEmptyNameTest() {
 
         ManufacturerRequest manufacturerRequest = new ManufacturerRequest();
 
@@ -105,6 +108,11 @@ public class ManufacturerServiceTests {
         when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
 
         Assertions.assertThatThrownBy(() -> manufacturerService.createManufacturers(token, manufacturerRequest));
+    }
+
+    @Test
+    public void addManufacturerExceptionFaultyTokenTest() {
+        Assertions.assertThatThrownBy(() -> manufacturerService.createManufacturers(token.substring(7), new ManufacturerRequest("Fender")));
     }
 
     @Test
@@ -180,7 +188,7 @@ public class ManufacturerServiceTests {
     }
 
     @Test
-    public void updateManufacturerExceptionTest() {
+    public void updateManufacturerExceptionEmptyNameTest() {
 
         ManufacturerRequest manufacturerRequest = new ManufacturerRequest();
 
@@ -190,7 +198,38 @@ public class ManufacturerServiceTests {
         when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
         when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
 
+        Assertions.assertThatThrownBy(() -> manufacturerService.updateManufacturer(token, 1L, manufacturerRequest));
+
+    }
+
+    @Test
+    public void updateManufacturerExceptionNotFoundTest() {
+
+        ManufacturerRequest manufacturerRequest = new ManufacturerRequest("Fender");
+
+        when(webClientBuilder.build()).thenReturn(webClient);
+        when(webClient.get()).thenReturn(requestHeadersUriSpec);
+        when(requestHeadersUriSpec.uri("http://USERS/api/v1/users/adminauthorize?token=" + token.substring(7))).thenReturn(requestHeadersSpec);
+        when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+        when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
+
         when(manufacturerRepository.findById(1L)).thenReturn(Optional.empty());
+        Assertions.assertThatThrownBy(() -> manufacturerService.updateManufacturer(token, 1L, manufacturerRequest));
+
+    }
+
+    @Test
+    public void updateManufacturerExceptionInvalidTokenTest() {
+
+        ManufacturerRequest manufacturerRequest = new ManufacturerRequest();
+        manufacturerRequest.setName("Gretsch");
+
+        when(webClientBuilder.build()).thenReturn(webClient);
+        when(webClient.get()).thenReturn(requestHeadersUriSpec);
+        when(requestHeadersUriSpec.uri("http://USERS/api/v1/users/adminauthorize?token=" + token.substring(7))).thenReturn(requestHeadersSpec);
+        when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+        when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(false));
+
         Assertions.assertThatThrownBy(() -> manufacturerService.updateManufacturer(token, 1L, manufacturerRequest));
 
     }
@@ -214,7 +253,7 @@ public class ManufacturerServiceTests {
     }
 
     @Test
-    public void deleteManufacturerExceptionTest() {
+    public void deleteManufacturerExceptionNotFoundTest() {
 
         when(webClientBuilder.build()).thenReturn(webClient);
         when(webClient.get()).thenReturn(requestHeadersUriSpec);
@@ -223,6 +262,19 @@ public class ManufacturerServiceTests {
         when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
 
         when(manufacturerRepository.findById(1L)).thenReturn(Optional.empty());
+        Assertions.assertThatThrownBy(() -> manufacturerService.deleteManufacturer(token, 1L));
+
+    }
+
+    @Test
+    public void deleteManufacturerExceptionInvalidTokenTest() {
+
+        when(webClientBuilder.build()).thenReturn(webClient);
+        when(webClient.get()).thenReturn(requestHeadersUriSpec);
+        when(requestHeadersUriSpec.uri("http://USERS/api/v1/users/adminauthorize?token=" + token.substring(7))).thenReturn(requestHeadersSpec);
+        when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+        when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(false));
+
         Assertions.assertThatThrownBy(() -> manufacturerService.deleteManufacturer(token, 1L));
     }
 }

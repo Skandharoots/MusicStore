@@ -97,13 +97,17 @@ public class SubcategoryServiceTests {
     @Test
     public void addSubcategoryExceptionInvalidTokenTest() {
 
-        String faultyToken = token.substring(7);
-
         SubcategoryRequest subcategoryRequest = new SubcategoryRequest();
         subcategoryRequest.setName("Electric");
         subcategoryRequest.setCategoryId(1L);
 
-        Assertions.assertThatThrownBy(() -> subcategoryService.createSubcategories(faultyToken, subcategoryRequest));
+        when(webClientBuilder.build()).thenReturn(webClient);
+        when(webClient.get()).thenReturn(requestHeadersUriSpec);
+        when(requestHeadersUriSpec.uri("http://USERS/api/v1/users/adminauthorize?token=" + token.substring(7))).thenReturn(requestHeadersSpec);
+        when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+        when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(false));
+
+        Assertions.assertThatThrownBy(() -> subcategoryService.createSubcategories(token, subcategoryRequest));
 
     }
     @Test
@@ -118,6 +122,11 @@ public class SubcategoryServiceTests {
         when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
 
         Assertions.assertThatThrownBy(() -> subcategoryService.createSubcategories(token, subcategoryRequest));
+    }
+
+    @Test
+    public void addSubcategoryExceptionFaultyTokenTest() {
+        Assertions.assertThatThrownBy(() -> subcategoryService.createSubcategories(token.substring(7), new SubcategoryRequest("Acoustic", 1L)));
     }
 
     @Test
@@ -172,9 +181,10 @@ public class SubcategoryServiceTests {
 
         SubcategoryRequest subcategoryRequest = new SubcategoryRequest();
         subcategoryRequest.setName("Acoustasonic");
+        subcategoryRequest.setCategoryId(1L);
 
         Subcategory subcategoryUpdated = new Subcategory("Acoustasonic");
-        subcategory.setId(1L);
+        subcategoryUpdated.setId(1L);
 
         when(webClientBuilder.build()).thenReturn(webClient);
         when(webClient.get()).thenReturn(requestHeadersUriSpec);
@@ -193,9 +203,26 @@ public class SubcategoryServiceTests {
     }
 
     @Test
-    public void updateSubcategoryExceptionTest() {
+    public void updateSubcategoryExceptionEmptyNameTest() {
 
         SubcategoryRequest subcategoryRequest = new SubcategoryRequest();
+
+        when(webClientBuilder.build()).thenReturn(webClient);
+        when(webClient.get()).thenReturn(requestHeadersUriSpec);
+        when(requestHeadersUriSpec.uri("http://USERS/api/v1/users/adminauthorize?token=" + token.substring(7))).thenReturn(requestHeadersSpec);
+        when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+        when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
+
+        Assertions.assertThatThrownBy(() -> subcategoryService.updateSubcategory(token, 1L, subcategoryRequest));
+
+    }
+
+    @Test
+    public void updateSubcategoryExceptionNotFoundTest() {
+
+        SubcategoryRequest subcategoryRequest = new SubcategoryRequest();
+        subcategoryRequest.setName("Acoustasonic");
+        subcategoryRequest.setCategoryId(1L);
 
         when(webClientBuilder.build()).thenReturn(webClient);
         when(webClient.get()).thenReturn(requestHeadersUriSpec);
@@ -206,6 +233,21 @@ public class SubcategoryServiceTests {
         when(subcategoryRepository.findById(1L)).thenReturn(Optional.empty());
         Assertions.assertThatThrownBy(() -> subcategoryService.updateSubcategory(token, 1L, subcategoryRequest));
 
+    }
+
+    @Test
+    public void updateSubcategoryExceptionInvalidTokenTest() {
+
+        SubcategoryRequest subcategoryRequest = new SubcategoryRequest();
+        subcategoryRequest.setName("Acoustasonic");
+
+        when(webClientBuilder.build()).thenReturn(webClient);
+        when(webClient.get()).thenReturn(requestHeadersUriSpec);
+        when(requestHeadersUriSpec.uri("http://USERS/api/v1/users/adminauthorize?token=" + token.substring(7))).thenReturn(requestHeadersSpec);
+        when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+        when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(false));
+
+        Assertions.assertThatThrownBy(() -> subcategoryService.updateSubcategory(token, 1L, subcategoryRequest));
     }
 
     @Test
@@ -230,7 +272,7 @@ public class SubcategoryServiceTests {
     }
 
     @Test
-    public void deleteSubcategoryExceptionTest() {
+    public void deleteSubcategoryExceptionNotFoundTest() {
 
         when(webClientBuilder.build()).thenReturn(webClient);
         when(webClient.get()).thenReturn(requestHeadersUriSpec);
@@ -240,5 +282,18 @@ public class SubcategoryServiceTests {
 
         when(subcategoryRepository.findById(1L)).thenReturn(Optional.empty());
         Assertions.assertThatThrownBy(() -> subcategoryService.deleteSubcategory(token, 1L));
+    }
+
+    @Test
+    public void deleteSubcategoryExceptionInvalidTokenTest() {
+
+        when(webClientBuilder.build()).thenReturn(webClient);
+        when(webClient.get()).thenReturn(requestHeadersUriSpec);
+        when(requestHeadersUriSpec.uri("http://USERS/api/v1/users/adminauthorize?token=" + token.substring(7))).thenReturn(requestHeadersSpec);
+        when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+        when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(false));
+
+        Assertions.assertThatThrownBy(() -> subcategoryService.deleteSubcategory(token, 1L));
+
     }
 }

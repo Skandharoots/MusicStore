@@ -28,7 +28,10 @@ public class SubcategoryService {
 			throw new RuntimeException("No admin authority");
 		}
 
-        if (subcategory.getName().isEmpty() || subcategory.getCategoryId().toString().isEmpty()) {
+        if (subcategory.getName() == null ||
+                subcategory.getName().isEmpty() ||
+                subcategory.getCategoryId() == null ||
+                subcategory.getCategoryId().toString().isEmpty()) {
             throw new IllegalArgumentException("Subcategory name or category id cannot be empty");
         }
 
@@ -63,6 +66,13 @@ public class SubcategoryService {
 
         if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
             throw new RuntimeException("No admin authority");
+        }
+
+        if (subcategory.getName() == null ||
+                subcategory.getName().isEmpty() ||
+                subcategory.getCategoryId() == null ||
+                subcategory.getCategoryId().toString().isEmpty()) {
+            throw new IllegalArgumentException("Subcategory name or category id cannot be empty");
         }
 
         Subcategory subcategoryToUpdate = subcategoryRepository

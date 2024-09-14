@@ -4,15 +4,16 @@ import com.musicstore.products.dto.*;
 import com.musicstore.products.model.*;
 import com.musicstore.products.repository.ProductRepository;
 import com.musicstore.products.security.config.VariablesConfiguration;
-import jakarta.ws.rs.NotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -42,7 +43,7 @@ public class ProductService {
 
 
 		if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
-			throw new RuntimeException("No admin authority");
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No admin authority");
 		}
 
 		if (productRequest.getProductName() == null || productRequest.getProductName().isEmpty()
@@ -50,7 +51,7 @@ public class ProductService {
 				|| productRequest.getDescription() == null || productRequest.getDescription().isEmpty()
 				|| productRequest.getManufacturerId() == null || productRequest.getCategoryId() == null
 				|| productRequest.getCountryId() == null || productRequest.getSubcategoryId() == null) {
-			throw new IllegalArgumentException("Invalid and empty product request parameters");
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid and empty product request parameters");
 		}
 
 		Category category = categoryService.getCategoryById(productRequest.getCategoryId());
@@ -89,7 +90,7 @@ public class ProductService {
 	public ResponseEntity<Product> getProductById(UUID id) {
 		Product product = productRepository.findByProductSkuId(id)
 				.orElseThrow(
-						() -> new NotFoundException("Product not found")
+						() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found")
 				);
 
 		return ResponseEntity.ok(product);
@@ -145,7 +146,7 @@ public class ProductService {
 					Product product = productRepository.findByProductSkuId(
 							orderLineItemsDTO.getProductSkuId())
 							.orElseThrow(
-									() -> new NotFoundException("Product not found")
+									() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found")
 							);
 					OrderAvailabilityListItem orderAvailabilityListItem;
 					if (product.getInStock() - orderLineItemsDTO.getQuantity() >= 0) {
@@ -195,7 +196,7 @@ public class ProductService {
 	public ResponseEntity<String> updateProduct(String token, Long id, ProductRequest product) {
 
 		if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
-			throw new RuntimeException("No admin authority");
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No admin authority");
 		}
 
 		if (product.getProductName() == null || product.getProductName().isEmpty()
@@ -203,12 +204,12 @@ public class ProductService {
 				|| product.getDescription() == null || product.getDescription().isEmpty()
 				|| product.getManufacturerId() == null || product.getCategoryId() == null
 				|| product.getCountryId() == null || product.getSubcategoryId() == null) {
-			throw new IllegalArgumentException("Invalid and empty product request parameters");
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid and empty product request parameters");
 		}
 
 		Product productToUpdate = productRepository.findById(id)
 				.orElseThrow(
-					() -> new NotFoundException("Product not found")
+					() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found")
 				);
 
 		productToUpdate.setProductName(product.getProductName());
@@ -227,12 +228,12 @@ public class ProductService {
 	public ResponseEntity<String> deleteProduct(String token, Long id) {
 
 		if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
-			throw new RuntimeException("No admin authority");
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No admin authority");
 		}
 
 		Product productToDelete = productRepository.findById(id)
 				.orElseThrow(
-						() -> new NotFoundException("Product not found")
+						() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found")
 				);
 
 		productRepository.delete(productToDelete);

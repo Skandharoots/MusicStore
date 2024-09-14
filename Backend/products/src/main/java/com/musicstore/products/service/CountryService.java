@@ -3,11 +3,12 @@ package com.musicstore.products.service;
 import com.musicstore.products.dto.CountryRequest;
 import com.musicstore.products.model.Country;
 import com.musicstore.products.repository.CountryRepository;
-import jakarta.ws.rs.NotFoundException;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -22,7 +23,7 @@ public class CountryService {
 	public String createCountry(String token, CountryRequest country) {
 
 		if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
-			throw new RuntimeException("No admin authority");
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No admin authority");
 		}
 
 		if (country.getName() == null || country.getName().isEmpty()) {
@@ -45,7 +46,7 @@ public class CountryService {
 		return countryRepository
 				.findById(id)
 				.orElseThrow(
-						() -> new NotFoundException("Country not found")
+						() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Country not found")
 				);
 	}
 
@@ -56,7 +57,7 @@ public class CountryService {
 	public ResponseEntity<String> updateCountry(String token, Long id, CountryRequest country) {
 
 		if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
-			throw new RuntimeException("No admin authority");
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No admin authority");
 		}
 
 		if (country.getName() == null || country.getName().isEmpty()) {
@@ -66,7 +67,7 @@ public class CountryService {
 		Country countryToUpdate = countryRepository
 				.findById(id)
 				.orElseThrow(
-						() -> new NotFoundException("Country not found")
+						() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Country not found")
 				);
 
 		countryToUpdate.setName(country.getName());
@@ -78,13 +79,13 @@ public class CountryService {
 
 	public ResponseEntity<String> deleteCountry(String token, Long id) {
 		if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
-			throw new RuntimeException("No admin authority");
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No admin authority");
 		}
 
 		Country country = countryRepository
 				.findById(id)
 				.orElseThrow(
-						() -> new NotFoundException("Country not found")
+						() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Country not found")
 				);
 
 		countryRepository.delete(country);

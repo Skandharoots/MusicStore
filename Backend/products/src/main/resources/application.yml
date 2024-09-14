@@ -3,5 +3,8 @@ spring:
     name: products
   config:
     import: optional:configserver:http://localhost:8888
+server:
+  error:
+    include-message: always
 my:
   admin_url: http://USERS/api/v1/users/adminauthorize?token=

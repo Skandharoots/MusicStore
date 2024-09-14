@@ -4,11 +4,13 @@ import com.musicstore.products.dto.SubcategoryRequest;
 import com.musicstore.products.model.Subcategory;
 import com.musicstore.products.repository.SubcategoryRepository;
 import jakarta.transaction.Transactional;
-import jakarta.ws.rs.NotFoundException;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.server.ResponseStatusException;
+
 import java.util.List;
 
 @Service
@@ -25,14 +27,14 @@ public class SubcategoryService {
     public String createSubcategories(String token, SubcategoryRequest subcategory) {
 
 		if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
-			throw new RuntimeException("No admin authority");
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No admin authority");
 		}
 
         if (subcategory.getName() == null ||
                 subcategory.getName().isEmpty() ||
                 subcategory.getCategoryId() == null ||
                 subcategory.getCategoryId().toString().isEmpty()) {
-            throw new IllegalArgumentException("Subcategory name or category id cannot be empty");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Subcategory name or category id cannot be empty");
         }
 
         Subcategory newSubcategory = new Subcategory();
@@ -54,7 +56,7 @@ public class SubcategoryService {
         return subcategoryRepository
                 .findById(id)
                 .orElseThrow(
-                        () -> new NotFoundException("Subcategory not found")
+                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Subcategory not found")
                 );
     }
 
@@ -65,20 +67,20 @@ public class SubcategoryService {
     public ResponseEntity<String> updateSubcategory(String token, Long id, SubcategoryRequest subcategory) {
 
         if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
-            throw new RuntimeException("No admin authority");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No admin authority");
         }
 
         if (subcategory.getName() == null ||
                 subcategory.getName().isEmpty() ||
                 subcategory.getCategoryId() == null ||
                 subcategory.getCategoryId().toString().isEmpty()) {
-            throw new IllegalArgumentException("Subcategory name or category id cannot be empty");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Subcategory name or category id cannot be empty");
         }
 
         Subcategory subcategoryToUpdate = subcategoryRepository
                 .findById(id)
                 .orElseThrow(
-                        () -> new NotFoundException("Subcategory not found")
+                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Subcategory not found")
                 );
 
         subcategoryToUpdate.setName(subcategory.getName());
@@ -91,13 +93,13 @@ public class SubcategoryService {
     public ResponseEntity<String> deleteSubcategory(String token, Long id) {
 
         if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
-            throw new RuntimeException("No admin authority");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No admin authority");
         }
 
         Subcategory subcategoryToDelete = subcategoryRepository
                 .findById(id)
                 .orElseThrow(
-                        () -> new NotFoundException("Subcategory not found")
+                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Subcategory not found")
                 );
 
         subcategoryRepository.delete(subcategoryToDelete);

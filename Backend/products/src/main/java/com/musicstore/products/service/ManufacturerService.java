@@ -3,11 +3,12 @@ package com.musicstore.products.service;
 import com.musicstore.products.dto.ManufacturerRequest;
 import com.musicstore.products.model.Manufacturer;
 import com.musicstore.products.repository.ManufacturerRepository;
-import jakarta.ws.rs.NotFoundException;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -22,7 +23,7 @@ public class ManufacturerService {
 	public String createManufacturers(String token, ManufacturerRequest manufacturer) {
 
 		if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
-			throw new RuntimeException("No admin authority");
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No admin authority");
 		}
 
 		if (manufacturer.getName() == null || manufacturer.getName().isEmpty()) {
@@ -46,7 +47,7 @@ public class ManufacturerService {
 		return manufacturerRepository
 				.findById(id)
 				.orElseThrow(
-						() -> new NotFoundException("Manufacturer not found")
+						() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Manufacturer not found")
 				);
 	}
 
@@ -57,7 +58,7 @@ public class ManufacturerService {
 	public ResponseEntity<String> updateManufacturer(String token, Long id, ManufacturerRequest manufacturer) {
 
 		if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
-			throw new RuntimeException("No admin authority");
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No admin authority");
 		}
 
 		if (manufacturer.getName() == null || manufacturer.getName().isEmpty()) {
@@ -67,7 +68,7 @@ public class ManufacturerService {
 		Manufacturer manufacurerToUpdate = manufacturerRepository
 				.findById(id)
 				.orElseThrow(
-						() -> new NotFoundException("Manufacturer not found")
+						() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Manufacturer not found")
 				);
 
 		manufacurerToUpdate.setName(manufacturer.getName());
@@ -79,13 +80,13 @@ public class ManufacturerService {
 
 	public ResponseEntity<String> deleteManufacturer(String token, Long id) {
 		if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
-			throw new RuntimeException("No admin authority");
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No admin authority");
 		}
 
 		Manufacturer manufacurerToDelete = manufacturerRepository
 				.findById(id)
 				.orElseThrow(
-						() -> new NotFoundException("Manufacturer not found")
+						() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Manufacturer not found")
 				);
 
 		manufacturerRepository.delete(manufacurerToDelete);

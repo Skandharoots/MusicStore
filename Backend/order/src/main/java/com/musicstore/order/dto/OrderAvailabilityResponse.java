@@ -1,6 +1,5 @@
 package com.musicstore.order.dto;
 
-import com.musicstore.order.dto.OrderAvailabilityListItem;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

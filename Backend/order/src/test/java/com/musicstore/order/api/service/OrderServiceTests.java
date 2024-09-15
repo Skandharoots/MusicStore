@@ -175,7 +175,7 @@ public class OrderServiceTests {
         when(webClientBuilder.build()).thenReturn(webClient);
         when(webClient.post()).thenReturn(requestBodyUriSpec);
         when(requestBodyUriSpec.uri(variablesConfiguration.getOrderCheckUrl())).thenReturn(requestBodySpec);
-        when(requestBodySpec.headers(any())).thenReturn(requestBodySpec);
+        when(requestBodySpec.header(any(), any())).thenReturn(requestBodySpec);
         when(requestBodySpec.cookie(any(), any())).thenReturn(requestBodySpec);
         when(requestBodySpec.contentType(any())).thenReturn(requestBodySpec);
         when(requestBodySpec.bodyValue(orderRequest)).thenReturn(requestHeadersSpec);
@@ -183,7 +183,6 @@ public class OrderServiceTests {
         when(responseSpec.bodyToMono(OrderAvailabilityResponse.class))
                 .thenReturn(Mono.just(orderAvailabilityResponseGood));
 
-        //when(requestBodySpec.body(any())).thenReturn(requestHeadersSpec);
         when(orderRepository.save(any())).thenReturn(order);
 
         String response = orderService.createOrder(orderRequest, csrfToken.getToken(), token);
@@ -203,18 +202,16 @@ public class OrderServiceTests {
     @Test
     public void createOrderFailureProductNotFoundInWebClientRequestTest() {
 
-        ResponseStatusException exception = new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found");
-
         when(webClientBuilder.build()).thenReturn(webClient);
         when(webClient.post()).thenReturn(requestBodyUriSpec);
         when(requestBodyUriSpec.uri(variablesConfiguration.getOrderCheckUrl())).thenReturn(requestBodySpec);
-        when(requestBodySpec.headers(any())).thenReturn(requestBodySpec);
+        when(requestBodySpec.header("X-XSRF-TOKEN", csrfToken.getToken())).thenReturn(requestBodySpec);
         when(requestBodySpec.cookie(any(), any())).thenReturn(requestBodySpec);
         when(requestBodySpec.contentType(any())).thenReturn(requestBodySpec);
         when(requestBodySpec.bodyValue(orderRequest)).thenReturn(requestHeadersSpec);
         when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
-        when(responseSpec.bodyToMono(ResponseStatusException.class))
-                .thenReturn(Mono.just(exception));
+        when(responseSpec.bodyToMono(OrderAvailabilityResponse.class))
+                .thenReturn(null);
 
         Assertions.assertThatThrownBy(() -> orderService.createOrder(orderRequest, csrfToken.getToken(), token));
 
@@ -226,7 +223,7 @@ public class OrderServiceTests {
         when(webClientBuilder.build()).thenReturn(webClient);
         when(webClient.post()).thenReturn(requestBodyUriSpec);
         when(requestBodyUriSpec.uri(variablesConfiguration.getOrderCheckUrl())).thenReturn(requestBodySpec);
-        when(requestBodySpec.headers(any())).thenReturn(requestBodySpec);
+        when(requestBodySpec.header(any(), any())).thenReturn(requestBodySpec);
         when(requestBodySpec.cookie(any(), any())).thenReturn(requestBodySpec);
         when(requestBodySpec.contentType(any())).thenReturn(requestBodySpec);
         when(requestBodySpec.bodyValue(orderRequest)).thenReturn(requestHeadersSpec);
@@ -356,7 +353,7 @@ public class OrderServiceTests {
         when(webClient.get()).thenReturn(requestHeadersUriSpec);
         when(requestHeadersUriSpec.uri(variablesConfiguration.getAdminVerificationUrl() + token.substring(7))).thenReturn(requestHeadersSpec);
         when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
-        when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(false));
+        when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
 
         Assertions.assertThatThrownBy(() -> orderService.updateOrderStatus(order.getUserIdentifier(), token, orderUpdateRequest));
 

@@ -16,6 +16,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -36,29 +37,21 @@ public class OrderService {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid token");
         }
 
-        String jwt = jwtToken.substring("Bearer ".length());
-
         OrderAvailabilityResponse response;
 
-        try {
-            response = webClient.build()
-                    .post()
-                    .uri(variablesConfiguration.getOrderCheckUrl())
-                    .headers(httpHeaders -> {
-                        httpHeaders.setBearerAuth(jwt);
-                        httpHeaders.set("X-XSRF-TOKEN", csrfToken);
-                    })
-                    .cookie("XSRF-TOKEN", csrfToken)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .bodyValue(request)
-                    .retrieve()
-                    .bodyToMono(OrderAvailabilityResponse.class)
-                    .block();
-        } catch (ResponseStatusException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        }
+        response = webClient.build()
+                .post()
+                .uri(variablesConfiguration.getOrderCheckUrl())
+                .header("X-XSRF-TOKEN", csrfToken)
+                .cookie("XSRF-TOKEN", csrfToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(request)
+                .retrieve()
+                .bodyToMono(OrderAvailabilityResponse.class)
+                .block();
 
-        assert response != null;
+        Objects.requireNonNull(response);
+
         response.getAvailableItems().forEach(
                 item -> {
                     if (!item.getIsAvailable()) {

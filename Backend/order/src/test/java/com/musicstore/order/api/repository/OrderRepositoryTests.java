@@ -38,7 +38,6 @@ public class OrderRepositoryTests {
 
     private OrderLineItems orderLineItems;
 
-
     private UUID productSkuId;
 
     private UUID userId;

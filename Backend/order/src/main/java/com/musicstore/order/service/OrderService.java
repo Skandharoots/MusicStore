@@ -55,7 +55,7 @@ public class OrderService {
                     .bodyToMono(OrderAvailabilityResponse.class)
                     .block();
         } catch (ResponseStatusException e) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
 
         assert response != null;
@@ -89,7 +89,7 @@ public class OrderService {
 
         orderRepository.save(order);
 
-        return "Order places successfully";
+        return "Order placed successfully";
 
     }
 
@@ -124,6 +124,10 @@ public class OrderService {
 		if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No admin authority");
 		}
+
+        if (request.getStatus() == null || request.getStatus().toString().isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid status");
+        }
 
         Order order = orderRepository
                 .findByOrderIdentifier(orderId)

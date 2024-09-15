@@ -193,6 +193,14 @@ public class OrderServiceTests {
     }
 
     @Test
+    public void createOrderFailureBadRequestTest() {
+
+        OrderRequest badOrderRequest = new OrderRequest();
+
+        Assertions.assertThatThrownBy(() -> orderService.createOrder(badOrderRequest, csrfToken.getToken(), token));
+    }
+
+    @Test
     public void createOrderFailureBadJwtTokenTest() {
 
         Assertions.assertThatThrownBy(() -> orderService.createOrder(orderRequest, csrfToken.getToken(), token.substring(7)));

@@ -31,6 +31,20 @@ public class OrderService {
 
     public String createOrder(OrderRequest request, String csrfToken, String jwtToken) {
 
+        if (request.getCity() == null || request.getCity().isEmpty()
+                || request.getCountry() == null || request.getCountry().isEmpty()
+                || request.getName() == null || request.getName().isEmpty()
+                || request.getPhone() == null || request.getPhone().isEmpty()
+                || request.getEmail() == null || request.getEmail().isEmpty()
+                || request.getOrderTotalPrice() == null || request.getSurname() == null
+                || request.getSurname().isEmpty() || request.getStreetAddress() == null
+                || request.getStreetAddress().isEmpty() || request.getUserIdentifier() == null
+                || request.getZipCode() == null || request.getZipCode().isEmpty()
+                || request.getItems().isEmpty()
+        ) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid order request");
+        }
+
         List<String> itemsNotAvailable = new ArrayList<>();
 
         if (!jwtToken.startsWith("Bearer ")) {

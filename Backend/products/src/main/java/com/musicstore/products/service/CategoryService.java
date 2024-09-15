@@ -3,6 +3,7 @@ package com.musicstore.products.service;
 import com.musicstore.products.dto.CategoryRequest;
 import com.musicstore.products.model.Category;
 import com.musicstore.products.repository.CategoryRepository;
+import com.musicstore.products.security.config.VariablesConfiguration;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,8 @@ public class CategoryService {
 	private final CategoryRepository categoryRepository;
 
 	private final WebClient.Builder webClient;
+
+	private final VariablesConfiguration variablesConfiguration;
 
 	public String createCategories(String token, CategoryRequest category) {
 
@@ -100,7 +103,7 @@ public class CategoryService {
 		return webClient
 				.build()
 				.get()
-				.uri("http://USERS/api/v1/users/adminauthorize?token=" + jwtToken)
+				.uri(variablesConfiguration.getAdminUrl() + jwtToken)
 				.retrieve()
 				.bodyToMono(Boolean.class)
 				.block();

@@ -3,6 +3,7 @@ package com.musicstore.products.service;
 import com.musicstore.products.dto.CountryRequest;
 import com.musicstore.products.model.Country;
 import com.musicstore.products.repository.CountryRepository;
+import com.musicstore.products.security.config.VariablesConfiguration;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,8 @@ public class CountryService {
 	private final CountryRepository countryRepository;
 
 	private final WebClient.Builder webClient;
+
+	private final VariablesConfiguration variablesConfiguration;
 
 	public String createCountry(String token, CountryRequest country) {
 
@@ -104,7 +107,7 @@ public class CountryService {
 		return webClient
 				.build()
 				.get()
-				.uri("http://USERS/api/v1/users/adminauthorize?token=" + jwtToken)
+				.uri(variablesConfiguration.getAdminUrl() + jwtToken)
 				.retrieve()
 				.bodyToMono(Boolean.class)
 				.block();

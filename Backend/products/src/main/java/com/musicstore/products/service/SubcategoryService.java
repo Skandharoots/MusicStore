@@ -3,6 +3,7 @@ package com.musicstore.products.service;
 import com.musicstore.products.dto.SubcategoryRequest;
 import com.musicstore.products.model.Subcategory;
 import com.musicstore.products.repository.SubcategoryRepository;
+import com.musicstore.products.security.config.VariablesConfiguration;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,8 @@ public class SubcategoryService {
     private final CategoryService categoryService;
 
     private final WebClient.Builder webClient;
+
+    private final VariablesConfiguration variablesConfiguration;
 
     public String createSubcategories(String token, SubcategoryRequest subcategory) {
 
@@ -118,7 +121,7 @@ public class SubcategoryService {
         return webClient
                 .build()
                 .get()
-                .uri("http://USERS/api/v1/users/adminauthorize?token=" + jwtToken)
+                .uri(variablesConfiguration.getAdminUrl() + jwtToken)
                 .retrieve()
                 .bodyToMono(Boolean.class)
                 .block();

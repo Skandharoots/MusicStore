@@ -3,6 +3,7 @@ package com.musicstore.products.service;
 import com.musicstore.products.dto.ManufacturerRequest;
 import com.musicstore.products.model.Manufacturer;
 import com.musicstore.products.repository.ManufacturerRepository;
+import com.musicstore.products.security.config.VariablesConfiguration;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,8 @@ public class ManufacturerService {
 	private final ManufacturerRepository manufacturerRepository;
 
 	private final WebClient.Builder webClient;
+
+	private final VariablesConfiguration variablesConfiguration;
 
 	public String createManufacturers(String token, ManufacturerRequest manufacturer) {
 
@@ -105,7 +108,7 @@ public class ManufacturerService {
 		return webClient
 				.build()
 				.get()
-				.uri("http://USERS/api/v1/users/adminauthorize?token=" + jwtToken)
+				.uri(variablesConfiguration.getAdminUrl() + jwtToken)
 				.retrieve()
 				.bodyToMono(Boolean.class)
 				.block();

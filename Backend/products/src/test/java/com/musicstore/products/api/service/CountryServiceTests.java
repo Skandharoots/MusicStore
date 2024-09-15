@@ -3,6 +3,7 @@ package com.musicstore.products.api.service;
 import com.musicstore.products.dto.CountryRequest;
 import com.musicstore.products.model.Country;
 import com.musicstore.products.repository.CountryRepository;
+import com.musicstore.products.security.config.VariablesConfiguration;
 import com.musicstore.products.service.CountryService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,6 +35,9 @@ public class CountryServiceTests {
 
     @Mock
     private WebClient webClient;
+
+    @Mock
+    private VariablesConfiguration variablesConfiguration;
 
     @Mock
     private WebClient.RequestHeadersUriSpec requestHeadersUriSpec;
@@ -68,7 +72,7 @@ public class CountryServiceTests {
 
         when(webClientBuilder.build()).thenReturn(webClient);
         when(webClient.get()).thenReturn(requestHeadersUriSpec);
-        when(requestHeadersUriSpec.uri("http://USERS/api/v1/users/adminauthorize?token=" + token.substring(7))).thenReturn(requestHeadersSpec);
+        when(requestHeadersUriSpec.uri(variablesConfiguration.getAdminUrl() + token.substring(7))).thenReturn(requestHeadersSpec);
         when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
         when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
 
@@ -87,7 +91,7 @@ public class CountryServiceTests {
 
         when(webClientBuilder.build()).thenReturn(webClient);
         when(webClient.get()).thenReturn(requestHeadersUriSpec);
-        when(requestHeadersUriSpec.uri("http://USERS/api/v1/users/adminauthorize?token=" + token.substring(7))).thenReturn(requestHeadersSpec);
+        when(requestHeadersUriSpec.uri(variablesConfiguration.getAdminUrl() + token.substring(7))).thenReturn(requestHeadersSpec);
         when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
         when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
 
@@ -102,7 +106,7 @@ public class CountryServiceTests {
 
         when(webClientBuilder.build()).thenReturn(webClient);
         when(webClient.get()).thenReturn(requestHeadersUriSpec);
-        when(requestHeadersUriSpec.uri("http://USERS/api/v1/users/adminauthorize?token=" + token.substring(7))).thenReturn(requestHeadersSpec);
+        when(requestHeadersUriSpec.uri(variablesConfiguration.getAdminUrl() + token.substring(7))).thenReturn(requestHeadersSpec);
         when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
         when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(false));
 
@@ -176,7 +180,7 @@ public class CountryServiceTests {
 
         when(webClientBuilder.build()).thenReturn(webClient);
         when(webClient.get()).thenReturn(requestHeadersUriSpec);
-        when(requestHeadersUriSpec.uri("http://USERS/api/v1/users/adminauthorize?token=" + token.substring(7))).thenReturn(requestHeadersSpec);
+        when(requestHeadersUriSpec.uri(variablesConfiguration.getAdminUrl() + token.substring(7))).thenReturn(requestHeadersSpec);
         when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
         when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
 
@@ -197,7 +201,7 @@ public class CountryServiceTests {
 
         when(webClientBuilder.build()).thenReturn(webClient);
         when(webClient.get()).thenReturn(requestHeadersUriSpec);
-        when(requestHeadersUriSpec.uri("http://USERS/api/v1/users/adminauthorize?token=" + token.substring(7))).thenReturn(requestHeadersSpec);
+        when(requestHeadersUriSpec.uri(variablesConfiguration.getAdminUrl() + token.substring(7))).thenReturn(requestHeadersSpec);
         when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
         when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
 
@@ -213,7 +217,7 @@ public class CountryServiceTests {
 
         when(webClientBuilder.build()).thenReturn(webClient);
         when(webClient.get()).thenReturn(requestHeadersUriSpec);
-        when(requestHeadersUriSpec.uri("http://USERS/api/v1/users/adminauthorize?token=" + token.substring(7))).thenReturn(requestHeadersSpec);
+        when(requestHeadersUriSpec.uri(variablesConfiguration.getAdminUrl() + token.substring(7))).thenReturn(requestHeadersSpec);
         when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
         when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(false));
 
@@ -229,7 +233,7 @@ public class CountryServiceTests {
 
         when(webClientBuilder.build()).thenReturn(webClient);
         when(webClient.get()).thenReturn(requestHeadersUriSpec);
-        when(requestHeadersUriSpec.uri("http://USERS/api/v1/users/adminauthorize?token=" + token.substring(7))).thenReturn(requestHeadersSpec);
+        when(requestHeadersUriSpec.uri(variablesConfiguration.getAdminUrl() + token.substring(7))).thenReturn(requestHeadersSpec);
         when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
         when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
 
@@ -242,7 +246,7 @@ public class CountryServiceTests {
 
         when(webClientBuilder.build()).thenReturn(webClient);
         when(webClient.get()).thenReturn(requestHeadersUriSpec);
-        when(requestHeadersUriSpec.uri("http://USERS/api/v1/users/adminauthorize?token=" + token.substring(7))).thenReturn(requestHeadersSpec);
+        when(requestHeadersUriSpec.uri(variablesConfiguration.getAdminUrl() + token.substring(7))).thenReturn(requestHeadersSpec);
         when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
         when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
 
@@ -260,7 +264,7 @@ public class CountryServiceTests {
 
         when(webClientBuilder.build()).thenReturn(webClient);
         when(webClient.get()).thenReturn(requestHeadersUriSpec);
-        when(requestHeadersUriSpec.uri("http://USERS/api/v1/users/adminauthorize?token=" + token.substring(7))).thenReturn(requestHeadersSpec);
+        when(requestHeadersUriSpec.uri(variablesConfiguration.getAdminUrl() + token.substring(7))).thenReturn(requestHeadersSpec);
         when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
         when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
 
@@ -274,7 +278,7 @@ public class CountryServiceTests {
 
         when(webClientBuilder.build()).thenReturn(webClient);
         when(webClient.get()).thenReturn(requestHeadersUriSpec);
-        when(requestHeadersUriSpec.uri("http://USERS/api/v1/users/adminauthorize?token=" + token.substring(7))).thenReturn(requestHeadersSpec);
+        when(requestHeadersUriSpec.uri(variablesConfiguration.getAdminUrl() + token.substring(7))).thenReturn(requestHeadersSpec);
         when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
         when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(false));
 

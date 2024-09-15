@@ -7,6 +7,7 @@ import com.musicstore.order.model.Order;
 import com.musicstore.order.service.OrderService;
 import jakarta.ws.rs.core.HttpHeaders;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +22,7 @@ public class OrderController {
     private final OrderService orderService;
 
     @PostMapping("/create")
+    @ResponseStatus(HttpStatus.CREATED)
     public String createOrder(
             @RequestBody OrderRequest orderRequest,
             @CookieValue("XSRF-TOKEN") String csrfToken,

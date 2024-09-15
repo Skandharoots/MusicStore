@@ -5,12 +5,13 @@ import com.musicstore.order.model.Order;
 import com.musicstore.order.model.OrderLineItems;
 import com.musicstore.order.repository.OrderRepository;
 import com.musicstore.order.security.config.VariablesConfiguration;
-import jakarta.ws.rs.NotFoundException;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,24 +32,30 @@ public class OrderService {
         List<String> itemsNotAvailable = new ArrayList<>();
 
         if (!jwtToken.startsWith("Bearer ")) {
-            throw new RuntimeException("Invalid token");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid token");
         }
 
         String jwt = jwtToken.substring("Bearer ".length());
 
-        OrderAvailabilityResponse response = webClient.build()
-                .post()
-                .uri(variablesConfiguration.getOrderCheckUrl())
-                .headers(httpHeaders -> {
-                    httpHeaders.setBearerAuth(jwt);
-                    httpHeaders.set("X-XSRF-TOKEN", csrfToken);
-                })
-                .cookie("XSRF-TOKEN", csrfToken)
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(request)
-                .retrieve()
-                .bodyToMono(OrderAvailabilityResponse.class)
-                .block();
+        OrderAvailabilityResponse response;
+
+        try {
+            response = webClient.build()
+                    .post()
+                    .uri(variablesConfiguration.getOrderCheckUrl())
+                    .headers(httpHeaders -> {
+                        httpHeaders.setBearerAuth(jwt);
+                        httpHeaders.set("X-XSRF-TOKEN", csrfToken);
+                    })
+                    .cookie("XSRF-TOKEN", csrfToken)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .bodyValue(request)
+                    .retrieve()
+                    .bodyToMono(OrderAvailabilityResponse.class)
+                    .block();
+        } catch (ResponseStatusException e) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
+        }
 
         assert response != null;
         response.getAvailableItems().forEach(
@@ -59,7 +66,7 @@ public class OrderService {
                 });
 
         if (!itemsNotAvailable.isEmpty()) {
-            throw new IllegalArgumentException("Not all items are available. Items not available - " + itemsNotAvailable);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Not all items are available. Items not available - " + itemsNotAvailable);
         }
 
         Order order = new Order(
@@ -101,7 +108,7 @@ public class OrderService {
 
         Order order = orderRepository.findByOrderIdentifier(orderId)
                 .orElseThrow(
-                        () -> new NotFoundException("Order not found")
+                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Order not found")
                 );
 
         return ResponseEntity.ok(order);
@@ -109,15 +116,14 @@ public class OrderService {
 
     public ResponseEntity<String> updateOrderStatus(UUID orderId, String token, OrderUpdateRequest request) {
 
-        //TODO: Uncomment this for prod
-//		if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
-//			throw new RuntimeException("No admin authority");
-//		}
+		if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No admin authority");
+		}
 
         Order order = orderRepository
                 .findByOrderIdentifier(orderId)
                 .orElseThrow(
-                        () -> new NotFoundException("Order not found")
+                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Order not found")
                 );
 
         order.setStatus(request.getStatus());

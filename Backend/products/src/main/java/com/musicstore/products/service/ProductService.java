@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 @AllArgsConstructor
@@ -51,6 +52,7 @@ public class ProductService {
 				|| productRequest.getDescription() == null || productRequest.getDescription().isEmpty()
 				|| productRequest.getManufacturerId() == null || productRequest.getCategoryId() == null
 				|| productRequest.getCountryId() == null || productRequest.getSubcategoryId() == null) {
+
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid and empty product request parameters");
 		}
 
@@ -146,7 +148,7 @@ public class ProductService {
 					Product product = productRepository.findByProductSkuId(
 							orderLineItemsDTO.getProductSkuId())
 							.orElseThrow(
-									() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found")
+									() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Product not found")
 							);
 					OrderAvailabilityListItem orderAvailabilityListItem;
 					if (product.getInStock() - orderLineItemsDTO.getQuantity() >= 0) {
@@ -169,12 +171,13 @@ public class ProductService {
 		orderAvailabilityResponse.setAvailableItems(items);
 
 		if (allAreAvailable.get()) {
-			int index = 0;
+			AtomicInteger index = new AtomicInteger();
 			orderRequest.getItems()
 					.forEach(orderLineItemsDTO -> {
-						Product product = productsToUpdateIfAllAvailable.get(index);
+						Product product = productsToUpdateIfAllAvailable.get(index.get());
 						product.setInStock(product.getInStock() - orderLineItemsDTO.getQuantity());
 						productRepository.save(product);
+						index.getAndIncrement();
 					});
 		}
 

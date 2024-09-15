@@ -255,7 +255,7 @@ public class OrderServiceTests {
         Page<Order> orders = new PageImpl<>(ordersList, pageable, ordersList.size());
         when(orderRepository.findAllByUserIdentifier(order.getUserIdentifier(), pageable)).thenReturn(orders);
 
-        ResponseEntity<Page<OrderResponse>> ordersFound = orderService.getAllOrdersByUserId(order.getUserIdentifier(), 0, 10);
+        ResponseEntity<Page<Order>> ordersFound = orderService.getAllOrdersByUserId(order.getUserIdentifier(), 0, 10);
         Assertions.assertThat(ordersFound.getStatusCode()).isEqualTo(HttpStatus.OK);
         Assertions.assertThat(ordersFound.getBody()).isNotNull();
         Assertions.assertThat(ordersFound.getBody().getContent()).isNotNull();

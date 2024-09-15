@@ -1,7 +1,6 @@
 package com.musicstore.order.controller;
 
 import com.musicstore.order.dto.OrderRequest;
-import com.musicstore.order.dto.OrderResponse;
 import com.musicstore.order.dto.OrderUpdateRequest;
 import com.musicstore.order.model.Order;
 import com.musicstore.order.service.OrderService;
@@ -31,7 +30,7 @@ public class OrderController {
     }
 
     @GetMapping("/get/all/{user-id}")
-    public ResponseEntity<Page<OrderResponse>> getAllOrdersForUser(
+    public ResponseEntity<Page<Order>> getAllOrdersForUser(
             @PathVariable(name = "user-id") UUID userId,
             @RequestParam(value = "page") Integer page,
             @RequestParam(value = "pageSize") Integer pageSize

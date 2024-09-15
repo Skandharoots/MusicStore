@@ -100,20 +100,13 @@ public class OrderService {
 
     }
 
-    public ResponseEntity<Page<OrderResponse>> getAllOrdersByUserId(UUID userId, Integer page, Integer pageSize) {
+    public ResponseEntity<Page<Order>> getAllOrdersByUserId(UUID userId, Integer page, Integer pageSize) {
 
         Pageable pageable = PageRequest.of(page, pageSize, Sort.by("dateCreated").descending());
 
         Page<Order> orders = orderRepository.findAllByUserIdentifier(userId, pageable);
 
-        List<OrderResponse> orderResponsesList = orders
-                .stream()
-                .map(this::mapToOrderListDTO)
-                .toList();
-
-        Page<OrderResponse> orderResponses = new PageImpl<>(orderResponsesList, pageable, orderResponsesList.size());
-
-        return ResponseEntity.ok(orderResponses);
+        return ResponseEntity.ok(orders);
     }
 
     public ResponseEntity<Order> getOrderDetails(UUID orderId) {
@@ -153,29 +146,6 @@ public class OrderService {
         orderLineItems.setQuantity(orderLineItemsDTO.getQuantity());
         orderLineItems.setUnitPrice(orderLineItemsDTO.getUnitPrice());
         return orderLineItems;
-    }
-
-    private OrderLineItemsDTO mapToOrderLineItemsDTO(OrderLineItems orderLineItems) {
-        OrderLineItemsDTO orderLineItemsDTO = new OrderLineItemsDTO();
-        orderLineItemsDTO.setProductSkuId(orderLineItems.getProductSkuId());
-        orderLineItemsDTO.setQuantity(orderLineItems.getQuantity());
-        orderLineItemsDTO.setUnitPrice(orderLineItems.getUnitPrice());
-        return orderLineItemsDTO;
-    }
-
-    private OrderResponse mapToOrderListDTO(Order order) {
-
-        List<OrderLineItemsDTO> items = order
-                .getOrderItems()
-                .stream()
-                .map(this::mapToOrderLineItemsDTO)
-                .toList();
-
-        return OrderResponse.builder()
-                .orderIdentifier(order.getOrderIdentifier())
-                .orderDateTime(order.getDateCreated())
-                .items(items)
-                .build();
     }
 
     private Boolean doesUserHaveAdminAuthorities(String token) {

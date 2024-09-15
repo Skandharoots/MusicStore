@@ -67,7 +67,7 @@ public class OrderModelTests {
     }
 
     @Test
-    public void orderLineItemsTest() {
+    public void orderLineItemsSettersTest() {
         Assertions.assertThat(orderLineItems.getId()).isEqualTo(1L);
         Assertions.assertThat(orderLineItems.getQuantity()).isEqualTo(10);
         Assertions.assertThat(orderLineItems.getUnitPrice()).isEqualTo(BigDecimal.valueOf(3672.00));
@@ -76,6 +76,49 @@ public class OrderModelTests {
 
     @Test
     public void orderConstructorTest() {
+
+        List<OrderLineItems> items = new ArrayList<>();
+        items.add(orderLineItems);
+
+        Order orderConstructor = new Order(
+                userId,
+                "test",
+                "test",
+                "test@test.com",
+                "+48 637 829 200",
+                "test",
+                "test",
+                "test",
+                "test",
+                BigDecimal.valueOf(100.00),
+                items
+        );
+
+        Assertions.assertThat(orderConstructor.getId()).isEqualTo(null);
+        Assertions.assertThat(orderConstructor.getStatus()).isEqualTo(OrderStatus.IN_PROGRESS);
+        Assertions.assertThat(orderConstructor.getOrderIdentifier()).isNotNull();
+        Assertions.assertThat(orderConstructor.getName()).isEqualTo("test");
+        Assertions.assertThat(orderConstructor.getCity()).isEqualTo("test");
+        Assertions.assertThat(orderConstructor.getCountry()).isEqualTo("test");
+        Assertions.assertThat(orderConstructor.getDateCreated()).isNotNull();
+        Assertions.assertThat(orderConstructor.getCountry()).isEqualTo("test");
+        Assertions.assertThat(orderConstructor.getEmail()).isEqualTo("test@test.com");
+        Assertions.assertThat(orderConstructor.getPhone()).isEqualTo("+48 637 829 200");
+        Assertions.assertThat(orderConstructor.getStreetAddress()).isEqualTo("test");
+        Assertions.assertThat(orderConstructor.getSurname()).isEqualTo("test");
+        Assertions.assertThat(orderConstructor.getUserIdentifier()).isEqualTo(userId);
+        Assertions.assertThat(orderConstructor.getZipCode()).isEqualTo("test");
+        Assertions.assertThat(orderConstructor.getTotalPrice()).isEqualTo(BigDecimal.valueOf(100.00));
+        Assertions.assertThat(orderConstructor.getOrderItems()).isNotNull();
+        Assertions.assertThat(orderConstructor.getOrderItems()).isNotEmpty();
+        Assertions.assertThat(orderConstructor.getOrderItems()).hasSize(1);
+        Assertions.assertThat(orderConstructor.getOrderItems().get(0).getId()).isEqualTo(1L);
+
+
+    }
+
+    @Test
+    public void orderSettersTest() {
 
         Assertions.assertThat(order.getId()).isEqualTo(1L);
         Assertions.assertThat(order.getStatus()).isEqualTo(OrderStatus.IN_PROGRESS);

@@ -6,6 +6,7 @@ import com.musicstore.order.model.OrderLineItems;
 import com.musicstore.order.repository.OrderRepository;
 import com.musicstore.order.security.config.VariablesConfiguration;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -92,14 +93,18 @@ public class OrderService {
 
     }
 
-    public ResponseEntity<List<OrderResponse>> getAllOrdersByUserId(UUID userId) {
+    public ResponseEntity<Page<OrderResponse>> getAllOrdersByUserId(UUID userId, Integer page, Integer pageSize) {
 
-        List<Order> orders = orderRepository.findAllByUserIdentifier(userId);
+        Pageable pageable = PageRequest.of(page, pageSize, Sort.by("dateCreated").descending());
 
-        List<OrderResponse> orderResponses = orders
+        Page<Order> orders = orderRepository.findAllByUserIdentifier(userId, pageable);
+
+        List<OrderResponse> orderResponsesList = orders
                 .stream()
                 .map(this::mapToOrderListDTO)
                 .toList();
+
+        Page<OrderResponse> orderResponses = new PageImpl<>(orderResponsesList, pageable, orderResponsesList.size());
 
         return ResponseEntity.ok(orderResponses);
     }

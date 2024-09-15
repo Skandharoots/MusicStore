@@ -7,11 +7,10 @@ import com.musicstore.order.model.Order;
 import com.musicstore.order.service.OrderService;
 import jakarta.ws.rs.core.HttpHeaders;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -32,10 +31,12 @@ public class OrderController {
     }
 
     @GetMapping("/get/all/{user-id}")
-    public ResponseEntity<List<OrderResponse>> getAllOrdersForUser(
-            @PathVariable(name = "user-id") UUID userId
+    public ResponseEntity<Page<OrderResponse>> getAllOrdersForUser(
+            @PathVariable(name = "user-id") UUID userId,
+            @RequestParam(value = "page") Integer page,
+            @RequestParam(value = "pageSize") Integer pageSize
     ) {
-        return orderService.getAllOrdersByUserId(userId);
+        return orderService.getAllOrdersByUserId(userId, page, pageSize);
     }
 
     @GetMapping("/get/{order-id}")

@@ -6,8 +6,11 @@ import com.musicstore.shoppingcart.model.Cart;
 import com.musicstore.shoppingcart.repository.CartRepository;
 import jakarta.ws.rs.NotFoundException;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -21,7 +24,7 @@ public class CartService {
     public Cart findById(Long id) throws NotFoundException {
 
         return cartRepository.findCartById(id).orElseThrow(
-                () -> new NotFoundException("Cart not found")
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cart not found")
         );
 
     }
@@ -71,7 +74,12 @@ public class CartService {
 
     public String deleteCartByUserUuidAndProductUuid(UUID userUuid, UUID productSkuId) {
 
-        cartRepository.deleteCartByUserUuidAndProductSkuId(userUuid, productSkuId);
+        Cart cart = cartRepository.findCartByUserUuidAndProductSkuId(userUuid, productSkuId)
+                .orElseThrow(
+                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cart not found")
+                );
+
+        cartRepository.delete(cart);
 
         return "Cart item deleted successfully";
     }

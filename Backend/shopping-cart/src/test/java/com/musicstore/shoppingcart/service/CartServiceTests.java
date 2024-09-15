@@ -302,13 +302,22 @@ public class CartServiceTests {
         when(cartRepository.save(Mockito.any(Cart.class))).thenReturn(cart);
         cartService.addCart(cartRequest);
 
-        when(cartRepository.findCartById(cart.getId())).thenReturn(Optional.of(cart));
-        Cart cartFound = cartService.findById(cart.getId());
-        Assertions.assertThat(cartFound).isNotNull();
+        when(cartRepository.findCartByUserUuidAndProductSkuId(userUuid, productSkuId)).thenReturn(Optional.of(cart));
 
         String successMsg = cartService.deleteCartByUserUuidAndProductUuid(userUuid, productSkuId);
         Assertions.assertThat(successMsg).isNotNull();
         Assertions.assertThat(successMsg).isEqualTo("Cart item deleted successfully");
+
+    }
+
+    @Test
+    public void deleteCartByUserUuidAndProductSkuIdNotFoundTest() {
+
+        UUID userUuid = UUID.randomUUID();
+        UUID productSkuId = UUID.randomUUID();
+        when(cartRepository.findCartByUserUuidAndProductSkuId(userUuid, productSkuId)).thenReturn(Optional.empty());
+        Assertions.assertThatThrownBy(() -> cartService.deleteCartByUserUuidAndProductUuid(userUuid, productSkuId));
+
 
     }
 

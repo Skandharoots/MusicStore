@@ -146,33 +146,6 @@ public class CartRepositoryTests {
     }
 
     @Test
-    public void deleteCartByUserUuidAndProductSkuIdTest() {
-
-        UUID userUuid = UUID.randomUUID();
-        UUID productSkuId = UUID.randomUUID();
-        BigDecimal productPrice = BigDecimal.valueOf(269.99);
-
-        Cart cart = new Cart(
-                userUuid,
-                productSkuId,
-                productPrice,
-                "Stratocaster Player MX Modern C",
-                2
-        );
-        entityManager.persist(cart);
-        entityManager.flush();
-        Optional<Cart> cartSaved = cartRepository.findCartByUserUuidAndProductSkuId(userUuid, productSkuId);
-        Assertions.assertThat(cartSaved.isPresent()).isTrue();
-
-
-        cartRepository.deleteCartByUserUuidAndProductSkuId(userUuid, productSkuId);
-        entityManager.flush();
-        Optional<Cart> cartDeleted = cartRepository.findCartByUserUuidAndProductSkuId(userUuid, productSkuId);
-        Assertions.assertThat(cartDeleted.isPresent()).isFalse();
-
-    }
-
-    @Test
     public void deleteCartByUserUuidTest() {
 
         UUID userUuid = UUID.randomUUID();

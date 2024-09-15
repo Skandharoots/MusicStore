@@ -3,3 +3,6 @@ spring:
       import: optional:configserver:http://localhost:8888
   application:
     name: discovery
+eureka:
+  username: ${EUREKA_USERNAME:admin}
+  password: ${EUREKA_PASSWORD:lapunia@121}

@@ -31,7 +31,7 @@ public class RouteValidator {
             "/api/azure/update",
             "/api/azure/delete",
             "/api/order/get/**",
-            "/eureka"
+            "/eureka/web"
     );
 
     public Predicate<ServerHttpRequest> isSecured =

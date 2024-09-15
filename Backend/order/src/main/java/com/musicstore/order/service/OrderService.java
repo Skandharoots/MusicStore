@@ -45,7 +45,7 @@ public class OrderService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid order request");
         }
 
-        List<String> itemsNotAvailable = new ArrayList<>();
+        List<OrderAvailabilityListItem> itemsNotAvailable = new ArrayList<>();
 
         if (!jwtToken.startsWith("Bearer ")) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid token");
@@ -69,7 +69,7 @@ public class OrderService {
         response.getAvailableItems().forEach(
                 item -> {
                     if (!item.getIsAvailable()) {
-                        itemsNotAvailable.add(item.getProductSkuId().toString());
+                        itemsNotAvailable.add(item);
                     }
                 });
 

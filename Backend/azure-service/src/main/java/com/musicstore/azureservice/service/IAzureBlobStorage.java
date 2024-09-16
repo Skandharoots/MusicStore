@@ -7,14 +7,14 @@ import java.util.List;
 
 public interface IAzureBlobStorage {
 
-	String write(String path, String fileName, MultipartFile file) throws ResponseStatusException;
+	String write(String token, String path, String fileName, MultipartFile file) throws ResponseStatusException;
 
-	String update(String path, String fileName,  MultipartFile file) throws ResponseStatusException;
+	String update(String token, String path, String fileName,  MultipartFile file) throws ResponseStatusException;
 
 	byte[] read(String path) throws ResponseStatusException;
 
 	List<String> listFiles(String path) throws ResponseStatusException;
 
-	String delete(String path) throws ResponseStatusException;
+	String delete(String token, String path) throws ResponseStatusException;
 
 }

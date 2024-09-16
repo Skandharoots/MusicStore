@@ -1,23 +1,20 @@
 package com.musicstore.azureservice.service;
 
-import com.musicstore.azureservice.exceptions.AzureBlobStorageException;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
 public interface IAzureBlobStorage {
 
-	String write(String token, String path, String fileName, MultipartFile file) throws AzureBlobStorageException;
+	String write(String path, String fileName, MultipartFile file) throws ResponseStatusException;
 
-	String update(String token, String path, String fileName, MultipartFile file) throws AzureBlobStorageException;
+	String update(String path, String fileName,  MultipartFile file) throws ResponseStatusException;
 
-	byte[] read(String path) throws AzureBlobStorageException;
+	byte[] read(String path) throws ResponseStatusException;
 
-	List<String> listFiles(String path) throws AzureBlobStorageException;
+	List<String> listFiles(String path) throws ResponseStatusException;
 
-	void delete(String token, String path) throws AzureBlobStorageException;
+	String delete(String path) throws ResponseStatusException;
 
-	void createContainer() throws AzureBlobStorageException;
-
-	void deleteContainer() throws AzureBlobStorageException;
 }

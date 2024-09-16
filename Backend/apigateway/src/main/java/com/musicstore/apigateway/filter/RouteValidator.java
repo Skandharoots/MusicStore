@@ -25,11 +25,8 @@ public class RouteValidator {
             "/api/products/countries/get/**",
             "/api/products/manufacturers/get/**",
             "/api/v1/users/adminauthorize",
-            "/api/azure/upload",
             "/api/azure/read",
             "/api/azure/list",
-            "/api/azure/update",
-            "/api/azure/delete",
             "/api/order/get/**",
             "/eureka/web"
     );

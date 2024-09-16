@@ -40,7 +40,7 @@ public class ProductService {
 
 	private final VariablesConfiguration variablesConfiguration;
 
-	public String createProducts(String token, ProductRequest productRequest) {
+	public UUID createProducts(String token, ProductRequest productRequest) {
 
 
 		if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
@@ -75,10 +75,10 @@ public class ProductService {
 				subcategory
 		);
 
-		productRepository.save(product);
+		Product savedProduct = productRepository.save(product);
 
 
-		return "Product created";
+		return savedProduct.getProductSkuId();
 	}
 
 	public Page<Product> getAllProducts(Integer page, Integer pageSize) {

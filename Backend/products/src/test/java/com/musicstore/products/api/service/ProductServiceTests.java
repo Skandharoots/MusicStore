@@ -149,11 +149,10 @@ public class ProductServiceTests {
         when(manufacturerService.getManufacturerById(1L)).thenReturn(manufacturer);
         when(subcategoryService.getSubcategoryById(1L)).thenReturn(subcategory);
         when(productRepository.save(Mockito.any(Product.class))).thenReturn(product);
-        String response = productService.createProducts(token, productRequest);
+        UUID response = productService.createProducts(token, productRequest);
 
         Assertions.assertThat(response).isNotNull();
-        Assertions.assertThat(response).isNotEmpty();
-
+        Assertions.assertThat(response).isEqualTo(product.getProductSkuId());
     }
 
     @Test

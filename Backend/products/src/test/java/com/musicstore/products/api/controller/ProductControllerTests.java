@@ -113,7 +113,7 @@ public class ProductControllerTests {
         productRequest.setCountryId(1L);
         productRequest.setManufacturerId(1L);
 
-        when(productService.createProducts(token, productRequest)).thenReturn("Product created");
+        when(productService.createProducts(token, productRequest)).thenReturn(product.getProductSkuId());
 
         ResultActions resultActions = mockMvc.perform(post("/api/products/items/create")
                 .header("Authorization", token)
@@ -122,7 +122,7 @@ public class ProductControllerTests {
         );
 
         resultActions.andExpect(MockMvcResultMatchers.status().isCreated());
-        resultActions.andExpect(MockMvcResultMatchers.content().string("Product created"));
+        resultActions.andExpect(MockMvcResultMatchers.content().string(objectMapper.writeValueAsString(product.getProductSkuId())));
 
     }
 

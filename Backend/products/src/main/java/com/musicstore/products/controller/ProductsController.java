@@ -24,7 +24,7 @@ public class ProductsController {
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-    public String createProducts(
+    public UUID createProducts(
             @RequestHeader(HttpHeaders.AUTHORIZATION) String token,
             @RequestBody ProductRequest product
     ) {

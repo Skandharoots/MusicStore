@@ -13,11 +13,13 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @AllArgsConstructor
@@ -63,10 +65,10 @@ public class UserService implements UserDetailsService {
 
                     return confirmationToken.getToken();
                 } else {
-                    throw new IllegalStateException("Confirmation token not found");
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST,  "Confirmation token not found");
                 }
             } else {
-                throw new IllegalStateException("Email already taken");
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email already taken");
             }
         } else {
             String encodedPassword = bcryptPasswordEncoder
@@ -108,7 +110,7 @@ public class UserService implements UserDetailsService {
         boolean userExists = userRepository.findByUuid(uuid).isPresent();
 
         if (!userExists) {
-            throw new IllegalStateException("Cannot update user, user not found");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot update user, user not found");
         }
 
         userRepository.updateUser(uuid, request.getFirstName(),
@@ -131,7 +133,7 @@ public class UserService implements UserDetailsService {
     public String deleteUser(UUID uuid) {
         Optional<Users> user = userRepository.findByUuid(uuid);
         if (user.isEmpty()) {
-            throw new IllegalStateException("Cannot delete user, user not found");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot delete user, user not found");
         } else {
             Users userToDelete = user.get();
             confirmationTokenService.deleteConfirmationToken(userToDelete.getId());

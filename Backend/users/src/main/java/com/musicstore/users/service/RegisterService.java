@@ -1,7 +1,6 @@
 package com.musicstore.users.service;
 
 import com.musicstore.users.dto.RegisterRequest;
-import com.musicstore.users.mail.EmailSender;
 import com.musicstore.users.model.ConfirmationToken;
 import com.musicstore.users.model.UserRole;
 import com.musicstore.users.model.Users;
@@ -10,7 +9,9 @@ import java.time.LocalDateTime;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @AllArgsConstructor
@@ -18,7 +19,6 @@ public class RegisterService {
 
     private final UserService userService;
     private final ConfirmationTokenService confirmationTokenService;
-    private final EmailSender emailSender;
 
     public String register(RegisterRequest request) {
 
@@ -31,7 +31,7 @@ public class RegisterService {
         boolean isValidEmail = matcher.matches();
 
         if (!isValidEmail) {
-            throw new IllegalStateException("Email not valid");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,  "Email not valid");
         }
 
         return userService.signUpUser(
@@ -49,16 +49,16 @@ public class RegisterService {
     public String confirmToken(String token) {
         ConfirmationToken confirmationToken = confirmationTokenService
                 .getConfirmationToken(token)
-                .orElseThrow(() -> new IllegalStateException("Invalid token"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid token"));
 
         if (confirmationToken.getConfirmedAt() != null) {
-            throw new IllegalStateException("Email already confirmed");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email already confirmed");
         }
 
         LocalDateTime expiredAt = confirmationToken.getExpiresAt();
 
         if (expiredAt.isBefore(LocalDateTime.now())) {
-            throw new IllegalStateException("Expired token");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Expired token");
         }
 
         confirmationTokenService.setConfirmationDate(token);

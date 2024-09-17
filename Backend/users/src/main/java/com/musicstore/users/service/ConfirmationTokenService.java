@@ -6,7 +6,9 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @AllArgsConstructor
@@ -27,7 +29,7 @@ public class ConfirmationTokenService {
         boolean tokenExists = confirmationTokenRepository.findByToken(token).isPresent();
 
         if (!tokenExists) {
-            throw new IllegalStateException("Token does not exist");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,  "Token does not exist");
         }
 
         confirmationTokenRepository.updateConfirmationToken(token, LocalDateTime.now());
@@ -41,7 +43,7 @@ public class ConfirmationTokenService {
         boolean tokenExists = confirmationTokenRepository.findByUser_Id(id).isPresent();
 
         if (!tokenExists) {
-            throw new IllegalStateException("Token does not exist");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Token does not exist");
         }
 
         confirmationTokenRepository.deleteByUser_Id(id);

@@ -137,6 +137,34 @@
 				</executions>
 			</plugin>
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>3.4.0</version>
+				<configuration>
+					<configLocation>checkstyle.xml</configLocation>
+					<consoleOutput>true</consoleOutput>
+					<failsOnError>true</failsOnError>
+					<linkXRef>false</linkXRef>
+					<excludes>**/module-info.java</excludes>
+				</configuration>
+				<executions>
+					<execution>
+						<id>checkstyle</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>com.puppycrawl.tools</groupId>
+						<artifactId>checkstyle</artifactId>
+						<version>10.0</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
@@ -165,6 +193,23 @@
 					<reportSet>
 						<reports>
 							<report>report</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>3.4.0</version>
+				<configuration>
+					<configLocation>checkstyle.xml</configLocation>
+					<consoleOutput>true</consoleOutput>
+					<linkXRef>false</linkXRef>
+				</configuration>
+				<reportSets>
+					<reportSet>
+						<reports>
+							<report>checkstyle</report>
 						</reports>
 					</reportSet>
 				</reportSets>

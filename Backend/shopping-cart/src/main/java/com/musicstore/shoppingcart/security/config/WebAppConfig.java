@@ -35,7 +35,8 @@ public class WebAppConfig {
                         .anyRequest()
                         .authenticated()
                 )
-                .sessionManagement(customizer -> customizer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionManagement(customizer -> customizer
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .formLogin(AbstractHttpConfigurer::disable);
         return http.build();
     }

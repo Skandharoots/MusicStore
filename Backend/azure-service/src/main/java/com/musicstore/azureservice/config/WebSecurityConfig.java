@@ -17,24 +17,27 @@ import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 @EnableWebSecurity
 public class WebSecurityConfig {
 
-	@Bean
-	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-		http
-				.csrf(httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer
-						.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-						.csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
-				)
-				.authorizeHttpRequests((requests) -> requests
-						.requestMatchers(HttpMethod.POST, "/api/azure/upload").permitAll()
-						.requestMatchers(HttpMethod.GET, "/api/azure/read").permitAll()
-						.requestMatchers(HttpMethod.GET, "/api/azure/list").permitAll()
-						.requestMatchers(HttpMethod.PUT, "/api/azure/update").permitAll()
-						.requestMatchers(HttpMethod.DELETE, "/api/azure/delete").permitAll()
-						.anyRequest()
-						.authenticated()
-				)
-				.sessionManagement(customizer -> customizer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-				.formLogin(AbstractHttpConfigurer::disable);
-		return http.build();
-	}
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+                .csrf(httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer
+                    .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                    .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
+                )
+                .authorizeHttpRequests((requests) -> requests
+                    .requestMatchers(HttpMethod.POST, "/api/azure/upload").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/azure/read").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/azure/list").permitAll()
+                    .requestMatchers(HttpMethod.PUT, "/api/azure/update").permitAll()
+                    .requestMatchers(HttpMethod.DELETE, "/api/azure/delete").permitAll()
+                    .anyRequest()
+                    .authenticated()
+                )
+                .sessionManagement(customizer -> customizer
+                    .sessionCreationPolicy(
+                        SessionCreationPolicy.STATELESS)
+                )
+                .formLogin(AbstractHttpConfigurer::disable);
+        return http.build();
+    }
 }

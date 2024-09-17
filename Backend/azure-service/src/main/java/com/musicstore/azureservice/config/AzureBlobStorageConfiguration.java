@@ -10,40 +10,40 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class AzureBlobStorageConfiguration {
 
-	@Value("${spring.cloud.azure.storage.blob.container-name}")
-	private String containerName;
+    @Value("${spring.cloud.azure.storage.blob.container-name}")
+    private String containerName;
 
-	@Value("${spring.cloud.azure.storage.connection.string}")
-	private String connectionString;
+    @Value("${spring.cloud.azure.storage.connection.string}")
+    private String connectionString;
 
-	@Value("${my.admin_autorize_url}")
-	private String adminUrl;
+    @Value("${my.admin_autorize_url}")
+    private String adminUrl;
 
-	@Bean
-	public BlobServiceClient getBlobServiceClient(){
-		return new BlobServiceClientBuilder()
-				.connectionString(connectionString).buildClient();
+    @Bean
+    public BlobServiceClient getBlobServiceClient() {
+        return new BlobServiceClientBuilder()
+                .connectionString(connectionString).buildClient();
 
-	}
+    }
 
-	@Bean
-	public BlobContainerClient getBlobContainerClient(){
-		return getBlobServiceClient()
-				.getBlobContainerClient(containerName);
-	}
+    @Bean
+    public BlobContainerClient getBlobContainerClient() {
+        return getBlobServiceClient()
+                .getBlobContainerClient(containerName);
+    }
 
-	@Bean
-	public String getContainerName() {
-		return containerName;
-	}
+    @Bean
+    public String getContainerName() {
+        return containerName;
+    }
 
-	@Bean
-	public String getConnectionString() {
-		return connectionString;
-	}
+    @Bean
+    public String getConnectionString() {
+        return connectionString;
+    }
 
-	@Bean
-	public String getAdminUrl() {
-		return adminUrl;
-	}
+    @Bean
+    public String getAdminUrl() {
+        return adminUrl;
+    }
 }

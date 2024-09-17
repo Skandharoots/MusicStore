@@ -1,5 +1,7 @@
 server:
   port: 8222
+  error:
+    include-message: always
 eureka:
   client:
     register-with-eureka: false

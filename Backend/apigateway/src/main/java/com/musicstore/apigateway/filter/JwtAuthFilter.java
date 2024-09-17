@@ -1,15 +1,13 @@
 package com.musicstore.apigateway.filter;
 
-import com.musicstore.apigateway.config.GatewayConfig;
+import java.util.Objects;
 import org.apache.http.HttpHeaders;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
-
-import java.util.Objects;
+import org.springframework.web.server.ResponseStatusException;
 
 @Component
 public class JwtAuthFilter extends AbstractGatewayFilterFactory<JwtAuthFilter.Config> {
@@ -21,8 +19,8 @@ public class JwtAuthFilter extends AbstractGatewayFilterFactory<JwtAuthFilter.Co
     public JwtAuthFilter(RouteValidator routeValidator, WebClient.Builder webClient) {
         super(Config.class);
         this.routeValidator = routeValidator;
-		this.webClient = webClient;
-	}
+        this.webClient = webClient;
+    }
 
     public static class Config {
 
@@ -32,16 +30,22 @@ public class JwtAuthFilter extends AbstractGatewayFilterFactory<JwtAuthFilter.Co
     public GatewayFilter apply(JwtAuthFilter.Config config) {
         return ((exchange, chain) -> {
             if (routeValidator.isSecured.test(exchange.getRequest())) {
+
                 if (!exchange.getRequest().getHeaders().containsKey(HttpHeaders.AUTHORIZATION)) {
-                    throw new IllegalStateException("Missing authorization priviledges");
+                    throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,
+                            "Missing authorization priviledges");
                 }
 
-                String authorization = Objects.requireNonNull(exchange.getRequest().getHeaders().get(HttpHeaders.AUTHORIZATION)).get(0);
+                String authorization = Objects.requireNonNull(exchange.getRequest()
+                        .getHeaders().get(HttpHeaders.AUTHORIZATION)).get(0);
+
                 if (!authorization.startsWith("Bearer ")) {
-                    throw new IllegalStateException("Invalid authorization header");
+                    throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,
+                            "Invalid authorization header");
                 } else {
                     authorization = authorization.substring("Bearer ".length());
                 }
+
                 return webClient
                         .build()
                         .get()
@@ -52,14 +56,18 @@ public class JwtAuthFilter extends AbstractGatewayFilterFactory<JwtAuthFilter.Co
                             if (response) {
                                 return chain.filter(exchange);
                             } else {
-                                return reactor.core.publisher.Mono.error(new RuntimeException("Unauthorized access"));
+                                return reactor.core.publisher.Mono.error(
+                                        new ResponseStatusException(HttpStatus.UNAUTHORIZED,
+                                                "Unauthorized access")
+                                );
                             }
                         })
                         .onErrorResume(throwable -> {
-                            throw new RuntimeException("Unauthorized access", throwable);
+                            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,
+                                    "Unauthorized access", throwable);
                         });
-                }
-                return chain.filter(exchange);
-            });
-        }
+            }
+            return chain.filter(exchange);
+        });
     }
+}

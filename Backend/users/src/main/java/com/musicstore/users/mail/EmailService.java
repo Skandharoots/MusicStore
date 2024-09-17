@@ -3,8 +3,7 @@ package com.musicstore.users.mail;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.AllArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -12,9 +11,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class EmailService implements EmailSender {
-
-    private static final Logger logger = LoggerFactory.getLogger(EmailService.class);
 
     @Autowired
     private JavaMailSender mailSender;
@@ -30,7 +28,7 @@ public class EmailService implements EmailSender {
             helper.setFrom("mardok1825@gmail.com");
             mailSender.send(message);
         } catch (MessagingException e) {
-            logger.error("Sending email failed", e);
+            log.error("Sending email failed", e);
             throw new IllegalStateException("Failed to send email");
         }
     }

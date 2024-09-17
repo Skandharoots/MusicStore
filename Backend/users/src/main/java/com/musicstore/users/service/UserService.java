@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -22,6 +23,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
@@ -64,10 +66,19 @@ public class UserService implements UserDetailsService {
 
                     return confirmationToken.getToken();
                 } else {
-                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST,  "Confirmation token not found");
+                    log.error(
+                            "Confirmation token not found for user \""
+                                    + users.getEmail() + "\".");
+                    throw new ResponseStatusException(
+                            HttpStatus.BAD_REQUEST,
+                            "Confirmation token not found");
                 }
             } else {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email already taken");
+                log.error("User with email \""
+                        + users.getEmail()
+                        + "\" already exists.");
+                throw new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST, "Email already taken");
             }
         } else {
             String encodedPassword = bcryptPasswordEncoder
@@ -76,6 +87,10 @@ public class UserService implements UserDetailsService {
             users.setPassword(encodedPassword);
 
             userRepository.save(users);
+
+            log.info("User with email \""
+                    + users.getEmail()
+                    + "\" has been registered successfully.");
 
             String tokenUuid = UUID.randomUUID().toString();
 
@@ -109,7 +124,9 @@ public class UserService implements UserDetailsService {
         boolean userExists = userRepository.findByUuid(uuid).isPresent();
 
         if (!userExists) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot update user, user not found");
+            log.error("User with email \"" + uuid + "\" not found.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Cannot update user, user not found");
         }
 
         userRepository.updateUser(uuid, request.getFirstName(),
@@ -118,6 +135,10 @@ public class UserService implements UserDetailsService {
 
         var updatedUser = userRepository.findByUuid(uuid);
         var userDetails = loadUserByUsername(request.getEmail());
+
+        log.info("User with username \""
+                + updatedUser.get().getUsername()
+                + "\" has been updated.");
 
         return LoginResponse.builder()
                 .firstName(updatedUser.get().getFirstName())
@@ -132,11 +153,17 @@ public class UserService implements UserDetailsService {
     public String deleteUser(UUID uuid) {
         Optional<Users> user = userRepository.findByUuid(uuid);
         if (user.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot delete user, user not found");
+            log.error("User with email \"" + uuid
+                    + "\" not found. Deletion failed.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Cannot delete user, user not found");
         } else {
             Users userToDelete = user.get();
             confirmationTokenService.deleteConfirmationToken(userToDelete.getId());
             userRepository.deleteByUuid(uuid);
+            log.info("User with email \"" + uuid
+                    + "\" has been deleted.");
+
             return "User successfully deleted";
         }
     }

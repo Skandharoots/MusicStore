@@ -10,7 +10,6 @@ import jakarta.persistence.SequenceGenerator;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.UUID;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

@@ -1,6 +1,5 @@
 package com.musicstore.users.service;
 
-
 import com.musicstore.users.dto.LoginResponse;
 import com.musicstore.users.dto.RegisterRequest;
 import com.musicstore.users.mail.EmailService;

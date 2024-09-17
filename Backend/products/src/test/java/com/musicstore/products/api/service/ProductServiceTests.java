@@ -321,13 +321,13 @@ public class ProductServiceTests {
 
         OrderAvailabilityResponse orderAvailabilityResponse = new OrderAvailabilityResponse();
         OrderAvailabilityListItem orderAvailabilityListItem = new OrderAvailabilityListItem();
-        OrderLineItemsDTO orderLineItemsDTO = new OrderLineItemsDTO();
+        OrderLineItemsDto orderLineItemsDTO = new OrderLineItemsDto();
         OrderRequest orderRequest = new OrderRequest();
 
         orderLineItemsDTO.setQuantity(1);
         orderLineItemsDTO.setProductSkuId(product.getProductSkuId());
         orderLineItemsDTO.setUnitPrice(BigDecimal.valueOf(2699.99));
-        List<OrderLineItemsDTO> orderItems = new ArrayList<>();
+        List<OrderLineItemsDto> orderItems = new ArrayList<>();
         orderItems.add(orderLineItemsDTO);
         orderRequest.setItems(orderItems);
 
@@ -356,13 +356,13 @@ public class ProductServiceTests {
         product.setProductSkuId(skuId);
 
 
-        OrderLineItemsDTO orderLineItemsDTO = new OrderLineItemsDTO();
+        OrderLineItemsDto orderLineItemsDTO = new OrderLineItemsDto();
         OrderRequest orderRequest = new OrderRequest();
 
         orderLineItemsDTO.setQuantity(1);
         orderLineItemsDTO.setProductSkuId(badSkuId);
         orderLineItemsDTO.setUnitPrice(BigDecimal.valueOf(2699.99));
-        List<OrderLineItemsDTO> orderItems = new ArrayList<>();
+        List<OrderLineItemsDto> orderItems = new ArrayList<>();
         orderItems.add(orderLineItemsDTO);
         orderRequest.setItems(orderItems);
 
@@ -379,13 +379,13 @@ public class ProductServiceTests {
 
         OrderAvailabilityResponse orderAvailabilityResponse = new OrderAvailabilityResponse();
         OrderAvailabilityListItem orderAvailabilityListItem = new OrderAvailabilityListItem();
-        OrderLineItemsDTO orderLineItemsDTO = new OrderLineItemsDTO();
+        OrderLineItemsDto orderLineItemsDTO = new OrderLineItemsDto();
         OrderRequest orderRequest = new OrderRequest();
 
         orderLineItemsDTO.setQuantity(2000);
         orderLineItemsDTO.setProductSkuId(product.getProductSkuId());
         orderLineItemsDTO.setUnitPrice(BigDecimal.valueOf(2699.99));
-        List<OrderLineItemsDTO> orderItems = new ArrayList<>();
+        List<OrderLineItemsDto> orderItems = new ArrayList<>();
         orderItems.add(orderLineItemsDTO);
         orderRequest.setItems(orderItems);
 

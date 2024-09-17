@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CountryRequest {
 
-	private String name;
+    private String name;
 }

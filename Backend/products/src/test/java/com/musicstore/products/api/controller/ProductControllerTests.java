@@ -212,11 +212,11 @@ public class ProductControllerTests {
     @Test
     public void verifyAvailabilityTest() throws Exception {
 
-        OrderLineItemsDTO orderLineItemsDTO = new OrderLineItemsDTO();
+        OrderLineItemsDto orderLineItemsDTO = new OrderLineItemsDto();
         orderLineItemsDTO.setProductSkuId(product.getProductSkuId());
         orderLineItemsDTO.setQuantity(1);
         orderLineItemsDTO.setUnitPrice(product.getProductPrice());
-        List<OrderLineItemsDTO> items = new ArrayList<>();
+        List<OrderLineItemsDto> items = new ArrayList<>();
         items.add(orderLineItemsDTO);
 
         OrderRequest orderRequest = new OrderRequest();

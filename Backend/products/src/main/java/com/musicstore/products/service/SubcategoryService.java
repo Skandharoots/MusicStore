@@ -5,18 +5,19 @@ import com.musicstore.products.model.Subcategory;
 import com.musicstore.products.repository.SubcategoryRepository;
 import com.musicstore.products.security.config.VariablesConfiguration;
 import jakarta.transaction.Transactional;
+import java.util.List;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
-
 @Service
 @Transactional
 @AllArgsConstructor
+@Slf4j
 public class SubcategoryService {
 
     private final SubcategoryRepository subcategoryRepository;
@@ -29,14 +30,16 @@ public class SubcategoryService {
 
     public String createSubcategories(String token, SubcategoryRequest subcategory) {
 
-		if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
-			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No admin authority");
-		}
+        if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
+            log.error("No admin authority for token - " + token);
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No admin authority");
+        }
 
-        if (subcategory.getName() == null ||
-                subcategory.getName().isEmpty() ||
-                subcategory.getCategoryId() == null ||
-                subcategory.getCategoryId().toString().isEmpty()) {
+        if (subcategory.getName() == null
+                || subcategory.getName().isEmpty()
+                || subcategory.getCategoryId() == null
+                || subcategory.getCategoryId().toString().isEmpty()) {
+            log.error("Bad subcategory creation request.");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Subcategory name or category id cannot be empty");
         }
 
@@ -45,6 +48,7 @@ public class SubcategoryService {
         newSubcategory.setCategory(categoryService.getCategoryById(subcategory.getCategoryId()));
 
         subcategoryRepository.save(newSubcategory);
+        log.info("Subcategory created - " + newSubcategory);
 
 
         return "Subcategories created";
@@ -70,13 +74,15 @@ public class SubcategoryService {
     public ResponseEntity<String> updateSubcategory(String token, Long id, SubcategoryRequest subcategory) {
 
         if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
+            log.error("No admin authority for token - " + token);
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No admin authority");
         }
 
-        if (subcategory.getName() == null ||
-                subcategory.getName().isEmpty() ||
-                subcategory.getCategoryId() == null ||
-                subcategory.getCategoryId().toString().isEmpty()) {
+        if (subcategory.getName() == null
+                || subcategory.getName().isEmpty()
+                || subcategory.getCategoryId() == null
+                || subcategory.getCategoryId().toString().isEmpty()) {
+            log.error("Bad subcategory update request.");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Subcategory name or category id cannot be empty");
         }
 
@@ -89,6 +95,7 @@ public class SubcategoryService {
         subcategoryToUpdate.setName(subcategory.getName());
 
         subcategoryRepository.save(subcategoryToUpdate);
+        log.info("Subcategory updated - " + subcategoryToUpdate);
 
         return ResponseEntity.ok("Subcategory updated");
     }
@@ -96,6 +103,7 @@ public class SubcategoryService {
     public ResponseEntity<String> deleteSubcategory(String token, Long id) {
 
         if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
+            log.error("No admin authority for token - " + token);
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No admin authority");
         }
 
@@ -106,6 +114,7 @@ public class SubcategoryService {
                 );
 
         subcategoryRepository.delete(subcategoryToDelete);
+        log.info("Subcategory deleted - " + subcategoryToDelete);
 
         return ResponseEntity.ok("Subcategory deleted");
     }
@@ -113,6 +122,7 @@ public class SubcategoryService {
     private Boolean doesUserHaveAdminAuthorities(String token) {
 
         if (!token.startsWith("Bearer ")) {
+            log.error("Invalid token - " + token);
             throw new RuntimeException("Invalid token");
         }
 

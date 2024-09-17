@@ -4,114 +4,123 @@ import com.musicstore.products.dto.ManufacturerRequest;
 import com.musicstore.products.model.Manufacturer;
 import com.musicstore.products.repository.ManufacturerRepository;
 import com.musicstore.products.security.config.VariablesConfiguration;
+import java.util.List;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
-
 @Service
 @AllArgsConstructor
+@Slf4j
 public class ManufacturerService {
 
-	private final ManufacturerRepository manufacturerRepository;
+    private final ManufacturerRepository manufacturerRepository;
 
-	private final WebClient.Builder webClient;
+    private final WebClient.Builder webClient;
 
-	private final VariablesConfiguration variablesConfiguration;
+    private final VariablesConfiguration variablesConfiguration;
 
-	public String createManufacturers(String token, ManufacturerRequest manufacturer) {
+    public String createManufacturers(String token, ManufacturerRequest manufacturer) {
 
-		if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
-			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No admin authority");
-		}
+        if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
+            log.error("No admin authority for token - " + token);
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No admin authority");
+        }
 
-		if (manufacturer.getName() == null || manufacturer.getName().isEmpty()) {
-			throw new IllegalArgumentException("Manufacturer name cannot be empty");
-		}
+        if (manufacturer.getName() == null || manufacturer.getName().isEmpty()) {
+            log.error("Bad request for manufacturer creation.");
+            throw new IllegalArgumentException("Manufacturer name cannot be empty");
+        }
 
-		Manufacturer newManufacturer = new Manufacturer(manufacturer.getName());
-
-
-		manufacturerRepository.save(newManufacturer);
+        Manufacturer newManufacturer = new Manufacturer(manufacturer.getName());
 
 
-		return "Manufacturers created";
-	}
+        manufacturerRepository.save(newManufacturer);
+        log.info("Manufacturer created: " + newManufacturer);
 
-	public List<Manufacturer> getAllManufacturers() {
-		return manufacturerRepository.findAll();
-	}
+        return "Manufacturers created";
+    }
 
-	public Manufacturer getManufacturerById(Long id) {
-		return manufacturerRepository
-				.findById(id)
-				.orElseThrow(
-						() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Manufacturer not found")
-				);
-	}
+    public List<Manufacturer> getAllManufacturers() {
+        return manufacturerRepository.findAll();
+    }
 
-	public List<Manufacturer> findAllBySearchParameters(Long categoryId, String country, String subcategory) {
-		return manufacturerRepository.findAllBySearchParameters(categoryId, country, subcategory);
-	}
+    public Manufacturer getManufacturerById(Long id) {
+        return manufacturerRepository
+                .findById(id)
+                .orElseThrow(
+            () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Manufacturer not found")
+                );
+    }
 
-	public ResponseEntity<String> updateManufacturer(String token, Long id, ManufacturerRequest manufacturer) {
+    public List<Manufacturer> findAllBySearchParameters(Long categoryId, String country, String subcategory) {
+        return manufacturerRepository.findAllBySearchParameters(categoryId, country, subcategory);
+    }
 
-		if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
-			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No admin authority");
-		}
+    public ResponseEntity<String> updateManufacturer(String token, Long id, ManufacturerRequest manufacturer) {
 
-		if (manufacturer.getName() == null || manufacturer.getName().isEmpty()) {
-			throw new IllegalArgumentException("Manufacturer name cannot be empty");
-		}
+        if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
+            log.error("No admin authority for token - " + token);
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No admin authority");
+        }
 
-		Manufacturer manufacurerToUpdate = manufacturerRepository
-				.findById(id)
-				.orElseThrow(
-						() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Manufacturer not found")
-				);
+        if (manufacturer.getName() == null || manufacturer.getName().isEmpty()) {
+            log.error("Bad request for manufacturer update.");
+            throw new IllegalArgumentException("Manufacturer name cannot be empty");
+        }
 
-		manufacurerToUpdate.setName(manufacturer.getName());
+        Manufacturer manufacurerToUpdate = manufacturerRepository
+                .findById(id)
+                .orElseThrow(
+            () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Manufacturer not found")
+                );
 
-		manufacturerRepository.save(manufacurerToUpdate);
+        manufacurerToUpdate.setName(manufacturer.getName());
 
-		return ResponseEntity.ok("Manufacturer updated");
-	}
+        manufacturerRepository.save(manufacurerToUpdate);
+        log.info("Manufacturer updated: " + manufacurerToUpdate);
 
-	public ResponseEntity<String> deleteManufacturer(String token, Long id) {
-		if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
-			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No admin authority");
-		}
+        return ResponseEntity.ok("Manufacturer updated");
+    }
 
-		Manufacturer manufacurerToDelete = manufacturerRepository
-				.findById(id)
-				.orElseThrow(
-						() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Manufacturer not found")
-				);
+    public ResponseEntity<String> deleteManufacturer(String token, Long id) {
+        if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
+            log.error("No admin authority for token - " + token);
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No admin authority");
+        }
 
-		manufacturerRepository.delete(manufacurerToDelete);
+        Manufacturer manufacurerToDelete = manufacturerRepository
+                .findById(id)
+                .orElseThrow(
+                    () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Manufacturer not found")
+                );
 
-		return ResponseEntity.ok("Manufacturer deleted");
-	}
+        manufacturerRepository.delete(manufacurerToDelete);
+        log.info("Manufacturer deleted: " + manufacurerToDelete);
 
-	private Boolean doesUserHaveAdminAuthorities(String token) {
+        return ResponseEntity.ok("Manufacturer deleted");
+    }
 
-		if (!token.startsWith("Bearer ")) {
-			throw new RuntimeException("Invalid token");
-		}
+    private Boolean doesUserHaveAdminAuthorities(String token) {
 
-		String jwtToken = token.substring("Bearer ".length());
+        if (!token.startsWith("Bearer ")) {
+            log.error("Invalid token - " + token);
+            throw new RuntimeException("Invalid token");
+        }
 
-		return webClient
-				.build()
-				.get()
-				.uri(variablesConfiguration.getAdminUrl() + jwtToken)
-				.retrieve()
-				.bodyToMono(Boolean.class)
-				.block();
+        String jwtToken = token.substring("Bearer ".length());
 
-	}
+        return webClient
+                .build()
+                .get()
+                .uri(variablesConfiguration.getAdminUrl() + jwtToken)
+                .retrieve()
+                .bodyToMono(Boolean.class)
+                .block();
+
+    }
 }

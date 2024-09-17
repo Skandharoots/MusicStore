@@ -4,27 +4,30 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.Setter;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
 @Entity
 public class Country {
 
-	@Id
-	@GeneratedValue(
-			strategy = GenerationType.IDENTITY
-	)
-	private Long id;
+    @Id
+    @GeneratedValue(
+            strategy = GenerationType.IDENTITY
+    )
+    private Long id;
 
-	@NonNull
-	private String name;
+    @NonNull
+    private String name;
 
-	public Country(String countryName) {
-		this.name = countryName;
-	}
+    public Country(String countryName) {
+        this.name = countryName;
+    }
 
 }

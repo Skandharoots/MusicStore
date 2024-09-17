@@ -1,11 +1,10 @@
 package com.musicstore.products.dto;
 
+import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.math.BigDecimal;
 
 @Data
 @Builder
@@ -13,13 +12,13 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class ProductRequest {
 
-	private String productName;
-	private String description;
-	private BigDecimal price;
-	private Integer quantity;
-	private Long manufacturerId;
-	private Long countryId;
-	private Long categoryId;
-	private Long subcategoryId;
+    private String productName;
+    private String description;
+    private BigDecimal price;
+    private Integer quantity;
+    private Long manufacturerId;
+    private Long countryId;
+    private Long categoryId;
+    private Long subcategoryId;
 
 }

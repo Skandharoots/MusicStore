@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ManufacturerRequest {
 
-	private String name;
+    private String name;
 }

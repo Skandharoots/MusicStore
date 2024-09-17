@@ -124,7 +124,7 @@ public class UserService implements UserDetailsService {
         boolean userExists = userRepository.findByUuid(uuid).isPresent();
 
         if (!userExists) {
-            log.error("User with email \"" + uuid + "\" not found.");
+            log.error("User with id \"" + uuid + "\" not found.");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "Cannot update user, user not found");
         }
@@ -153,7 +153,7 @@ public class UserService implements UserDetailsService {
     public String deleteUser(UUID uuid) {
         Optional<Users> user = userRepository.findByUuid(uuid);
         if (user.isEmpty()) {
-            log.error("User with email \"" + uuid
+            log.error("User with id \"" + uuid
                     + "\" not found. Deletion failed.");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "Cannot delete user, user not found");
@@ -161,7 +161,7 @@ public class UserService implements UserDetailsService {
             Users userToDelete = user.get();
             confirmationTokenService.deleteConfirmationToken(userToDelete.getId());
             userRepository.deleteByUuid(uuid);
-            log.info("User with email \"" + uuid
+            log.info("User with id \"" + uuid
                     + "\" has been deleted.");
 
             return "User successfully deleted";

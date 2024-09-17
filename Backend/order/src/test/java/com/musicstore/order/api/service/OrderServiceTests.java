@@ -78,7 +78,7 @@ public class OrderServiceTests {
 
     private OrderRequest orderRequest;
 
-    private OrderLineItemsDTO orderLineItemsDTO;
+    private OrderLineItemsDto orderLineItemsDTO;
 
     private OrderAvailabilityListItem orderListItemAvailable;
 
@@ -111,11 +111,11 @@ public class OrderServiceTests {
         List<OrderLineItems> orderLineItemsList = new ArrayList<>();
         orderLineItemsList.add(orderLineItems);
 
-        orderLineItemsDTO = new OrderLineItemsDTO();
+        orderLineItemsDTO = new OrderLineItemsDto();
         orderLineItemsDTO.setQuantity(10);
         orderLineItemsDTO.setProductSkuId(productSkuId);
         orderLineItemsDTO.setUnitPrice(BigDecimal.valueOf(3672.00));
-        List<OrderLineItemsDTO> itemsDto = new ArrayList<>();
+        List<OrderLineItemsDto> itemsDto = new ArrayList<>();
         itemsDto.add(orderLineItemsDTO);
 
         order = new Order();

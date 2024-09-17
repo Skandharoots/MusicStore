@@ -1,12 +1,24 @@
 package com.musicstore.order.service;
 
-import com.musicstore.order.dto.*;
+import com.musicstore.order.dto.OrderAvailabilityListItem;
+import com.musicstore.order.dto.OrderAvailabilityResponse;
+import com.musicstore.order.dto.OrderLineItemsDto;
+import com.musicstore.order.dto.OrderRequest;
+import com.musicstore.order.dto.OrderUpdateRequest;
 import com.musicstore.order.model.Order;
 import com.musicstore.order.model.OrderLineItems;
 import com.musicstore.order.repository.OrderRepository;
 import com.musicstore.order.security.config.VariablesConfiguration;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.*;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -14,13 +26,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
-
 @Service
 @AllArgsConstructor
+@Slf4j
 public class OrderService {
 
     private final OrderRepository orderRepository;
@@ -42,14 +50,16 @@ public class OrderService {
                 || request.getZipCode() == null || request.getZipCode().isEmpty()
                 || request.getItems().isEmpty()
         ) {
+            log.error("Bad order creation request");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid order request");
         }
 
-        List<OrderAvailabilityListItem> itemsNotAvailable = new ArrayList<>();
-
         if (!jwtToken.startsWith("Bearer ")) {
+            log.error("No admin authority for token - " + jwtToken);
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid token");
         }
+
+        List<OrderAvailabilityListItem> itemsNotAvailable = new ArrayList<>();
 
         OrderAvailabilityResponse response;
 
@@ -74,7 +84,9 @@ public class OrderService {
                 });
 
         if (!itemsNotAvailable.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Not all items are available. Items not available - " + itemsNotAvailable);
+            log.error("Not all items are available for order - " + request);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Not all items are available. Items not available - " + itemsNotAvailable);
         }
 
         Order order = new Order(
@@ -95,14 +107,22 @@ public class OrderService {
         );
 
         orderRepository.save(order);
+        log.info("Order created - " + order);
 
         return "Order placed successfully";
 
     }
 
-    public ResponseEntity<Page<Order>> getAllOrdersByUserId(UUID userId, Integer page, Integer pageSize) {
+    public ResponseEntity<Page<Order>> getAllOrdersByUserId(
+            UUID userId,
+            Integer page,
+            Integer pageSize) {
 
-        Pageable pageable = PageRequest.of(page, pageSize, Sort.by("dateCreated").descending());
+        Pageable pageable = PageRequest.of(
+                page,
+                pageSize,
+                Sort.by("dateCreated")
+                        .descending());
 
         Page<Order> orders = orderRepository.findAllByUserIdentifier(userId, pageable);
 
@@ -113,44 +133,54 @@ public class OrderService {
 
         Order order = orderRepository.findByOrderIdentifier(orderId)
                 .orElseThrow(
-                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Order not found")
+                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                                "Order not found")
                 );
 
         return ResponseEntity.ok(order);
     }
 
-    public ResponseEntity<String> updateOrderStatus(UUID orderId, String token, OrderUpdateRequest request) {
+    public ResponseEntity<String> updateOrderStatus(
+            UUID orderId, String token, OrderUpdateRequest request) {
 
-		if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
-			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No admin authority");
-		}
+        if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
+            log.error("No admin authority for token - " + token);
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+                    "No admin authority");
+        }
 
-        if (request.getStatus() == null || request.getStatus().toString().isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid status");
+        if (request.getStatus() == null
+                || request.getStatus().toString().isEmpty()) {
+            log.error("Bad order status update request");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Invalid status");
         }
 
         Order order = orderRepository
                 .findByOrderIdentifier(orderId)
                 .orElseThrow(
-                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Order not found")
+                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                                "Order not found")
                 );
 
         order.setStatus(request.getStatus());
         orderRepository.save(order);
+        log.info("Order updated - " + order);
         return ResponseEntity.ok("Order status updated successfully");
     }
 
-    private OrderLineItems mapToDto(OrderLineItemsDTO orderLineItemsDTO) {
+    private OrderLineItems mapToDto(OrderLineItemsDto orderLineItemsDto) {
         OrderLineItems orderLineItems = new OrderLineItems();
-        orderLineItems.setProductSkuId(orderLineItemsDTO.getProductSkuId());
-        orderLineItems.setQuantity(orderLineItemsDTO.getQuantity());
-        orderLineItems.setUnitPrice(orderLineItemsDTO.getUnitPrice());
+        orderLineItems.setProductSkuId(orderLineItemsDto.getProductSkuId());
+        orderLineItems.setQuantity(orderLineItemsDto.getQuantity());
+        orderLineItems.setUnitPrice(orderLineItemsDto.getUnitPrice());
         return orderLineItems;
     }
 
     private Boolean doesUserHaveAdminAuthorities(String token) {
 
         if (!token.startsWith("Bearer ")) {
+            log.error("Invalid token - " + token);
             throw new RuntimeException("Invalid token");
         }
 

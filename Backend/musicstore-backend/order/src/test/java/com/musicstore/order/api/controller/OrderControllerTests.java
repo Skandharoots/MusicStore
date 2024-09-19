@@ -202,13 +202,17 @@ public class OrderControllerTests {
     @Test
     public void updateOrderDetailsTest() throws Exception {
 
+        List<OrderLineItemsDto> itemsToCancel = new ArrayList<>();
+        itemsToCancel.add(orderLineItemsDTO);
         OrderUpdateRequest orderUpdateRequest = new OrderUpdateRequest();
         orderUpdateRequest.setStatus(OrderStatus.COMPLETED);
+        orderUpdateRequest.setItemsToCancel(itemsToCancel);
 
-        when(orderService.updateOrderStatus(order.getOrderIdentifier(), token, orderUpdateRequest)).thenReturn(ResponseEntity.ok("Order status updated"));
+        when(orderService.updateOrderStatus(order.getOrderIdentifier(), token, csrfToken.getToken(), orderUpdateRequest)).thenReturn(ResponseEntity.ok("Order status updated"));
 
         ResultActions resultActions  = mockMvc.perform(put("/api/order/update/{order-id}", order.getOrderIdentifier())
                 .header("Authorization", token)
+                .cookie(new Cookie("XSRF-TOKEN", csrfToken.getToken()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(orderUpdateRequest))
         );

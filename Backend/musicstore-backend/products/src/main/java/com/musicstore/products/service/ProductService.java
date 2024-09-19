@@ -1,5 +1,6 @@
 package com.musicstore.products.service;
 
+import com.musicstore.products.dto.CancelOrderRequest;
 import com.musicstore.products.dto.OrderAvailabilityListItem;
 import com.musicstore.products.dto.OrderAvailabilityResponse;
 import com.musicstore.products.dto.OrderRequest;
@@ -196,6 +197,21 @@ public class ProductService {
 
         return ResponseEntity.ok(orderAvailabilityResponse);
 
+    }
+
+    public ResponseEntity<Boolean> cancelOrderProducts(CancelOrderRequest request) {
+        request.getItems()
+                .forEach(orderLineItemsDto -> {
+                    Product product = productRepository.findByProductSkuId(
+                                    orderLineItemsDto.getProductSkuId())
+                            .orElseThrow(
+                                    () -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                                            "Product not found")
+                            );
+                    product.setInStock(product.getInStock() + orderLineItemsDto.getQuantity());
+                });
+
+        return ResponseEntity.ok(true);
     }
 
     public ResponseEntity<BigDecimal> getMaxPriceForProducts(Long category, String country, String manufacturer, String subcategory) {

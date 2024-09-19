@@ -59,9 +59,10 @@ public class OrderController {
     public ResponseEntity<String> updateOrderDetails(
             @PathVariable(name = "order-id") UUID orderId,
             @RequestHeader(HttpHeaders.AUTHORIZATION) String token,
+            @CookieValue("XSRF-TOKEN") String csrfToken,
             @RequestBody OrderUpdateRequest request
     ) {
-        return orderService.updateOrderStatus(orderId, token, request);
+        return orderService.updateOrderStatus(orderId, token, csrfToken, request);
     }
 
 

@@ -13,6 +13,9 @@ public class VariablesConfiguration {
     @Value("${my.order_check_url}")
     private String orderCheckUrl;
 
+    @Value("${my.order_cancellation_url}")
+    private String orderCancellationUrl;
+
     @Bean
     public String getAdminVerificationUrl() {
         return adminUrl;
@@ -21,5 +24,10 @@ public class VariablesConfiguration {
     @Bean
     public String getOrderCheckUrl() {
         return orderCheckUrl;
+    }
+
+    @Bean
+    public String getOrderCancellationUrl() {
+        return orderCancellationUrl;
     }
 }

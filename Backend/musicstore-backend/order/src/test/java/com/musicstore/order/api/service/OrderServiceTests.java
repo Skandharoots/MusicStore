@@ -287,10 +287,17 @@ public class OrderServiceTests {
     }
 
     @Test
-    public void updateOrderStatusTest() {
+    public void updateOrderStatusCancelledTest() {
+
+        List<OrderLineItemsDto> itemsToCancel = new ArrayList<>();
+        itemsToCancel.add(orderLineItemsDTO);
+
+        OrderCancelRequest orderCancelRequest = new OrderCancelRequest();
+        orderCancelRequest.setItems(itemsToCancel);
 
         OrderUpdateRequest orderUpdateRequest = new OrderUpdateRequest();
         orderUpdateRequest.setStatus(OrderStatus.CANCELED);
+        orderUpdateRequest.setItemsToCancel(itemsToCancel);
 
         when(webClientBuilder.build()).thenReturn(webClient);
         when(webClient.get()).thenReturn(requestHeadersUriSpec);
@@ -299,9 +306,21 @@ public class OrderServiceTests {
         when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
 
         when(orderRepository.findByOrderIdentifier(order.getOrderIdentifier())).thenReturn(Optional.of(order));
+
+        when(webClientBuilder.build()).thenReturn(webClient);
+        when(webClient.post()).thenReturn(requestBodyUriSpec);
+        when(requestBodyUriSpec.uri(variablesConfiguration.getOrderCancellationUrl())).thenReturn(requestBodySpec);
+        when(requestBodySpec.header(any(), any())).thenReturn(requestBodySpec);
+        when(requestBodySpec.cookie(any(), any())).thenReturn(requestBodySpec);
+        when(requestBodySpec.contentType(any())).thenReturn(requestBodySpec);
+        when(requestBodySpec.bodyValue(orderCancelRequest)).thenReturn(requestHeadersSpec);
+        when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+        when(responseSpec.bodyToMono(Boolean.class))
+                .thenReturn(Mono.just(true));
+
         when(orderRepository.save(any())).thenReturn(order);
 
-        ResponseEntity<String> response = orderService.updateOrderStatus(order.getOrderIdentifier(), token, orderUpdateRequest);
+        ResponseEntity<String> response = orderService.updateOrderStatus(order.getOrderIdentifier(), token, csrfToken.getToken(), orderUpdateRequest);
         Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         Assertions.assertThat(response.getBody()).isNotNull();
         Assertions.assertThat(response.getBody()).isEqualTo("Order status updated successfully");
@@ -309,20 +328,102 @@ public class OrderServiceTests {
     }
 
     @Test
-    public void updateOrderStatusFailureBadJwtTokenTest() {
+    public void updateOrderStatusFailedTest() {
+
+        List<OrderLineItemsDto> itemsToCancel = new ArrayList<>();
+        itemsToCancel.add(orderLineItemsDTO);
+
+        OrderCancelRequest orderCancelRequest = new OrderCancelRequest();
+        orderCancelRequest.setItems(itemsToCancel);
 
         OrderUpdateRequest orderUpdateRequest = new OrderUpdateRequest();
-        orderUpdateRequest.setStatus(OrderStatus.CANCELED);
+        orderUpdateRequest.setStatus(OrderStatus.FAILED);
+        orderUpdateRequest.setItemsToCancel(itemsToCancel);
 
-        Assertions.assertThatThrownBy(() -> orderService.updateOrderStatus(order.getOrderIdentifier(), token.substring(7), orderUpdateRequest));
+        when(webClientBuilder.build()).thenReturn(webClient);
+        when(webClient.get()).thenReturn(requestHeadersUriSpec);
+        when(requestHeadersUriSpec.uri(variablesConfiguration.getAdminVerificationUrl() + token.substring(7))).thenReturn(requestHeadersSpec);
+        when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+        when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
+
+        when(orderRepository.findByOrderIdentifier(order.getOrderIdentifier())).thenReturn(Optional.of(order));
+
+        when(webClientBuilder.build()).thenReturn(webClient);
+        when(webClient.post()).thenReturn(requestBodyUriSpec);
+        when(requestBodyUriSpec.uri(variablesConfiguration.getOrderCancellationUrl())).thenReturn(requestBodySpec);
+        when(requestBodySpec.header(any(), any())).thenReturn(requestBodySpec);
+        when(requestBodySpec.cookie(any(), any())).thenReturn(requestBodySpec);
+        when(requestBodySpec.contentType(any())).thenReturn(requestBodySpec);
+        when(requestBodySpec.bodyValue(orderCancelRequest)).thenReturn(requestHeadersSpec);
+        when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+        when(responseSpec.bodyToMono(Boolean.class))
+                .thenReturn(Mono.just(true));
+
+        when(orderRepository.save(any())).thenReturn(order);
+
+        ResponseEntity<String> response = orderService.updateOrderStatus(order.getOrderIdentifier(), token, csrfToken.getToken(), orderUpdateRequest);
+        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        Assertions.assertThat(response.getBody()).isNotNull();
+        Assertions.assertThat(response.getBody()).isEqualTo("Order status updated successfully");
 
     }
 
     @Test
-    public void updateOrderStatusFailureProductNotFoundInWebClientRequestTest() {
+    public void updateOrderStatusBadResponseTest() {
+        List<OrderLineItemsDto> itemsToCancel = new ArrayList<>();
+        itemsToCancel.add(orderLineItemsDTO);
+
+        OrderCancelRequest orderCancelRequest = new OrderCancelRequest();
+        orderCancelRequest.setItems(itemsToCancel);
 
         OrderUpdateRequest orderUpdateRequest = new OrderUpdateRequest();
         orderUpdateRequest.setStatus(OrderStatus.CANCELED);
+        orderUpdateRequest.setItemsToCancel(itemsToCancel);
+
+        when(webClientBuilder.build()).thenReturn(webClient);
+        when(webClient.get()).thenReturn(requestHeadersUriSpec);
+        when(requestHeadersUriSpec.uri(variablesConfiguration.getAdminVerificationUrl() + token.substring(7))).thenReturn(requestHeadersSpec);
+        when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+
+        when(orderRepository.findByOrderIdentifier(order.getOrderIdentifier())).thenReturn(Optional.of(order));
+
+        when(webClientBuilder.build()).thenReturn(webClient);
+        when(webClient.post()).thenReturn(requestBodyUriSpec);
+        when(requestBodyUriSpec.uri(variablesConfiguration.getOrderCancellationUrl())).thenReturn(requestBodySpec);
+        when(requestBodySpec.header(any(), any())).thenReturn(requestBodySpec);
+        when(requestBodySpec.cookie(any(), any())).thenReturn(requestBodySpec);
+        when(requestBodySpec.contentType(any())).thenReturn(requestBodySpec);
+        when(requestBodySpec.bodyValue(orderCancelRequest)).thenReturn(requestHeadersSpec);
+        when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+        when(responseSpec.bodyToMono(Boolean.class))
+                .thenReturn(Mono.just(true), Mono.just(false));
+
+        Assertions.assertThatThrownBy(() -> orderService.updateOrderStatus(order.getOrderIdentifier(), token, csrfToken.getToken(), orderUpdateRequest));
+    }
+
+    @Test
+    public void updateOrderStatusFailureBadJwtTokenTest() {
+
+        List<OrderLineItemsDto> itemsToCancel = new ArrayList<>();
+        itemsToCancel.add(orderLineItemsDTO);
+
+        OrderUpdateRequest orderUpdateRequest = new OrderUpdateRequest();
+        orderUpdateRequest.setStatus(OrderStatus.CANCELED);
+        orderUpdateRequest.setItemsToCancel(itemsToCancel);
+
+        Assertions.assertThatThrownBy(() -> orderService.updateOrderStatus(order.getOrderIdentifier(), token.substring(7), csrfToken.getToken(), orderUpdateRequest));
+
+    }
+
+    @Test
+    public void updateOrderStatusFailureOrderNotFoundInWebClientRequestTest() {
+
+        List<OrderLineItemsDto> itemsToCancel = new ArrayList<>();
+        itemsToCancel.add(orderLineItemsDTO);
+
+        OrderUpdateRequest orderUpdateRequest = new OrderUpdateRequest();
+        orderUpdateRequest.setStatus(OrderStatus.CANCELED);
+        orderUpdateRequest.setItemsToCancel(itemsToCancel);
 
         when(webClientBuilder.build()).thenReturn(webClient);
         when(webClient.get()).thenReturn(requestHeadersUriSpec);
@@ -331,15 +432,18 @@ public class OrderServiceTests {
         when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
 
         when(orderRepository.findByOrderIdentifier(order.getOrderIdentifier())).thenReturn(Optional.empty());
-        Assertions.assertThatThrownBy(() -> orderService.updateOrderStatus(order.getOrderIdentifier(), token, orderUpdateRequest));
+        Assertions.assertThatThrownBy(() -> orderService.updateOrderStatus(order.getOrderIdentifier(), token, csrfToken.getToken(), orderUpdateRequest));
 
     }
 
     @Test
     public void updateOrderStatusFailureJwtTokenWithoutAdminPermissionsTest() {
 
+        List<OrderLineItemsDto> itemsToCancel = new ArrayList<>();
+        itemsToCancel.add(orderLineItemsDTO);
         OrderUpdateRequest orderUpdateRequest = new OrderUpdateRequest();
         orderUpdateRequest.setStatus(OrderStatus.CANCELED);
+        orderUpdateRequest.setItemsToCancel(itemsToCancel);
 
         when(webClientBuilder.build()).thenReturn(webClient);
         when(webClient.get()).thenReturn(requestHeadersUriSpec);
@@ -347,7 +451,7 @@ public class OrderServiceTests {
         when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
         when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(false));
 
-        Assertions.assertThatThrownBy(() -> orderService.updateOrderStatus(order.getUserIdentifier(), token, orderUpdateRequest));
+        Assertions.assertThatThrownBy(() -> orderService.updateOrderStatus(order.getUserIdentifier(), token, csrfToken.getToken(), orderUpdateRequest));
 
     }
 
@@ -362,7 +466,7 @@ public class OrderServiceTests {
         when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
         when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
 
-        Assertions.assertThatThrownBy(() -> orderService.updateOrderStatus(order.getUserIdentifier(), token, orderUpdateRequest));
+        Assertions.assertThatThrownBy(() -> orderService.updateOrderStatus(order.getUserIdentifier(), token, csrfToken.getToken(), orderUpdateRequest));
 
     }
 

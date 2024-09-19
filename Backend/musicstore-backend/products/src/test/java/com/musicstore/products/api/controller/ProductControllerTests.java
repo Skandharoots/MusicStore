@@ -244,6 +244,29 @@ public class ProductControllerTests {
     }
 
     @Test
+    public void cancelOrderProductsTest() throws Exception {
+
+        OrderLineItemsDto orderLineItemsDTO = new OrderLineItemsDto();
+        orderLineItemsDTO.setProductSkuId(product.getProductSkuId());
+        orderLineItemsDTO.setQuantity(1);
+        orderLineItemsDTO.setUnitPrice(product.getProductPrice());
+        List<OrderLineItemsDto> items = new ArrayList<>();
+        items.add(orderLineItemsDTO);
+
+        CancelOrderRequest cancelOrderRequest = new CancelOrderRequest();
+        cancelOrderRequest.setItems(items);
+
+        when(productService.cancelOrderProducts(cancelOrderRequest)).thenReturn(ResponseEntity.ok(true));
+
+        ResultActions resultActions = mockMvc.perform(post("/api/products/items/cancel_order")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(cancelOrderRequest))
+        );
+        resultActions.andExpect(MockMvcResultMatchers.status().isOk());
+        resultActions.andExpect(MockMvcResultMatchers.content().string(objectMapper.writeValueAsString(true)));
+    }
+
+    @Test
     public void updateProductTest() throws Exception {
 
         ProductRequest productRequest = new ProductRequest();

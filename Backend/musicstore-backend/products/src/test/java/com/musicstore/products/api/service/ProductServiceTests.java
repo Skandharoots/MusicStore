@@ -408,6 +408,47 @@ public class ProductServiceTests {
     }
 
     @Test
+    public void cancelOrderProductTest() {
+
+        OrderLineItemsDto orderLineItemsDTO = new OrderLineItemsDto();
+        orderLineItemsDTO.setQuantity(2000);
+        orderLineItemsDTO.setProductSkuId(product.getProductSkuId());
+        orderLineItemsDTO.setUnitPrice(BigDecimal.valueOf(2699.99));
+        List<OrderLineItemsDto> orderItems = new ArrayList<>();
+        orderItems.add(orderLineItemsDTO);
+
+        CancelOrderRequest cancelOrderRequest = new CancelOrderRequest();
+        cancelOrderRequest.setItems(orderItems);
+
+        when(productRepository.findByProductSkuId(product.getProductSkuId())).thenReturn(Optional.of(product));
+
+        ResponseEntity<Boolean> result = productService.cancelOrderProducts(cancelOrderRequest);
+        Assertions.assertThat(result).isNotNull();
+        Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
+        Assertions.assertThat(result.getBody()).isNotNull();
+        Assertions.assertThat(result.getBody()).isTrue();
+    }
+
+    @Test
+    public void cancelOrderProductNotFoundTest() {
+
+        OrderLineItemsDto orderLineItemsDTO = new OrderLineItemsDto();
+        orderLineItemsDTO.setQuantity(2000);
+        orderLineItemsDTO.setProductSkuId(product.getProductSkuId());
+        orderLineItemsDTO.setUnitPrice(BigDecimal.valueOf(2699.99));
+        List<OrderLineItemsDto> orderItems = new ArrayList<>();
+        orderItems.add(orderLineItemsDTO);
+
+        CancelOrderRequest cancelOrderRequest = new CancelOrderRequest();
+        cancelOrderRequest.setItems(orderItems);
+
+        when(productRepository.findByProductSkuId(product.getProductSkuId())).thenReturn(Optional.empty());
+        Assertions.assertThatThrownBy(() -> productService.cancelOrderProducts(cancelOrderRequest));
+
+
+    }
+
+    @Test
     public void getMaxPriceForProductTest() {
 
         when(productRepository.findMaxProductPrice(1L, "USA", "Fender", "Electric")).thenReturn(BigDecimal.valueOf(2699.99));

@@ -6,3 +6,4 @@ spring:
 my:
   admin_url: http://USERS/api/v1/users/adminauthorize?token=
   order_check_url: http://PRODUCTS/api/products/items/verify_availability
+  order_cancellation_url: http://PRODUCTS/api/products/items/cancel_order

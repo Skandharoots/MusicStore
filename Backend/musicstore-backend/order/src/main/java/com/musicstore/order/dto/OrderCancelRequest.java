@@ -1,19 +1,17 @@
 package com.musicstore.order.dto;
 
-import com.musicstore.order.model.OrderStatus;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderUpdateRequest {
+public class OrderCancelRequest {
 
-    private OrderStatus status;
-    private List<OrderLineItemsDto> itemsToCancel;
-
+    private List<OrderLineItemsDto> items;
 }

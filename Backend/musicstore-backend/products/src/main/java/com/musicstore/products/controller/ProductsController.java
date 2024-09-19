@@ -1,5 +1,6 @@
 package com.musicstore.products.controller;
 
+import com.musicstore.products.dto.CancelOrderRequest;
 import com.musicstore.products.dto.OrderAvailabilityResponse;
 import com.musicstore.products.dto.OrderRequest;
 import com.musicstore.products.dto.ProductRequest;
@@ -108,6 +109,13 @@ public class ProductsController {
             @RequestBody OrderRequest orderRequest
     ) {
         return productService.verifyAvailabilityOfOrderProducts(orderRequest);
+    }
+
+    @PostMapping("/cancel_order")
+    public ResponseEntity<Boolean> cancelOrderItems(
+            @RequestBody CancelOrderRequest cancelOrderRequest
+    ) {
+        return productService.cancelOrderProducts(cancelOrderRequest);
     }
 
     @PutMapping("/update/{id}")

@@ -1,12 +1,9 @@
 package com.musicstore.order.service;
 
-import com.musicstore.order.dto.OrderAvailabilityListItem;
-import com.musicstore.order.dto.OrderAvailabilityResponse;
-import com.musicstore.order.dto.OrderLineItemsDto;
-import com.musicstore.order.dto.OrderRequest;
-import com.musicstore.order.dto.OrderUpdateRequest;
+import com.musicstore.order.dto.*;
 import com.musicstore.order.model.Order;
 import com.musicstore.order.model.OrderLineItems;
+import com.musicstore.order.model.OrderStatus;
 import com.musicstore.order.repository.OrderRepository;
 import com.musicstore.order.security.config.VariablesConfiguration;
 import java.util.ArrayList;
@@ -141,7 +138,8 @@ public class OrderService {
     }
 
     public ResponseEntity<String> updateOrderStatus(
-            UUID orderId, String token, OrderUpdateRequest request) {
+            UUID orderId, String token,
+            String csrfToken, OrderUpdateRequest request) {
 
         if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
             log.error("No admin authority for token - " + token);
@@ -150,7 +148,10 @@ public class OrderService {
         }
 
         if (request.getStatus() == null
-                || request.getStatus().toString().isEmpty()) {
+                || request.getStatus().toString().isEmpty()
+                || request.getItemsToCancel() == null
+                || request.getItemsToCancel().isEmpty()
+        ) {
             log.error("Bad order status update request");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "Invalid status");
@@ -162,6 +163,32 @@ public class OrderService {
                         () -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                                 "Order not found")
                 );
+
+        Boolean response = null;
+
+        if (
+                request.getStatus().equals(OrderStatus.CANCELED)
+                || request.getStatus().equals(OrderStatus.FAILED)
+        ) {
+            OrderCancelRequest orderCancelRequest = new OrderCancelRequest();
+            orderCancelRequest.setItems(request.getItemsToCancel());
+            response = webClient.build()
+                    .post()
+                    .uri(variablesConfiguration.getOrderCancellationUrl())
+                    .header("X-XSRF-TOKEN", csrfToken)
+                    .cookie("XSRF-TOKEN", csrfToken)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .bodyValue(orderCancelRequest)
+                    .retrieve()
+                    .bodyToMono(Boolean.class)
+                    .block();
+
+        }
+
+        if (!Boolean.TRUE.equals(response)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Order update failed because of bad products in list");
+        }
 
         order.setStatus(request.getStatus());
         orderRepository.save(order);

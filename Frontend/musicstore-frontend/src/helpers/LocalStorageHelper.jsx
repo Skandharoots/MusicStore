@@ -17,6 +17,12 @@ class LocalStorageHelper {
         return localStorage.getItem('userName');
     }
 
+    static isUserAdmin() {
+        LocalStorageHelper.ActiveCheck();
+
+        return localStorage.getItem('userAdmin') !== null && localStorage.getItem('userAdmin') !== undefined && localStorage.getItem('userAdmin') === 'ADMIN';
+    }
+
     static ActiveCheck() {
         let validUntil = new Date(parseInt(localStorage.getItem('authValidUntil'), 10));
         let now = Date.now();
@@ -27,11 +33,12 @@ class LocalStorageHelper {
         }
     }
 
-    static LoginUser(userUuid, userFirstName, jwt) {
+    static LoginUser(userUuid, userFirstName, jwt, userRole) {
         localStorage.setItem('userUuid', userUuid);
         localStorage.setItem('authValidUntil', Date.now() + (23 * 60 * 60 * 1000)); // 2 hours
         localStorage.setItem('userName', userFirstName);
         localStorage.setItem('credentials', jwt);
+        localStorage.setItem('userRole', userRole);
     }
 
     static LogoutUser() {

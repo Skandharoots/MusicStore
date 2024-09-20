@@ -1,5 +1,6 @@
 import React from 'react';
-import './Navbar.scss'
+import './Navbar.scss';
+import LocalStorageHelper from "../../helpers/LocalStorageHelper.jsx";
 import logo from '../../assets/logo.svg';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
@@ -46,31 +47,49 @@ function Navbar() {
                 </div>
                 <div className={"user-info-container"}>
                     <ul>
-                        <li>
-                            <a href="/account">
-                                <div className={"welcome-text"}>
-                                    <p>
-                                        Your<br/>Account
-                                    </p>
-                                </div>
-                                <PersonOutlineOutlinedIcon fontSize={"medium"}/>
-                            </a>
-                        </li>
+                        { LocalStorageHelper.IsUserLogged() === true &&
+                            <li>
+                                <a href="/account">
+                                    <div className={"welcome-text"}>
+                                            <p>
+                                                Hi,<br/>{LocalStorageHelper.getUserName()}
+                                            </p>
+                                    </div>
+                                    <PersonOutlineOutlinedIcon fontSize={"medium"}/>
+                                </a>
+                            </li>
+                        }
+                        { LocalStorageHelper.IsUserLogged() === false &&
+                            <li>
+                                <a href="/login">
+                                    <div className={"welcome-text"}>
+                                        <p>
+                                            Hi,<br/>Login
+                                        </p>
+                                    </div>
+                                    <PersonOutlineOutlinedIcon fontSize={"medium"}/>
+                                </a>
+                            </li>
+                        }
                         <li>
                             <a href="/basket">
                                 <ShoppingCartOutlinedIcon fontSize={"medium"}/>
                             </a>
                         </li>
-                        <li>
-                            <a href="/login">
-                                <LoginOutlinedIcon fontSize={"medium"}/>
-                            </a>
-                        </li>
-                        <li>
-                            <a onClick={logoutUser}>
-                                <LogoutOutlinedIcon fontSize={"medium"}/>
-                            </a>
-                        </li>
+                        { LocalStorageHelper.IsUserLogged() === false &&
+                            <li>
+                                <a href="/login">
+                                    <LoginOutlinedIcon fontSize={"medium"}/>
+                                </a>
+                            </li>
+                        }
+                        { LocalStorageHelper.IsUserLogged() === true &&
+                            <li>
+                                <a onClick={logoutUser}>
+                                    <LogoutOutlinedIcon fontSize={"medium"}/>
+                                </a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>

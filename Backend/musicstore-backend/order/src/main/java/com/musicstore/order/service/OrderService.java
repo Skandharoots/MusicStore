@@ -1,6 +1,11 @@
 package com.musicstore.order.service;
 
-import com.musicstore.order.dto.*;
+import com.musicstore.order.dto.OrderAvailabilityListItem;
+import com.musicstore.order.dto.OrderAvailabilityResponse;
+import com.musicstore.order.dto.OrderCancelRequest;
+import com.musicstore.order.dto.OrderLineItemsDto;
+import com.musicstore.order.dto.OrderRequest;
+import com.musicstore.order.dto.OrderUpdateRequest;
 import com.musicstore.order.model.Order;
 import com.musicstore.order.model.OrderLineItems;
 import com.musicstore.order.model.OrderStatus;
@@ -199,6 +204,7 @@ public class OrderService {
     private OrderLineItems mapToDto(OrderLineItemsDto orderLineItemsDto) {
         OrderLineItems orderLineItems = new OrderLineItems();
         orderLineItems.setProductSkuId(orderLineItemsDto.getProductSkuId());
+        orderLineItems.setProductName(orderLineItemsDto.getProductName());
         orderLineItems.setQuantity(orderLineItemsDto.getQuantity());
         orderLineItems.setUnitPrice(orderLineItemsDto.getUnitPrice());
         return orderLineItems;

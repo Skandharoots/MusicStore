@@ -93,6 +93,7 @@ public class OrderControllerTests {
         orderLineItems.setQuantity(10);
         orderLineItems.setUnitPrice(BigDecimal.valueOf(3672.00));
         orderLineItems.setProductSkuId(productSkuId);
+        orderLineItems.setProductName("Stratocaster");
 
         List<OrderLineItems> orderLineItemsList = new ArrayList<>();
         orderLineItemsList.add(orderLineItems);
@@ -101,6 +102,7 @@ public class OrderControllerTests {
         orderLineItemsDTO.setQuantity(10);
         orderLineItemsDTO.setProductSkuId(productSkuId);
         orderLineItemsDTO.setUnitPrice(BigDecimal.valueOf(3672.00));
+        orderLineItemsDTO.setProductName("Stratocaster");
         List<OrderLineItemsDto> itemsDto = new ArrayList<>();
         itemsDto.add(orderLineItemsDTO);
 

@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 public class OrderLineItemsDto {
 
     private UUID productSkuId;
+    private String productName;
     private Integer quantity;
     private BigDecimal unitPrice;
 }

@@ -26,6 +26,8 @@ public class OrderLineItems {
 
     private UUID productSkuId;
 
+    private String productName;
+
     private Integer quantity;
 
     private BigDecimal unitPrice;

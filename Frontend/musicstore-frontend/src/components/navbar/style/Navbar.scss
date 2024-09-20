@@ -61,6 +61,14 @@ input[type="text"]:focus {
   height: 40px;
   margin: auto -10px;
   z-index: 1;
+  border: 1px solid black;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.search-btn:hover {
+  background-color: rgb(58, 58, 58);
+  outline: none;
+  border: 1px solid black;
 }
 
 .user-info-container {

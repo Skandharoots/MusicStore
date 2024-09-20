@@ -118,6 +118,21 @@ public class OrderRepositoryTests {
     }
 
     @Test
+    public void findAllOrdersTest() {
+
+        entityManager.persist(order);
+        entityManager.flush();
+
+        Pageable pageable = (Pageable) PageRequest.of(0, 10, Sort.by("dateCreated").descending());
+        Page<Order> orders = orderRepository.findAll(pageable);
+
+        Assertions.assertThat(orders).hasSize(1);
+        Assertions.assertThat(orders.getContent().get(0).getId()).isEqualTo(order.getId());
+        Assertions.assertThat(orders.getContent().get(0)).isEqualTo(order);
+
+    }
+
+    @Test
     public void findOrderByIdentifierTest() {
         entityManager.persist(order);
         entityManager.flush();

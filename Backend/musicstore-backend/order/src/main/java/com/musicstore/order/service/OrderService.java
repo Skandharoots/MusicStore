@@ -131,6 +131,18 @@ public class OrderService {
         return ResponseEntity.ok(orders);
     }
 
+    public ResponseEntity<Page<Order>> getAllOrders(Integer page, Integer pageSize) {
+
+        Pageable pageable = PageRequest.of(
+                page,
+                pageSize,
+                Sort.by("dateCreated").descending());
+
+        Page<Order> orders = orderRepository.findAll(pageable);
+
+        return ResponseEntity.ok(orders);
+    }
+
     public ResponseEntity<Order> getOrderDetails(UUID orderId) {
 
         Order order = orderRepository.findByOrderIdentifier(orderId)

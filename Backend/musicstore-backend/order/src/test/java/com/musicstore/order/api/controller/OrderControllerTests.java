@@ -191,6 +191,22 @@ public class OrderControllerTests {
     }
 
     @Test
+    public void getAllOrdersTest() throws Exception {
+        List<Order> ordersList = new ArrayList<>();
+        ordersList.add(order);
+
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("dateCreated").descending());
+        Page<Order> page = new PageImpl<>(ordersList, pageable, 1);
+
+        when(orderService.getAllOrders(0, 10)).thenReturn(ResponseEntity.ok(page));
+
+        ResultActions resultActions = mockMvc.perform(get("/api/order/get/all?page=0&pageSize=10"));
+        resultActions.andExpect(MockMvcResultMatchers.status().isOk());
+        resultActions.andExpect(MockMvcResultMatchers.content().string(objectMapper.writeValueAsString(page)));
+
+    }
+
+    @Test
     public void getOrderDetailsTest() throws Exception {
 
         when(orderService.getOrderDetails(order.getOrderIdentifier())).thenReturn(ResponseEntity.ok(order));

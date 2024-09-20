@@ -1,5 +1,5 @@
 import React from 'react';
-import './Navbar.scss';
+import './style/Navbar.scss';
 import LocalStorageHelper from "../../helpers/LocalStorageHelper.jsx";
 import logo from '../../assets/logo.svg';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';

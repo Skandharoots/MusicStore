@@ -1,0 +1,135 @@
+header {
+  display: block;
+}
+
+.top-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: white;
+  padding: 0 400px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.top-container a {
+  background: none;
+  text-decoration: none;
+  padding: 0 0;
+}
+
+.top-container a:hover {
+  cursor: pointer;
+}
+
+.top-container a img {
+  pointer-events: none;
+  margin: 0;
+}
+
+.search-form {
+  display: flex;
+  width: 600px;
+  height: 50px;
+  padding: 0 0;
+  align-items: center;
+  justify-content: center;
+}
+
+input[type="text"] {
+  width: 500px;
+  height: 40px;
+  margin: 0 0;
+  background: white;
+  color: rgb(127, 127, 127);
+  border: 1px solid black;
+  border-radius: 1em;
+  padding: 0 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.search-btn {
+  padding: 0 0;
+  width: 40px;
+  height: 40px;
+  margin: auto -10px;
+  z-index: 1;
+}
+
+.user-info-container {
+  display: flex;
+  width: fit-content;
+  height: 50px;
+  padding: 0 0;
+  align-items: center;
+  justify-content: center;
+}
+
+.user-info-container ul {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+}
+
+.user-info-container ul li {
+  list-style: none;
+  position: relative;
+  color: black;
+  margin: 0 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: fit-content;
+  font-size: 12px;
+  font-weight: bold;
+  min-width: 50px;
+  padding: 0 5px;
+  height: 50px;
+  border-radius: 1em;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease-in-out;
+}
+
+.user-info-container ul li:hover {
+  background-color: rgba(184, 184, 184, 0.2);
+}
+
+.bottom-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: white;
+  padding: 10px 400px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.bottom-container ul {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+}
+
+.bottom-container li {
+  list-style: none;
+  margin: 0;
+  padding: 0 15px;
+  position: relative;
+}
+
+.bottom-container li a {
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 600;
+  color: black;
+  transition: color 0.3s ease-in-out;
+}
+
+.bottom-container li a:hover {
+  color: rgb(44, 122, 41);
+}
+
+
+

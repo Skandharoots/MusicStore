@@ -7,5 +7,12 @@ export default defineConfig({
   server: {
     https: false,
     port: 3000,
+  },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        api: 'modern-compiler' // or "modern"
+      }
+    }
   }
 })

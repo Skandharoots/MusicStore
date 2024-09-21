@@ -9,11 +9,11 @@ import org.springframework.stereotype.Component;
 public class RouteValidator {
 
     public static final List<String> openApiEndpoints = List.of(
-            "/api/v1/users/register",
-            "/api/v1/users/login",
-            "/api/v1/users/validate",
-            "/api/v1/users/register/**",
-            "/api/v1/users/csrf/token",
+            "/api/users/register",
+            "/api/users/login",
+            "/api/users/validate",
+            "/api/users/register/**",
+            "/api/users/csrf/token",
             "/api/products/items/get",
             "/api/products/items/get/**",
             "/api/products/categories/get",
@@ -22,7 +22,7 @@ public class RouteValidator {
             "/api/products/categories/get/**",
             "/api/products/countries/get/**",
             "/api/products/manufacturers/get/**",
-            "/api/v1/users/adminauthorize",
+            "/api/users/adminauthorize",
             "/api/azure/read",
             "/api/azure/list",
             "/api/order/get/**",

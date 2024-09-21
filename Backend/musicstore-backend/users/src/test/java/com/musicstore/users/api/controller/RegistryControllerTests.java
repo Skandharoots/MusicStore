@@ -54,7 +54,7 @@ public class RegistryControllerTests {
 
     @Test
     public void getCsrfToken() throws Exception {
-        mockMvc.perform(get("/api/v1/users/csrf/token"))
+        mockMvc.perform(get("/api/users/csrf/token"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
@@ -68,7 +68,7 @@ public class RegistryControllerTests {
                 .password("testpass")
                 .build();
 
-        ResultActions resultActions = mockMvc.perform(post("/api/v1/users/register")
+        ResultActions resultActions = mockMvc.perform(post("/api/users/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(registerRequest))
         );
@@ -94,7 +94,7 @@ public class RegistryControllerTests {
 
         when(loginService.loginUser(loginRequest)).thenReturn(loginResponse);
 
-        ResultActions resultActions = mockMvc.perform(post("/api/v1/users/login")
+        ResultActions resultActions = mockMvc.perform(post("/api/users/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(loginRequest))
         );
@@ -115,7 +115,7 @@ public class RegistryControllerTests {
 
         when(registerService.confirmToken(token)).thenReturn(token);
 
-        ResultActions resultActions = mockMvc.perform(get("/api/v1/users/register/confirm")
+        ResultActions resultActions = mockMvc.perform(get("/api/users/register/confirm")
                 .param("token", token));
 
         resultActions
@@ -128,7 +128,7 @@ public class RegistryControllerTests {
         String token = UUID.randomUUID().toString();
         when(loginService.validateLoginRequest(token)).thenReturn(true);
 
-        ResultActions resultActions = mockMvc.perform(get("/api/v1/users/validate")
+        ResultActions resultActions = mockMvc.perform(get("/api/users/validate")
         .param("token", token));
 
         resultActions
@@ -142,7 +142,7 @@ public class RegistryControllerTests {
         String token = UUID.randomUUID().toString();
         when(loginService.adminAuthorize(token)).thenReturn(true);
 
-        ResultActions resultActions = mockMvc.perform(get("/api/v1/users/adminauthorize")
+        ResultActions resultActions = mockMvc.perform(get("/api/users/adminauthorize")
         .param("token", token));
 
         resultActions
@@ -172,7 +172,7 @@ public class RegistryControllerTests {
 
         when(userService.updateUser(uuid, registerRequest)).thenReturn(loginResponse);
 
-        ResultActions resultActions = mockMvc.perform(put("/api/v1/users/update/{uuid}", uuid)
+        ResultActions resultActions = mockMvc.perform(put("/api/users/update/{uuid}", uuid)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(registerRequest))
         );
@@ -192,7 +192,7 @@ public class RegistryControllerTests {
 
         when(userService.deleteUser(uuid)).thenReturn(String.valueOf(String.class));
 
-        ResultActions resultActions = mockMvc.perform(delete("/api/v1/users/delete/{uuid}", uuid));
+        ResultActions resultActions = mockMvc.perform(delete("/api/users/delete/{uuid}", uuid));
         resultActions
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType("text/plain;charset=UTF-8"));

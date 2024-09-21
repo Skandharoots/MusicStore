@@ -2,6 +2,7 @@ package com.musicstore.users.security.config;
 
 import com.musicstore.users.security.JwtFilter;
 import com.musicstore.users.service.UserService;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,9 +37,11 @@ public class WebSecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowCredentials(true);
-        configuration.addAllowedOrigin("http://localhost:3000");
-        configuration.addAllowedHeader("*");
-        configuration.addAllowedMethod("*");
+        configuration.setAllowedOrigins(List.of("http://localhost:3000"));
+        configuration.setMaxAge(3600L);
+        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setAllowedMethods(List.of("*"));
+        configuration.setExposedHeaders(List.of("*"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
@@ -54,14 +57,14 @@ public class WebSecurityConfig {
                         .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
                 )
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers(HttpMethod.POST, "/api/v*/users/register").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v*/users/register/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v*/users/validate").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/v*/users/login").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v*/users/csrf/token").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/api/v*/users/update/**").permitAll()
-                        .requestMatchers(HttpMethod.DELETE, "api/v*/users/delete/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v*/users/adminauthorize").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/users/register").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/users/register/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/users/validate").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/users/login").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/users/csrf/token").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/api/users/update/**").permitAll()
+                        .requestMatchers(HttpMethod.DELETE, "api/users/delete/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/users/adminauthorize").permitAll()
                         .anyRequest()
                         .authenticated()
                 )

@@ -13,7 +13,7 @@ spring:
       globalcors:
         corsConfigurations:
           '[/**]':
-            allowedOrigins: "*"
+            allowedOrigins: "http://localhost:3000"
             allowedMethods: "*"
             allowedHeaders: "*"
       discovery:
@@ -23,31 +23,93 @@ spring:
         - id: users
           uri: lb://users
           predicates:
-            - Path=/api/v1/users/**
+            - Path=/api/users/**
           filters:
             - JwtAuthFilter
+          metadata:
+            cors:
+              allowedOrigins: "http://localhost:3000"
+              allowedMethods:
+                - GET
+                - POST
+                - PUT
+                - DELETE
+                - OPTIONS
+              allowedHeaders: "*"
+              allowCredentials: true
+              maxAge: 30
         - id: products
           uri: lb://products
           predicates:
             - Path=/api/products/**
           filters:
             - JwtAuthFilter
+          metadata:
+            cors:
+              allowedOrigins: "http://localhost:3000"
+              allowedMethods:
+                - GET
+                - POST
+                - PUT
+                - DELETE
+                - OPTIONS
+              allowedHeaders: "*"
+              allowCredentials: true
+              maxAge: 30
         - id: azure
           uri: lb://azure-service
           predicates:
             - Path=/api/azure/**
           filters:
             - JwtAuthFilter
+          metadata:
+            cors:
+              allowedOrigins: "http://localhost:3000"
+              allowedMethods:
+                - GET
+                - POST
+                - PUT
+                - DELETE
+                - OPTIONS
+              allowedHeaders: "*"
+              allowCredentials: true
+              maxAge: 30
         - id: shopping-cart
           uri: lb://shopping-cart
           predicates:
             - Path=/api/cart/**
           filters:
             - JwtAuthFilter
+          metadata:
+            cors:
+              allowedOrigins: "http://localhost:3000"
+              allowedMethods:
+                - GET
+                - POST
+                - PUT
+                - DELETE
+                - OPTIONS
+              allowedHeaders: "*"
+              allowCredentials: true
+              maxAge: 30
         - id: orders
           uri: lb://orders
           predicates:
             - Path=/api/order/**
+          filters:
+            - JwtAuthFilter
+          metadata:
+            cors:
+              allowedOrigins: "http://localhost:3000"
+              allowedMethods:
+                - GET
+                - POST
+                - PUT
+                - DELETE
+                - OPTIONS
+              allowedHeaders: "*"
+              allowCredentials: true
+              maxAge: 30
         - id: discovery
           uri: http://localhost:8761
           predicates:

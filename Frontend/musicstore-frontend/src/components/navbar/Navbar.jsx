@@ -66,7 +66,7 @@ function Navbar() {
                         {LocalStorageHelper.IsUserLogged() === false &&
                             <li>
                                 <Tooltip title={"Login"}>
-                                    <NavLink to="/account">
+                                    <NavLink to="/login">
                                         <div className={"welcome-text"}>
                                             <p>
                                                 Hi,<br/>Login

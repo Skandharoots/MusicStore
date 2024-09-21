@@ -10,7 +10,7 @@ import Home from './pages/home/Home.jsx';
 import LeftSideRibbon from "./pages/account/LeftSideRibbon.jsx";
 import Account from "./pages/account/Account.jsx";
 import MyOrders from "./pages/account/MyOrders.jsx";
-
+import Login from "./pages/login/Login.jsx";
 const Dashboard = () => {
     return (
         <>
@@ -39,6 +39,10 @@ const router = createBrowserRouter([
             {
                 path: '/',
                 element: <Home />,
+            },
+            {
+                path: '/login',
+                element: <Login />,
             },
             {
                 path: '/',

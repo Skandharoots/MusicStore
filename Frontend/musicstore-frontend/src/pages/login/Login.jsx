@@ -4,6 +4,7 @@ import TextField from '@mui/material/TextField';
 import {useState} from "react";
 import {Box, Button, Typography} from "@mui/material";
 import {Link} from "react-router-dom";
+import axios from "axios";
 
 
 function Login() {
@@ -41,8 +42,25 @@ function Login() {
     };
 
 
-    const submitLogin = (event) => {
+    const submitLogin = async (event) => {
         event.preventDefault();
+
+        await axios.get('api/users/csrf/token', {})
+            .then((response) => {
+                const headers = {
+                    'Content-Type': 'application/json',
+                    'X-XSRF-TOKEN': response.data.token,
+                }
+                console.log(headers);
+                // axios.post("api/users/login",
+                //     {
+                //         email: email,
+                //         password: password,
+                //     },
+            })
+            .catch((error) => console.log(error));
+
+
     }
 
     return (
@@ -79,7 +97,6 @@ function Login() {
                         variant="outlined"
                         color={emailError ? 'error' : 'primary'}
                         label="Email"
-                        defaultValue="Email"
                         value={email}
                         onChange={e => setEmail(e.target.value)}
                         sx={{
@@ -108,7 +125,7 @@ function Login() {
                         fullWidth
                         variant="outlined"
                         label="Password"
-                        defaultValue={password}
+                        value={password}
                         onChange={e => setPassword(e.target.value)}
                         sx={{
                             width: '100%',

@@ -319,7 +319,7 @@ function Signup() {
             </Alert>
             <Alert variant='filled'
                    severity='error'
-                   onClose={() => alert('Close alert')}
+                   onClose={() => setShowErrorMsg('none')}
                    sx={{
                        display: showErrorMsg,
                        width: 'fit-content',

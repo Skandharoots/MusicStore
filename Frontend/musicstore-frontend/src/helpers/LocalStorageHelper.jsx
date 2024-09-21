@@ -1,3 +1,4 @@
+
 class LocalStorageHelper {
 
     static IsUserLogged() {
@@ -19,8 +20,7 @@ class LocalStorageHelper {
 
     static isUserAdmin() {
         LocalStorageHelper.ActiveCheck();
-
-        return localStorage.getItem('userAdmin') !== null && localStorage.getItem('userAdmin') !== undefined && localStorage.getItem('userAdmin') === 'ADMIN';
+        return LocalStorageHelper.IsUserLogged() && localStorage.getItem('userAdmin') !== null && localStorage.getItem('userAdmin') !== undefined && localStorage.getItem('userAdmin') === 'ADMIN';
     }
 
     static ActiveCheck() {
@@ -29,7 +29,6 @@ class LocalStorageHelper {
 
         if (localStorage.getItem('authValidUntil') && validUntil - now < 0) {
             LocalStorageHelper.LogoutUser();
-            window.location.href = '/login';
         }
     }
 
@@ -46,6 +45,7 @@ class LocalStorageHelper {
         localStorage.removeItem("authValidUntil");
         localStorage.removeItem("userName");
         localStorage.removeItem("credentials");
+        localStorage.removeItem("userRole");
     }
 
 }

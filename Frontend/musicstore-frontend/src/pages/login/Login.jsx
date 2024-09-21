@@ -1,5 +1,9 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import './style/Login.scss';
+import {Bounce, toast} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import LocalStorageHelper from "../../helpers/LocalStorageHelper.jsx";
 import TextField from '@mui/material/TextField';
 import {useState} from "react";
 import {Box, Button, Typography} from "@mui/material";
@@ -16,11 +20,13 @@ function Login() {
     const [passwordError, setPasswordError] = React.useState(false);
     const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
 
+    const navigate = useNavigate();
+
     const validateInputs = () => {
 
         let isValid = true;
 
-        if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
+        if (!email || !/\S+@\S+\.\S+/.test(email)) {
             setEmailError(true);
             setEmailErrorMessage('Please enter a valid email address.');
             isValid = false;
@@ -29,7 +35,7 @@ function Login() {
             setEmailErrorMessage('');
         }
 
-        if (!password.value || password.value.length < 6) {
+        if (!password || password.length < 6) {
             setPasswordError(true);
             setPasswordErrorMessage('Password must be at least 6 characters long.');
             isValid = false;
@@ -42,24 +48,65 @@ function Login() {
     };
 
 
-    const submitLogin = async (event) => {
+    const submitLogin = (event) => {
         event.preventDefault();
-
-        await axios.get('api/users/csrf/token', {})
+        axios.get('api/users/csrf/token', {})
             .then((response) => {
                 const headers = {
                     'Content-Type': 'application/json',
                     'X-XSRF-TOKEN': response.data.token,
                 }
-                console.log(headers);
-                // axios.post("api/users/login",
-                //     {
-                //         email: email,
-                //         password: password,
-                //     },
-            })
-            .catch((error) => console.log(error));
+                axios.post("api/users/login",
+                    {
+                        email: email,
+                        password: password,
+                    },
+                    {
+                        headers: headers,
+                    }
+                ).then((response) => {
+                    LocalStorageHelper.LoginUser(response.data.uuid, response.data.firstName,
+                        response.data.token, response.data.role);
+                    toast.success("Welcome, " + LocalStorageHelper.getUserName() + "!", {
+                        position: "bottom-center",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: false,
+                        progress: undefined,
+                        theme: "colored",
+                        transition: Bounce,
+                    });
+                    navigate("/");
 
+                }).catch((error) => {
+                    toast.error("Bad credentials provided", {
+                        position: "bottom-center",
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: false,
+                        progress: undefined,
+                        theme: "colored",
+                        transition: Bounce,
+                    });
+                })
+            })
+            .catch((error) => {
+                toast.error("Cannot fetch token", {
+                    position: "bottom-center",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: false,
+                    progress: undefined,
+                    theme: "colored",
+                    transition: Bounce,
+                });
+            });
 
     }
 

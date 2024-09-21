@@ -12,6 +12,7 @@ import Account from "./pages/account/Account.jsx";
 import MyOrders from "./pages/account/MyOrders.jsx";
 import Login from "./pages/login/Login.jsx";
 import axios from "axios";
+import {ToastContainer} from "react-toastify";
 
 axios.defaults.baseURL = "http://localhost:8222/";
 axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
@@ -21,6 +22,7 @@ axios.defaults.withCredentials = true;
 const Dashboard = () => {
     return (
         <>
+            <ToastContainer />
             <Navbar />
             <Outlet />
             <Footer />
@@ -31,6 +33,7 @@ const Dashboard = () => {
 const DashboardMyAcc = () => {
     return (
         <div className={"my-acc-dash"}>
+            <ToastContainer />
             <LeftSideRibbon />
             <Outlet />
         </div>

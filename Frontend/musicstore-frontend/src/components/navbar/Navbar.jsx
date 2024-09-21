@@ -1,4 +1,5 @@
-import React from 'react';
+import React, {useEffect} from 'react';
+import { useNavigate } from "react-router-dom";
 import './style/Navbar.scss';
 import LocalStorageHelper from "../../helpers/LocalStorageHelper.jsx";
 import logo from '../../assets/logo.svg';
@@ -13,10 +14,19 @@ import {NavLink} from "react-router-dom";
 
 function Navbar() {
 
+
     const [serach, setSerach] = React.useState('');
+    const [userName, setUserName] = React.useState('');
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        setUserName(LocalStorageHelper.getUserName());
+    })
 
     const logoutUser = () => {
-        //
+        LocalStorageHelper.LogoutUser();
+        navigate('/');
     }
 
     const onSubmitSearch = () => {
@@ -49,13 +59,13 @@ function Navbar() {
                 </div>
                 <div className={"user-info-container"}>
                     <ul>
-                        {LocalStorageHelper.IsUserLogged() === true &&
+                        { LocalStorageHelper.IsUserLogged() === true &&
                             <li>
                                 <Tooltip title={"My account"}>
                                     <NavLink to="/account">
                                         <div className={"welcome-text"}>
                                             <p>
-                                                Hi,<br/>{LocalStorageHelper.getUserName()}
+                                                Hi,<br/>{userName}
                                             </p>
                                         </div>
                                         <PersonOutlineOutlinedIcon fontSize={"medium"}/>
@@ -63,7 +73,7 @@ function Navbar() {
                                 </Tooltip>
                             </li>
                         }
-                        {LocalStorageHelper.IsUserLogged() === false &&
+                        { LocalStorageHelper.IsUserLogged() === false &&
                             <li>
                                 <Tooltip title={"Login"}>
                                     <NavLink to="/login">
@@ -84,7 +94,7 @@ function Navbar() {
                                 </NavLink>
                             </Tooltip>
                         </li>
-
+                        { LocalStorageHelper.isUserAdmin() === true &&
                             <li>
                                 <Tooltip title={"Admin panel"}>
                                     <NavLink to="/admin">
@@ -97,8 +107,8 @@ function Navbar() {
                                     </NavLink>
                                 </Tooltip>
                             </li>
-
-                        {LocalStorageHelper.IsUserLogged() === false &&
+                        }
+                        { LocalStorageHelper.IsUserLogged() === false &&
                             <li>
                                 <Tooltip title={"Login"}>
                                     <NavLink to="/login">
@@ -107,7 +117,7 @@ function Navbar() {
                                 </Tooltip>
                             </li>
                         }
-                        {LocalStorageHelper.IsUserLogged() === true &&
+                        { LocalStorageHelper.IsUserLogged() === true &&
                             <li>
                                 <Tooltip title={"Logout"}>
                                     <NavLink onClick={logoutUser}>

@@ -41,15 +41,15 @@ const router = createBrowserRouter([
                 element: <Home />,
             },
             {
-                path: '/user',
+                path: '/',
                 element: <DashboardMyAcc />,
                 children: [
                     {
-                        path: '/user/account',
+                        path: '/account',
                         element: <Account />,
                     },
                     {
-                        path: '/user/orders',
+                        path: '/myorders',
                         element: <MyOrders />
                     }
                 ]

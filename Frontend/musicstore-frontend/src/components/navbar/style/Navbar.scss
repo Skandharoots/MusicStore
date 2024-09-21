@@ -141,7 +141,6 @@ input[type="text"]:focus {
   background: white;
   padding: 10px 400px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .bottom-container ul {
@@ -152,14 +151,14 @@ input[type="text"]:focus {
   padding: 0;
 }
 
-.bottom-container li {
+.bottom-container ul li {
   list-style: none;
   margin: 0;
   padding: 0 15px;
   position: relative;
 }
 
-.bottom-container li a {
+.bottom-container ul li a {
   text-decoration: none;
   font-size: 16px;
   font-weight: normal;
@@ -167,8 +166,12 @@ input[type="text"]:focus {
   transition: color 0.3s ease-in-out;
 }
 
-.bottom-container li a:hover {
+.bottom-container ul li a:hover {
   color: rgb(184, 184, 184);
+}
+
+.bottom-container ul li a.active {
+  font-weight: bold;
 }
 
 

@@ -9,7 +9,7 @@ import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import LoginOutlinedIcon from '@mui/icons-material/LoginOutlined';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import AdminPanelSettingsOutlinedIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
-import {Link} from "react-router-dom";
+import {NavLink} from "react-router-dom";
 
 function Navbar() {
 
@@ -26,9 +26,9 @@ function Navbar() {
     return (
         <header>
             <div className={"top-container"}>
-                <Link to="/">
+                <NavLink to="/">
                     <img alt={""} className="logo" src={logo}/>
-                </Link>
+                </NavLink>
                 <div className={"search-container"}>
                     <form className={"search-form"}>
                         <input
@@ -52,67 +52,67 @@ function Navbar() {
                         {LocalStorageHelper.IsUserLogged() === true &&
                             <li>
                                 <Tooltip title={"My account"}>
-                                    <Link to="/user/account">
+                                    <NavLink to="/account">
                                         <div className={"welcome-text"}>
                                             <p>
                                                 Hi,<br/>{LocalStorageHelper.getUserName()}
                                             </p>
                                         </div>
                                         <PersonOutlineOutlinedIcon fontSize={"medium"}/>
-                                    </Link>
+                                    </NavLink>
                                 </Tooltip>
                             </li>
                         }
                         {LocalStorageHelper.IsUserLogged() === false &&
                             <li>
                                 <Tooltip title={"Login"}>
-                                    <Link to="/user/account">
+                                    <NavLink to="/account">
                                         <div className={"welcome-text"}>
                                             <p>
                                                 Hi,<br/>Login
                                             </p>
                                         </div>
                                         <PersonOutlineOutlinedIcon fontSize={"medium"}/>
-                                    </Link>
+                                    </NavLink>
                                 </Tooltip>
                             </li>
                         }
                         <li>
                             <Tooltip title={"Basket"}>
-                                <Link to="/basket">
+                                <NavLink to="/basket">
                                     <ShoppingCartOutlinedIcon fontSize={"medium"}/>
-                                </Link>
+                                </NavLink>
                             </Tooltip>
                         </li>
 
                             <li>
                                 <Tooltip title={"Admin panel"}>
-                                    <Link to="/admin">
+                                    <NavLink to="/admin">
                                         <div className={"admin-text"}>
                                             <p>
                                                 Admin<br/>panel
                                             </p>
                                         </div>
                                         <AdminPanelSettingsOutlinedIcon fontSize={"medium"}/>
-                                    </Link>
+                                    </NavLink>
                                 </Tooltip>
                             </li>
 
                         {LocalStorageHelper.IsUserLogged() === false &&
                             <li>
                                 <Tooltip title={"Login"}>
-                                    <Link to="/login">
+                                    <NavLink to="/login">
                                         <LoginOutlinedIcon fontSize={"medium"}/>
-                                    </Link>
+                                    </NavLink>
                                 </Tooltip>
                             </li>
                         }
                         {LocalStorageHelper.IsUserLogged() === true &&
                             <li>
                                 <Tooltip title={"Logout"}>
-                                    <Link onClick={logoutUser}>
+                                    <NavLink onClick={logoutUser}>
                                         <LogoutOutlinedIcon fontSize={"medium"}/>
-                                    </Link>
+                                    </NavLink>
                                 </Tooltip>
                             </li>
                         }
@@ -122,11 +122,11 @@ function Navbar() {
             <nav className="bottom-container">
                 <div>
                     <ul>
-                        <li><Link to="/">Guitars</Link></li>
-                        <li><Link to="/">Drums</Link></li>
-                        <li><Link to="/">Sound</Link></li>
-                        <li><Link to="/">Microphones</Link></li>
-                        <li><Link to="/">Orchestra</Link></li>
+                        <li><NavLink to="/">Guitars</NavLink></li>
+                        <li><NavLink to="/">Drums</NavLink></li>
+                        <li><NavLink to="/">Sound</NavLink></li>
+                        <li><NavLink to="/">Microphones</NavLink></li>
+                        <li><NavLink to="/">Orchestra</NavLink></li>
                     </ul>
                 </div>
             </nav>

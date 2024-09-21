@@ -7,26 +7,28 @@ import {NavLink} from "react-router-dom";
 function LeftSideRibbon() {
 
     return (
-        <div className="left-side">
-            <h4>Welcome to<br/>Your account</h4>
-            <ul>
-                <li>
-                    <NavLink to="/user/orders">
-                        <AssignmentOutlinedIcon fontSize={"medium"}/>
-                        Orders
-                    </NavLink>
-                </li>
-                <li>
-                    <NavLink to="/basket">
-                        <ShoppingCartOutlinedIcon fontSize={"medium"} />
-                        Basket</NavLink>
-                </li>
-                <li>
-                    <NavLink to="/user/account"><SettingsIcon fontSize={"medium"} />
-                        Account settings
-                    </NavLink>
-                </li>
-            </ul>
+        <div className="left-side-wrapper">
+            <div className="left-side">
+                <h4>Welcome to<br/>Your account</h4>
+                <ul>
+                    <li>
+                        <NavLink to="/myorders">
+                            <AssignmentOutlinedIcon fontSize={"medium"}/>
+                            Orders
+                        </NavLink>
+                    </li>
+                    <li>
+                        <NavLink to="/basket">
+                            <ShoppingCartOutlinedIcon fontSize={"medium"}/>
+                            Basket</NavLink>
+                    </li>
+                    <li>
+                        <NavLink to="/account"><SettingsIcon fontSize={"medium"}/>
+                            Account settings
+                        </NavLink>
+                    </li>
+                </ul>
+            </div>
         </div>
     )
 }

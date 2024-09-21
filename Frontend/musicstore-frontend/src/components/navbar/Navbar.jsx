@@ -52,7 +52,7 @@ function Navbar() {
                         {LocalStorageHelper.IsUserLogged() === true &&
                             <li>
                                 <Tooltip title={"My account"}>
-                                    <Link to="/account">
+                                    <Link to="/user/account">
                                         <div className={"welcome-text"}>
                                             <p>
                                                 Hi,<br/>{LocalStorageHelper.getUserName()}
@@ -66,7 +66,7 @@ function Navbar() {
                         {LocalStorageHelper.IsUserLogged() === false &&
                             <li>
                                 <Tooltip title={"Login"}>
-                                    <Link to="/login">
+                                    <Link to="/user/account">
                                         <div className={"welcome-text"}>
                                             <p>
                                                 Hi,<br/>Login

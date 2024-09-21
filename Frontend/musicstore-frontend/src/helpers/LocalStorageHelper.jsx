@@ -20,7 +20,7 @@ class LocalStorageHelper {
 
     static isUserAdmin() {
         LocalStorageHelper.ActiveCheck();
-        return LocalStorageHelper.IsUserLogged() && localStorage.getItem('userAdmin') !== null && localStorage.getItem('userAdmin') !== undefined && localStorage.getItem('userAdmin') === 'ADMIN';
+        return LocalStorageHelper.IsUserLogged() && localStorage.getItem('userRole') !== null && localStorage.getItem('userRole') !== undefined && localStorage.getItem('userRole') === 'ADMIN';
     }
 
     static ActiveCheck() {

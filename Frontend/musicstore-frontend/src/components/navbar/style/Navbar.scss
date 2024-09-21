@@ -1,5 +1,7 @@
 header {
   display: block;
+  width: 100vw;
+  overflow: hidden;
 }
 
 .top-container {
@@ -7,6 +9,7 @@ header {
   align-items: center;
   justify-content: space-between;
   height: 10dvh;
+  width: 60vw;
   background: white;
   padding: 0 20%;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
@@ -137,6 +140,7 @@ input[type="text"]:focus {
   display: flex;
   align-items: center;
   height: 2dvh;
+  width: 100vw;
   justify-content: space-between;
   background: white;
   padding: 10px 20%;

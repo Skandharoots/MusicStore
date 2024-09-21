@@ -13,6 +13,7 @@ import MyOrders from "./pages/account/MyOrders.jsx";
 import Login from "./pages/login/Login.jsx";
 import axios from "axios";
 import {ToastContainer} from "react-toastify";
+import Signup from "./pages/signup/Signup.jsx";
 
 axios.defaults.baseURL = "http://localhost:8222/";
 axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
@@ -53,6 +54,10 @@ const router = createBrowserRouter([
             {
                 path: '/login',
                 element: <Login />,
+            },
+            {
+                path: '/signup',
+                element: <Signup />,
             },
             {
                 path: '/',

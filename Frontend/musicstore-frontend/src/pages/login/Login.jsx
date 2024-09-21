@@ -67,7 +67,7 @@ function Login() {
                 ).then((response) => {
                     LocalStorageHelper.LoginUser(response.data.uuid, response.data.firstName,
                         response.data.token, response.data.role);
-                    toast.success("Welcome, " + LocalStorageHelper.getUserName() + "!", {
+                    toast.success("Welcome, " + response.data.firstName + "!", {
                         position: "bottom-center",
                         autoClose: 5000,
                         hideProgressBar: false,
@@ -80,7 +80,7 @@ function Login() {
                     });
                     navigate("/");
 
-                }).catch((error) => {
+                }).catch(() => {
                     toast.error("Bad credentials provided", {
                         position: "bottom-center",
                         autoClose: 3000,
@@ -94,7 +94,7 @@ function Login() {
                     });
                 })
             })
-            .catch((error) => {
+            .catch(() => {
                 toast.error("Cannot fetch token", {
                     position: "bottom-center",
                     autoClose: 3000,
@@ -147,7 +147,7 @@ function Login() {
                         value={email}
                         onChange={e => setEmail(e.target.value)}
                         sx={{
-                            width: '100%',
+                            width: '70%',
                             margin: '0 auto 5% auto',
                             "& label.Mui-focused": {
                                 color: 'rgb(39, 99, 24)'
@@ -175,7 +175,7 @@ function Login() {
                         value={password}
                         onChange={e => setPassword(e.target.value)}
                         sx={{
-                            width: '100%',
+                            width: '70%',
                             margin: '0 auto 5% auto',
                             "& label.Mui-focused": {
                                 color: 'rgb(39, 99, 24)'
@@ -194,6 +194,7 @@ function Login() {
                         variant="contained"
                         onClick={validateInputs}
                         sx={{
+                            width: '70%',
                             backgroundColor: 'rgb(39, 99, 24)',
                             "&:hover": {backgroundColor: 'rgb(49,140,23)'}
                         }}
@@ -204,7 +205,7 @@ function Login() {
                         Don&apos;t have an account?{' '}
                         <span>
                         <Link
-                            to="/sign-up"
+                            to="/signup"
                             variant="body2"
                             sx={{ alignSelf: 'right', width: '100%'}}
                         >

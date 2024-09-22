@@ -32,6 +32,7 @@ function CategoryItem(props) {
                         theme: "colored",
                         transition: Bounce,
                     });
+                    props.onDelete(props.id);
                 }).catch((error) => {
                     toast.error(error.response.data.message, {
                         position: "bottom-center",
@@ -86,7 +87,7 @@ function CategoryItem(props) {
                     variant="contained"
                     type="button"
                     fullWidth
-                    onClick={function() {deleteCategory; props.onDelete(props.id)}}
+                    onClick={deleteCategory}
                     sx={{
                         width: 'fit-content',
                         backgroundColor: 'rgb(106,39,39)',

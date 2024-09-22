@@ -5,6 +5,7 @@ import TurnedInNotOutlinedIcon from '@mui/icons-material/TurnedInNotOutlined';
 import WarehouseOutlinedIcon from '@mui/icons-material/WarehouseOutlined';
 import LanguageOutlinedIcon from '@mui/icons-material/LanguageOutlined';
 import Inventory2OutlinedIcon from '@mui/icons-material/Inventory2Outlined';
+import AssignmentOutlinedIcon from "@mui/icons-material/AssignmentOutlined";
 
 
 function LeftSideAdminRibbon() {
@@ -12,7 +13,7 @@ function LeftSideAdminRibbon() {
     return (
         <div className="left-side-admin-wrapper">
             <div className="left-side-admin">
-                <h4>Welcome to<br/>Your account</h4>
+                <h4>Welcome to<br/>Admin panel</h4>
                 <ul>
                     <li>
                         <NavLink to="/admin/category">
@@ -29,6 +30,12 @@ function LeftSideAdminRibbon() {
                         <NavLink to="/admin/manufacturer">
                             <WarehouseOutlinedIcon fontSize={"medium"}/>
                             Manufacturers
+                        </NavLink>
+                    </li>
+                    <li>
+                        <NavLink to="/admin/order">
+                            <AssignmentOutlinedIcon fontSize={"medium"}/>
+                            Orders
                         </NavLink>
                     </li>
                     <li>

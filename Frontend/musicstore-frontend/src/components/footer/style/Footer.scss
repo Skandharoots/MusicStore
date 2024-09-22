@@ -1,0 +1,42 @@
+.footer-wrapper {
+
+  background-color: white;
+  height: 13dvh;
+  width: 100%;
+  padding: 0 0;
+  margin: 0 0;
+}
+
+.footer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  background-color: white;
+  height: 10dvh;
+  margin: 0 0;
+  padding: 0 20%;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.left-container {
+  display: block;
+  align-items: start;
+  justify-content: start;
+  color: black;
+  font-size: 12px;
+  padding: 3vh 0;
+  margin: 0 0;
+  height: 100%;
+}
+
+.right-container {
+  display: block;
+  align-items: start;
+  justify-content: start;
+  color: black;
+  font-size: 12px;
+  padding: 3vh 0;
+  margin: 0 0;
+  height: 100%;
+}

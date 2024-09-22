@@ -20,6 +20,7 @@ import Country from "./pages/admin/Country.jsx";
 import Manufacturer from "./pages/admin/Manufacturer.jsx";
 import Product from "./pages/admin/Product.jsx";
 import Subcategory from "./pages/admin/Subcategory.jsx";
+import Order from "./pages/admin/Order.jsx";
 
 axios.defaults.baseURL = "http://localhost:8222/";
 axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
@@ -104,6 +105,10 @@ const router = createBrowserRouter([
                     {
                         path: '/admin/manufacturer',
                         element: <Manufacturer />,
+                    },
+                    {
+                        path: '/admin/order',
+                        element: <Order />
                     },
                     {
                         path: '/admin/product',

@@ -1,27 +1,35 @@
-import {Box, Button, Typography} from "@mui/material";
+import {Alert, AlertTitle, Box, Button, Typography} from "@mui/material";
 import TextField from "@mui/material/TextField";
-import {useNavigate} from "react-router-dom";
-import {useEffect, useState} from "react";
-import axios from "axios";
-import '../style/AddCategory.scss';
-import LocalStorageHelper from "../../../helpers/LocalStorageHelper.jsx";
+import React, {useEffect, useState} from "react";
+import {useNavigate, useParams} from "react-router-dom";
 import {Bounce, toast} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+import axios from "axios";
+import LocalStorageHelper from "../../../helpers/LocalStorageHelper.jsx";
+import '../style/UpdateCategory.scss';
 
 
-function AddCategory() {
+function UpdateCategory() {
+
+    const id = useParams();
 
     const [categoryName, setCategoryName] = useState('');
     const [categoryNameError, setCategoryNameError] = useState(false);
     const [categoryNameErrorMsg, setCategoryNameErrorMsg] = useState('');
 
+    const [showErrorMsg, setShowErrorMsg] = React.useState('none');
+    const [updateErrorMsg, setUpdateErrorMsg] = React.useState('');
+
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (LocalStorageHelper.IsUserLogged() === false || LocalStorageHelper.isUserAdmin() === false) {
-            navigate('/');
-        }
-    }, []);
-
+        axios.get(`api/products/categories/get/${id.id}`, {})
+            .then(res => {
+                setCategoryName(res.data.name);
+            }).catch(err => {
+                console.log(err);
+        })
+    }, [])
 
     const validateInputs = () => {
 
@@ -40,7 +48,7 @@ function AddCategory() {
         return isValid;
     };
 
-    const submitCategory = (event) => {
+    const updateCategory = (event) => {
         event.preventDefault();
         if (validateInputs() === false) {
             return;
@@ -48,18 +56,17 @@ function AddCategory() {
 
         axios.get('api/users/csrf/token', {})
             .then((response) => {
-                axios.post('api/products/categories/create',
-                    {
+                axios.put(`api/products/categories/update/${id.id}`, {
                         categoryName: categoryName,
                     },
                     {
                         headers: {
-                            'Authorization': 'Bearer ' + LocalStorageHelper.getJwtToken(),
-                            'X-XSRF-TOKEN': response.data.token,
                             'Content-Type': 'application/json',
+                            'X-XSRF-TOKEN': response.data.token,
+                            'Authorization': 'Bearer ' + LocalStorageHelper.getJwtToken(),
                         }
                     }).then(() => {
-                        toast.success('Category Added', {
+                        toast.success("Category updated ;)", {
                             position: "bottom-center",
                             autoClose: 5000,
                             hideProgressBar: false,
@@ -71,18 +78,10 @@ function AddCategory() {
                             transition: Bounce,
                         });
                         navigate('/admin/category');
+
                 }).catch((error) => {
-                    toast.error(error.response.data.message, {
-                        position: "bottom-center",
-                        autoClose: 3000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: false,
-                        progress: undefined,
-                        theme: "colored",
-                        transition: Bounce,
-                    });
+                    setShowErrorMsg('flex');
+                    setUpdateErrorMsg(error.response.data.message);
                 })
             }).catch(() => {
             toast.error("Cannot fetch token", {
@@ -98,15 +97,11 @@ function AddCategory() {
             });
         });
 
-
-
     }
 
-
-
     return (
-        <div className="CategoryAdd">
-            <div className="FormTitle">
+        <div className="CategoryUpdate">
+            <div className="CategoryUpdateForm">
                 <Typography
                     component="h1"
                     variant="h5"
@@ -115,15 +110,30 @@ function AddCategory() {
                         , margin: '0 auto 5% auto'
                     }}
                 >
-                    Add category
+                    Update category
                 </Typography>
                 <Box
                     component="form"
-                    onSubmit={submitCategory}
+                    onSubmit={updateCategory}
                     noValidate
 
                 >
-
+                    <TextField
+                        id="categoryId"
+                        type="email"
+                        name="categoryId"
+                        autoComplete="id"
+                        required
+                        fullWidth
+                        variant="outlined"
+                        label="Category Id"
+                        value={id.id}
+                        disabled={true}
+                        sx={{
+                            width: '70%',
+                            margin: '0 auto 5% auto',
+                        }}
+                    />
                     <TextField
                         error={categoryNameError}
                         helperText={categoryNameErrorMsg}
@@ -132,7 +142,6 @@ function AddCategory() {
                         name="categoryName"
                         placeholder="Fender"
                         autoComplete="categoryName"
-                        autoFocus
                         required
                         fullWidth
                         variant="outlined"
@@ -165,12 +174,22 @@ function AddCategory() {
                             "&:hover": {backgroundColor: 'rgb(49,140,23)'}
                         }}
                     >
-                        Add Category
+                        Update Category
                     </Button>
                 </Box>
             </div>
+            <Alert variant='filled'
+                   severity='error'
+                   onClose={() => setShowErrorMsg('none')}
+                   sx={{
+                       display: showErrorMsg,
+                       width: 'fit-content',
+                       margin: '5% auto 0 auto',
+                   }}>
+                <AlertTitle>Error, {updateErrorMsg}</AlertTitle>
+            </Alert>
         </div>
     )
 }
 
-export default AddCategory;
+export default UpdateCategory;

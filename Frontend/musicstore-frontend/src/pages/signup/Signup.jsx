@@ -88,6 +88,9 @@ function Signup() {
 
     const submitRegister = (event) => {
         event.preventDefault();
+        if (validateInputs() === false) {
+            return;
+        }
 
         axios.get('api/users/csrf/token', {})
         .then((response) => {
@@ -183,7 +186,6 @@ function Signup() {
                         name="lastName"
                         placeholder="Doe"
                         autoComplete="lastName"
-                        autoFocus
                         required
                         fullWidth
                         variant="outlined"
@@ -212,7 +214,6 @@ function Signup() {
                         name="email"
                         placeholder="your@email.com"
                         autoComplete="email"
-                        autoFocus
                         required
                         fullWidth
                         variant="outlined"
@@ -241,7 +242,6 @@ function Signup() {
                         type="password"
                         id="password"
                         autoComplete="current-password"
-                        autoFocus
                         required
                         fullWidth
                         variant="outlined"
@@ -269,7 +269,6 @@ function Signup() {
                         type="password"
                         id="confirmPassword"
                         autoComplete="current-password"
-                        autoFocus
                         required
                         fullWidth
                         variant="outlined"

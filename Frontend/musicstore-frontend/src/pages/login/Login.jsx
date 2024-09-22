@@ -50,6 +50,10 @@ function Login() {
 
     const submitLogin = (event) => {
         event.preventDefault();
+        if (validateInputs() === false) {
+            return;
+        }
+
         axios.get('api/users/csrf/token', {})
             .then((response) => {
                 const headers = {
@@ -167,7 +171,6 @@ function Login() {
                         type="password"
                         id="password"
                         autoComplete="current-password"
-                        autoFocus
                         required
                         fullWidth
                         variant="outlined"

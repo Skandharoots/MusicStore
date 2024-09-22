@@ -1,4 +1,4 @@
-import './style/Country.scss';
+import '../style/Country.scss';
 
 function Country() {
 

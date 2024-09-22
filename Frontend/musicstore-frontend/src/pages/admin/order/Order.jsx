@@ -1,4 +1,4 @@
-import './style/Order.scss';
+import '../style/Order.scss';
 
 
 function Order() {

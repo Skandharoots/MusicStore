@@ -15,12 +15,13 @@ import axios from "axios";
 import {ToastContainer} from "react-toastify";
 import Signup from "./pages/signup/Signup.jsx";
 import LeftSideAdminRibbon from "./pages/admin/LeftSideAdminRibbon.jsx";
-import Category from "./pages/admin/Category.jsx";
-import Country from "./pages/admin/Country.jsx";
-import Manufacturer from "./pages/admin/Manufacturer.jsx";
-import Product from "./pages/admin/Product.jsx";
-import Subcategory from "./pages/admin/Subcategory.jsx";
-import Order from "./pages/admin/Order.jsx";
+import Category from "./pages/admin/category/Category.jsx";
+import Country from "./pages/admin/country/Country.jsx";
+import Manufacturer from "./pages/admin/manufacturer/Manufacturer.jsx";
+import Product from "./pages/admin/product/Product.jsx";
+import Subcategory from "./pages/admin/subcategory/Subcategory.jsx";
+import Order from "./pages/admin/order/Order.jsx";
+import AddCategory from "./pages/admin/category/AddCategory.jsx";
 
 axios.defaults.baseURL = "http://localhost:8222/";
 axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
@@ -97,6 +98,10 @@ const router = createBrowserRouter([
                     {
                         path: '/admin/category',
                         element: <Category />,
+                    },
+                    {
+                        path: '/admin/category/add',
+                        element: <AddCategory />
                     },
                     {
                         path: '/admin/country',

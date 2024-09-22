@@ -1,4 +1,4 @@
-import './style/Manufacturer.scss';
+import '../style/Manufacturer.scss';
 
 
 function Manufacturer() {

@@ -18,6 +18,11 @@ class LocalStorageHelper {
         return localStorage.getItem('userName');
     }
 
+    static getJwtToken() {
+        LocalStorageHelper.ActiveCheck();
+        return localStorage.getItem('credentials');
+    }
+
     static isUserAdmin() {
         LocalStorageHelper.ActiveCheck();
         return LocalStorageHelper.IsUserLogged() && localStorage.getItem('userRole') !== null && localStorage.getItem('userRole') !== undefined && localStorage.getItem('userRole') === 'ADMIN';

@@ -97,7 +97,7 @@ function Navbar() {
                         { LocalStorageHelper.isUserAdmin() === true &&
                             <li>
                                 <Tooltip title={"Admin panel"}>
-                                    <NavLink to="/admin">
+                                    <NavLink to="/admin/category">
                                         <div className={"admin-text"}>
                                             <p>
                                                 Admin<br/>panel

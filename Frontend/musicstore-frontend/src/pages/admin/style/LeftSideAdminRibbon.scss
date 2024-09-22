@@ -1,0 +1,56 @@
+.left-side-admin-wrapper {
+  min-height: 80dvh;
+  padding: 0 0 0 20vw;
+  margin: 0 0;
+  background-color: white;
+}
+
+.left-side-admin {
+  margin: 0 0;
+  padding: 0 0;
+  height: fit-content;
+  width: 12dvw;
+  background-color: white;
+  border-right: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.left-side-admin h4 {
+  color: black;
+  margin-left: 14px;
+
+}
+
+.left-side-admin ul {
+  display: block;
+  align-items: center;
+  justify-content: start;
+  margin: 0;
+  padding: 0;
+}
+
+.left-side-admin ul li {
+  list-style: none;
+  margin: 0;
+  padding: 15px 15px;
+  position: relative;
+}
+
+.left-side-admin ul li a {
+  text-decoration: none;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  font-size: 14px;
+  font-weight: normal;
+  color: black;
+  transition: color 0.3s ease-in-out;
+}
+
+.left-side-admin ul li a:hover {
+  color: rgb(184, 184, 184);
+  cursor: pointer;
+}
+
+.left-side-admin ul li a.active {
+  font-weight: bold;
+}

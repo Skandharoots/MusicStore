@@ -14,6 +14,12 @@ import Login from "./pages/login/Login.jsx";
 import axios from "axios";
 import {ToastContainer} from "react-toastify";
 import Signup from "./pages/signup/Signup.jsx";
+import LeftSideAdminRibbon from "./pages/admin/LeftSideAdminRibbon.jsx";
+import Category from "./pages/admin/Category.jsx";
+import Country from "./pages/admin/Country.jsx";
+import Manufacturer from "./pages/admin/Manufacturer.jsx";
+import Product from "./pages/admin/Product.jsx";
+import Subcategory from "./pages/admin/Subcategory.jsx";
 
 axios.defaults.baseURL = "http://localhost:8222/";
 axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
@@ -36,6 +42,16 @@ const DashboardMyAcc = () => {
         <div className={"my-acc-dash"}>
             <ToastContainer />
             <LeftSideRibbon />
+            <Outlet />
+        </div>
+    )
+}
+
+const DashboardAdmin = () => {
+    return (
+        <div className={"admin-dash"}>
+            <ToastContainer />
+            <LeftSideAdminRibbon />
             <Outlet />
         </div>
     )
@@ -72,7 +88,33 @@ const router = createBrowserRouter([
                         element: <MyOrders />
                     }
                 ]
-            }
+            },
+            {
+                path: '/admin',
+                element: <DashboardAdmin />,
+                children: [
+                    {
+                        path: '/admin/category',
+                        element: <Category />,
+                    },
+                    {
+                        path: '/admin/country',
+                        element: <Country />,
+                    },
+                    {
+                        path: '/admin/manufacturer',
+                        element: <Manufacturer />,
+                    },
+                    {
+                        path: '/admin/product',
+                        element: <Product />
+                    },
+                    {
+                        path: '/admin/subcategory',
+                        element: <Subcategory />,
+                    },
+                ]
+            },
         ]
     }
 ])

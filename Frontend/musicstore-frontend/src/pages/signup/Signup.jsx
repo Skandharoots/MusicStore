@@ -105,8 +105,7 @@ function Signup() {
                 {
                     headers: headers,
                 })
-                .then((response) => {
-                    console.log(response);
+                .then(() => {
                     setShowSuccessMsg('flex');
                 }).catch((error) => {
                     setRegisterErrorMsg(error.response.data.message);

@@ -4,4 +4,4 @@ spring:
   config:
     import: optional:configserver:http://localhost:8888
 my:
-  admin_url: http://USERS/api/v1/users/adminauthorize?token=
+  admin_url: http://USERS/api/users/adminauthorize?token=

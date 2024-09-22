@@ -49,7 +49,7 @@ public class JwtAuthFilter extends AbstractGatewayFilterFactory<JwtAuthFilter.Co
                 return webClient
                         .build()
                         .get()
-                        .uri("http://USERS/api/v1/users/validate?token=" + authorization)
+                        .uri("http://USERS/api/users/validate?token=" + authorization)
                         .retrieve()
                         .bodyToMono(Boolean.class)
                         .flatMap(response -> {

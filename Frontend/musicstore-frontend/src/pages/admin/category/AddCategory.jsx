@@ -106,7 +106,7 @@ function AddCategory() {
 
     return (
         <div className="CategoryAdd">
-            <div className="FormTitle">
+            <div className="AddCatForm">
                 <Typography
                     component="h1"
                     variant="h5"

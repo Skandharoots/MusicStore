@@ -132,7 +132,7 @@ function Signup() {
 
     return (
         <div className="Signup">
-            <div className="FormTitle">
+            <div className="SignupForm">
                 <Typography
                     component="h1"
                     variant="h5"

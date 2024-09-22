@@ -116,7 +116,7 @@ function Login() {
 
     return (
         <div className="Login">
-            <div className="FormTitle">
+            <div className="LoginForm">
                 <Typography
                     component="h1"
                     variant="h5"

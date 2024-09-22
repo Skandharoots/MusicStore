@@ -65,6 +65,7 @@ public class WebSecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "/api/users/update/**").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "api/users/delete/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/users/adminauthorize").permitAll()
+                        .requestMatchers("/error").permitAll()
                         .anyRequest()
                         .authenticated()
                 )

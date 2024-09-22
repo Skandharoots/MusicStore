@@ -73,6 +73,7 @@ public class WebAppConfig {
                         .requestMatchers(HttpMethod.GET, "/api/products/subcategories/get/**").permitAll()
                         .requestMatchers(HttpMethod.PUT, "/api/products/subcategories/update/**").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/api/products/subcategories/delete/**").permitAll()
+                        .requestMatchers("/error").permitAll()
                         .anyRequest()
                         .authenticated()
                 )

@@ -49,6 +49,7 @@ public class WebAppConfig {
                         .requestMatchers(HttpMethod.POST, "/api/order/create").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/order/get/**").permitAll()
                         .requestMatchers(HttpMethod.PUT, "/api/order/update/**").permitAll()
+                        .requestMatchers("/error").permitAll()
                         .anyRequest()
                         .authenticated()
                 )

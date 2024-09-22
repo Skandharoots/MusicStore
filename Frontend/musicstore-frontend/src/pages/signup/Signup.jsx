@@ -108,8 +108,8 @@ function Signup() {
                 .then((response) => {
                     console.log(response);
                     setShowSuccessMsg('flex');
-                }).catch(() => {
-                    setRegisterErrorMsg('User with such email already exists.');
+                }).catch((error) => {
+                    setRegisterErrorMsg(error.response.data.message);
                     setShowErrorMsg('flex');
             })
         }).catch(() => {

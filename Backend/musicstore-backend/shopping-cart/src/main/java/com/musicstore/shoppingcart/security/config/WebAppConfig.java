@@ -51,6 +51,7 @@ public class WebAppConfig {
                         .requestMatchers(HttpMethod.PUT, "/api/cart/update/**").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/api/cart/delete/**").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/api/cart/clear/**").permitAll()
+                        .requestMatchers("/error").permitAll()
                         .anyRequest()
                         .authenticated()
                 )

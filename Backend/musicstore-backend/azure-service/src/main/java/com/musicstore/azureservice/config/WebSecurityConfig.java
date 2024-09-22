@@ -49,6 +49,7 @@ public class WebSecurityConfig {
                     .requestMatchers(HttpMethod.GET, "/api/azure/list").permitAll()
                     .requestMatchers(HttpMethod.PUT, "/api/azure/update").permitAll()
                     .requestMatchers(HttpMethod.DELETE, "/api/azure/delete").permitAll()
+                    .requestMatchers("/error").permitAll()
                     .anyRequest()
                     .authenticated()
                 )

@@ -90,8 +90,8 @@ function CategoryItem(props) {
                     onClick={deleteCategory}
                     sx={{
                         width: 'fit-content',
-                        backgroundColor: 'rgb(106,39,39)',
-                        "&:hover": {backgroundColor: 'rgb(154,57,57)'}
+                        backgroundColor: 'rgb(159,20,20)',
+                        "&:hover": {backgroundColor: 'rgb(193,56,56)'}
                     }}
                     >
                     <DeleteIcon fontSize="small" />

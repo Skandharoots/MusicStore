@@ -79,7 +79,7 @@ function Navbar() {
                                     <NavLink to="/login">
                                         <div className={"welcome-text"}>
                                             <p>
-                                                Hi,<br/>Login
+                                                Hi,<br/>Log in
                                             </p>
                                         </div>
                                         <PersonOutlineOutlinedIcon fontSize={"medium"}/>

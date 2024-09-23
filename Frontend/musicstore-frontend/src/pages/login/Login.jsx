@@ -85,7 +85,7 @@ function Login() {
                     navigate("/");
 
                 }).catch(() => {
-                    toast.error("Bad credentials provided", {
+                    toast.error("Wrong credentials provided", {
                         position: "bottom-center",
                         autoClose: 3000,
                         hideProgressBar: false,

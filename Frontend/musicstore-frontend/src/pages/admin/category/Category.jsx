@@ -58,10 +58,10 @@ function Category() {
                 </Button>
             </div>
             <Box sx={{ flexGrow: 1, margin: '0 20% 0 0', padding: '8px 0 8px 16px' }}>
-                <Grid container spacing={2} sx={{padding: '0'}}>
+                <Grid container spacing={0} sx={{padding: '0'}}>
                     {
                         categories.map((category) => (
-                            <Grid size={4} key={category.id}>
+                            <Grid size={2.6} key={category.id}>
                                 <CategoryItem id={category.id} name={category.name} onDelete={removeById} { ...category}/>
                             </Grid>
                         ))

@@ -12,6 +12,10 @@ function Category() {
     const [categories, setCategories] = useState([]);
     const navigate = useNavigate();
 
+    useEffect(() => {
+        document.title = 'Category management';
+    }, []);
+
     const redirect = () => {
         navigate('/admin/category/add');
     }

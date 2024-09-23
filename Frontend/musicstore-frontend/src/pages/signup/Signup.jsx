@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import './style/Signup.scss';
 import { Alert, AlertTitle } from '@mui/material';
 import CheckIcon from '@mui/icons-material/Check';
@@ -31,6 +31,10 @@ function Signup() {
     const [firstNameErrorMessage, setFirstNameErrorMessage] = React.useState('');
     const [lastNameError, setLastNameError] = React.useState(false);
     const [lastNameErrorMessage, setLastNameErrorMessage] = React.useState('');
+
+    useEffect(() => {
+        document.title = 'Sign up';
+    }, []);
 
     const validateInputs = () => {
 

@@ -17,6 +17,10 @@ function AddCategory() {
     const navigate = useNavigate();
 
     useEffect(() => {
+        document.title = 'Add Category';
+    }, []);
+
+    useEffect(() => {
         if (LocalStorageHelper.IsUserLogged() === false || LocalStorageHelper.isUserAdmin() === false) {
             navigate('/');
         }

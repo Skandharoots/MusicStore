@@ -23,6 +23,10 @@ function UpdateCategory() {
     const navigate = useNavigate();
 
     useEffect(() => {
+        document.title = 'Edit Category';
+    }, []);
+
+    useEffect(() => {
         axios.get(`api/products/categories/get/${id.id}`, {})
             .then(res => {
                 setCategoryName(res.data.name);

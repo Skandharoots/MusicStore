@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { useNavigate } from "react-router-dom";
 import './style/Login.scss';
 import {Bounce, toast} from 'react-toastify';
@@ -21,6 +21,10 @@ function Login() {
     const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
 
     const navigate = useNavigate();
+
+    useEffect(() => {
+        document.title = 'Log in';
+    }, []);
 
     const validateInputs = () => {
 

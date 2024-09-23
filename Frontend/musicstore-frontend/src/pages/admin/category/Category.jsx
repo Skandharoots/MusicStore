@@ -2,9 +2,10 @@ import '../style/Category.scss';
 import {Box, Button} from "@mui/material";
 import Grid from '@mui/material/Grid2';
 import { useNavigate } from "react-router-dom";
-import {useEffect, useState, useCallback} from "react";
+import {useEffect, useState} from "react";
 import LocalStorageHelper from "../../../helpers/LocalStorageHelper.jsx";
 import CategoryItem from "./components/CategoryItem.jsx";
+import AddIcon from '@mui/icons-material/Add';
 import axios from "axios";
 
 function Category() {
@@ -50,12 +51,14 @@ function Category() {
                     className="add-button"
                     variant="contained"
                     type="button"
+                    endIcon={<AddIcon fontSize="small" />}
                     fullWidth
                     onClick={redirect}
                     sx={{
                         width: 'fit-content',
                         backgroundColor: 'rgb(39, 99, 24)',
-                        "&:hover": {backgroundColor: 'rgb(49,140,23)'}
+                        "&:hover": {backgroundColor: 'rgb(49,140,23)'},
+                        marginBottom: '16px',
                     }}
                 >
                     Add New

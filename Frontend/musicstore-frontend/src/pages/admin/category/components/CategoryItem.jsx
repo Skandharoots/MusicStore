@@ -72,6 +72,7 @@ function CategoryItem(props) {
                     component={Link}
                     to={"/admin/category/update/" + props.id}
                     variant="contained"
+                    size="small"
                     type="button"
                     fullWidth
                     sx={{
@@ -85,13 +86,14 @@ function CategoryItem(props) {
                 </Button>
                 <Button
                     variant="contained"
+                    size="small"
                     type="button"
                     fullWidth
                     onClick={deleteCategory}
                     sx={{
-                        width: 'fit-content',
+                        width: '10px',
                         backgroundColor: 'rgb(159,20,20)',
-                        "&:hover": {backgroundColor: 'rgb(193,56,56)'}
+                        "&:hover": {backgroundColor: 'rgb(193,56,56)'},
                     }}
                     >
                     <DeleteIcon fontSize="small" />

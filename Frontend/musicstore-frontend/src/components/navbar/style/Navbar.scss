@@ -64,14 +64,15 @@ input[type="text"]:focus {
   height: 40px;
   margin: auto -10px;
   z-index: 1;
-  border: 1px solid black;
+  background: rgb(39, 99, 24);
+  border: 1px solid rgb(39, 99, 24);
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
 .search-btn:hover {
-  background-color: rgb(58, 58, 58);
+  background-color: rgb(49,140,23);
   outline: none;
-  border: 1px solid black;
+  border: 1px solid rgb(49,140,23);
 }
 
 .user-info-container {

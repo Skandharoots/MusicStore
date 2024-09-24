@@ -24,18 +24,9 @@ public class AzureBlobStorageService implements IAzureBlobStorage {
 
     private final BlobContainerClient blobContainerClient;
 
-    private final AzureBlobStorageConfiguration azureBlobStorageConfiguration;
-
-    private final WebClient.Builder webClient;
-
     @Override
-    public String write(String token, String path, String fileName, MultipartFile file)
+    public String write(String path, String fileName, MultipartFile file)
             throws ResponseStatusException {
-
-        if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
-            log.error("No admin authority for token - " + token);
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No admin authority");
-        }
 
         try {
             BlobClient blobClient = blobContainerClient.getBlobClient(path + "/" + fileName);
@@ -87,13 +78,8 @@ public class AzureBlobStorageService implements IAzureBlobStorage {
     }
 
     @Override
-    public String update(String token, String path, String fileName, MultipartFile file)
+    public String update(String path, String fileName, MultipartFile file)
             throws ResponseStatusException {
-
-        if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
-            log.error("No admin authority for token - " + token);
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No admin authority");
-        }
 
         try {
             BlobClient client = blobContainerClient.getBlobClient(path);
@@ -114,12 +100,7 @@ public class AzureBlobStorageService implements IAzureBlobStorage {
     }
 
     @Override
-    public String delete(String token, String path) throws ResponseStatusException {
-
-        if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
-            log.error("No admin authority for token - " + token);
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No admin authority");
-        }
+    public String delete(String path) throws ResponseStatusException {
 
         try {
             BlobClient client = blobContainerClient.getBlobClient(path);
@@ -135,25 +116,5 @@ public class AzureBlobStorageService implements IAzureBlobStorage {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
         }
     }
-
-    private Boolean doesUserHaveAdminAuthorities(String token) {
-
-        if (!token.startsWith("Bearer ")) {
-            log.error("Invalid token - " + token);
-            throw new RuntimeException("Invalid token");
-        }
-
-        String jwtToken = token.substring("Bearer ".length());
-
-        return webClient
-                .build()
-                .get()
-                .uri(azureBlobStorageConfiguration.getAdminUrl() + jwtToken)
-                .retrieve()
-                .bodyToMono(Boolean.class)
-                .block();
-
-    }
-
 
 }

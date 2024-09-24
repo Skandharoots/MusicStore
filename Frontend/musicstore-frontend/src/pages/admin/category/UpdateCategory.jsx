@@ -40,7 +40,7 @@ function UpdateCategory() {
         let isValid = true;
 
         if (!categoryName
-            || !/^[A-Z][a-z]+$/i.test(categoryName)) {
+            || !/^[A-Z][A-Z 'a-z]+$/i.test(categoryName)) {
             setCategoryNameError(true);
             setCategoryNameErrorMsg('Please enter a valid category name.');
             isValid = false;

@@ -16,7 +16,7 @@ public class AzureBlobStorageConfiguration {
     @Value("${spring.cloud.azure.storage.connection.string}")
     private String connectionString;
 
-    @Value("${my.admin_autorize_url}")
+    @Value("${my.admin_authorize_url}")
     private String adminUrl;
 
     @Bean

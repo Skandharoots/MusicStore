@@ -6,16 +6,16 @@ import org.springframework.web.server.ResponseStatusException;
 
 public interface IAzureBlobStorage {
 
-    String write(String path, String fileName, MultipartFile file)
+    String write(String token, String path, String fileName, MultipartFile file)
             throws ResponseStatusException;
 
-    String update(String path, String fileName,  MultipartFile file)
+    String update(String token, String path, String fileName,  MultipartFile file)
             throws ResponseStatusException;
 
     byte[] read(String path) throws ResponseStatusException;
 
     List<String> listFiles(String path) throws ResponseStatusException;
 
-    String delete(String path) throws ResponseStatusException;
+    String delete(String token, String path) throws ResponseStatusException;
 
 }

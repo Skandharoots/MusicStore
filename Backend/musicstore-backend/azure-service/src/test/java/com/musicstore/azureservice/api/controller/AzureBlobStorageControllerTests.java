@@ -53,10 +53,15 @@ public class AzureBlobStorageControllerTests {
 
     private MultipartFile multipartFile = new MockMultipartFile("file", "test.txt", "text/plain", "Hello World".getBytes());
 
+    private String token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpX" +
+            "VCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI" +
+            "6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.S" +
+            "flKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
+
     @Test
     public void createFileTest() throws Exception {
 
-        when(azureBlobStorageService.write(path, filename, multipartFile)).thenReturn(fullFilePath);
+        when(azureBlobStorageService.write(token, path, filename, multipartFile)).thenReturn(fullFilePath);
 
         ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.multipart("/api/azure/upload")
@@ -64,6 +69,7 @@ public class AzureBlobStorageControllerTests {
                         .file("fileName", filename.getBytes())
                         .file((MockMultipartFile) multipartFile)
                         .contentType(MediaType.MULTIPART_FORM_DATA)
+                        .header("Authorization", token)
                 );
 
         resultActions.andExpect(MockMvcResultMatchers.status().isCreated());
@@ -103,7 +109,7 @@ public class AzureBlobStorageControllerTests {
     @Test
     public void updateFileTest() throws Exception {
 
-        when(azureBlobStorageService.update(path, filename, multipartFile)).thenReturn(fullFilePath);
+        when(azureBlobStorageService.update(token, path, filename, multipartFile)).thenReturn(fullFilePath);
 
 
         MockMultipartHttpServletRequestBuilder builder =
@@ -122,6 +128,7 @@ public class AzureBlobStorageControllerTests {
                         .file("fileName", filename.getBytes())
                         .file((MockMultipartFile) multipartFile)
                         .contentType(MediaType.MULTIPART_FORM_DATA)
+                        .header("Authorization", token)
         );
         resultActions.andExpect(MockMvcResultMatchers.status().isOk());
         resultActions.andExpect(MockMvcResultMatchers.content().string(fullFilePath));
@@ -131,9 +138,10 @@ public class AzureBlobStorageControllerTests {
     @Test
     public void deleteFileTest() throws Exception {
 
-        when(azureBlobStorageService.delete(fullFilePath)).thenReturn("File deleted");
+        when(azureBlobStorageService.delete(token, fullFilePath)).thenReturn("File deleted");
 
         ResultActions resultActions = mockMvc.perform(delete("/api/azure/delete?path=" + fullFilePath)
+                .header("Authorization", token)
         );
 
         resultActions.andExpect(MockMvcResultMatchers.status().isOk());

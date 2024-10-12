@@ -2,7 +2,7 @@ spring:
   application:
     name: orders
   config:
-    import: optional:configserver:http://localhost:8888
+    import: optional:configserver:http://service/config-server-svc.default.svc.cluster.local:8888
 my:
   admin_url: http://USERS/api/users/adminauthorize?token=
   order_check_url: http://PRODUCTS/api/products/items/verify_availability

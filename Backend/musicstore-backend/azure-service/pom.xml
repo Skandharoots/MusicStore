@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.musicstore</groupId>
-		<artifactId>musicstore-backend</artifactId>
+		<artifactId>musicstore</artifactId>
 		<version>1.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>azure-service</artifactId>

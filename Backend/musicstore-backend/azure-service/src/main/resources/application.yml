@@ -2,7 +2,7 @@ spring:
   application:
     name: azure-service
   config:
-    import: optional:configserver:http://localhost:8888
+    import: optional:configserver:http://service/config-server-svc.default.svc.cluster.local:8888
   cloud:
     azure:
       storage:

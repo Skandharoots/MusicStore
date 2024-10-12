@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: apigateway
+  labels:
+    app: apigateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: apigateway
+  template:
+    metadata:
+      labels:
+        app: apigateway
+    spec:
+      containers:
+        - name: apigateway
+          image: skandharoots/apigateway:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8222
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: apigateway-svc
+spec:
+  selector:
+    app: apigateway
+  type: LoadBalancer
+  ports:
+    - port: 80
+      targetPort: 8222
+      protocol: TCP
+

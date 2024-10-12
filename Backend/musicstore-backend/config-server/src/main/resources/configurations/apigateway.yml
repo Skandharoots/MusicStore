@@ -3,8 +3,12 @@ server:
   error:
     include-message: always
 eureka:
+  instance:
+    preferIpAddress: true
+    hostname: discovery-0
   client:
-    register-with-eureka: false
+    service-url:
+      defaultZone: http://discovery-0.discovery.default.svc.cluster.local:8761/eureka
 spring:
   cloud:
     gateway:
@@ -111,12 +115,12 @@ spring:
               allowCredentials: true
               maxAge: 30
         - id: discovery
-          uri: http://localhost:8761
+          uri: http://discovery-0.discovery.default.svc.cluster.local:8761
           predicates:
-              - Path=/eureka/web
+            - Path=/eureka/web
           filters:
-              - SetPath=/
+            - SetPath=/
         - id: discovery-static
-          uri: http://localhost:8761
+          uri: http://discovery-0.discovery.default.svc.cluster.local:8761
           predicates:
-              - Path=/eureka/**
+            - Path=/eureka/**

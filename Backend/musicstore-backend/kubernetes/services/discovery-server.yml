@@ -19,7 +19,7 @@ spec:
       name: discovery
       protocol: TCP
   selector:
-    app: eureka
+    app: discovery
 
 ---
 apiVersion: apps/v1

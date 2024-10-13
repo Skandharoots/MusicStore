@@ -1,8 +1,17 @@
 spring:
-  config:
-    import: optional:configserver:http://service/config-server-svc.default.svc.cluster.local:8888
   application:
     name: discovery
 eureka:
   username: ${EUREKA_USERNAME:admin}
   password: ${EUREKA_PASSWORD:lapunia@121}
+  instance:
+    hostname: ${HOSTNAME}.discovery
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+    service-url:
+      defaultZone: ${DISCOVERY_SERVER_ADDRESS}
+  server:
+    renewal-percent-threshold: 0.85
+server:
+  port: 8761

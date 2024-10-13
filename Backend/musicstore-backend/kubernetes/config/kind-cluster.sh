@@ -1,0 +1,1 @@
+kind create cluster --name musicstore --config ./kind.yaml

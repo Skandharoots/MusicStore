@@ -5,12 +5,12 @@ eureka:
   username: ${EUREKA_USERNAME:admin}
   password: ${EUREKA_PASSWORD:lapunia@121}
   instance:
-    hostname: ${HOSTNAME}.discovery
+    hostname: localhost
   client:
     register-with-eureka: false
     fetch-registry: false
     service-url:
-      defaultZone: ${DISCOVERY_SERVER_ADDRESS}
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
   server:
     renewal-percent-threshold: 0.85
 server:

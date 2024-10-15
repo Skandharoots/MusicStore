@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: users
+  name: order
   labels:
-    app: users
+    app: order
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
-      app: users
+      app: order
   template:
     metadata:
       labels:
-        app: users
+        app: order
     spec:
       containers:
-        - name: users
-          image: skandharoots/users:latest
+        - name: order
+          image: skandharoots/order:latest
           imagePullPolicy: Always
           env:
             - name: SPRING_PROFILES_ACTIVE
@@ -32,10 +32,10 @@ spec:
 kind: Service
 apiVersion: v1
 metadata:
-  name: users-svc
+  name: order-svc
 spec:
   selector:
-    app: users
+    app: order
   type: ClusterIP
   ports:
     - port: 80

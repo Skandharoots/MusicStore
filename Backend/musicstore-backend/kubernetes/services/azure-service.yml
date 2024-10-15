@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: users
+  name: azure-service
   labels:
-    app: users
+    app: azure-service
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
-      app: users
+      app: azure-service
   template:
     metadata:
       labels:
-        app: users
+        app: azure-service
     spec:
       containers:
-        - name: users
-          image: skandharoots/users:latest
+        - name: azure-service
+          image: skandharoots/azure-service:latest
           imagePullPolicy: Always
           env:
             - name: SPRING_PROFILES_ACTIVE
@@ -32,10 +32,10 @@ spec:
 kind: Service
 apiVersion: v1
 metadata:
-  name: users-svc
+  name: azure-service-svc
 spec:
   selector:
-    app: users
+    app: azure-service
   type: ClusterIP
   ports:
     - port: 80

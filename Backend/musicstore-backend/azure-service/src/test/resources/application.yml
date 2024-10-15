@@ -9,7 +9,7 @@ spring:
   application:
     name: azure-service
   config:
-    import: optional:configserver:http://config-server-0.config-server.default.svc.cluster.local:8888
+    import: optional:configserver:http://localhost:8888
   cloud:
     loadbalancer:
       enabled: false

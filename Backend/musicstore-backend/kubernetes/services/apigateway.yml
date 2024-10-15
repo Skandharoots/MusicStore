@@ -20,6 +20,14 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 8222
+          env:
+            - name: SPRING_CONFIG_IMPORT
+              valueFrom:
+                configMapKeyRef:
+                  key: config-server-url
+                  name: config-server-cm
+            - name: SPRING_PROFILES_ACTIVE
+              value: kubernetes
 ---
 
 kind: Service

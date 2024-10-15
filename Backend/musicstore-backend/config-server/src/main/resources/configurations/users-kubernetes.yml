@@ -1,7 +1,7 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/postgres
-    username: postgres
+    url: jdbc:postgresql://postgres.default.svc.cluster.local:5432/postgres
+    username: skandha
     password: lapunia2121
   jpa:
     hibernate:
@@ -9,10 +9,11 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
 eureka:
   instance:
-    hostname: localhost
+    preferIpAddress: true
+    hostname: discovery-0
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka
+      defaultZone: http://discovery-0.discovery.default.svc.cluster.local:8761/eureka
 server:
   port: 0
   error:

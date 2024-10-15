@@ -1,40 +1,3 @@
-#apiVersion: apps/v1
-#kind: Deployment
-#metadata:
-#  name: config-server
-#  labels:
-#    app: config-server
-#spec:
-#  replicas: 1
-#  selector:
-#    matchLabels:
-#      app: config-server
-#  template:
-#    metadata:
-#      labels:
-#        app: config-server
-#    spec:
-#      containers:
-#        - name: config-server
-#          image: skandharoots/config-server:latest
-#          imagePullPolicy: Always
-#          ports:
-#            - containerPort: 8888
-#---
-#
-#kind: Service
-#apiVersion: v1
-#metadata:
-#  name: config-server-svc
-#spec:
-#  selector:
-#    app: config-server
-#  type: ClusterIP
-#  ports:
-#    - port: 80
-#      targetPort: 8888
-#      protocol: TCP
-
 apiVersion: v1
 kind: Service
 metadata:
@@ -72,4 +35,29 @@ spec:
           image: skandharoots/config-server:latest
           ports:
             - containerPort: 8888
+          env:
+            - name: EUREKA_INSTANCE_HOSTNAME
+              valueFrom:
+                configMapKeyRef:
+                  key: config_hostname
+                  name: discovery-config-cm
+            - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+              valueFrom:
+                configMapKeyRef:
+                  key: config_discovery_server_address
+                  name: discovery-config-cm
+            - name: EUREKA_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: config_discovery_server_uri_for_gateway
+                  name: discovery-config-cm
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: config-server-cm
+data:
+  config-server-url: "optional:configserver:http://config-server-0.config-server.default.svc.cluster.local:8888"
 

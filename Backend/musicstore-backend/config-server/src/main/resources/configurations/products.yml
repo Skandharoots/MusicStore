@@ -5,15 +5,14 @@ spring:
     password: lapunia2121
   jpa:
     hibernate:
-      ddl-auto:
+      ddl-auto: create
     database-platform: org.hibernate.dialect.MySQL8Dialect
 eureka:
   instance:
-    preferIpAddress: true
-    hostname: discovery-0
+    hostname: localhost
   client:
     service-url:
-      defaultZone: http://discovery-0.discovery.default.svc.cluster.local:8761/eureka
+      defaultZone: http://localhost:8761/eureka
 server:
   port: 0
   error:

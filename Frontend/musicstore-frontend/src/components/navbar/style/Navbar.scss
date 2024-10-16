@@ -1,7 +1,6 @@
 header {
   display: block;
-  width: 100%;
-  overflow: hidden;
+  width: max-content;
 }
 
 .top-container {
@@ -9,9 +8,8 @@ header {
   align-items: center;
   justify-content: space-between;
   height: 10dvh;
-  width: 60vw;
   background: white;
-  padding: 0 20%;
+  padding: 10px 10%;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
@@ -40,7 +38,7 @@ header {
 }
 
 input[type="text"] {
-  width: 500px;
+  width: 80%;
   height: 40px;
   margin: 0 0;
   background: white;
@@ -144,7 +142,7 @@ input[type="text"]:focus {
   width: 100vw;
   justify-content: space-between;
   background: white;
-  padding: 10px 20%;
+  padding: 10px 10%;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 

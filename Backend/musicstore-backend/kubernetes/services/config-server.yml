@@ -14,6 +14,7 @@ spec:
     app: config-server
 
 ---
+
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -51,7 +52,11 @@ spec:
                 configMapKeyRef:
                   key: config_discovery_server_uri_for_gateway
                   name: discovery-config-cm
-
+      initContainers:
+          # Wait for discovery to show up
+        - name: wait-for-discovery
+          image: busybox
+          command: [ "sh", "-c", "until nc -zv discovery-0.discovery.default.svc.cluster.local 8761 > /dev/null; do echo Waiting for master.; sleep 2; done;" ]
 ---
 
 apiVersion: v1

@@ -26,7 +26,19 @@ public class RouteValidator {
             "/api/azure/read",
             "/api/azure/list",
             "/api/order/get/**",
-            "/eureka/web"
+            "/eureka/web",
+
+            "/swagger-ui/**",
+            "/swagger-ui.html",
+            "/v3/api-docs/**",
+            "/swagger-resources/**",
+            "/api-docs/**",
+            "/users-svc/v3/api-docs",
+            "/order-svc/v3/api-docs",
+            "/azure-svc/v3/api-docs",
+            "/cart-svc/v3/api-docs",
+            "/products-svc/v3/api-docs"
+
     );
 
     public Predicate<ServerHttpRequest> isSecured =

@@ -124,3 +124,25 @@ spring:
           uri: http://discovery-0.discovery.default.svc.cluster.local:8761
           predicates:
             - Path=/eureka/**
+springdoc:
+  enable-native-support: true
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    config-url: /v3/api-docs/swagger-config
+    path: /swagger-ui.html
+    urls:
+      - url: /v3/api-docs
+        name: API Gateway Service
+      - url: /azure-svc/v3/api-docs
+        name: Azure Service
+      - url: /order-svc/v3/api-docs
+        name: Order Service
+      - url: /products-svc/v3/api-docs
+        name: Product Service
+      - url: /cart-svc/v3/api-docs
+        name: Shopping Cart Service
+      - url: /users-svc/v3/api-docs
+        name: User Service

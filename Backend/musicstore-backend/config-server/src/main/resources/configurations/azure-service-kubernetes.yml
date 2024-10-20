@@ -14,3 +14,10 @@ logging:
     org:
       springframework:
         security: DEBUG
+springdoc:
+  api-docs:
+    enabled: true
+    path: /azure-svc/v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /azure-svc/swagger-ui.html

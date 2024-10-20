@@ -23,3 +23,10 @@ logging:
     org:
       springframework:
         security: DEBUG
+springdoc:
+  api-docs:
+    enabled: true
+    path: /cart-svc/v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /cart-svc/swagger-ui.html

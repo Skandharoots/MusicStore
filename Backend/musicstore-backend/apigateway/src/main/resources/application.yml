@@ -3,3 +3,7 @@ spring:
     name: apigateway
   config:
     import: optional:configserver:http://localhost:8888
+my:
+  security:
+    username: ${SECURITY_USER:admin}
+    password: ${SECURITY_PASSWORD:lapunia2121}

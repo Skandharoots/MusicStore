@@ -9,7 +9,7 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
 eureka:
   instance:
-    preferIpAddress: true
+    prefer-ip-address: true
     hostname: discovery-0
   client:
     service-url:

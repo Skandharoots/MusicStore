@@ -1,44 +1,46 @@
-#apiVersion: apps/v1
-#kind: Deployment
-#metadata:
-#  name: azure-service
-#  labels:
-#    app: azure-service
-#spec:
-#  replicas: 1
-#  selector:
-#    matchLabels:
-#      app: azure-service
-#  template:
-#    metadata:
-#      labels:
-#        app: azure-service
-#    spec:
-#      containers:
-#        - name: azure-service
-#          image: skandharoots/azure-service:latest
-#          imagePullPolicy: Always
-#          env:
-#            - name: SPRING_PROFILES_ACTIVE
-#              value: kubernetes
-#            - name: SPRING_CONFIG_IMPORT
-#              valueFrom:
-#                configMapKeyRef:
-#                  key: config-server-url
-#                  name: config-server-cm
-#
-#---
-#
-#kind: Service
-#apiVersion: v1
-#metadata:
-#  name: azure-service-svc
-#spec:
-#  selector:
-#    app: azure-service
-#  type: ClusterIP
-#  ports:
-#    - port: 80
-#      targetPort: 0
-#      protocol: TCP
-#
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: azure-service
+  labels:
+    app: azure-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: azure-service
+  template:
+    metadata:
+      labels:
+        app: azure-service
+    spec:
+      containers:
+        - name: azure-service
+          image: skandharoots/azure-service:latest
+          imagePullPolicy: Always
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: kubernetes
+            - name: SPRING_CONFIG_IMPORT
+              valueFrom:
+                configMapKeyRef:
+                  key: config-server-url
+                  name: config-server-cm
+            - name: SPRING_CLOUD_AZURE_STORAGE_CONNECTION_STRING
+              value: DefaultEndpointsProtocol=https;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=https://[CLUSTER_EXTERNAL_IP]:10000/devstoreaccount1;QueueEndpoint=https://[CLUSTER_EXTERNAL_IP]:10001/devstoreaccount1;TableEndpoint=https://[CLUSTER_EXTERNAL_IP]:10002/devstoreaccount1;
+
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: azure-service-svc
+spec:
+  selector:
+    app: azure-service
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: 0
+      protocol: TCP
+

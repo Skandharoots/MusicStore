@@ -6,6 +6,7 @@ eureka:
   password: ${EUREKA_PASSWORD:lapunia@121}
   instance:
     hostname: localhost
+    prefer-ip-address: true
   client:
     register-with-eureka: false
     fetch-registry: false

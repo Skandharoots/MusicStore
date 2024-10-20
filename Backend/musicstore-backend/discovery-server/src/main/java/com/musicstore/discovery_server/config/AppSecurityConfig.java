@@ -50,6 +50,7 @@ public class AppSecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request.requestMatchers("/").hasRole("ADMIN"))
                 .authorizeHttpRequests(request -> request.requestMatchers("/eureka/**").permitAll())
+                .authorizeHttpRequests(request -> request.requestMatchers("/error").permitAll())
                 .authorizeHttpRequests(request -> request.anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults());
 

@@ -26,6 +26,24 @@ spec:
                 configMapKeyRef:
                   key: config-server-url
                   name: config-server-cm
+            - name: SPRING_DATASOURCE_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: pg_url
+                  name: postgres-config
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: postgres_password
+                  name: postgres-secret-cred
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  key: postgres_username
+                  name: postgres-secret-cred
+            - name: SERVER_FORWARDHEADERSSTRATEGY
+              value: framework
+
       initContainers:
           # Wait for discovery to show up
         - name: wait-for-discovery

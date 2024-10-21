@@ -3,9 +3,9 @@ kind: Secret
 metadata:
   name: postgres-secret
 data:
-  POSTGRES_DB: cG9zdGdyZXMK
-  POSTGRES_USER: c2thbmRoYQo=
-  POSTGRES_PASSWORD: bGFwdW5pYTIxMjEK
+  POSTGRES_DB: cG9zdGdyZXM=
+  POSTGRES_USER: c2thbmRoYQ==
+  POSTGRES_PASSWORD: bGFwdW5pYTIxMjE=
 
 ---
 
@@ -90,4 +90,23 @@ spec:
       targetPort: 5432
   selector:
     app: postgres
+
+---
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: postgres-secret-cred
+data:
+  postgres_username: c2thbmRoYQ==
+  postgres_password: bGFwdW5pYTIxMjE=
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-config
+data:
+  pg_url: "jdbc:postgresql://postgres.default.svc.cluster.local:5432/postgres"
 

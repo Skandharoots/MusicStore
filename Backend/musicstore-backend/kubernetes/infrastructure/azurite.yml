@@ -36,10 +36,6 @@ spec:
             - '10002'
             - '--oauth'
             - 'basic'
-            - '--cert'
-            - '/certs/cert.pem'
-            - '--key'
-            - '/certs/key.pem'
             - '--debug'
             - '/tmp/debug.log'
             - '--loose'
@@ -62,9 +58,6 @@ spec:
             requests:
               cpu: '0'
               memory: '0'
-          volumeMounts:
-            - name: azurite-certs
-              mountPath: /certs
 
 ---
 
@@ -88,22 +81,36 @@ spec:
 
 ---
 
-kind: Ingress
-apiVersion: networking.k8s.io/v1
+apiVersion: v1
+kind: ConfigMap
 metadata:
-  name: azurite-ingress
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /devstoreaccount1/$1
-spec:
-  ingressClassName: nginx
-  rules:
-    - host: blob.contoso.com
-      http:
-        paths:
-          - path: /(.*)
-            pathType: Prefix
-            backend:
-              service:
-                name: azurite
-                port:
-                  number: 10000
+  name: azurite-cfg
+data:
+  azr_con_str: "AccountName=devstoreaccount1;
+  AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;
+  DefaultEndpointsProtocol=http;
+  BlobEndpoint=http://azurite.default.svc.cluster.local:10000/devstoreaccount1;
+  QueueEndpoint=http://azurite.default.svc.cluster.local:10001/devstoreaccount1;
+  TableEndpoint=http://azurite.default.svc.cluster.local:10002/devstoreaccount1;"
+
+---
+
+#kind: Ingress
+#apiVersion: networking.k8s.io/v1
+#metadata:
+#  name: azurite-ingress
+#  annotations:
+#    nginx.ingress.kubernetes.io/rewrite-target: /devstoreaccount1/$1
+#spec:
+#  ingressClassName: nginx
+#  rules:
+#    - host: blob.contoso.com
+#      http:
+#        paths:
+#          - path: /(.*)
+#            pathType: Prefix
+#            backend:
+#              service:
+#                name: azurite
+#                port:
+#                  number: 10000

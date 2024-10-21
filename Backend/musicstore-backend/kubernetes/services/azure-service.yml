@@ -27,7 +27,25 @@ spec:
                   key: config-server-url
                   name: config-server-cm
             - name: SPRING_CLOUD_AZURE_STORAGE_CONNECTION_STRING
-              value: DefaultEndpointsProtocol=https;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=https://[CLUSTER_EXTERNAL_IP]:10000/devstoreaccount1;QueueEndpoint=https://[CLUSTER_EXTERNAL_IP]:10001/devstoreaccount1;TableEndpoint=https://[CLUSTER_EXTERNAL_IP]:10002/devstoreaccount1;
+              valueFrom:
+                configMapKeyRef:
+                  key: azr_con_str
+                  name: azurite-cfg
+            - name: SERVER_FORWARDHEADERSSTRATEGY
+              value: framework
+      initContainers:
+        # Wait for discovery to show up
+        - name: wait-for-discovery
+          image: busybox
+          command: [ "sh", "-c", "until nc -zv discovery-0.discovery.default.svc.cluster.local 8761 > /dev/null; do echo Waiting for master.; sleep 2; done;" ]
+          #Wait for config server to show up
+        - name: wait-for-config-server
+          image: busybox
+          command: [ "sh", "-c", "until nc -zv config-server-0.config-server.default.svc.cluster.local 8888 > /dev/null; do echo Waiting for master.; sleep 2; done;" ]
+          #Wait for api-gateway to show up
+        - name: wait-for-apigateway
+          image: busybox
+          command: [ "sh", "-c", "until nc -zv apigateway-svc.default.svc.cluster.local 80 > /dev/null; do echo Waiting for master.; sleep 2; done;" ]
 
 ---
 

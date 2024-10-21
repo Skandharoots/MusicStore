@@ -27,7 +27,7 @@ spring:
         - id: users
           uri: lb://users
           predicates:
-            - Path=/api/users/**
+            - Path=/api/users/** , /users-svc/**
           filters:
             - JwtAuthFilter
           metadata:
@@ -45,7 +45,7 @@ spring:
         - id: products
           uri: lb://products
           predicates:
-            - Path=/api/products/**
+            - Path=/api/products/** , /products-svc/**
           filters:
             - JwtAuthFilter
           metadata:
@@ -63,7 +63,7 @@ spring:
         - id: azure
           uri: lb://azure-service
           predicates:
-            - Path=/api/azure/**
+            - Path=/api/azure/** , /azure-svc/**
           filters:
             - JwtAuthFilter
           metadata:
@@ -81,7 +81,7 @@ spring:
         - id: shopping-cart
           uri: lb://shopping-cart
           predicates:
-            - Path=/api/cart/**
+            - Path=/api/cart/** , /cart-svc/**
           filters:
             - JwtAuthFilter
           metadata:
@@ -99,7 +99,7 @@ spring:
         - id: orders
           uri: lb://orders
           predicates:
-            - Path=/api/order/**
+            - Path=/api/order/** , /order-svc/**
           filters:
             - JwtAuthFilter
           metadata:

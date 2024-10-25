@@ -2,10 +2,19 @@ server:
   port: 8222
   error:
     include-message: always
+logging:
+  level:
+    org:
+      springframework:
+        security: INFO
 eureka:
   instance:
     prefer-ip-address: true
     hostname: discovery-0
+    metadata-map:
+      "prometheus.scrape": "true"
+      "prometheus.path": "/actuator/prometheus"
+      "prometheus.port": "8080"
   client:
     service-url:
       defaultZone: http://discovery-0.discovery.default.svc.cluster.local:8761/eureka
@@ -146,3 +155,22 @@ springdoc:
         name: Shopping Cart Service
       - url: /users-svc/v3/api-docs
         name: User Service
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      enabled: true
+      show-details: always
+  metrics:
+    distribution:
+      percentiles-histogram:
+        all: true
+  observations:
+    key-values:
+      application: apigateway
+  tracing:
+    sampling:
+      probability: 1.0

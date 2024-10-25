@@ -4,6 +4,7 @@ import com.musicstore.users.dto.LoginRequest;
 import com.musicstore.users.dto.LoginResponse;
 import com.musicstore.users.model.Users;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class LoginService {
 
     private final UserService userService;
@@ -28,6 +30,7 @@ public class LoginService {
         );
         var user = (Users) userService.loadUserByUsername(request.getEmail());
         var userDetails = userService.loadUserByUsername(request.getEmail());
+        log.info("Login successfull for user: " + user.getUsername());
         return LoginResponse.builder()
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())

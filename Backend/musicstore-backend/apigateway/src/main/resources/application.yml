@@ -7,3 +7,4 @@ my:
   security:
     username: ${SECURITY_USER:admin}
     password: ${SECURITY_PASSWORD:lapunia2121}
+

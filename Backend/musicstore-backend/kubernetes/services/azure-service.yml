@@ -31,9 +31,16 @@ spec:
                 configMapKeyRef:
                   key: azr_con_str
                   name: azurite-cfg
-            - name: SERVER_FORWARDHEADERSSTRATEGY
-              value: framework
+            - name: LOKI_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: LOKI_URL
+                  name: loki-cfg
       initContainers:
+        #Wait for api-gateway to show up
+        - name: wait-for-mysql
+          image: busybox
+          command: [ "sh", "-c", "until nc -zv azurite.default.svc.cluster.local 10000 > /dev/null; do echo Waiting for master.; sleep 2; done;" ]
         # Wait for discovery to show up
         - name: wait-for-discovery
           image: busybox
@@ -42,10 +49,6 @@ spec:
         - name: wait-for-config-server
           image: busybox
           command: [ "sh", "-c", "until nc -zv config-server-0.config-server.default.svc.cluster.local 8888 > /dev/null; do echo Waiting for master.; sleep 2; done;" ]
-          #Wait for api-gateway to show up
-        - name: wait-for-apigateway
-          image: busybox
-          command: [ "sh", "-c", "until nc -zv apigateway-svc.default.svc.cluster.local 80 > /dev/null; do echo Waiting for master.; sleep 2; done;" ]
 
 ---
 

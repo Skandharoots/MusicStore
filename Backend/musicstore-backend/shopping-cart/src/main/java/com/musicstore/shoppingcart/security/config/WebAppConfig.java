@@ -27,7 +27,9 @@ public class WebAppConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowCredentials(true);
-        configuration.setAllowedOrigins(List.of("http://localhost:3000"));
+        configuration.setAllowedOrigins(List.of("http://localhost:3000",
+                "http://prometheus.default.svc.cluster.local:9090",
+                "http://loki.default.svc.cluster.local:3100"));
         configuration.setMaxAge(3600L);
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowedMethods(List.of("*"));
@@ -51,6 +53,7 @@ public class WebAppConfig {
                         .requestMatchers(HttpMethod.PUT, "/api/cart/update/**").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/api/cart/delete/**").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/api/cart/clear/**").permitAll()
+                        .requestMatchers("/actuator/**").permitAll()
                         .requestMatchers("/cart-svc/api-docs/**",
                                 "/cart-svc/v3/api-docs/**").permitAll()
                         .requestMatchers("/error").permitAll()

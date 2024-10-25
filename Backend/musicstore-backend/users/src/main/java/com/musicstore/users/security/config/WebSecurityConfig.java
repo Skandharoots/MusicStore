@@ -37,7 +37,9 @@ public class WebSecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowCredentials(true);
-        configuration.setAllowedOrigins(List.of("http://localhost:3000"));
+        configuration.setAllowedOrigins(List.of("http://localhost:3000",
+                "http://prometheus.default.svc.cluster.local:9090",
+                "http://loki.default.svc.cluster.local:3100"));
         configuration.setMaxAge(3600L);
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowedMethods(List.of("*"));
@@ -65,6 +67,7 @@ public class WebSecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "/api/users/update/**").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "api/users/delete/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/users/adminauthorize").permitAll()
+                        .requestMatchers("/actuator/**").permitAll()
                         .requestMatchers("/users-svc/api-docs/**",
                                 "/users-svc/v3/api-docs/**").permitAll()
                         .requestMatchers("/error").permitAll()

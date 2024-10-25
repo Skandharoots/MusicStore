@@ -39,7 +39,7 @@ public class CountryService {
         Country newCountry = new Country(country.getName());
 
         countryRepository.save(newCountry);
-        log.info("Country created: " + newCountry);
+        log.info("Country created: " + newCountry.getName());
 
         return "Country created";
     }
@@ -81,7 +81,7 @@ public class CountryService {
         countryToUpdate.setName(country.getName());
 
         countryRepository.save(countryToUpdate);
-        log.info("Country updated: " + countryToUpdate);
+        log.info("Country updated: " + countryToUpdate.getName());
 
         return ResponseEntity.ok("Country updated");
     }
@@ -99,7 +99,7 @@ public class CountryService {
                 );
 
         countryRepository.delete(country);
-        log.info("Country deleted: " + country);
+        log.info("Country deleted: " + country.getName());
 
         return ResponseEntity.ok("Country deleted");
     }

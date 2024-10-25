@@ -2,7 +2,7 @@ spring:
   application:
     name: users
   config:
-    import: optional:configserver:http://localhost:8888
+    import: optional:configserver:http://localhost:8889
   mail:
     host: smtp.gmail.com
     port: 587
@@ -12,7 +12,6 @@ spring:
       auth: true
       starttls.enable: true
       starttls.required: true
-
 my:
   jwt_secret: 4a8b8241925cedf1d133c4e37da837829664b848e81c4431b76ef212d0f7121a0722a6e5cd5bdc3fd66ac37ce6dd2848df4a328bd532dbf0a54ab6ec1e30751e2421b48160cfcdd42cf6a13a44e46b04851e11fae725d115d51b0308c56e24595392f0cba51cdd7a8fe84b39584d3c5b51a148e2dbfffee71b70354e830f9164befc3e6d97e9aa047942de793716f3b385309ca8f2cbf7c6a36f497b63131d8b451c7311f32b9f8fc57b74e510f859a3ba59b037fd6da731cabc60309d113d09186462b79e03fc9e5d032a943deb4df1a8c058efa8ba167fdf27fa5ae73ebc2b5bd5f1a7a081c5a3a4dd8c7a3482bf1326e87c79a2b3fc7d9cbcd43802ebb5be
   account_confirm_url: http://localhost:3000/register/confirm?token=

@@ -40,7 +40,7 @@ public class CategoryService {
         categoryEntity.setName(category.getCategoryName());
 
         categoryRepository.save(categoryEntity);
-        log.info("Category created - " + categoryEntity);
+        log.info("Category created - " + categoryEntity.getName());
         return "Category created";
     }
 
@@ -77,7 +77,7 @@ public class CategoryService {
         categoryToUpdate.setName(category.getCategoryName());
 
         categoryRepository.save(categoryToUpdate);
-        log.info("Category updated - " + categoryToUpdate);
+        log.info("Category updated - " + categoryToUpdate.getName());
         return ResponseEntity.ok("Category updated");
     }
 
@@ -94,7 +94,7 @@ public class CategoryService {
                         );
 
         categoryRepository.delete(category);
-        log.info("Category deleted - " + category);
+        log.info("Category deleted - " + category.getName());
         return ResponseEntity.ok("Category deleted successfully");
     }
 

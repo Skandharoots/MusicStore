@@ -48,7 +48,7 @@ spec:
           #Wait for config server to show up
         - name: wait-for-config-server
           image: busybox
-          command: [ "sh", "-c", "until nc -zv config-server-0.config-server.default.svc.cluster.local 8888 > /dev/null; do echo Waiting for master.; sleep 2; done;" ]
+          command: [ "sh", "-c", "until nc -zv config-server-0.config-server.default.svc.cluster.local 8889 > /dev/null; do echo Waiting for master.; sleep 2; done;" ]
 
 ---
 

@@ -40,7 +40,7 @@ public class ManufacturerService {
 
 
         manufacturerRepository.save(newManufacturer);
-        log.info("Manufacturer created: " + newManufacturer);
+        log.info("Manufacturer created: " + newManufacturer.getName());
 
         return "Manufacturers created";
     }
@@ -82,7 +82,7 @@ public class ManufacturerService {
         manufacurerToUpdate.setName(manufacturer.getName());
 
         manufacturerRepository.save(manufacurerToUpdate);
-        log.info("Manufacturer updated: " + manufacurerToUpdate);
+        log.info("Manufacturer updated: " + manufacurerToUpdate.getName());
 
         return ResponseEntity.ok("Manufacturer updated");
     }
@@ -100,7 +100,7 @@ public class ManufacturerService {
                 );
 
         manufacturerRepository.delete(manufacurerToDelete);
-        log.info("Manufacturer deleted: " + manufacurerToDelete);
+        log.info("Manufacturer deleted: " + manufacurerToDelete.getName());
 
         return ResponseEntity.ok("Manufacturer deleted");
     }

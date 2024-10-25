@@ -75,7 +75,7 @@ public class CartService {
             cartRepository.save(newCart);
 
         }
-        log.info("New cart created.");
+        log.info("New cart created for user {}", cartRequest.getUserUuid());
         return "Cart item added successfully";
     }
 
@@ -85,7 +85,7 @@ public class CartService {
 
         cart.setQuantity(cartUpdateRequest.getQuantity());
         cartRepository.save(cart);
-        log.info("Cart updated.");
+        log.info("Cart updated for user {}", cart.getUserUuid());
         return "Cart item updated successfully";
     }
 

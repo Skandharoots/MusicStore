@@ -51,7 +51,7 @@ public class SubcategoryService {
         newSubcategory.setCategory(categoryService.getCategoryById(subcategory.getCategoryId()));
 
         subcategoryRepository.save(newSubcategory);
-        log.info("Subcategory created - " + newSubcategory);
+        log.info("Subcategory created - " + newSubcategory.getName());
 
 
         return "Subcategories created";
@@ -98,7 +98,7 @@ public class SubcategoryService {
         subcategoryToUpdate.setName(subcategory.getName());
 
         subcategoryRepository.save(subcategoryToUpdate);
-        log.info("Subcategory updated - " + subcategoryToUpdate);
+        log.info("Subcategory updated - " + subcategoryToUpdate.getName());
 
         return ResponseEntity.ok("Subcategory updated");
     }
@@ -117,7 +117,7 @@ public class SubcategoryService {
                 );
 
         subcategoryRepository.delete(subcategoryToDelete);
-        log.info("Subcategory deleted - " + subcategoryToDelete);
+        log.info("Subcategory deleted - " + subcategoryToDelete.getName());
 
         return ResponseEntity.ok("Subcategory deleted");
     }

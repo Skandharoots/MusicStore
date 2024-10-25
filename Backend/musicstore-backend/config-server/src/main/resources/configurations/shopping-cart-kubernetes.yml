@@ -27,6 +27,7 @@ logging:
     org:
       springframework:
         security: INFO
+    com.musicstore.shoppingcart.service: DEBUG
 springdoc:
   api-docs:
     enabled: true

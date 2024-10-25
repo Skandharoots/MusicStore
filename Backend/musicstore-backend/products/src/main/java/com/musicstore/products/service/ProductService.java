@@ -87,7 +87,7 @@ public class ProductService {
         );
 
         Product savedProduct = productRepository.save(product);
-        log.info("Product created - " + savedProduct);
+        log.info("Product created - " + savedProduct.getProductName());
 
 
         return savedProduct.getProductSkuId();
@@ -255,7 +255,7 @@ public class ProductService {
         productToUpdate.setSubcategory(subcategoryService.getSubcategoryById(product.getSubcategoryId()));
 
         productRepository.save(productToUpdate);
-        log.info("Product updated - " + productToUpdate);
+        log.info("Product updated - " + productToUpdate.getProductName());
 
         return ResponseEntity.ok("Product updated");
     }
@@ -273,7 +273,7 @@ public class ProductService {
             );
 
         productRepository.delete(productToDelete);
-        log.info("Product deleted - " + productToDelete);
+        log.info("Product deleted - " + productToDelete.getProductName());
 
         return ResponseEntity.ok("Product deleted");
     }

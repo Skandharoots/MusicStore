@@ -27,6 +27,7 @@ logging:
     org:
       springframework:
         security: INFO
+    com.musicstore.users.service: DEBUG
 springdoc:
   api-docs:
     enabled: true

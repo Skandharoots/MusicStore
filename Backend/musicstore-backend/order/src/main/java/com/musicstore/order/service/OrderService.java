@@ -109,7 +109,7 @@ public class OrderService {
         );
 
         orderRepository.save(order);
-        log.info("Order created - " + order);
+        log.info("Order created - " + order.getOrderIdentifier());
 
         return "Order placed successfully";
 
@@ -209,7 +209,7 @@ public class OrderService {
 
         order.setStatus(request.getStatus());
         orderRepository.save(order);
-        log.info("Order updated - " + order);
+        log.info("Order updated - " + order.getOrderIdentifier());
         return ResponseEntity.ok("Order status updated successfully");
     }
 

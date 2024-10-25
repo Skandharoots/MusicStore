@@ -7,7 +7,7 @@ metadata:
 spec:
   clusterIP: None
   ports:
-    - port: 8888
+    - port: 8889
       name: config-server
       protocol: TCP
   selector:
@@ -35,7 +35,7 @@ spec:
           imagePullPolicy: Always
           image: skandharoots/config-server:latest
           ports:
-            - containerPort: 8888
+            - containerPort: 8889
           env:
             - name: EUREKA_INSTANCE_HOSTNAME
               valueFrom:
@@ -64,5 +64,5 @@ kind: ConfigMap
 metadata:
   name: config-server-cm
 data:
-  config-server-url: "optional:configserver:http://config-server-0.config-server.default.svc.cluster.local:8888"
+  config-server-url: "optional:configserver:http://config-server-0.config-server.default.svc.cluster.local:8889"
 

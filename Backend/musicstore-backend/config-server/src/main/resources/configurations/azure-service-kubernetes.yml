@@ -18,6 +18,7 @@ logging:
     org:
       springframework:
         security: INFO
+    com.musicstore.azureservice.service: DEBUG
 springdoc:
   api-docs:
     enabled: true

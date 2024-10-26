@@ -3,21 +3,21 @@ import TextField from "@mui/material/TextField";
 import {useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
 import axios from "axios";
-import '../style/AddCountry.scss';
+import '../style/AddManufacturer.scss';
 import LocalStorageHelper from "../../../helpers/LocalStorageHelper.jsx";
 import {Bounce, toast} from "react-toastify";
 
 
-function AddCountry() {
+function AddManufacturer() {
 
-    const [countryName, setCountryName] = useState('');
-    const [countryNameError, setCountryNameError] = useState(false);
-    const [countryNameErrorMsg, setCountryNameErrorMsg] = useState('');
+    const [manufacturerName, setManufacturerName] = useState('');
+    const [manufacturerNameError, setManufacturerNameError] = useState(false);
+    const [manufacturerNameErrorMsg, setManufacturerNameErrorMsg] = useState('');
 
     const navigate = useNavigate();
 
     useEffect(() => {
-        document.title = 'Add Country';
+        document.title = 'Add Manufacturer';
     }, []);
 
     useEffect(() => {
@@ -31,20 +31,20 @@ function AddCountry() {
 
         let isValid = true;
 
-        if (!countryName
-            || !/^[A-Z][A-Z 'a-z]+$/i.test(countryName)) {
-            setCountryNameError(true);
-            setCountryNameErrorMsg('Please enter a valid country name.');
+        if (!manufacturerName
+            || !/^[A-Z][A-Z 'a-z]+$/i.test(manufacturerName)) {
+            setManufacturerNameError(true);
+            setManufacturerNameErrorMsg('Please enter a valid manufacturer name.');
             isValid = false;
         } else {
-            setCountryNameError(false);
-            setCountryNameErrorMsg('');
+            setManufacturerNameError(false);
+            setManufacturerNameErrorMsg('');
         }
 
         return isValid;
     };
 
-    const submitCountry = (event) => {
+    const submitManufacturer = (event) => {
         event.preventDefault();
         if (validateInputs() === false) {
             return;
@@ -52,9 +52,9 @@ function AddCountry() {
 
         axios.get('api/users/csrf/token', {})
             .then((response) => {
-                axios.post('api/products/countries/create',
+                axios.post('api/products/manufacturers/create',
                     {
-                        name: countryName,
+                        name: manufacturerName,
                     },
                     {
                         headers: {
@@ -63,7 +63,7 @@ function AddCountry() {
                             'Content-Type': 'application/json',
                         }
                     }).then(() => {
-                    toast.success('Country Added!', {
+                    toast.success('Manufacturer Added!', {
                         position: "bottom-center",
                         autoClose: 5000,
                         hideProgressBar: false,
@@ -74,7 +74,7 @@ function AddCountry() {
                         theme: "colored",
                         transition: Bounce,
                     });
-                    navigate('/admin/country');
+                    navigate('/admin/manufacturer');
                 }).catch((error) => {
                     toast.error(error.response.data.message, {
                         position: "bottom-center",
@@ -106,8 +106,8 @@ function AddCountry() {
 
 
     return (
-        <div className="CountryAdd">
-            <div className="AddCountForm">
+        <div className="ManufacturerAdd">
+            <div className="AddManForm">
                 <Typography
                     component="h1"
                     variant="h5"
@@ -116,31 +116,31 @@ function AddCountry() {
                         , margin: '0 auto 5% auto'
                     }}
                 >
-                    Add country
+                    Add manufacturer
                 </Typography>
                 <Box
                     component="form"
-                    onSubmit={submitCountry}
+                    onSubmit={submitManufacturer}
                     noValidate
 
                 >
 
                     <TextField
-                        error={countryNameError}
-                        helperText={countryNameErrorMsg}
-                        id="countryName"
+                        error={manufacturerNameError}
+                        helperText={manufacturerNameErrorMsg}
+                        id="manufacturerName"
                         type="email"
-                        name="countryName"
+                        name="manufacturerName"
                         placeholder="Fender"
-                        autoComplete="countryName"
+                        autoComplete="manufacturerName"
                         autoFocus
                         required
                         fullWidth
                         variant="outlined"
-                        color={countryNameError ? 'error' : 'primary'}
-                        label="Country"
-                        value={countryName}
-                        onChange={e => setCountryName(e.target.value)}
+                        color={manufacturerNameError ? 'error' : 'primary'}
+                        label="Manufacturer"
+                        value={manufacturerName}
+                        onChange={e => setManufacturerName(e.target.value)}
                         sx={{
                             width: '70%',
                             margin: '0 auto 5% auto',
@@ -166,7 +166,7 @@ function AddCountry() {
                             "&:hover": {backgroundColor: 'rgb(49,140,23)'}
                         }}
                     >
-                        Add Country
+                        Add Manufacturer
                     </Button>
                 </Box>
             </div>
@@ -174,4 +174,4 @@ function AddCountry() {
     )
 }
 
-export default AddCountry;
+export default AddManufacturer;

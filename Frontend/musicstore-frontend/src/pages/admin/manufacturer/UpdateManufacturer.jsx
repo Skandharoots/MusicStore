@@ -1,50 +1,56 @@
 import {Box, Button, Typography} from "@mui/material";
 import TextField from "@mui/material/TextField";
-import {useNavigate} from "react-router-dom";
-import {useEffect, useState} from "react";
-import axios from "axios";
-import '../style/AddCountry.scss';
-import LocalStorageHelper from "../../../helpers/LocalStorageHelper.jsx";
+// eslint-disable-next-line no-unused-vars
+import React, {useEffect, useState} from "react";
+import {useNavigate, useParams} from "react-router-dom";
 import {Bounce, toast} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+import axios from "axios";
+import LocalStorageHelper from "../../../helpers/LocalStorageHelper.jsx";
+import '../style/UpdateManufacturer.scss';
 
 
-function AddCountry() {
+function UpdateManufacturer() {
 
-    const [countryName, setCountryName] = useState('');
-    const [countryNameError, setCountryNameError] = useState(false);
-    const [countryNameErrorMsg, setCountryNameErrorMsg] = useState('');
+    const id = useParams();
+
+    const [manufacturerName, setManufacturerName] = useState('');
+    const [manufacturerNameError, setManufacturerNameError] = useState(false);
+    const [manufacturerNameErrorMsg, setManufacturerNameErrorMsg] = useState('');
 
     const navigate = useNavigate();
 
     useEffect(() => {
-        document.title = 'Add Country';
+        document.title = 'Edit Manufacturer';
     }, []);
 
     useEffect(() => {
-        if (LocalStorageHelper.IsUserLogged() === false || LocalStorageHelper.isUserAdmin() === false) {
-            navigate('/');
-        }
-    }, []);
-
+        axios.get(`api/products/manufacturers/get/${id.id}`, {})
+            .then(res => {
+                setManufacturerName(res.data.name);
+            }).catch(err => {
+            console.log(err);
+        })
+    }, [])
 
     const validateInputs = () => {
 
         let isValid = true;
 
-        if (!countryName
-            || !/^[A-Z][A-Z 'a-z]+$/i.test(countryName)) {
-            setCountryNameError(true);
-            setCountryNameErrorMsg('Please enter a valid country name.');
+        if (!manufacturerName
+            || !/^[A-Z][A-Z 'a-z]+$/i.test(manufacturerName)) {
+            setManufacturerNameError(true);
+            setManufacturerNameErrorMsg('Please enter a valid manufacturer name.');
             isValid = false;
         } else {
-            setCountryNameError(false);
-            setCountryNameErrorMsg('');
+            setManufacturerNameError(false);
+            setManufacturerNameErrorMsg('');
         }
 
         return isValid;
     };
 
-    const submitCountry = (event) => {
+    const updateManufacturer = (event) => {
         event.preventDefault();
         if (validateInputs() === false) {
             return;
@@ -52,18 +58,17 @@ function AddCountry() {
 
         axios.get('api/users/csrf/token', {})
             .then((response) => {
-                axios.post('api/products/countries/create',
-                    {
-                        name: countryName,
+                axios.put(`api/products/manufacturers/update/${id.id}`, {
+                        name: manufacturerName,
                     },
                     {
                         headers: {
-                            'Authorization': 'Bearer ' + LocalStorageHelper.getJwtToken(),
-                            'X-XSRF-TOKEN': response.data.token,
                             'Content-Type': 'application/json',
+                            'X-XSRF-TOKEN': response.data.token,
+                            'Authorization': 'Bearer ' + LocalStorageHelper.getJwtToken(),
                         }
                     }).then(() => {
-                    toast.success('Country Added!', {
+                    toast.success("Manufacturer updated!", {
                         position: "bottom-center",
                         autoClose: 5000,
                         hideProgressBar: false,
@@ -74,7 +79,8 @@ function AddCountry() {
                         theme: "colored",
                         transition: Bounce,
                     });
-                    navigate('/admin/country');
+                    navigate('/admin/manufacturer');
+
                 }).catch((error) => {
                     toast.error(error.response.data.message, {
                         position: "bottom-center",
@@ -101,13 +107,12 @@ function AddCountry() {
                 transition: Bounce,
             });
         });
+
     }
 
-
-
     return (
-        <div className="CountryAdd">
-            <div className="AddCountForm">
+        <div className="ManufacturerUpdate">
+            <div className="ManufacturerUpdateForm">
                 <Typography
                     component="h1"
                     variant="h5"
@@ -116,31 +121,45 @@ function AddCountry() {
                         , margin: '0 auto 5% auto'
                     }}
                 >
-                    Add country
+                    Update manufacturer
                 </Typography>
                 <Box
                     component="form"
-                    onSubmit={submitCountry}
+                    onSubmit={updateManufacturer}
                     noValidate
 
                 >
-
                     <TextField
-                        error={countryNameError}
-                        helperText={countryNameErrorMsg}
-                        id="countryName"
+                        id="manufacturerId"
                         type="email"
-                        name="countryName"
-                        placeholder="Fender"
-                        autoComplete="countryName"
-                        autoFocus
+                        name="manufacturerId"
+                        autoComplete="id"
                         required
                         fullWidth
                         variant="outlined"
-                        color={countryNameError ? 'error' : 'primary'}
-                        label="Country"
-                        value={countryName}
-                        onChange={e => setCountryName(e.target.value)}
+                        label="Manufacturer Id"
+                        value={id.id}
+                        disabled={true}
+                        sx={{
+                            width: '70%',
+                            margin: '0 auto 5% auto',
+                        }}
+                    />
+                    <TextField
+                        error={manufacturerNameError}
+                        helperText={manufacturerNameErrorMsg}
+                        id="manufacturerName"
+                        type="email"
+                        name="manufacturerName"
+                        placeholder="Fender"
+                        autoComplete="manufacturerName"
+                        required
+                        fullWidth
+                        variant="outlined"
+                        color={manufacturerNameError ? 'error' : 'primary'}
+                        label="Manufacturer"
+                        value={manufacturerName}
+                        onChange={e => setManufacturerName(e.target.value)}
                         sx={{
                             width: '70%',
                             margin: '0 auto 5% auto',
@@ -166,7 +185,7 @@ function AddCountry() {
                             "&:hover": {backgroundColor: 'rgb(49,140,23)'}
                         }}
                     >
-                        Add Country
+                        Update Manufacturer
                     </Button>
                 </Box>
             </div>
@@ -174,4 +193,4 @@ function AddCountry() {
     )
 }
 
-export default AddCountry;
+export default UpdateManufacturer;

@@ -15,7 +15,7 @@ function SubcategoryItem(props) {
         event.preventDefault();
         axios.get('api/users/csrf/token', {})
             .then((response) => {
-                axios.delete(`api/products/subcategories/delete/${props.id}`, {
+                axios.delete(`api/products/subcategories/delete/${props.subcategory.id}`, {
                     headers: {
                         'Authorization': 'Bearer ' + LocalStorageHelper.getJwtToken(),
                         'X-XSRF-TOKEN': response.data.token,
@@ -85,9 +85,9 @@ function SubcategoryItem(props) {
                      width: '60%', display: 'block',
                      padding: '2%'
                  }}>
-                <p style={{margin: '0', overflow: 'hidden', textWrap: 'nowrap'}}><b>Id: </b>{props.id}</p>
-                <p style={{margin: '0', overflow: 'hidden', textWrap: 'nowrap'}}><b>Name: </b>{props.name}</p>
-                <p style={{margin: '0', overflow: 'hidden', textWrap: 'nowrap'}}><b>Category: </b>{props.category}</p>
+                <p style={{margin: '0', overflow: 'hidden', textWrap: 'nowrap'}}><b>Id: </b>{props.subcategory.id}</p>
+                <p style={{margin: '0', overflow: 'hidden', textWrap: 'nowrap'}}><b>Name: </b>{props.subcategory.name}</p>
+                <p style={{margin: '0', overflow: 'hidden', textWrap: 'nowrap'}}><b>Category: </b>{props.subcategory.category.name}</p>
 
             </div>
             <div className="subcategory-buttons"

@@ -39,7 +39,7 @@ public class OrderController {
         return orderService.createOrder(orderRequest, csrfToken, jwtToken);
     }
 
-    @GetMapping("/get/all")
+    @PostMapping("/get/all")
     public ResponseEntity<Page<Order>> getAllOrders(
             @RequestParam(value = "page") Integer page,
             @RequestParam(value = "pageSize") Integer pageSize
@@ -47,7 +47,7 @@ public class OrderController {
         return orderService.getAllOrders(page, pageSize);
     }
 
-    @GetMapping("/get/all/{user-id}")
+    @PostMapping("/get/all/{user-id}")
     public ResponseEntity<Page<Order>> getAllOrdersForUser(
             @PathVariable(name = "user-id") UUID userId,
             @RequestParam(value = "page") Integer page,
@@ -56,7 +56,7 @@ public class OrderController {
         return orderService.getAllOrdersByUserId(userId, page, pageSize);
     }
 
-    @GetMapping("/get/{order-id}")
+    @PostMapping("/get/{order-id}")
     public ResponseEntity<Order> getOrderDetails(
             @PathVariable(name = "order-id") UUID orderId
     ) {

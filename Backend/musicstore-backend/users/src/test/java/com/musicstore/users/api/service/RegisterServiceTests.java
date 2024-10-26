@@ -44,7 +44,7 @@ public class RegisterServiceTests {
                 "Marek",
                 "Kopania",
                 "marek@gmail.com",
-                "testpasswd",
+                "Tes7p$s",
                 UserRole.USER
         );
 
@@ -56,7 +56,7 @@ public class RegisterServiceTests {
                 "Marek",
                 "Kopania",
                 "marek@gmail.com",
-                "testpasswd"
+                "Tes7p$s"
         );
         when(userService.signUpUser(Mockito.any(Users.class))).thenReturn(String.valueOf(String.class));
         String result = registerService.register(registerRequest);
@@ -65,14 +65,37 @@ public class RegisterServiceTests {
     }
 
     @Test
-    public void registerUserExceptionTest() {
+    public void registerUserExceptionBadEmailTest() {
         RegisterRequest registerRequest = new RegisterRequest(
                 "Marek",
                 "Kopania",
                 "mar..ek@gmail.com",
-                "testpasswd"
+                "Tes7p$s"
         );
         Assertions.assertThatThrownBy(() -> registerService.register(registerRequest)).isNotNull();
+    }
+
+    @Test
+    public void registerUserExceptionBadPasswordTest() {
+        RegisterRequest registerRequest = new RegisterRequest(
+                "Marek",
+                "Kopania",
+                "marek@gmail.com",
+                "test"
+        );
+        Assertions.assertThatThrownBy(() -> registerService.register(registerRequest)).isNotNull();
+    }
+
+    @Test
+    public void registerUserExceptionEmptyFirstOrLastNameTest() {
+        RegisterRequest registerRequest = new RegisterRequest(
+                "",
+                "",
+                "marek@gmail.com",
+                "Tes7p$s"
+        );
+        Assertions.assertThatThrownBy(() -> registerService.register(registerRequest)).isNotNull();
+
     }
 
     @Test

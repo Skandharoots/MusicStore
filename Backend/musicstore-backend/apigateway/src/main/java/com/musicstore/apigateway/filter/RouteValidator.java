@@ -25,9 +25,7 @@ public class RouteValidator {
             "/api/users/adminauthorize",
             "/api/azure/read",
             "/api/azure/list",
-            "/api/order/get/**",
             "/eureka/web",
-
             "/swagger-ui/**",
             "/swagger-ui.html",
             "/v3/api-docs/**",

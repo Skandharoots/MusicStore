@@ -30,10 +30,27 @@ public class RegisterService {
                 Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(request.getEmail());
 
-        boolean isValidEmail = matcher.matches();
+        Pattern passPattern = Pattern
+                .compile("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])"
+                        + "(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{6,20}$");
+        Matcher passMatcher = passPattern.matcher(request.getPassword());
 
-        if (!isValidEmail) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,  "Email not valid");
+        if (!matcher.matches()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Email not valid");
+        }
+
+        if (!passMatcher.matches()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Password must contain lower and upper case letters, "
+                    + "at least one number, as well as one special character. "
+                    + "Password must be at least 6 characters long.");
+        }
+
+        if (request.getFirstName().isEmpty() || request.getLastName().isEmpty()
+        || request.getEmail().isEmpty() || request.getPassword().isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "First and Last name, as well as email or password fields cannot be empty");
         }
 
         return userService.signUpUser(

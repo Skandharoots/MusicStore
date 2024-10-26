@@ -49,7 +49,7 @@ public class WebAppConfig {
                 )
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers(HttpMethod.POST, "/api/order/create").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/order/get/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/order/get/**").permitAll()
                         .requestMatchers(HttpMethod.PUT, "/api/order/update/**").permitAll()
                         .requestMatchers("/actuator/**").permitAll()
                         .requestMatchers("/order-svc/api-docs/**",

@@ -184,7 +184,10 @@ public class OrderControllerTests {
 
         when(orderService.getAllOrdersByUserId(order.getUserIdentifier(), 0, 10)).thenReturn(ResponseEntity.ok(page));
 
-        ResultActions resultActions = mockMvc.perform(get("/api/order/get/all/{user-id}?page=0&pageSize=10", order.getUserIdentifier()));
+        ResultActions resultActions = mockMvc.perform(post("/api/order/get/all/{user-id}?page=0&pageSize=10", order.getUserIdentifier())
+                .header("Authorization", token)
+                .cookie(new Cookie("XSRF-TOKEN", csrfToken.getToken()))
+        );
         resultActions.andExpect(MockMvcResultMatchers.status().isOk());
         resultActions.andExpect(MockMvcResultMatchers.content().string(objectMapper.writeValueAsString(page)));
 
@@ -200,7 +203,10 @@ public class OrderControllerTests {
 
         when(orderService.getAllOrders(0, 10)).thenReturn(ResponseEntity.ok(page));
 
-        ResultActions resultActions = mockMvc.perform(get("/api/order/get/all?page=0&pageSize=10"));
+        ResultActions resultActions = mockMvc.perform(post("/api/order/get/all?page=0&pageSize=10")
+                .header("Authorization", token)
+                .cookie(new Cookie("XSRF-TOKEN", csrfToken.getToken()))
+        );
         resultActions.andExpect(MockMvcResultMatchers.status().isOk());
         resultActions.andExpect(MockMvcResultMatchers.content().string(objectMapper.writeValueAsString(page)));
 
@@ -211,7 +217,10 @@ public class OrderControllerTests {
 
         when(orderService.getOrderDetails(order.getOrderIdentifier())).thenReturn(ResponseEntity.ok(order));
 
-        ResultActions resultActions = mockMvc.perform(get("/api/order/get/{order-id}", order.getOrderIdentifier()));
+        ResultActions resultActions = mockMvc.perform(post("/api/order/get/{order-id}", order.getOrderIdentifier())
+                .header("Authorization", token)
+                .cookie(new Cookie("XSRF-TOKEN", csrfToken.getToken()))
+        );
         resultActions.andExpect(MockMvcResultMatchers.status().isOk());
         resultActions.andExpect(MockMvcResultMatchers.content().string(objectMapper.writeValueAsString(order)));
 

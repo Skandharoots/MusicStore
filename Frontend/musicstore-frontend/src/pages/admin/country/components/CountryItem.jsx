@@ -9,19 +9,19 @@ import LocalStorageHelper from "../../../../helpers/LocalStorageHelper.jsx";
 import Grid from "@mui/material/Grid2";
 
 
-function CategoryItem(props) {
+function CountryItem(props) {
 
-    const deleteCategory = (event) => {
+    const deleteCountry = (event) => {
         event.preventDefault();
         axios.get('api/users/csrf/token', {})
             .then((response) => {
-                axios.delete(`api/products/categories/delete/${props.id}`, {
+                axios.delete(`api/products/countries/delete/${props.id}`, {
                     headers: {
                         'Authorization': 'Bearer ' + LocalStorageHelper.getJwtToken(),
                         'X-XSRF-TOKEN': response.data.token,
                     }
                 }).then(() => {
-                    toast.success("Category deleted !", {
+                    toast.success("Country deleted!", {
                         position: "bottom-center",
                         autoClose: 5000,
                         hideProgressBar: false,
@@ -80,14 +80,14 @@ function CategoryItem(props) {
         }}
               key={props.id}
         >
-            <div className="category-metrics"
+            <div className="country-metrics"
                  style={{width: '60%', display: 'block',
                      padding: '2%'
                  }}>
                 <p style={{margin: '0', overflow: 'hidden', textWrap: 'nowrap'}}><b>Id: </b>{props.id}</p>
                 <p style={{margin: '0', overflow: 'hidden', textWrap: 'nowrap'}}><b>Name: </b>{props.name}</p>
             </div>
-            <div className="category-buttons"
+            <div className="country-buttons"
                  style={{
                      height: '100%',
                      marginRight: '0',
@@ -101,7 +101,7 @@ function CategoryItem(props) {
             >
                 <Button
                     component={Link}
-                    to={"/admin/category/update/" + props.id}
+                    to={"/admin/country/update/" + props.id}
                     variant="contained"
                     size="small"
                     type="button"
@@ -117,7 +117,7 @@ function CategoryItem(props) {
                     variant="contained"
                     size="small"
                     type="button"
-                    onClick={deleteCategory}
+                    onClick={deleteCountry}
                     sx={{
                         width: 'fit-content',
                         backgroundColor: 'rgb(159,20,20)',
@@ -133,4 +133,4 @@ function CategoryItem(props) {
 
 }
 
-export default CategoryItem;
+export default CountryItem;

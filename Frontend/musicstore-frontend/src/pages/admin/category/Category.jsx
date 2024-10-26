@@ -64,17 +64,15 @@ function Category() {
                     Add New
                 </Button>
             </div>
-            <Box sx={{ flexGrow: 1, margin: '0 20% 0 0', padding: '8px 0 8px 16px' }}>
-                <Grid container spacing={0} sx={{padding: '0'}}>
-                    {
-                        categories.map((category) => (
-                            <Grid size={2.6} key={category.id}>
-                                <CategoryItem id={category.id} name={category.name} onDelete={removeById} { ...category}/>
-                            </Grid>
-                        ))
-                    }
-                </Grid>
-            </Box>
+
+            <Grid container style={{marginRight: '20%', marginLeft: '16px'}} rowSpacing={2} columnSpacing={2}>
+                {
+                    categories.map((category) => (
+                        <CategoryItem key={category.id} id={category.id} name={category.name} onDelete={removeById} { ...category}/>
+                    ))
+                }
+            </Grid>
+
         </div>
     )
 }

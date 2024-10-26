@@ -1,0 +1,21 @@
+.CountryAdd {
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  min-height: 80dvh;
+  width: 100vw;
+  background-color: white;
+}
+
+.AddCountForm {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  width: 20dvw;
+  margin: 5% 20%;
+  border-radius: 1em;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+  padding: 2%;
+}

@@ -1,4 +1,4 @@
-import {Alert, AlertTitle, Box, Button, Typography} from "@mui/material";
+import {Box, Button, Typography} from "@mui/material";
 import TextField from "@mui/material/TextField";
 import React, {useEffect, useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
@@ -6,29 +6,29 @@ import {Bounce, toast} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import axios from "axios";
 import LocalStorageHelper from "../../../helpers/LocalStorageHelper.jsx";
-import '../style/UpdateCategory.scss';
+import '../style/UpdateCountry.scss';
 
 
-function UpdateCategory() {
+function UpdateCountry() {
 
     const id = useParams();
 
-    const [categoryName, setCategoryName] = useState('');
-    const [categoryNameError, setCategoryNameError] = useState(false);
-    const [categoryNameErrorMsg, setCategoryNameErrorMsg] = useState('');
+    const [countryName, setCountryName] = useState('');
+    const [countryNameError, setCountryNameError] = useState(false);
+    const [countryNameErrorMsg, setCountryNameErrorMsg] = useState('');
 
     const navigate = useNavigate();
 
     useEffect(() => {
-        document.title = 'Edit Category';
+        document.title = 'Edit Country';
     }, []);
 
     useEffect(() => {
-        axios.get(`api/products/categories/get/${id.id}`, {})
+        axios.get(`api/products/countries/get/${id.id}`, {})
             .then(res => {
-                setCategoryName(res.data.name);
+                setCountryName(res.data.name);
             }).catch(err => {
-                console.log(err);
+            console.log(err);
         })
     }, [])
 
@@ -36,20 +36,20 @@ function UpdateCategory() {
 
         let isValid = true;
 
-        if (!categoryName
-            || !/^[A-Z][A-Z 'a-z]+$/i.test(categoryName)) {
-            setCategoryNameError(true);
-            setCategoryNameErrorMsg('Please enter a valid category name.');
+        if (!countryName
+            || !/^[A-Z][A-Z 'a-z]+$/i.test(countryName)) {
+            setCountryNameError(true);
+            setCountryNameErrorMsg('Please enter a valid country name.');
             isValid = false;
         } else {
-            setCategoryNameError(false);
-            setCategoryNameErrorMsg('');
+            setCountryNameError(false);
+            setCountryNameErrorMsg('');
         }
 
         return isValid;
     };
 
-    const updateCategory = (event) => {
+    const updateCountry = (event) => {
         event.preventDefault();
         if (validateInputs() === false) {
             return;
@@ -57,8 +57,8 @@ function UpdateCategory() {
 
         axios.get('api/users/csrf/token', {})
             .then((response) => {
-                axios.put(`api/products/categories/update/${id.id}`, {
-                        categoryName: categoryName,
+                axios.put(`api/products/countries/update/${id.id}`, {
+                        name: countryName,
                     },
                     {
                         headers: {
@@ -67,18 +67,18 @@ function UpdateCategory() {
                             'Authorization': 'Bearer ' + LocalStorageHelper.getJwtToken(),
                         }
                     }).then(() => {
-                        toast.success("Category updated ;)", {
-                            position: "bottom-center",
-                            autoClose: 5000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: false,
-                            progress: undefined,
-                            theme: "colored",
-                            transition: Bounce,
-                        });
-                        navigate('/admin/category');
+                    toast.success("Country updated!", {
+                        position: "bottom-center",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: false,
+                        progress: undefined,
+                        theme: "colored",
+                        transition: Bounce,
+                    });
+                    navigate('/admin/country');
 
                 }).catch((error) => {
                     toast.error(error.response.data.message, {
@@ -110,8 +110,8 @@ function UpdateCategory() {
     }
 
     return (
-        <div className="CategoryUpdate">
-            <div className="CategoryUpdateForm">
+        <div className="CountryUpdate">
+            <div className="CountryUpdateForm">
                 <Typography
                     component="h1"
                     variant="h5"
@@ -120,23 +120,23 @@ function UpdateCategory() {
                         , margin: '0 auto 5% auto'
                     }}
                 >
-                    Update category
+                    Update country
                 </Typography>
                 <Box
                     component="form"
-                    onSubmit={updateCategory}
+                    onSubmit={updateCountry}
                     noValidate
 
                 >
                     <TextField
-                        id="categoryId"
+                        id="countryId"
                         type="email"
-                        name="categoryId"
+                        name="countryId"
                         autoComplete="id"
                         required
                         fullWidth
                         variant="outlined"
-                        label="Category Id"
+                        label="Country Id"
                         value={id.id}
                         disabled={true}
                         sx={{
@@ -145,20 +145,20 @@ function UpdateCategory() {
                         }}
                     />
                     <TextField
-                        error={categoryNameError}
-                        helperText={categoryNameErrorMsg}
-                        id="categoryName"
+                        error={countryNameError}
+                        helperText={countryNameErrorMsg}
+                        id="countryName"
                         type="email"
-                        name="categoryName"
+                        name="countryName"
                         placeholder="Fender"
-                        autoComplete="categoryName"
+                        autoComplete="countryName"
                         required
                         fullWidth
                         variant="outlined"
-                        color={categoryNameError ? 'error' : 'primary'}
-                        label="Category"
-                        value={categoryName}
-                        onChange={e => setCategoryName(e.target.value)}
+                        color={countryNameError ? 'error' : 'primary'}
+                        label="Country"
+                        value={countryName}
+                        onChange={e => setCountryName(e.target.value)}
                         sx={{
                             width: '70%',
                             margin: '0 auto 5% auto',
@@ -184,7 +184,7 @@ function UpdateCategory() {
                             "&:hover": {backgroundColor: 'rgb(49,140,23)'}
                         }}
                     >
-                        Update Category
+                        Update Country
                     </Button>
                 </Box>
             </div>
@@ -192,4 +192,4 @@ function UpdateCategory() {
     )
 }
 
-export default UpdateCategory;
+export default UpdateCountry;

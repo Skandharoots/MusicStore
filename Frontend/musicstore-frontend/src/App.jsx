@@ -23,6 +23,8 @@ import Subcategory from "./pages/admin/subcategory/Subcategory.jsx";
 import Order from "./pages/admin/order/Order.jsx";
 import AddCategory from "./pages/admin/category/AddCategory.jsx";
 import UpdateCategory from "./pages/admin/category/UpdateCategory.jsx";
+import UpdateCountry from "./pages/admin/country/UpdateCountry.jsx";
+import AddCountry from "./pages/admin/country/AddCountry.jsx";
 
 axios.defaults.baseURL = "http://localhost:8222/";
 axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
@@ -111,6 +113,14 @@ const router = createBrowserRouter([
                     {
                         path: '/admin/country',
                         element: <Country />,
+                    },
+                    {
+                        path: '/admin/country/add',
+                        element: <AddCountry />
+                    },
+                    {
+                        path: '/admin/country/update/:id',
+                        element: <UpdateCountry />
                     },
                     {
                         path: '/admin/manufacturer',

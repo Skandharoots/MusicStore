@@ -1,55 +1,50 @@
-import {Alert, AlertTitle, Box, Button, Typography} from "@mui/material";
+import {Box, Button, Typography} from "@mui/material";
 import TextField from "@mui/material/TextField";
-import React, {useEffect, useState} from "react";
-import {useNavigate, useParams} from "react-router-dom";
-import {Bounce, toast} from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
+import {useNavigate} from "react-router-dom";
+import {useEffect, useState} from "react";
 import axios from "axios";
+import '../style/AddCountry.scss';
 import LocalStorageHelper from "../../../helpers/LocalStorageHelper.jsx";
-import '../style/UpdateCategory.scss';
+import {Bounce, toast} from "react-toastify";
 
 
-function UpdateCategory() {
+function AddCountry() {
 
-    const id = useParams();
-
-    const [categoryName, setCategoryName] = useState('');
-    const [categoryNameError, setCategoryNameError] = useState(false);
-    const [categoryNameErrorMsg, setCategoryNameErrorMsg] = useState('');
+    const [countryName, setCountryName] = useState('');
+    const [countryNameError, setCountryNameError] = useState(false);
+    const [countryNameErrorMsg, setCountryNameErrorMsg] = useState('');
 
     const navigate = useNavigate();
 
     useEffect(() => {
-        document.title = 'Edit Category';
+        document.title = 'Add Country';
     }, []);
 
     useEffect(() => {
-        axios.get(`api/products/categories/get/${id.id}`, {})
-            .then(res => {
-                setCategoryName(res.data.name);
-            }).catch(err => {
-                console.log(err);
-        })
-    }, [])
+        if (LocalStorageHelper.IsUserLogged() === false || LocalStorageHelper.isUserAdmin() === false) {
+            navigate('/');
+        }
+    }, []);
+
 
     const validateInputs = () => {
 
         let isValid = true;
 
-        if (!categoryName
-            || !/^[A-Z][A-Z 'a-z]+$/i.test(categoryName)) {
-            setCategoryNameError(true);
-            setCategoryNameErrorMsg('Please enter a valid category name.');
+        if (!countryName
+            || !/^[A-Z][A-Z 'a-z]+$/i.test(countryName)) {
+            setCountryNameError(true);
+            setCountryNameErrorMsg('Please enter a valid country name.');
             isValid = false;
         } else {
-            setCategoryNameError(false);
-            setCategoryNameErrorMsg('');
+            setCountryNameError(false);
+            setCountryNameErrorMsg('');
         }
 
         return isValid;
     };
 
-    const updateCategory = (event) => {
+    const submitCountry = (event) => {
         event.preventDefault();
         if (validateInputs() === false) {
             return;
@@ -57,29 +52,29 @@ function UpdateCategory() {
 
         axios.get('api/users/csrf/token', {})
             .then((response) => {
-                axios.put(`api/products/categories/update/${id.id}`, {
-                        categoryName: categoryName,
+                axios.post('api/products/countries/create',
+                    {
+                        name: countryName,
                     },
                     {
                         headers: {
-                            'Content-Type': 'application/json',
-                            'X-XSRF-TOKEN': response.data.token,
                             'Authorization': 'Bearer ' + LocalStorageHelper.getJwtToken(),
+                            'X-XSRF-TOKEN': response.data.token,
+                            'Content-Type': 'application/json',
                         }
                     }).then(() => {
-                        toast.success("Category updated ;)", {
-                            position: "bottom-center",
-                            autoClose: 5000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: false,
-                            progress: undefined,
-                            theme: "colored",
-                            transition: Bounce,
-                        });
-                        navigate('/admin/category');
-
+                    toast.success('Country Added!', {
+                        position: "bottom-center",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: false,
+                        progress: undefined,
+                        theme: "colored",
+                        transition: Bounce,
+                    });
+                    navigate('/admin/country');
                 }).catch((error) => {
                     toast.error(error.response.data.message, {
                         position: "bottom-center",
@@ -107,11 +102,15 @@ function UpdateCategory() {
             });
         });
 
+
+
     }
 
+
+
     return (
-        <div className="CategoryUpdate">
-            <div className="CategoryUpdateForm">
+        <div className="CountryAdd">
+            <div className="AddCountForm">
                 <Typography
                     component="h1"
                     variant="h5"
@@ -120,45 +119,31 @@ function UpdateCategory() {
                         , margin: '0 auto 5% auto'
                     }}
                 >
-                    Update category
+                    Add country
                 </Typography>
                 <Box
                     component="form"
-                    onSubmit={updateCategory}
+                    onSubmit={submitCountry}
                     noValidate
 
                 >
+
                     <TextField
-                        id="categoryId"
+                        error={countryNameError}
+                        helperText={countryNameErrorMsg}
+                        id="countryName"
                         type="email"
-                        name="categoryId"
-                        autoComplete="id"
-                        required
-                        fullWidth
-                        variant="outlined"
-                        label="Category Id"
-                        value={id.id}
-                        disabled={true}
-                        sx={{
-                            width: '70%',
-                            margin: '0 auto 5% auto',
-                        }}
-                    />
-                    <TextField
-                        error={categoryNameError}
-                        helperText={categoryNameErrorMsg}
-                        id="categoryName"
-                        type="email"
-                        name="categoryName"
+                        name="countryName"
                         placeholder="Fender"
-                        autoComplete="categoryName"
+                        autoComplete="countryName"
+                        autoFocus
                         required
                         fullWidth
                         variant="outlined"
-                        color={categoryNameError ? 'error' : 'primary'}
-                        label="Category"
-                        value={categoryName}
-                        onChange={e => setCategoryName(e.target.value)}
+                        color={countryNameError ? 'error' : 'primary'}
+                        label="Country"
+                        value={countryName}
+                        onChange={e => setCountryName(e.target.value)}
                         sx={{
                             width: '70%',
                             margin: '0 auto 5% auto',
@@ -184,7 +169,7 @@ function UpdateCategory() {
                             "&:hover": {backgroundColor: 'rgb(49,140,23)'}
                         }}
                     >
-                        Update Category
+                        Add Country
                     </Button>
                 </Box>
             </div>
@@ -192,4 +177,4 @@ function UpdateCategory() {
     )
 }
 
-export default UpdateCategory;
+export default AddCountry;

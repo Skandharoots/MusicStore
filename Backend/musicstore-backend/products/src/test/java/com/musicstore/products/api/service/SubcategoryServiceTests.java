@@ -1,6 +1,7 @@
 package com.musicstore.products.api.service;
 
 import com.musicstore.products.dto.SubcategoryRequest;
+import com.musicstore.products.dto.SubcategoryUpdateRequest;
 import com.musicstore.products.model.Category;
 import com.musicstore.products.model.Subcategory;
 import com.musicstore.products.repository.SubcategoryRepository;
@@ -134,7 +135,19 @@ public class SubcategoryServiceTests {
     }
 
     @Test
-    public void getAllSubCategoriesTest() {
+    public void getAllSubcategoriesTest() {
+        List<Subcategory> categories = new ArrayList<>();
+        categories.add(subcategory);
+
+        when(subcategoryRepository.findAll()).thenReturn(categories);
+        List<Subcategory> response = subcategoryService.getAll();
+        Assertions.assertThat(response).isNotNull();
+        Assertions.assertThat(response).isNotEmpty();
+        Assertions.assertThat(response).hasSize(1);
+    }
+
+    @Test
+    public void getAllSubCategoriesByCategoryTest() {
 
         List<Subcategory> categories = new ArrayList<>();
         categories.add(subcategory);
@@ -183,9 +196,8 @@ public class SubcategoryServiceTests {
     @Test
     public void updateSubcategoryTest() {
 
-        SubcategoryRequest subcategoryRequest = new SubcategoryRequest();
+        SubcategoryUpdateRequest subcategoryRequest = new SubcategoryUpdateRequest();
         subcategoryRequest.setName("Acoustasonic");
-        subcategoryRequest.setCategoryId(1L);
 
         Subcategory subcategoryUpdated = new Subcategory("Acoustasonic");
         subcategoryUpdated.setId(1L);
@@ -209,7 +221,7 @@ public class SubcategoryServiceTests {
     @Test
     public void updateSubcategoryExceptionEmptyNameTest() {
 
-        SubcategoryRequest subcategoryRequest = new SubcategoryRequest();
+        SubcategoryUpdateRequest subcategoryRequest = new SubcategoryUpdateRequest();
 
         when(webClientBuilder.build()).thenReturn(webClient);
         when(webClient.get()).thenReturn(requestHeadersUriSpec);
@@ -224,9 +236,8 @@ public class SubcategoryServiceTests {
     @Test
     public void updateSubcategoryExceptionNotFoundTest() {
 
-        SubcategoryRequest subcategoryRequest = new SubcategoryRequest();
+        SubcategoryUpdateRequest subcategoryRequest = new SubcategoryUpdateRequest();
         subcategoryRequest.setName("Acoustasonic");
-        subcategoryRequest.setCategoryId(1L);
 
         when(webClientBuilder.build()).thenReturn(webClient);
         when(webClient.get()).thenReturn(requestHeadersUriSpec);
@@ -242,7 +253,7 @@ public class SubcategoryServiceTests {
     @Test
     public void updateSubcategoryExceptionInvalidTokenTest() {
 
-        SubcategoryRequest subcategoryRequest = new SubcategoryRequest();
+        SubcategoryUpdateRequest subcategoryRequest = new SubcategoryUpdateRequest();
         subcategoryRequest.setName("Acoustasonic");
 
         when(webClientBuilder.build()).thenReturn(webClient);

@@ -1,6 +1,7 @@
 package com.musicstore.products.controller;
 
 import com.musicstore.products.dto.SubcategoryRequest;
+import com.musicstore.products.dto.SubcategoryUpdateRequest;
 import com.musicstore.products.model.Subcategory;
 import com.musicstore.products.service.SubcategoryService;
 import jakarta.ws.rs.core.HttpHeaders;
@@ -37,6 +38,11 @@ public class SubcategoryController {
     }
 
     @GetMapping("/get")
+    public List<Subcategory> getSubcategories() {
+        return subcategoryService.getAll();
+    }
+
+    @GetMapping("/get/category")
     public List<Subcategory> getAllSubcategories(
             @RequestParam(name = "category") Long categoryId
     ) {
@@ -62,7 +68,7 @@ public class SubcategoryController {
     public ResponseEntity<String> updateCategory(
             @RequestHeader(HttpHeaders.AUTHORIZATION) String token,
             @PathVariable(name = "subcategoryId") Long id,
-            @RequestBody SubcategoryRequest subcategory
+            @RequestBody SubcategoryUpdateRequest subcategory
     ) {
         return subcategoryService.updateSubcategory(token, id, subcategory);
     }

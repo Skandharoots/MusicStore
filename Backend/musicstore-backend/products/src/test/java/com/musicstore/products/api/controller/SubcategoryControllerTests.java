@@ -3,6 +3,7 @@ package com.musicstore.products.api.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.musicstore.products.controller.SubcategoryController;
 import com.musicstore.products.dto.SubcategoryRequest;
+import com.musicstore.products.dto.SubcategoryUpdateRequest;
 import com.musicstore.products.model.Subcategory;
 import com.musicstore.products.service.SubcategoryService;
 import org.junit.Test;
@@ -67,6 +68,22 @@ public class SubcategoryControllerTests {
 
     @Test
     public void getAllSubcategoriesTest() throws Exception {
+        Subcategory subcategory = new Subcategory();
+        subcategory.setId(1L);
+        subcategory.setName("test");
+
+        List<Subcategory> subcategories = new ArrayList<>();
+        subcategories.add(subcategory);
+
+        when(subcategoryService.getAll()).thenReturn(subcategories);
+
+        ResultActions resultActions = mockMvc.perform(get("/api/products/subcategories/get"));
+        resultActions.andExpect(MockMvcResultMatchers.status().isOk());
+        resultActions.andExpect(MockMvcResultMatchers.content().string(objectMapper.writeValueAsString(subcategories)));
+    }
+
+    @Test
+    public void getAllSubcategoriesByCategoryTest() throws Exception {
 
         Subcategory subcategory = new Subcategory();
         subcategory.setId(1L);
@@ -77,7 +94,7 @@ public class SubcategoryControllerTests {
 
         when(subcategoryService.getAllSubcategories(1L)).thenReturn(subcategories);
 
-        ResultActions resultActions = mockMvc.perform(get("/api/products/subcategories/get?category=1"));
+        ResultActions resultActions = mockMvc.perform(get("/api/products/subcategories/get/category?category=1"));
         resultActions.andExpect(MockMvcResultMatchers.status().isOk());
         resultActions.andExpect(MockMvcResultMatchers.content().string(objectMapper.writeValueAsString(subcategories)));
 
@@ -119,9 +136,8 @@ public class SubcategoryControllerTests {
     @Test
     public void updateSubcategoryTest() throws Exception {
 
-        SubcategoryRequest subcategoryRequest = new SubcategoryRequest();
+        SubcategoryUpdateRequest subcategoryRequest = new SubcategoryUpdateRequest();
         subcategoryRequest.setName("test");
-        subcategoryRequest.setCategoryId(1L);
 
         when(subcategoryService.updateSubcategory(token, 1L, subcategoryRequest)).thenReturn(ResponseEntity.ok("Subcategory updated"));
 

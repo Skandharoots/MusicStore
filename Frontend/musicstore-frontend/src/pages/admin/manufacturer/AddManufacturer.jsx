@@ -131,7 +131,7 @@ function AddManufacturer() {
                         id="manufacturerName"
                         type="email"
                         name="manufacturerName"
-                        placeholder="Fender"
+                        placeholder="Manufacturer"
                         autoComplete="manufacturerName"
                         autoFocus
                         required

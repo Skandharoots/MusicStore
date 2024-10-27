@@ -12,6 +12,8 @@ import org.springframework.stereotype.Repository;
 @Transactional
 public interface SubcategoryRepository extends JpaRepository<Subcategory, Long> {
 
+    List<Subcategory> findAll();
+
     List<Subcategory> findAllByCategory_Id(Long id);
 
     Optional<Subcategory> findById(Long id);

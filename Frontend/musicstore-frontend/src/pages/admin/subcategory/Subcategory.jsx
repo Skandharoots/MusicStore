@@ -37,7 +37,6 @@ function Subcategory() {
         axios.get('api/products/subcategories/get', {})
             .then(res => {
                 setSubcategories(res.data);
-                console.log(res.data);
             }).catch(() => {
         })
     }, [])

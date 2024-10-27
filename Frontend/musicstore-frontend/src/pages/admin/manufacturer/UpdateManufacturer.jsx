@@ -151,7 +151,7 @@ function UpdateManufacturer() {
                         id="manufacturerName"
                         type="email"
                         name="manufacturerName"
-                        placeholder="Fender"
+                        placeholder="Manufacturer"
                         autoComplete="manufacturerName"
                         required
                         fullWidth

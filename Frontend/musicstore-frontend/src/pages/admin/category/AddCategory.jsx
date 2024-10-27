@@ -134,7 +134,7 @@ function AddCategory() {
                         id="categoryName"
                         type="email"
                         name="categoryName"
-                        placeholder="Fender"
+                        placeholder="Category"
                         autoComplete="categoryName"
                         autoFocus
                         required

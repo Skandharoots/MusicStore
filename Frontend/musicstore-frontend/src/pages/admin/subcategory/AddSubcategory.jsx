@@ -122,7 +122,7 @@ function AddSubcategory() {
 
     return (
         <div className="SubcategoryAdd">
-            <div className="AddManForm">
+            <div className="AddSubcatForm">
                 <Typography
                     component="h1"
                     variant="h5"
@@ -174,7 +174,7 @@ function AddSubcategory() {
                         id="subcategoryName"
                         type="email"
                         name="subcategoryName"
-                        placeholder="Fender"
+                        placeholder="Subcategory"
                         autoComplete="subcategoryName"
                         required
                         fullWidth

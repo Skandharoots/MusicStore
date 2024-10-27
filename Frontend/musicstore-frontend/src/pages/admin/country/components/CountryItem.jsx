@@ -66,7 +66,7 @@ function CountryItem(props) {
         <Grid sx={{
             display: 'flex',
             flexDirection: 'row',
-            width: '200px',
+            width: '240px',
             height: '70px',
             alignItems: 'flex-start',
             justifyContent: 'flex-start',

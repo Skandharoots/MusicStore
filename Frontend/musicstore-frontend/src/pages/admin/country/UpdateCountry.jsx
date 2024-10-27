@@ -151,7 +151,7 @@ function UpdateCountry() {
                         id="countryName"
                         type="email"
                         name="countryName"
-                        placeholder="Fender"
+                        placeholder="Country"
                         autoComplete="countryName"
                         required
                         fullWidth

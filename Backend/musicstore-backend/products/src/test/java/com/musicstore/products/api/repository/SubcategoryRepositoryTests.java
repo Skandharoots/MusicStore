@@ -41,6 +41,23 @@ public class SubcategoryRepositoryTests {
     }
 
     @Test
+    public void findAllTest() {
+        Category category = new Category("Guitar");
+        entityManager.persist(category);
+
+        Subcategory subcategory = new Subcategory();
+        subcategory.setName("Subcategory");
+        subcategory.setCategory(category);
+        entityManager.persist(subcategory);
+
+        List<Subcategory> subcats = subcategoryRepository.findAll();
+        Assertions.assertThat(subcats).hasSize(1);
+        Assertions.assertThat(subcats.get(0).getName()).isEqualTo("Subcategory");
+        Assertions.assertThat(subcats.get(0).getCategory()).isEqualTo(category);
+        Assertions.assertThat(subcats.get(0).getCategory().getName()).isEqualTo("Guitar");
+    }
+
+    @Test
     public void findAllByCategoryIdTest() {
 
         Category category = new Category("Guitar");

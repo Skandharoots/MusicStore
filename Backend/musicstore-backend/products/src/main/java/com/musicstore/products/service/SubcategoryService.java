@@ -1,6 +1,7 @@
 package com.musicstore.products.service;
 
 import com.musicstore.products.dto.SubcategoryRequest;
+import com.musicstore.products.dto.SubcategoryUpdateRequest;
 import com.musicstore.products.model.Subcategory;
 import com.musicstore.products.repository.SubcategoryRepository;
 import com.musicstore.products.security.config.VariablesConfiguration;
@@ -57,6 +58,10 @@ public class SubcategoryService {
         return "Subcategories created";
     }
 
+    public List<Subcategory> getAll() {
+        return subcategoryRepository.findAll();
+    }
+
     public List<Subcategory> getAllSubcategories(Long id) {
 
         return subcategoryRepository.findAllByCategory_Id(id);
@@ -74,7 +79,7 @@ public class SubcategoryService {
         return subcategoryRepository.findAllBySearchParameters(categoryId, country, manufacturer);
     }
 
-    public ResponseEntity<String> updateSubcategory(String token, Long id, SubcategoryRequest subcategory) {
+    public ResponseEntity<String> updateSubcategory(String token, Long id, SubcategoryUpdateRequest subcategory) {
 
         if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
             log.error("No admin authority for token - " + token);
@@ -83,10 +88,9 @@ public class SubcategoryService {
 
         if (subcategory.getName() == null
                 || subcategory.getName().isEmpty()
-                || subcategory.getCategoryId() == null
-                || subcategory.getCategoryId().toString().isEmpty()) {
+        ) {
             log.error("Bad subcategory update request.");
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Subcategory name or category id cannot be empty");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Subcategory name cannot be empty");
         }
 
         Subcategory subcategoryToUpdate = subcategoryRepository

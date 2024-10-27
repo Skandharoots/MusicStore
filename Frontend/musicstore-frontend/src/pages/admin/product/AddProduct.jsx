@@ -8,20 +8,13 @@ import {
     FormControl, InputAdornment,
 } from "@mui/material";
 import TextField from "@mui/material/TextField";
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
-import 'swiper/css/scrollbar';
 import {useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
 import axios from "axios";
 import '../style/AddProduct.scss';
 import LocalStorageHelper from "../../../helpers/LocalStorageHelper.jsx";
 import {Bounce, toast} from "react-toastify";
-
-
+import SimpleImageSlider from "react-simple-image-slider";
 
 function AddProduct() {
 
@@ -200,6 +193,14 @@ function AddProduct() {
         setHideGallery(true);
         setHideUploadGalBtn(false);
         setHideDeleteGalBtn(true);
+    }
+
+    const printImages = () => {
+        let images = [];
+        [...productGalleryPhoto].map((f) => (
+            images.push(URL.createObjectURL(f))
+        ))
+        return images;
     }
 
     const validateInputs = () => {
@@ -691,26 +692,9 @@ function AddProduct() {
                         Delete Gallery Photos
                     </Button>
                     }
-                    <div hidden={hideGallery} style={{width: '70%', margin: '0 auto 0 auto'}}>
-                        <Swiper
-                                slidesPerView={1}
-                                spaceBetween={0}
-                                width={200}
-                                modules={[Navigation, Pagination, Scrollbar, A11y]}
-                                navigation
-                                pagination={{clickable: true}}
-                                scrollbar={{draggable: true}}
-                                style={{margin: '0 auto'}} >
-                            {
-
-                                [...productGalleryPhoto].map((f, i) => (
-                                    <SwiperSlide key={i}>
-                                        <img alt={"Gallery photo - " + i} src={URL.createObjectURL(f)} width="70%"/>
-                                    </SwiperSlide>
-                                ))
-                            }
-                        </Swiper>
-                    </div>
+                    {!hideGallery &&
+                            <SimpleImageSlider style={{margin: '0 auto 8px auto', border: '1px solid black'}} width={356} height={200} images={printImages()} showNavs={true} showBullets={true}/>
+                    }
 
                     <Button
                         className="add-btn"

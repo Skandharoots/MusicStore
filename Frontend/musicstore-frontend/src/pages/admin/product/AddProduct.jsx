@@ -10,6 +10,9 @@ import {
 import TextField from "@mui/material/TextField";
 import {useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
+import CloudUploadOutlinedIcon from '@mui/icons-material/CloudUploadOutlined';
+import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import axios from "axios";
 import '../style/AddProduct.scss';
 import LocalStorageHelper from "../../../helpers/LocalStorageHelper.jsx";
@@ -621,6 +624,7 @@ function AddProduct() {
                         variant="contained"
                         component="label"
                         fullWidth
+                        endIcon={<CloudUploadOutlinedIcon />}
                         sx={{
                             width: '70%',
                             marginBottom: '8px',
@@ -642,6 +646,7 @@ function AddProduct() {
                     <Button variant="contained"
                             hidden={hideDeleteMainBtn}
                             fullWidth
+                            endIcon={<DeleteOutlineOutlinedIcon />}
                             onClick={deletePhoto}
                             sx={{
                                 width: '70%',
@@ -659,6 +664,7 @@ function AddProduct() {
                         variant="contained"
                         component="label"
                         hidden={hideUploadGalBtn}
+                        endIcon={<CloudUploadOutlinedIcon />}
                         fullWidth
                         sx={{
                             width: '70%',
@@ -681,6 +687,7 @@ function AddProduct() {
                     <Button variant="contained"
                             hidden={hideDeleteGalBtn}
                             fullWidth
+                            endIcon={<DeleteOutlineOutlinedIcon />}
                             onClick={deleteGallery}
                             sx={{
                                 width: '70%',
@@ -708,7 +715,7 @@ function AddProduct() {
                             "&:hover": {backgroundColor: 'rgb(49,140,23)'}
                         }}
                     >
-                        Add Product
+                        Add Product <AddOutlinedIcon />
                     </Button>
                 </Box>
             </div>

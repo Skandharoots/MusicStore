@@ -7,7 +7,7 @@
   background-color: white;
 }
 
-.page-title {
+.category .page-title {
   display: flex;
   flex-direction: row;
   justify-content: start;
@@ -18,7 +18,7 @@
 
 }
 
-.actions {
+.category .actions {
   display: flex;
   flex-direction: row;
   justify-content: space-between;

@@ -32,8 +32,18 @@ function AddSubcategory() {
         axios.get('api/products/categories/get', {})
         .then(res => {
             setCategories(res.data);
-        }).catch(err => {
-            console.log(err);
+        }).catch(error => {
+            toast.error(error.response.data.message, {
+                position: "bottom-center",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: false,
+                progress: undefined,
+                theme: "colored",
+                transition: Bounce,
+            });
         })
     }, [])
 

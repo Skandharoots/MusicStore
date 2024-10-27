@@ -7,6 +7,7 @@ import LocalStorageHelper from "../../../helpers/LocalStorageHelper.jsx";
 import CategoryItem from "./components/CategoryItem.jsx";
 import AddIcon from '@mui/icons-material/Add';
 import axios from "axios";
+import {Bounce, toast} from "react-toastify";
 
 function Category() {
 
@@ -37,7 +38,18 @@ function Category() {
         axios.get('api/products/categories/get', {})
             .then(res => {
                 setCategories(res.data);
-            }).catch(() => {
+            }).catch((error) => {
+            toast.error(error.response.data.message, {
+                position: "bottom-center",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: false,
+                progress: undefined,
+                theme: "colored",
+                transition: Bounce,
+            });
         })
     }, [])
 

@@ -1,6 +1,6 @@
 header {
   display: block;
-  width: max-content;
+  width: 100%;
 }
 
 .top-container {
@@ -139,7 +139,6 @@ input[type="text"]:focus {
   display: flex;
   align-items: center;
   height: 2dvh;
-  width: 100vw;
   justify-content: space-between;
   background: white;
   padding: 10px 10%;

@@ -29,8 +29,18 @@ function UpdateSubcategory() {
         axios.get(`api/products/subcategories/get/${id.id}`, {})
             .then(res => {
                 setSubcategoryName(res.data.name);
-            }).catch(err => {
-            console.log(err);
+            }).catch(error => {
+            toast.error(error.response.data.message, {
+                position: "bottom-center",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: false,
+                progress: undefined,
+                theme: "colored",
+                transition: Bounce,
+            });
         })
     }, [])
 

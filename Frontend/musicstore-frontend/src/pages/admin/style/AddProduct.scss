@@ -1,0 +1,31 @@
+.ProductAdd {
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  min-height: 80dvh;
+  width: 100vw;
+  background-color: white;
+}
+
+.AddProductForm {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  width: 20dvw;
+  margin: 5% 20%;
+  border-radius: 1em;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+  padding: 2%;
+}
+
+input[type="file"]::file-selector-button {
+  background-color: rgb(39, 99, 24);
+  border: none;
+}
+
+input[type="file"]::file-selector-button:hover {
+  background-color: rgb(49,140,23);
+  border: none;
+}

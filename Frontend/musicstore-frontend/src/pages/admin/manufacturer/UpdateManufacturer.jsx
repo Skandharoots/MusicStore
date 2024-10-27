@@ -28,8 +28,18 @@ function UpdateManufacturer() {
         axios.get(`api/products/manufacturers/get/${id.id}`, {})
             .then(res => {
                 setManufacturerName(res.data.name);
-            }).catch(err => {
-            console.log(err);
+            }).catch(error => {
+            toast.error(error.response.data.message, {
+                position: "bottom-center",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: false,
+                progress: undefined,
+                theme: "colored",
+                transition: Bounce,
+            });
         })
     }, [])
 

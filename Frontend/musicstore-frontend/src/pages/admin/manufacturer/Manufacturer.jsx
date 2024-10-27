@@ -7,6 +7,7 @@ import LocalStorageHelper from "../../../helpers/LocalStorageHelper.jsx";
 import ManufacturerItem from "./components/ManufacturerItem.jsx";
 import AddIcon from '@mui/icons-material/Add';
 import axios from "axios";
+import {Bounce, toast} from "react-toastify";
 
 function Manufacturer() {
 
@@ -37,7 +38,18 @@ function Manufacturer() {
         axios.get('api/products/manufacturers/get', {})
             .then(res => {
                 setManufacturers(res.data);
-            }).catch(() => {
+            }).catch(error => {
+            toast.error(error.response.data.message, {
+                position: "bottom-center",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: false,
+                progress: undefined,
+                theme: "colored",
+                transition: Bounce,
+            });
         })
     }, [])
 

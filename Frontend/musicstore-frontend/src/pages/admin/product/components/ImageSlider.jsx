@@ -1,12 +1,23 @@
-import { useState } from "react"
+import {useEffect, useState} from "react"
 import ArrowBackIosNewOutlinedIcon from '@mui/icons-material/ArrowBackIosNewOutlined';
 import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutlined';
 import LensOutlinedIcon from '@mui/icons-material/LensOutlined';
 import CircleIcon from '@mui/icons-material/Circle';
+import DeleteIcon from '@mui/icons-material/Delete';
 import "../../style/ImageSlider.scss";
+import Tooltip from '@mui/material/Tooltip';
 
-export function ImageSlider({ images }) {
+export function ImageSlider({ imageBinaries, onDelete }) {
     const [imageIndex, setImageIndex] = useState(0)
+    const [images, setImages] = useState([])
+
+    useEffect(() => {
+        let imagesURL = [];
+        [...imageBinaries].map((f) => (
+            imagesURL.push(URL.createObjectURL(f))
+        ))
+        setImages(imagesURL);
+    }, [imageBinaries])
 
     function showNextImage() {
         setImageIndex(index => {
@@ -20,6 +31,15 @@ export function ImageSlider({ images }) {
             if (index === 0) return images.length - 1
             return index - 1
         })
+    }
+
+    const removeCurrentPhoto = () => {
+        onDelete(imageBinaries[imageIndex]);
+        if (imageIndex - 1 < 0) {
+            setImageIndex(0)
+        } else {
+            setImageIndex(imageIndex - 1)
+        }
     }
 
     return (
@@ -64,6 +84,16 @@ export function ImageSlider({ images }) {
             >
                 <ArrowForwardIosOutlinedIcon />
             </button>
+            <Tooltip title={"Remove current photo"}>
+                <button
+                    className="img-slider-del-btn"
+                    aria-label="Delete Image"
+                    onClick={removeCurrentPhoto}
+                >
+                    <DeleteIcon fontSize={"inherit"}/>
+                </button>
+            </Tooltip>
+
             <div
                 style={{
                     position: "absolute",

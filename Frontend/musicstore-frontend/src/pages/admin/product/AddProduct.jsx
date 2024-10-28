@@ -198,13 +198,20 @@ function AddProduct() {
         setHideDeleteGalBtn(true);
     }
 
-    const printImages = () => {
-        let images = [];
-        [...productGalleryPhoto].map((f) => (
-            images.push(URL.createObjectURL(f))
-        ))
-        return images;
-    }
+    const delGalPhoto = (imageBin) => {
+        let newGallery = [...productGalleryPhoto];
+        setProductGalleryPhoto(() =>
+            newGallery.filter((image) => {
+                return imageBin !== image;
+            })
+        );
+        console.log(productGalleryPhoto.length);
+        if (productGalleryPhoto.length <= 1) {
+            setHideGallery(true);
+            setHideUploadGalBtn(false);
+            setHideDeleteGalBtn(true);
+        }
+    };
 
     const validateInputs = () => {
 
@@ -706,7 +713,7 @@ function AddProduct() {
                             aspectRatio: "10 / 6",
                             margin: "0 auto 32px auto",
                         }}>
-                            <ImageSlider images={printImages()} />
+                            <ImageSlider imageBinaries={productGalleryPhoto} onDelete={delGalPhoto}/>
                         </div>
                     }
 

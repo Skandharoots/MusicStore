@@ -17,7 +17,7 @@ import axios from "axios";
 import '../style/AddProduct.scss';
 import LocalStorageHelper from "../../../helpers/LocalStorageHelper.jsx";
 import {Bounce, toast} from "react-toastify";
-import SimpleImageSlider from "react-simple-image-slider";
+import {ImageSlider} from "./components/ImageSlider.jsx";
 
 function AddProduct() {
 
@@ -64,11 +64,11 @@ function AddProduct() {
         document.title = 'Add Product';
     }, []);
 
-    useEffect(() => {
-        if (LocalStorageHelper.IsUserLogged() === false || LocalStorageHelper.isUserAdmin() === false) {
-            navigate('/');
-        }
-    }, []);
+    // useEffect(() => {
+    //     if (LocalStorageHelper.IsUserLogged() === false || LocalStorageHelper.isUserAdmin() === false) {
+    //         navigate('/');
+    //     }
+    // }, []);
 
     useEffect(() => {
         axios.get('api/products/categories/get', {})
@@ -282,7 +282,7 @@ function AddProduct() {
         if (validateInputs() === false) {
             return;
         }
-
+        console.log("Woops")
         // axios.get('api/users/csrf/token', {})
         //     .then((response) => {
         //         axios.post('api/products/subcategories/create',
@@ -628,8 +628,8 @@ function AddProduct() {
                         sx={{
                             width: '70%',
                             marginBottom: '8px',
-                            backgroundColor: 'rgb(39, 99, 24)',
-                            "&:hover": {backgroundColor: 'rgb(49,140,23)'}
+                            backgroundColor: 'rgb(15,90,110)',
+                            "&:hover": {backgroundColor: 'rgb(33,123,145)'}
                         }}
                     >
                         Upload Main Photo
@@ -669,8 +669,8 @@ function AddProduct() {
                         sx={{
                             width: '70%',
                             marginBottom: '8px',
-                            backgroundColor: 'rgb(39, 99, 24)',
-                            "&:hover": {backgroundColor: 'rgb(49,140,23)'}
+                            backgroundColor: 'rgb(15,90,110)',
+                            "&:hover": {backgroundColor: 'rgb(33,123,145)'}
                         }}
                     >
                         Upload Gallery Photos
@@ -700,7 +700,14 @@ function AddProduct() {
                     </Button>
                     }
                     {!hideGallery &&
-                            <SimpleImageSlider style={{margin: '0 auto 8px auto', border: '1px solid black'}} width={356} height={200} images={printImages()} showNavs={true} showBullets={true}/>
+                        <div style={{
+                            maxWidth: "1200px",
+                            width: "70%",
+                            aspectRatio: "10 / 6",
+                            margin: "0 auto 32px auto",
+                        }}>
+                            <ImageSlider images={printImages()} />
+                        </div>
                     }
 
                     <Button

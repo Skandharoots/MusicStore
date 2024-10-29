@@ -2,16 +2,18 @@ import '../style/Product.scss';
 import {Button} from "@mui/material";
 import Grid from '@mui/material/Grid2';
 import { useNavigate } from "react-router-dom";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import LocalStorageHelper from "../../../helpers/LocalStorageHelper.jsx";
 import ProductItem from "./components/ProductItem.jsx";
 import AddIcon from '@mui/icons-material/Add';
 import axios from "axios";
 import {Bounce, toast} from "react-toastify";
+import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 
 function Product() {
 
     const [products, setProducts] = useState([]);
+    const [search, setSearch] = useState('');
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -53,34 +55,59 @@ function Product() {
         })
     }, [])
 
+    const onSubmitSearch = () => {
+        navigate(`/admin/product/update/${search}`);
+    }
+
     return (
         <div className="manufacturer">
             <div className="page-title">
                 <h5>Products</h5>
             </div>
             <div className="actions">
-                <Button
-                    className="add-button"
-                    variant="contained"
-                    type="button"
-                    endIcon={<AddIcon fontSize="small" />}
-                    fullWidth
-                    onClick={redirect}
-                    sx={{
-                        width: 'fit-content',
-                        backgroundColor: 'rgb(39, 99, 24)',
-                        "&:hover": {backgroundColor: 'rgb(49,140,23)'},
-                        marginBottom: '16px',
-                    }}
-                >
-                    Add New
-                </Button>
+                <div style={{ display: 'inline-block' }}>
+                    <Button
+                        className="add-button"
+                        variant="contained"
+                        type="button"
+                        endIcon={<AddIcon fontSize="small"/>}
+                        fullWidth
+                        onClick={redirect}
+                        sx={{
+                            width: 'fit-content',
+                            backgroundColor: 'rgb(39, 99, 24)',
+                            "&:hover": {backgroundColor: 'rgb(49,140,23)'},
+                            marginBottom: '16px',
+                        }}
+                    >
+                        Add New
+                    </Button>
+                </div>
+
+                    <form className={"search-prod"}>
+                        <input
+                            type="text"
+                            className="search-prod-input"
+                            placeholder="Update product by skuId"
+                            required
+                            value={search}
+                            onChange={e => setSearch(e.target.value)}
+                        />
+                        <button
+                            type="button"
+                            className="search-prod-btn"
+                            onClick={onSubmitSearch}>
+                            <SearchOutlinedIcon fontSize={"small"}/>
+                        </button>
+                    </form>
+
             </div>
 
             <Grid container style={{marginRight: '20%', marginLeft: '16px'}} rowSpacing={2} columnSpacing={2}>
                 {
                     products.map((product) => (
-                        <ProductItem key={product.id} id={product.id} item={product}  onDelete={removeById} { ...product}/>
+                        <ProductItem key={product.id} id={product.id} item={product}
+                                     onDelete={removeById} {...product}/>
                     ))
                 }
             </Grid>

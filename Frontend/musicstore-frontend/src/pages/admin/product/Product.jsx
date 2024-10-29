@@ -2,18 +2,27 @@ import '../style/Product.scss';
 import {Button} from "@mui/material";
 import Grid from '@mui/material/Grid2';
 import { useNavigate } from "react-router-dom";
-import React, {useEffect, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import LocalStorageHelper from "../../../helpers/LocalStorageHelper.jsx";
 import ProductItem from "./components/ProductItem.jsx";
 import AddIcon from '@mui/icons-material/Add';
 import axios from "axios";
 import {Bounce, toast} from "react-toastify";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
+import Pagination from '@mui/material/Pagination';
+import Stack from '@mui/material/Stack';
+
+const pageSize = 2;
 
 function Product() {
 
     const [products, setProducts] = useState([]);
     const [search, setSearch] = useState('');
+    const [totalPages, setTotalPages] = useState(1);
+    const [totalElements, setTotalElements] = useState(0);
+    const [currentPage, setCurrentPage] = useState(1);
+
+
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -28,7 +37,15 @@ function Product() {
         setProducts(currentProducts => currentProducts.filter(
             ({id}) => id !== idToDelete)
         );
+        if (totalElements - 1 <= 0) {
+            console.log(totalElements);
+            setCurrentPage(currentPage - 1);
+        }
     };
+
+    const changePage = (event, value) => {
+        setCurrentPage(value);
+    }
 
     useEffect(() => {
         if (LocalStorageHelper.IsUserLogged() === false || LocalStorageHelper.isUserAdmin() === false) {
@@ -37,8 +54,10 @@ function Product() {
     }, []);
 
     useEffect(() => {
-        axios.get('api/products/items/get', {})
+        axios.get(`api/products/items/get?page=${currentPage - 1}&pageSize=${pageSize}`, {})
             .then(res => {
+                setTotalPages(res.data.totalPages);
+                setTotalElements(res.data.numberOfElements);
                 setProducts(res.data.content);
             }).catch(error => {
             toast.error(error.response.data.message, {
@@ -53,7 +72,7 @@ function Product() {
                 transition: Bounce,
             });
         })
-    }, [])
+    }, [currentPage]);
 
     const onSubmitSearch = () => {
         navigate(`/admin/product/update/${search}`);
@@ -111,7 +130,15 @@ function Product() {
                     ))
                 }
             </Grid>
-
+            <Stack spacing={2} sx={{marginTop: '16px'}}>
+                <Pagination page={currentPage} count={totalPages} onChange={changePage}
+                            sx={{
+                                '& .Mui-selected': {
+                                    "&:focus": {outline: 'none !important'},
+                                },
+                            }}
+                />
+            </Stack>
         </div>
     )
 }

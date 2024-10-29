@@ -192,7 +192,7 @@ function ProductItem(props) {
             >
                 <Button
                     component={Link}
-                    to={"/admin/manufacturer/update/" + props.id}
+                    to={"/admin/product/update/" + props.item.productSkuId}
                     variant="contained"
                     size="small"
                     type="button"

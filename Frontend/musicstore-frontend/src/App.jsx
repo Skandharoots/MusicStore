@@ -30,6 +30,7 @@ import AddManufacturer from "./pages/admin/manufacturer/AddManufacturer.jsx";
 import AddSubcategory from "./pages/admin/subcategory/AddSubcategory.jsx";
 import UpdateSubcategory from "./pages/admin/subcategory/UpdateSubcategory.jsx";
 import AddProduct from "./pages/admin/product/AddProduct.jsx";
+import UpdateProduct from "./pages/admin/product/UpdateProduct.jsx";
 
 axios.defaults.baseURL = "http://localhost:8222/";
 axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
@@ -150,6 +151,10 @@ const router = createBrowserRouter([
                     {
                         path: '/admin/product/add',
                         element: <AddProduct />
+                    },
+                    {
+                        path: '/admin/product/update/:skuId',
+                        element: <UpdateProduct />
                     },
                     {
                         path: '/admin/subcategory',

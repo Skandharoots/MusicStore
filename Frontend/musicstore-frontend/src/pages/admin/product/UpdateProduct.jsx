@@ -1,25 +1,29 @@
 import {
     Box,
     Button,
-    Select,
-    MenuItem,
-    Typography,
+    FormControl,
+    FormHelperText,
+    InputAdornment,
     InputLabel,
-    FormControl, InputAdornment, FormHelperText,
+    MenuItem,
+    Select,
+    Typography
 } from "@mui/material";
 import TextField from "@mui/material/TextField";
-import {useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
-import CloudUploadOutlinedIcon from '@mui/icons-material/CloudUploadOutlined';
-import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
-import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
-import axios from "axios";
-import '../style/AddProduct.scss';
-import LocalStorageHelper from "../../../helpers/LocalStorageHelper.jsx";
+import {useNavigate, useParams} from "react-router-dom";
 import {Bounce, toast} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+import axios from "axios";
+import LocalStorageHelper from "../../../helpers/LocalStorageHelper.jsx";
+import '../style/UpdateProduct.scss';
+import CloudUploadOutlinedIcon from "@mui/icons-material/CloudUploadOutlined";
+import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import {ImageSlider} from "./components/ImageSlider.jsx";
+import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 
-function AddProduct() {
+
+function UpdateProduct() {
 
     const [productName, setProductName] = useState('');
     const [productDescription, setProductDescription] = useState('');
@@ -37,6 +41,8 @@ function AddProduct() {
     const [hideGallery, setHideGallery] = useState(true);
     const [hideUploadGalBtn, setHideUploadGalBtn] = useState(false);
     const [hideDeleteGalBtn, setHideDeleteGalBtn] = useState(true);
+    const [wasGalleryUpdated, setWasGalleryUpdated] = useState(false);
+    const [imagesPaths, setImagesPaths] = useState([]);
 
     const [categoryError, setCategoryError] = useState(false);
     const [categoryErrorMsg, setCategoryErrorMsg] = useState('');
@@ -53,10 +59,12 @@ function AddProduct() {
     const [productQuantityError, setProductQuantityError] = useState(false);
     const [productQuantityErrorMsg, setProductQuantityErrorMsg] = useState('');
 
+    const skuId = useParams();
+
     const navigate = useNavigate();
 
     useEffect(() => {
-        document.title = 'Add Product';
+        document.title = 'Edit Product';
     }, []);
 
     useEffect(() => {
@@ -66,6 +74,7 @@ function AddProduct() {
     }, []);
 
     useEffect(() => {
+
         axios.get('api/products/categories/get', {})
             .then(res => {
                 setCategories(res.data);
@@ -81,7 +90,88 @@ function AddProduct() {
                 theme: "colored",
                 transition: Bounce,
             });
-        })
+        });
+
+        axios.get(`api/products/manufacturers/get`, {})
+            .then(res => {
+                setManufacturers(res.data);
+            }).catch(error => {
+            toast.error(error.response.data.message, {
+                position: "bottom-center",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: false,
+                progress: undefined,
+                theme: "colored",
+                transition: Bounce,
+            });
+        });
+
+        axios.get(`api/products/countries/get`, {})
+            .then(res => {
+                setCountries(res.data);
+            }).catch(error => {
+            toast.error(error.response.data.message, {
+                position: "bottom-center",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: false,
+                progress: undefined,
+                theme: "colored",
+                transition: Bounce,
+            });
+        });
+
+        axios.get(`api/products/items/get/${skuId.skuId}`, {})
+            .then(res => {
+                setProductName(res.data.productName);
+                setProductDescription(res.data.productDescription);
+                setProductPrice(res.data.productPrice);
+                setProductQuantity(res.data.inStock);
+                setSelectCategoryId(res.data.category.id);
+                setSelectedSubcategoryId(res.data.subcategory.id);
+                setSelectedManufacturerId(res.data.manufacturer.id);
+                setSelectedCountryId(res.data.builtinCountry.id);
+            }).catch(error => {
+            toast.error(error.response.data.message, {
+                position: "bottom-center",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: false,
+                progress: undefined,
+                theme: "colored",
+                transition: Bounce,
+            });
+        });
+
+        axios.get(`api/azure/list?path=${skuId.skuId}`, {})
+            .then(res => {
+                setImagesPaths(res.data);
+                if (res.data.length > 0) {
+                    [...res.data].map((path) => {
+                        axios.get(`api/azure/read?path=${path}`, {responseType: 'blob'})
+                            .then(res => {
+                                let blob = new Blob([res.data], { type: "image/*" });
+                                setProductGalleryPhoto(oldGallery => [...oldGallery,blob]);
+                            })
+                    });
+                    setHideGallery(false);
+                    setHideDeleteGalBtn(false);
+                    setHideUploadGalBtn(true);
+                } else {
+                    setHideDeleteGalBtn(true);
+                    setHideUploadGalBtn(false);
+                    setHideGallery(true);
+                }
+
+            })
+
     }, [])
 
     useEffect(() => {
@@ -104,44 +194,6 @@ function AddProduct() {
             });
         }
     }, [selectCategoryId]);
-
-    useEffect(() => {
-        axios.get(`api/products/manufacturers/get`, {})
-        .then(res => {
-            setManufacturers(res.data);
-        }).catch(error => {
-            toast.error(error.response.data.message, {
-                position: "bottom-center",
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: false,
-                progress: undefined,
-                theme: "colored",
-                transition: Bounce,
-            });
-        })
-    }, [])
-
-    useEffect(() => {
-        axios.get(`api/products/countries/get`, {})
-            .then(res => {
-                setCountries(res.data);
-            }).catch(error => {
-            toast.error(error.response.data.message, {
-                position: "bottom-center",
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: false,
-                progress: undefined,
-                theme: "colored",
-                transition: Bounce,
-            });
-        })
-    }, [])
 
     const handleCategoryChange = (event) => {
         setSelectCategoryId(event.target.value);
@@ -174,6 +226,7 @@ function AddProduct() {
                 setHideGallery(false);
                 setHideUploadGalBtn(true);
                 setHideDeleteGalBtn(false);
+                setWasGalleryUpdated(true);
             } else {
                 toast.error('Photo file size cannot exceed 40MB', {
                     position: "bottom-center",
@@ -195,6 +248,7 @@ function AddProduct() {
         setHideGallery(true);
         setHideUploadGalBtn(false);
         setHideDeleteGalBtn(true);
+        setWasGalleryUpdated(true);
     }
 
     const delGalPhoto = (imageBin) => {
@@ -204,6 +258,7 @@ function AddProduct() {
                 return imageBin !== image;
             })
         );
+        setWasGalleryUpdated(true);
         if (productGalleryPhoto.length <= 1) {
             setHideGallery(true);
             setHideUploadGalBtn(false);
@@ -297,32 +352,58 @@ function AddProduct() {
         return isValid;
     };
 
-    const submitProduct = (event) => {
+    const updateProduct = (event) => {
         event.preventDefault();
         if (validateInputs() === false) {
             return;
         }
-        axios.get('api/users/csrf/token', {})
-            .then((response) => {
-                axios.post('api/products/items/create',
-                    {
-                        productName: productName,
-                        description: productDescription,
-                        price: productPrice,
-                        quantity: productQuantity,
-                        manufacturerId: selectedManufacturerId,
-                        countryId: selectedCountryId,
-                        categoryId: selectCategoryId,
-                        subcategoryId: selectedSubcategoryId,
-                    },
-                    {
+        if (wasGalleryUpdated) {
+            [...imagesPaths].map((path) => {
+                axios.get('api/users/csrf/token', {})
+                .then((response) => {
+                    axios.delete(`api/azure/delete?path=${path}`, {
                         headers: {
                             'Authorization': 'Bearer ' + LocalStorageHelper.getJwtToken(),
                             'X-XSRF-TOKEN': response.data.token,
-                            'Content-Type': 'application/json',
                         }
-                    }).then((response) => {
-                        const pathMain = `${response.data}`;
+                    })
+                        .then(() => {
+                        }).catch(error => {
+                        toast.error(error.response.data.message, {
+                            position: "bottom-center",
+                            autoClose: 3000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: false,
+                            progress: undefined,
+                            theme: "colored",
+                            transition: Bounce,
+                        });
+                    });
+                })
+            });
+            axios.get('api/users/csrf/token', {})
+                .then((response) => {
+                    axios.put(`api/products/items/update/${skuId.skuId}`,
+                        {
+                            productName: productName,
+                            description: productDescription,
+                            price: productPrice,
+                            quantity: productQuantity,
+                            manufacturerId: selectedManufacturerId,
+                            countryId: selectedCountryId,
+                            categoryId: selectCategoryId,
+                            subcategoryId: selectedSubcategoryId,
+                        },
+                        {
+                            headers: {
+                                'Authorization': 'Bearer ' + LocalStorageHelper.getJwtToken(),
+                                'X-XSRF-TOKEN': response.data.token,
+                                'Content-Type': 'application/json',
+                            }
+                        }).then(() => {
+                        const pathMain = `${skuId.skuId}`;
                         axios.get('api/users/csrf/token', {})
                             .then((response) => {
                                 const photos = [...productGalleryPhoto];
@@ -363,7 +444,7 @@ function AddProduct() {
                                         })
                                     })
                                 })
-                                toast.success('New product added!', {
+                                toast.success('Product updated!', {
                                     position: "bottom-center",
                                     autoClose: 3000,
                                     hideProgressBar: false,
@@ -376,20 +457,92 @@ function AddProduct() {
                                 });
                                 setTimeout(() => {navigate('/admin/product')}, 3000);
                             }).catch(() => {
-                                toast.error('Cannot fetch token', {
-                                    position: "bottom-center",
-                                    autoClose: 3000,
-                                    hideProgressBar: false,
-                                    closeOnClick: true,
-                                    pauseOnHover: true,
-                                    draggable: false,
-                                    progress: undefined,
-                                    theme: "colored",
-                                    transition: Bounce,
-                                })
+                            toast.error('Cannot fetch token', {
+                                position: "bottom-center",
+                                autoClose: 3000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: false,
+                                progress: undefined,
+                                theme: "colored",
+                                transition: Bounce,
+                            })
                         })
-                }).catch((error) => {
-                    toast.error(error.response.data.message, {
+                    }).catch((error) => {
+                        toast.error(error.response.data.message, {
+                            position: "bottom-center",
+                            autoClose: 3000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: false,
+                            progress: undefined,
+                            theme: "colored",
+                            transition: Bounce,
+                        });
+                    })
+                }).catch(() => {
+                toast.error("Cannot fetch token", {
+                    position: "bottom-center",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: false,
+                    progress: undefined,
+                    theme: "colored",
+                    transition: Bounce,
+                });
+            });
+        } else {
+            axios.get('api/users/csrf/token', {})
+                .then((response) => {
+                    axios.put(`api/products/items/update/${skuId.skuId}`,
+                        {
+                            productName: productName,
+                            description: productDescription,
+                            price: productPrice,
+                            quantity: productQuantity,
+                            manufacturerId: selectedManufacturerId,
+                            countryId: selectedCountryId,
+                            categoryId: selectCategoryId,
+                            subcategoryId: selectedSubcategoryId,
+                        },
+                        {
+                            headers: {
+                                'Authorization': 'Bearer ' + LocalStorageHelper.getJwtToken(),
+                                'X-XSRF-TOKEN': response.data.token,
+                                'Content-Type': 'application/json',
+                            }
+                        }).then((response) => {
+                            toast.success(response.data, {
+                                position: "bottom-center",
+                                autoClose: 3000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: false,
+                                progress: undefined,
+                                theme: "colored",
+                                transition: Bounce,
+                            });
+                            setTimeout(() => {navigate('/admin/product')}, 3000);
+                        }).catch((error) => {
+                            toast.error(error.response.data.message, {
+                                position: "bottom-center",
+                                autoClose: 3000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: false,
+                                progress: undefined,
+                                theme: "colored",
+                                transition: Bounce,
+                            })
+                        })
+                }).catch(() => {
+                    toast.error('Cannot fetch token', {
                         position: "bottom-center",
                         autoClose: 3000,
                         hideProgressBar: false,
@@ -400,27 +553,13 @@ function AddProduct() {
                         theme: "colored",
                         transition: Bounce,
                     });
-                })
-            }).catch(() => {
-            toast.error("Cannot fetch token", {
-                position: "bottom-center",
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: false,
-                progress: undefined,
-                theme: "colored",
-                transition: Bounce,
             });
-        });
+        }
     }
 
-
-
     return (
-        <div className="ProductAdd">
-            <div className="AddProductForm">
+        <div className="ProductUpdate">
+            <div className="ProductUpdateForm">
                 <Typography
                     component="h1"
                     variant="h5"
@@ -457,7 +596,10 @@ function AddProduct() {
                         <Select
                             labelId="categoryLabel"
                             id="category"
-                            value={selectCategoryId}
+                            value={
+                                (selectCategoryId === undefined ||
+                                    selectCategoryId === null ||
+                                    categories.length === 0) ? '' : selectCategoryId}
                             onChange={handleCategoryChange}
                             required
                             variant={"filled"}>
@@ -492,7 +634,10 @@ function AddProduct() {
                         <Select
                             labelId="subcategoryLabel"
                             id="subcategory"
-                            value={selectedSubcategoryId}
+                            value={
+                                (selectedSubcategoryId === undefined ||
+                                    selectedSubcategoryId === null ||
+                                    subcategories.length === 0) ? '' : selectedSubcategoryId}
                             onChange={handleSubcategoryChange}
                             required
                             variant={"filled"}>
@@ -527,7 +672,10 @@ function AddProduct() {
                         <Select
                             labelId="countryLabel"
                             id="country"
-                            value={selectedCountryId}
+                            value={
+                                (selectedCountryId === undefined ||
+                                    selectedCountryId === null ||
+                                    countries.length === 0) ? '' : selectedCountryId}
                             onChange={handleCountryChange}
                             required
                             variant={"filled"}>
@@ -561,7 +709,10 @@ function AddProduct() {
                         <Select
                             labelId="manufacturerLabel"
                             id="manufacturer"
-                            value={selectedManufacturerId}
+                            value={
+                                (selectedManufacturerId === undefined ||
+                                    selectedManufacturerId === null ||
+                                    manufacturers.length === 0) ? '' : selectedManufacturerId}
                             onChange={handleManufacturerChange}
                             required
                             variant={"filled"}>
@@ -698,46 +849,46 @@ function AddProduct() {
                         }}
                     />
                     { !hideUploadGalBtn &&
-                    <Button
-                        variant="contained"
-                        component="label"
-                        hidden={hideUploadGalBtn}
-                        endIcon={<CloudUploadOutlinedIcon />}
-                        formNoValidate
-                        fullWidth
-                        sx={{
-                            width: '70%',
-                            marginBottom: '8px',
-                            backgroundColor: 'rgb(15,90,110)',
-                            "&:hover": {backgroundColor: 'rgb(33,123,145)'}
-                        }}
-                    >
-                        Upload Gallery Photos
-                        <input
-                            type="file"
-                            accept="image/jpeg, image/png"
-                            hidden
+                        <Button
+                            variant="contained"
+                            component="label"
+                            hidden={hideUploadGalBtn}
+                            endIcon={<CloudUploadOutlinedIcon />}
                             formNoValidate
-                            multiple={true}
-                            onChange={handleGallery}
-                        />
-                    </Button>
-                    }
-                    { !hideDeleteGalBtn &&
-                    <Button variant="contained"
-                            hidden={hideDeleteGalBtn}
                             fullWidth
-                            endIcon={<DeleteOutlineOutlinedIcon />}
-                            onClick={deleteGallery}
                             sx={{
                                 width: '70%',
                                 marginBottom: '8px',
-                                backgroundColor: 'rgb(97,12,12)',
-                                "&:hover": {backgroundColor: 'rgb(175,38,38)'}
+                                backgroundColor: 'rgb(15,90,110)',
+                                "&:hover": {backgroundColor: 'rgb(33,123,145)'}
                             }}
-                    >
-                        Delete Gallery Photos
-                    </Button>
+                        >
+                            Upload Gallery Photos
+                            <input
+                                type="file"
+                                accept="image/jpeg, image/png"
+                                hidden
+                                formNoValidate
+                                multiple={true}
+                                onChange={handleGallery}
+                            />
+                        </Button>
+                    }
+                    { !hideDeleteGalBtn &&
+                        <Button variant="contained"
+                                hidden={hideDeleteGalBtn}
+                                fullWidth
+                                endIcon={<DeleteOutlineOutlinedIcon />}
+                                onClick={deleteGallery}
+                                sx={{
+                                    width: '70%',
+                                    marginBottom: '8px',
+                                    backgroundColor: 'rgb(97,12,12)',
+                                    "&:hover": {backgroundColor: 'rgb(175,38,38)'}
+                                }}
+                        >
+                            Delete Gallery Photos
+                        </Button>
                     }
                     {!hideGallery &&
                         <div
@@ -755,14 +906,14 @@ function AddProduct() {
                         type="button"
                         fullWidth
                         variant="contained"
-                        onClick={submitProduct}
+                        onClick={updateProduct}
                         sx={{
                             width: '70%',
                             backgroundColor: 'rgb(39, 99, 24)',
                             "&:hover": {backgroundColor: 'rgb(49,140,23)'}
                         }}
                     >
-                        Add Product <AddOutlinedIcon />
+                        Update Product <AddOutlinedIcon />
                     </Button>
                 </Box>
             </div>
@@ -770,4 +921,4 @@ function AddProduct() {
     )
 }
 
-export default AddProduct;
+export default UpdateProduct;

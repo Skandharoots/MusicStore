@@ -37,7 +37,7 @@ function Product() {
     useEffect(() => {
         axios.get('api/products/items/get', {})
             .then(res => {
-                setProducts(res.data);
+                setProducts(res.data.content);
             }).catch(error => {
             toast.error(error.response.data.message, {
                 position: "bottom-center",
@@ -79,9 +79,9 @@ function Product() {
 
             <Grid container style={{marginRight: '20%', marginLeft: '16px'}} rowSpacing={2} columnSpacing={2}>
                 {
-                    // products.map((country) => (
-                    //     <ProductItem key={country.id} id={country.id} name={country.name} onDelete={removeById} { ...country}/>
-                    // ))
+                    products.map((product) => (
+                        <ProductItem key={product.id} id={product.id} item={product}  onDelete={removeById} { ...product}/>
+                    ))
                 }
             </Grid>
 

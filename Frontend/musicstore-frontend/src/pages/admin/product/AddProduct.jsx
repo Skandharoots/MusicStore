@@ -5,7 +5,7 @@ import {
     MenuItem,
     Typography,
     InputLabel,
-    FormControl, InputAdornment,
+    FormControl, InputAdornment, FormHelperText,
 } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import {useNavigate} from "react-router-dom";
@@ -33,15 +33,10 @@ function AddProduct() {
     const [selectedSubcategoryId, setSelectedSubcategoryId] = useState('');
     const [categories, setCategories] = useState([]);
     const [selectCategoryId, setSelectCategoryId] = useState('');
-    const [productHeaderPhoto, setProductHeaderPhoto] = useState([]);
-    const [image, setImage] = useState(null);
     const [productGalleryPhoto, setProductGalleryPhoto] = useState([]);
-    const [hideMain, setHidMain] = useState(true);
     const [hideGallery, setHideGallery] = useState(true);
-    const [hideUploadMainBtn, setHideUploadMainBtn] = useState(false);
     const [hideUploadGalBtn, setHideUploadGalBtn] = useState(false);
     const [hideDeleteGalBtn, setHideDeleteGalBtn] = useState(true);
-    const [hideDeleteMainBtn, setHideDeleteMainBtn] = useState(true);
 
     const [categoryError, setCategoryError] = useState(false);
     const [categoryErrorMsg, setCategoryErrorMsg] = useState('');
@@ -164,30 +159,33 @@ function AddProduct() {
         setSelectedManufacturerId(event.target.value);
     }
 
-    const handlePhoto = (event) => {
-            if (event.target.files && event.target.files[0]) {
-                setImage(URL.createObjectURL(event.target.files[0]));
-                setProductHeaderPhoto(event.target.files[0]);
-                setHidMain(false);
-                setHideUploadMainBtn(true);
-                setHideDeleteMainBtn(false);
-            }
-    }
-
-    const deletePhoto = () => {
-        setProductHeaderPhoto([]);
-        setImage(null);
-        setHidMain(true);
-        setHideUploadMainBtn(false);
-        setHideDeleteMainBtn(true);
-    }
-
     const handleGallery = (event) => {
         if (event.target.files) {
-            setProductGalleryPhoto(event.target.files);
-            setHideGallery(false);
-            setHideUploadGalBtn(true);
-            setHideDeleteGalBtn(false);
+            let sizeCheck = true;
+            const files = [...event.target.files];
+            files.forEach(file => {
+                if (file.size > 40 * 1000 * 1024) {
+                    sizeCheck = false;
+                }
+            })
+            if (sizeCheck) {
+                setProductGalleryPhoto(event.target.files);
+                setHideGallery(false);
+                setHideUploadGalBtn(true);
+                setHideDeleteGalBtn(false);
+            } else {
+                toast.error('Photo file size cannot exceed 40MB', {
+                    position: "bottom-center",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: false,
+                    progress: undefined,
+                    theme: "colored",
+                    transition: Bounce,
+                })
+            }
         }
     }
 
@@ -205,7 +203,6 @@ function AddProduct() {
                 return imageBin !== image;
             })
         );
-        console.log(productGalleryPhoto.length);
         if (productGalleryPhoto.length <= 1) {
             setHideGallery(true);
             setHideUploadGalBtn(false);
@@ -281,6 +278,21 @@ function AddProduct() {
             setProductQuantityErrorMsg('');
         }
 
+        if (productGalleryPhoto.length <= 0) {
+            toast.warning('Gallery photos not selected!', {
+                position: "bottom-center",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: false,
+                progress: undefined,
+                theme: "colored",
+                transition: Bounce,
+            });
+            isValid = false;
+        }
+
         return isValid;
     };
 
@@ -289,59 +301,118 @@ function AddProduct() {
         if (validateInputs() === false) {
             return;
         }
-        console.log("Woops")
-        // axios.get('api/users/csrf/token', {})
-        //     .then((response) => {
-        //         axios.post('api/products/subcategories/create',
-        //             {
-        //                 name: productName,
-        //                 categoryId: selectCategoryId,
-        //             },
-        //             {
-        //                 headers: {
-        //                     'Authorization': 'Bearer ' + LocalStorageHelper.getJwtToken(),
-        //                     'X-XSRF-TOKEN': response.data.token,
-        //                     'Content-Type': 'application/json',
-        //                 }
-        //             }).then(() => {
-        //             toast.success('Product Added!', {
-        //                 position: "bottom-center",
-        //                 autoClose: 5000,
-        //                 hideProgressBar: false,
-        //                 closeOnClick: true,
-        //                 pauseOnHover: true,
-        //                 draggable: false,
-        //                 progress: undefined,
-        //                 theme: "colored",
-        //                 transition: Bounce,
-        //             });
-        //             navigate('/admin/product');
-        //         }).catch((error) => {
-        //             toast.error(error.response.data.message, {
-        //                 position: "bottom-center",
-        //                 autoClose: 3000,
-        //                 hideProgressBar: false,
-        //                 closeOnClick: true,
-        //                 pauseOnHover: true,
-        //                 draggable: false,
-        //                 progress: undefined,
-        //                 theme: "colored",
-        //                 transition: Bounce,
-        //             });
-        //         })
-        //     }).catch(() => {
-        //     toast.error("Cannot fetch token", {
-        //         position: "bottom-center",
-        //         autoClose: 3000,
-        //         hideProgressBar: false,
-        //         closeOnClick: true,
-        //         pauseOnHover: true,
-        //         draggable: false,
-        //         progress: undefined,
-        //         theme: "colored",
-        //         transition: Bounce,
-        //     });
-        // });
+        axios.get('api/users/csrf/token', {})
+            .then((response) => {
+                axios.post('api/products/items/create',
+                    {
+                        productName: productName,
+                        description: productDescription,
+                        price: productPrice,
+                        quantity: productQuantity,
+                        manufacturerId: selectedManufacturerId,
+                        countryId: selectedCountryId,
+                        categoryId: selectCategoryId,
+                        subcategoryId: selectedSubcategoryId,
+                    },
+                    {
+                        headers: {
+                            'Authorization': 'Bearer ' + LocalStorageHelper.getJwtToken(),
+                            'X-XSRF-TOKEN': response.data.token,
+                            'Content-Type': 'application/json',
+                        }
+                    }).then((response) => {
+                        const pathMain = `${response.data}`;
+                        axios.get('api/users/csrf/token', {})
+                            .then((response) => {
+                                const photos = [...productGalleryPhoto];
+                                photos.map((photo, index) => {
+                                    const formData = new FormData();
+                                    formData.append('file', photo);
+                                    formData.append('path', pathMain);
+                                    formData.append('fileName', index);
+                                    axios.post('api/azure/upload', formData, {
+                                        headers: {
+                                            'Authorization': 'Bearer ' + LocalStorageHelper.getJwtToken(),
+                                            'X-XSRF-TOKEN': response.data.token,
+                                            'Content-Type': 'multipart/form-data',
+                                        }
+                                    }).then(() => {
+                                        toast.success('New product photo added!', {
+                                            position: "bottom-center",
+                                            autoClose: 3000,
+                                            hideProgressBar: false,
+                                            closeOnClick: true,
+                                            pauseOnHover: true,
+                                            draggable: false,
+                                            progress: undefined,
+                                            theme: "colored",
+                                            transition: Bounce,
+                                        });
+                                    }).catch(error => {
+                                        toast.error(error.response.data.message, {
+                                            position: "bottom-center",
+                                            autoClose: 3000,
+                                            hideProgressBar: false,
+                                            closeOnClick: true,
+                                            pauseOnHover: true,
+                                            draggable: false,
+                                            progress: undefined,
+                                            theme: "colored",
+                                            transition: Bounce,
+                                        })
+                                    })
+                                })
+                                toast.success('New product added!', {
+                                    position: "bottom-center",
+                                    autoClose: 3000,
+                                    hideProgressBar: false,
+                                    closeOnClick: true,
+                                    pauseOnHover: true,
+                                    draggable: false,
+                                    progress: undefined,
+                                    theme: "colored",
+                                    transition: Bounce,
+                                });
+                                navigate('/admin/product');
+                            }).catch(() => {
+                                toast.error('Cannot fetch token', {
+                                    position: "bottom-center",
+                                    autoClose: 3000,
+                                    hideProgressBar: false,
+                                    closeOnClick: true,
+                                    pauseOnHover: true,
+                                    draggable: false,
+                                    progress: undefined,
+                                    theme: "colored",
+                                    transition: Bounce,
+                                })
+                        })
+                }).catch((error) => {
+                    toast.error(error.response.data.message, {
+                        position: "bottom-center",
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: false,
+                        progress: undefined,
+                        theme: "colored",
+                        transition: Bounce,
+                    });
+                })
+            }).catch(() => {
+            toast.error("Cannot fetch token", {
+                position: "bottom-center",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: false,
+                progress: undefined,
+                theme: "colored",
+                transition: Bounce,
+            });
+        });
     }
 
 
@@ -360,17 +431,13 @@ function AddProduct() {
                     Add product
                 </Typography>
                 <Box
-                    component="form"
-                    onSubmit={submitProduct}
-                    noValidate
-
                 >
                     <FormControl variant="outlined"
                                  size={"small"}
                                  autoFocus
+                                 noValidate
                                  required
                                  error={categoryError}
-                                 helperText={categoryErrorMsg}
                                  color={categoryError ? 'error' : 'primary'}
                                  sx={{
                                      width: '70%',
@@ -399,12 +466,13 @@ function AddProduct() {
                                 ))
                             }
                         </Select>
+                        <FormHelperText>{categoryErrorMsg}</FormHelperText>
                     </FormControl>
                     <FormControl variant="outlined"
                                  size={"small"}
                                  required
+                                 noValidate
                                  error={subcategoryError}
-                                 helperText={subcategoryErrorMsg}
                                  color={subcategoryError ? 'error' : 'primary'}
                                  sx={{
                                      width: '70%',
@@ -433,12 +501,13 @@ function AddProduct() {
                                 ))
                             }
                         </Select>
+                        <FormHelperText>{subcategoryErrorMsg}</FormHelperText>
                     </FormControl>
                     <FormControl variant="outlined"
                                  size={"small"}
                                  required
+                                 noValidate
                                  error={countryError}
-                                 helperText={countryErrorMsg}
                                  color={countryError ? 'error' : 'primary'}
                                  sx={{
                                      width: '70%',
@@ -467,12 +536,12 @@ function AddProduct() {
                                 ))
                             }
                         </Select>
+                        <FormHelperText>{countryErrorMsg}</FormHelperText>
                     </FormControl>
                     <FormControl variant="outlined"
                                  size={"small"}
                                  required
                                  error={manufacturerError}
-                                 helperText={manufacturerErrorMsg}
                                  color={manufacturerError ? 'error' : 'primary'}
                                  sx={{
                                      width: '70%',
@@ -501,6 +570,7 @@ function AddProduct() {
                                 ))
                             }
                         </Select>
+                        <FormHelperText>{manufacturerErrorMsg}</FormHelperText>
                     </FormControl>
                     <TextField
                         size={"small"}
@@ -626,52 +696,13 @@ function AddProduct() {
                             }
                         }}
                     />
-                    { !hideUploadMainBtn &&
-                    <Button
-                        variant="contained"
-                        component="label"
-                        fullWidth
-                        endIcon={<CloudUploadOutlinedIcon />}
-                        sx={{
-                            width: '70%',
-                            marginBottom: '8px',
-                            backgroundColor: 'rgb(15,90,110)',
-                            "&:hover": {backgroundColor: 'rgb(33,123,145)'}
-                        }}
-                    >
-                        Upload Main Photo
-                        <input
-                            type="file"
-                            accept="image/*"
-                            hidden
-                            multiple={false}
-                            onChange={handlePhoto}
-                        />
-                    </Button>
-                    }
-                    { !hideDeleteMainBtn &&
-                    <Button variant="contained"
-                            hidden={hideDeleteMainBtn}
-                            fullWidth
-                            endIcon={<DeleteOutlineOutlinedIcon />}
-                            onClick={deletePhoto}
-                            sx={{
-                                width: '70%',
-                                marginBottom: '8px',
-                                backgroundColor: 'rgb(97,12,12)',
-                                "&:hover": {backgroundColor: 'rgb(175,38,38)'}
-                            }}
-                    >
-                        Delete Main Photo
-                    </Button>
-                    }
-                    <img alt={"Main photo"} src={image} width={"70%"} hidden={hideMain} />
                     { !hideUploadGalBtn &&
                     <Button
                         variant="contained"
                         component="label"
                         hidden={hideUploadGalBtn}
                         endIcon={<CloudUploadOutlinedIcon />}
+                        formNoValidate
                         fullWidth
                         sx={{
                             width: '70%',
@@ -683,8 +714,9 @@ function AddProduct() {
                         Upload Gallery Photos
                         <input
                             type="file"
-                            accept="image/*"
+                            accept="image/jpeg, image/png"
                             hidden
+                            formNoValidate
                             multiple={true}
                             onChange={handleGallery}
                         />
@@ -707,22 +739,22 @@ function AddProduct() {
                     </Button>
                     }
                     {!hideGallery &&
-                        <div style={{
-                            maxWidth: "1200px",
-                            width: "70%",
-                            aspectRatio: "10 / 6",
-                            margin: "0 auto 32px auto",
-                        }}>
+                        <div
+                            style={{
+                                maxWidth: "1200px",
+                                width: "70%",
+                                aspectRatio: "10 / 6",
+                                margin: "0 auto 32px auto",
+                            }}>
                             <ImageSlider imageBinaries={productGalleryPhoto} onDelete={delGalPhoto}/>
                         </div>
                     }
-
                     <Button
                         className="add-btn"
-                        type="submit"
+                        type="button"
                         fullWidth
                         variant="contained"
-                        onClick={validateInputs}
+                        onClick={submitProduct}
                         sx={{
                             width: '70%',
                             backgroundColor: 'rgb(39, 99, 24)',

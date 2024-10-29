@@ -44,12 +44,8 @@ export function ImageSlider({ imageBinaries, onDelete }) {
 
     return (
         <section
-            aria-label="Image Slider"
             style={{ width: "100%", height: "100%", position: "relative" }}
         >
-            <a href="#after-image-slider-controls" className="skip-link">
-                Skip Image Slider Controls
-            </a>
             <div
                 style={{
                     width: "100%",
@@ -72,6 +68,7 @@ export function ImageSlider({ imageBinaries, onDelete }) {
             <button
                 onClick={showPrevImage}
                 className="img-slider-btn"
+                formNoValidate={true}
                 style={{left: 0}}
             >
                 <ArrowBackIosNewOutlinedIcon />
@@ -79,6 +76,7 @@ export function ImageSlider({ imageBinaries, onDelete }) {
             <button
                 onClick={showNextImage}
                 className="img-slider-btn"
+                formNoValidate={true}
                 style={{right: 0}}
                 aria-label={"View Next Image"}
             >
@@ -87,6 +85,7 @@ export function ImageSlider({ imageBinaries, onDelete }) {
             <Tooltip title={"Remove current photo"}>
                 <button
                     className="img-slider-del-btn"
+                    formNoValidate={true}
                     aria-label="Delete Image"
                     onClick={removeCurrentPhoto}
                 >
@@ -108,7 +107,7 @@ export function ImageSlider({ imageBinaries, onDelete }) {
                     <button
                         key={index}
                         className="img-slider-dot-btn"
-                        aria-label={`View Image ${index + 1}`}
+                        formNoValidate={true}
                         onClick={() => setImageIndex(index)}
                     >
                         {index === imageIndex ? (
@@ -119,7 +118,6 @@ export function ImageSlider({ imageBinaries, onDelete }) {
                     </button>
                 ))}
             </div>
-            <div id="after-image-slider-controls" />
         </section>
     )
 }

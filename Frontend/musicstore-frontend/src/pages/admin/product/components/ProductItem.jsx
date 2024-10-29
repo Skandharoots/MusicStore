@@ -162,11 +162,22 @@ function ProductItem(props) {
               key={props.item.id}
         >
             <div className="product-img"
-                    style={{width: '100%', maxHeight: '200px', aspectRatio: "10 / 6",
-                    display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                    style={{width: '100%', maxHeight: '150px', aspectRatio: "10 / 6",
+                    display: 'flex', justifyContent: 'center', alignItems: 'center',
+                    backgroundSize: 'cover',}}
+            >
 
 
-                <img alt={`${props.item.productName} photo`} height={"200px"} src={img} />
+                <img alt={`${props.item.productName} photo`} src={img}
+                        style={{
+                            objectFit: 'cover',
+                            maxWidth: '100%',
+                            maxHeight: '100%',
+                            display: 'block',
+                            flexShrink: '0',
+                            flexGrow: '0',
+                        }}
+                />
             </div>
             <div className="product-metrics"
                  style={{

@@ -249,6 +249,7 @@ public class ProductService {
         productToUpdate.setProductName(product.getProductName());
         productToUpdate.setProductPrice(product.getPrice());
         productToUpdate.setProductDescription(product.getDescription());
+        productToUpdate.setInStock(product.getQuantity());
         productToUpdate.setBuiltinCountry(countryService.getCountryById(product.getCountryId()));
         productToUpdate.setCategory(categoryService.getCategoryById(product.getCategoryId()));
         productToUpdate.setManufacturer(manufacturerService.getManufacturerById(product.getManufacturerId()));

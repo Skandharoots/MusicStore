@@ -136,8 +136,8 @@ function UpdateProduct() {
                 setSelectedSubcategoryId(res.data.subcategory.id);
                 setSelectedManufacturerId(res.data.manufacturer.id);
                 setSelectedCountryId(res.data.builtinCountry.id);
-            }).catch(error => {
-            toast.error(error.response.data.message, {
+            }).catch(() => {
+            toast.error("Cannot find product, redirecting", {
                 position: "bottom-center",
                 autoClose: 3000,
                 hideProgressBar: false,
@@ -148,6 +148,7 @@ function UpdateProduct() {
                 theme: "colored",
                 transition: Bounce,
             });
+            navigate('/admin/product');
         });
 
         axios.get(`api/azure/list?path=${skuId.skuId}`, {})

@@ -461,20 +461,22 @@ public class ProductServiceTests {
 
     @Test
     public void updateProductTest() {
+
+        UUID skuId = UUID.randomUUID();
+
         when(webClientBuilder.build()).thenReturn(webClient);
         when(webClient.get()).thenReturn(requestHeadersUriSpec);
         when(requestHeadersUriSpec.uri(variablesConfiguration.getAdminUrl() + token.substring(7))).thenReturn(requestHeadersSpec);
         when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
         when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
 
-        when(productRepository.findById(1L)).thenReturn(Optional.of(product));
+        when(productRepository.findByProductSkuId(skuId)).thenReturn(Optional.of(product));
         when(categoryService.getCategoryById(1L)).thenReturn(category);
         when(countryService.getCountryById(1L)).thenReturn(country);
         when(manufacturerService.getManufacturerById(1L)).thenReturn(manufacturer);
         when(subcategoryService.getSubcategoryById(1L)).thenReturn(subcategory);
 
-
-        ResponseEntity<String> response = productService.updateProduct(token, 1L, productRequest);
+        ResponseEntity<String> response = productService.updateProduct(token, skuId, productRequest);
 
         Assertions.assertThat(response).isNotNull();
         Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -485,45 +487,52 @@ public class ProductServiceTests {
     @Test
     public void updateProductInvalidTokenTest() {
 
+        UUID skuId = UUID.randomUUID();
+
         when(webClientBuilder.build()).thenReturn(webClient);
         when(webClient.get()).thenReturn(requestHeadersUriSpec);
         when(requestHeadersUriSpec.uri(variablesConfiguration.getAdminUrl() + token.substring(7))).thenReturn(requestHeadersSpec);
         when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
         when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(false));
 
-        Assertions.assertThatThrownBy(() -> productService.updateProduct(token, 1L, productRequest));
+        Assertions.assertThatThrownBy(() -> productService.updateProduct(token, skuId, productRequest));
 
     }
 
     @Test
     public void updateProductNotFoundTest() {
 
+        UUID skuId = UUID.randomUUID();
+
         when(webClientBuilder.build()).thenReturn(webClient);
         when(webClient.get()).thenReturn(requestHeadersUriSpec);
         when(requestHeadersUriSpec.uri(variablesConfiguration.getAdminUrl() + token.substring(7))).thenReturn(requestHeadersSpec);
         when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
         when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
 
-        when(productRepository.findById(1L)).thenReturn(Optional.empty());
-        Assertions.assertThatThrownBy(() -> productService.updateProduct(token, 1L, productRequest));
+        when(productRepository.findByProductSkuId(skuId)).thenReturn(Optional.empty());
+        Assertions.assertThatThrownBy(() -> productService.updateProduct(token, skuId, productRequest));
 
     }
 
     @Test
     public void updateProductFaultyRequestBodyTest() {
 
+        UUID skuId = UUID.randomUUID();
+
         when(webClientBuilder.build()).thenReturn(webClient);
         when(webClient.get()).thenReturn(requestHeadersUriSpec);
         when(requestHeadersUriSpec.uri(variablesConfiguration.getAdminUrl() + token.substring(7))).thenReturn(requestHeadersSpec);
         when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
         when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
 
-        Assertions.assertThatThrownBy(() -> productService.updateProduct(token, 1L, faultyProductRequest));
+        Assertions.assertThatThrownBy(() -> productService.updateProduct(token, skuId, faultyProductRequest));
 
     }
 
     @Test
     public void deleteProductTest() {
+        UUID skuId = UUID.randomUUID();
 
         when(webClientBuilder.build()).thenReturn(webClient);
         when(webClient.get()).thenReturn(requestHeadersUriSpec);
@@ -531,8 +540,8 @@ public class ProductServiceTests {
         when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
         when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
 
-        when(productRepository.findById(1L)).thenReturn(Optional.of(product));
-        ResponseEntity<String> response = productService.deleteProduct(token, 1L);
+        when(productRepository.findByProductSkuId(skuId)).thenReturn(Optional.of(product));
+        ResponseEntity<String> response = productService.deleteProduct(token, skuId);
         Assertions.assertThat(response).isNotNull();
         Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         Assertions.assertThat(response.getBody()).isEqualTo("Product deleted");
@@ -542,19 +551,23 @@ public class ProductServiceTests {
     @Test
     public void deleteProductNotFoundTest() {
 
+        UUID skuId = UUID.randomUUID();
+
         when(webClientBuilder.build()).thenReturn(webClient);
         when(webClient.get()).thenReturn(requestHeadersUriSpec);
         when(requestHeadersUriSpec.uri(variablesConfiguration.getAdminUrl() + token.substring(7))).thenReturn(requestHeadersSpec);
         when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
         when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
 
-        when(productRepository.findById(1L)).thenReturn(Optional.empty());
-        Assertions.assertThatThrownBy(() -> productService.deleteProduct(token, 1L));
+        when(productRepository.findByProductSkuId(skuId)).thenReturn(Optional.empty());
+        Assertions.assertThatThrownBy(() -> productService.deleteProduct(token, skuId));
 
     }
 
     @Test
     public void deleteProductInvalidTokenTest() {
+
+        UUID skuId = UUID.randomUUID();
 
         when(webClientBuilder.build()).thenReturn(webClient);
         when(webClient.get()).thenReturn(requestHeadersUriSpec);
@@ -562,6 +575,6 @@ public class ProductServiceTests {
         when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
         when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(false));
 
-        Assertions.assertThatThrownBy(() -> productService.deleteProduct(token, 1L));
+        Assertions.assertThatThrownBy(() -> productService.deleteProduct(token, skuId));
     }
 }

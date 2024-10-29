@@ -118,19 +118,19 @@ public class ProductsController {
         return productService.cancelOrderProducts(cancelOrderRequest);
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/update/{productSkuId}")
     public ResponseEntity<String> updateProduct(
             @RequestHeader(HttpHeaders.AUTHORIZATION) String token,
-            @PathVariable(name = "id") Long id,
+            @PathVariable(name = "productSkuId") UUID id,
             @RequestBody ProductRequest product
     ) {
         return productService.updateProduct(token, id, product);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/delete/{productSkuId}")
     public ResponseEntity<String> deleteProduct(
             @RequestHeader(HttpHeaders.AUTHORIZATION) String token,
-            @PathVariable(name = "id") Long id
+            @PathVariable(name = "productSkuId") UUID id
     ) {
         return productService.deleteProduct(token, id);
     }

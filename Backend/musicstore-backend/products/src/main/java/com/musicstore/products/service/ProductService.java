@@ -225,7 +225,7 @@ public class ProductService {
         );
     }
 
-    public ResponseEntity<String> updateProduct(String token, Long id, ProductRequest product) {
+    public ResponseEntity<String> updateProduct(String token, UUID id, ProductRequest product) {
 
         if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
             log.error("No admin authority for token - " + token);
@@ -241,7 +241,7 @@ public class ProductService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid and empty product request parameters");
         }
 
-        Product productToUpdate = productRepository.findById(id)
+        Product productToUpdate = productRepository.findByProductSkuId(id)
             .orElseThrow(
                     () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found")
             );
@@ -260,14 +260,14 @@ public class ProductService {
         return ResponseEntity.ok("Product updated");
     }
 
-    public ResponseEntity<String> deleteProduct(String token, Long id) {
+    public ResponseEntity<String> deleteProduct(String token, UUID id) {
 
         if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
             log.error("No admin authority for token - " + token);
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No admin authority");
         }
 
-        Product productToDelete = productRepository.findById(id)
+        Product productToDelete = productRepository.findByProductSkuId(id)
             .orElseThrow(
                         () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found")
             );

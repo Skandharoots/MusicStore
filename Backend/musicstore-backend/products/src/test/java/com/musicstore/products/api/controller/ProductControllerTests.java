@@ -279,9 +279,11 @@ public class ProductControllerTests {
         productRequest.setCountryId(1L);
         productRequest.setManufacturerId(1L);
 
-        when(productService.updateProduct(token, 1L, productRequest)).thenReturn(ResponseEntity.ok("Product updated"));
+        UUID productSkuId = UUID.randomUUID();
 
-        ResultActions resultActions = mockMvc.perform(put("/api/products/items/update/{id}", 1L)
+        when(productService.updateProduct(token, productSkuId, productRequest)).thenReturn(ResponseEntity.ok("Product updated"));
+
+        ResultActions resultActions = mockMvc.perform(put("/api/products/items/update/{id}", productSkuId)
                 .header("Authorization", token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(productRequest))
@@ -294,9 +296,11 @@ public class ProductControllerTests {
     @Test
     public void deleteProductTest() throws Exception {
 
-        when(productService.deleteProduct(token, 1L)).thenReturn(ResponseEntity.ok("Product deleted"));
+        UUID productSkuId = UUID.randomUUID();
 
-        ResultActions resultActions = mockMvc.perform(delete("/api/products/items/delete/{id}", 1L)
+        when(productService.deleteProduct(token, productSkuId)).thenReturn(ResponseEntity.ok("Product deleted"));
+
+        ResultActions resultActions = mockMvc.perform(delete("/api/products/items/delete/{id}", productSkuId)
                 .header("Authorization", token));
 
         resultActions.andExpect(MockMvcResultMatchers.status().isOk());

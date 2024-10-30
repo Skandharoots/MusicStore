@@ -35,7 +35,6 @@ function AddProduct() {
     const [selectCategoryId, setSelectCategoryId] = useState('');
     const [productGalleryPhoto, setProductGalleryPhoto] = useState([]);
     const [hideGallery, setHideGallery] = useState(true);
-    const [hideUploadGalBtn, setHideUploadGalBtn] = useState(false);
     const [hideDeleteGalBtn, setHideDeleteGalBtn] = useState(true);
 
     const [categoryError, setCategoryError] = useState(false);
@@ -59,11 +58,11 @@ function AddProduct() {
         document.title = 'Add Product';
     }, []);
 
-    useEffect(() => {
-        if (LocalStorageHelper.IsUserLogged() === false || LocalStorageHelper.isUserAdmin() === false) {
-            navigate('/');
-        }
-    }, []);
+    // useEffect(() => {
+    //     if (LocalStorageHelper.IsUserLogged() === false || LocalStorageHelper.isUserAdmin() === false) {
+    //         navigate('/');
+    //     }
+    // }, []);
 
     useEffect(() => {
         axios.get('api/products/categories/get', {})
@@ -170,9 +169,8 @@ function AddProduct() {
                 }
             })
             if (sizeCheck) {
-                setProductGalleryPhoto(event.target.files);
+                setProductGalleryPhoto(oldGallery => [...oldGallery, ...files]);
                 setHideGallery(false);
-                setHideUploadGalBtn(true);
                 setHideDeleteGalBtn(false);
             } else {
                 toast.error('Photo file size cannot exceed 40MB', {
@@ -193,7 +191,6 @@ function AddProduct() {
     const deleteGallery = () => {
         setProductGalleryPhoto([]);
         setHideGallery(true);
-        setHideUploadGalBtn(false);
         setHideDeleteGalBtn(true);
     }
 
@@ -206,7 +203,6 @@ function AddProduct() {
         );
         if (productGalleryPhoto.length <= 1) {
             setHideGallery(true);
-            setHideUploadGalBtn(false);
             setHideDeleteGalBtn(true);
         }
     };
@@ -697,11 +693,9 @@ function AddProduct() {
                             }
                         }}
                     />
-                    { !hideUploadGalBtn &&
                     <Button
                         variant="contained"
                         component="label"
-                        hidden={hideUploadGalBtn}
                         endIcon={<CloudUploadOutlinedIcon />}
                         formNoValidate
                         fullWidth
@@ -722,10 +716,8 @@ function AddProduct() {
                             onChange={handleGallery}
                         />
                     </Button>
-                    }
                     { !hideDeleteGalBtn &&
                     <Button variant="contained"
-                            hidden={hideDeleteGalBtn}
                             fullWidth
                             endIcon={<DeleteOutlineOutlinedIcon />}
                             onClick={deleteGallery}

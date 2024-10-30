@@ -39,7 +39,6 @@ function UpdateProduct() {
     const [selectCategoryId, setSelectCategoryId] = useState('');
     const [productGalleryPhoto, setProductGalleryPhoto] = useState([]);
     const [hideGallery, setHideGallery] = useState(true);
-    const [hideUploadGalBtn, setHideUploadGalBtn] = useState(false);
     const [hideDeleteGalBtn, setHideDeleteGalBtn] = useState(true);
     const [wasGalleryUpdated, setWasGalleryUpdated] = useState(false);
     const [imagesPaths, setImagesPaths] = useState([]);
@@ -164,10 +163,8 @@ function UpdateProduct() {
                     });
                     setHideGallery(false);
                     setHideDeleteGalBtn(false);
-                    setHideUploadGalBtn(true);
                 } else {
                     setHideDeleteGalBtn(true);
-                    setHideUploadGalBtn(false);
                     setHideGallery(true);
                 }
 
@@ -223,9 +220,8 @@ function UpdateProduct() {
                 }
             })
             if (sizeCheck) {
-                setProductGalleryPhoto(event.target.files);
+                setProductGalleryPhoto(oldGallery => [...oldGallery, ...files]);
                 setHideGallery(false);
-                setHideUploadGalBtn(true);
                 setHideDeleteGalBtn(false);
                 setWasGalleryUpdated(true);
             } else {
@@ -247,7 +243,6 @@ function UpdateProduct() {
     const deleteGallery = () => {
         setProductGalleryPhoto([]);
         setHideGallery(true);
-        setHideUploadGalBtn(false);
         setHideDeleteGalBtn(true);
         setWasGalleryUpdated(true);
     }
@@ -262,7 +257,6 @@ function UpdateProduct() {
         setWasGalleryUpdated(true);
         if (productGalleryPhoto.length <= 1) {
             setHideGallery(true);
-            setHideUploadGalBtn(false);
             setHideDeleteGalBtn(true);
         }
     };
@@ -849,32 +843,29 @@ function UpdateProduct() {
                             }
                         }}
                     />
-                    { !hideUploadGalBtn &&
-                        <Button
-                            variant="contained"
-                            component="label"
-                            hidden={hideUploadGalBtn}
-                            endIcon={<CloudUploadOutlinedIcon />}
+                    <Button
+                        variant="contained"
+                        component="label"
+                        endIcon={<CloudUploadOutlinedIcon />}
+                        formNoValidate
+                        fullWidth
+                        sx={{
+                            width: '70%',
+                            marginBottom: '8px',
+                            backgroundColor: 'rgb(15,90,110)',
+                            "&:hover": {backgroundColor: 'rgb(33,123,145)'}
+                        }}
+                    >
+                        Upload Gallery Photos
+                        <input
+                            type="file"
+                            accept="image/jpeg, image/png"
+                            hidden
                             formNoValidate
-                            fullWidth
-                            sx={{
-                                width: '70%',
-                                marginBottom: '8px',
-                                backgroundColor: 'rgb(15,90,110)',
-                                "&:hover": {backgroundColor: 'rgb(33,123,145)'}
-                            }}
-                        >
-                            Upload Gallery Photos
-                            <input
-                                type="file"
-                                accept="image/jpeg, image/png"
-                                hidden
-                                formNoValidate
-                                multiple={true}
-                                onChange={handleGallery}
-                            />
-                        </Button>
-                    }
+                            multiple={true}
+                            onChange={handleGallery}
+                        />
+                    </Button>
                     { !hideDeleteGalBtn &&
                         <Button variant="contained"
                                 hidden={hideDeleteGalBtn}

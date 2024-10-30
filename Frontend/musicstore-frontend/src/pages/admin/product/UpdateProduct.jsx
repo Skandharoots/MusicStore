@@ -563,7 +563,7 @@ function UpdateProduct() {
                         , margin: '0 auto 5% auto'
                     }}
                 >
-                    Add product
+                    Update product
                 </Typography>
                 <Box
                 >

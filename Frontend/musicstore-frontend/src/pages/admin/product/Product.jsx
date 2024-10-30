@@ -12,7 +12,7 @@ import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 
-const pageSize = 2;
+const pageSize = 4;
 
 function Product() {
 
@@ -79,7 +79,7 @@ function Product() {
     }
 
     return (
-        <div className="manufacturer">
+        <div className="product">
             <div className="page-title">
                 <h5>Products</h5>
             </div>
@@ -96,7 +96,6 @@ function Product() {
                             width: 'fit-content',
                             backgroundColor: 'rgb(39, 99, 24)',
                             "&:hover": {backgroundColor: 'rgb(49,140,23)'},
-                            marginBottom: '16px',
                         }}
                     >
                         Add New
@@ -130,15 +129,22 @@ function Product() {
                     ))
                 }
             </Grid>
-            <Stack spacing={2} sx={{marginTop: '16px'}}>
-                <Pagination page={currentPage} count={totalPages} onChange={changePage}
-                            sx={{
-                                '& .Mui-selected': {
-                                    "&:focus": {outline: 'none !important'},
-                                },
-                            }}
-                />
-            </Stack>
+            <div  style={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', padding: '16px 25% 0 0'}}>
+                <Stack spacing={2}>
+                    <Pagination page={currentPage} count={totalPages} onChange={changePage} shape={"rounded"}
+                                sx={{
+                                    '& .Mui-selected': {
+                                        outline: 'none !important',
+                                        backgroundColor: 'rgba(49, 140, 23, 0.4)',
+                                    },
+                                    '& .MuiPaginationItem-root': {
+                                        color: 'black',
+                                        "&:hover": {outline: 'none !important', backgroundColor: 'rgba(49, 140, 23, 0.2)'},
+                                    },
+                                }}
+                    />
+                </Stack>
+            </div>
         </div>
     )
 }

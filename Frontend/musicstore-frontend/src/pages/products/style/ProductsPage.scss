@@ -1,0 +1,86 @@
+.products-page {
+  margin: 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: row;
+  background-color: white;
+  min-height: 80dvh;
+  color: black;
+
+  .products-page-ribbon-wrapper {
+    min-height: 80dvh;
+    padding: 0 0 0 20vw;
+    margin: 0 0;
+    background-color: white;
+
+    .products-page-ribbon {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: flex-end;
+      margin: 0 0;
+      padding: 0 0;
+      height: fit-content;
+      min-height: 80dvh;
+      width: 12dvw;
+      background-color: white;
+      border-right: 1px solid rgba(0, 0, 0, 0.1);
+      border-left: 1px solid rgba(0, 0, 0, 0.1);
+      border-top: 1px solid rgba(0, 0, 0, 0.1);
+
+      .ribbon-header {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        justify-content: flex-start;
+        width: 100%;
+        padding: 0 8px;
+        height: fit-content;
+      }
+
+      .ribbon-subcat {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+        width: 100%;
+        padding: 0 8px;
+        height: fit-content;
+      }
+
+      .ribbon-manufacturer {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+        width: 100%;
+        padding: 0 8px;
+        height: fit-content;
+      }
+
+      .ribbon-country {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+        width: 100%;
+        padding: 0 8px;
+        height: fit-content;
+      }
+    }
+
+    .products-page-ribbon > * {
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      box-sizing: border-box;
+    }
+  }
+
+  .products-page-content {
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    min-height: 80dvh;
+    width: 80vw;
+    background-color: white;
+  }
+}

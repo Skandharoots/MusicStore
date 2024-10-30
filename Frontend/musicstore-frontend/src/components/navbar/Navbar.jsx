@@ -11,18 +11,27 @@ import LoginOutlinedIcon from '@mui/icons-material/LoginOutlined';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import AdminPanelSettingsOutlinedIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
 import {NavLink} from "react-router-dom";
+import axios from "axios";
 
 function Navbar() {
 
 
     const [serach, setSerach] = React.useState('');
     const [userName, setUserName] = React.useState('');
+    const [categories, setCategories] = React.useState([]);
 
     const navigate = useNavigate();
 
     useEffect(() => {
         setUserName(LocalStorageHelper.getUserName());
-    })
+    });
+
+    useEffect(() => {
+        axios.get('api/products/categories/get')
+            .then(res => {
+                setCategories(res.data);
+            }).catch(() => {})
+    }, [])
 
     const logoutUser = () => {
         LocalStorageHelper.LogoutUser();
@@ -132,11 +141,16 @@ function Navbar() {
             <nav className="bottom-container">
                 <div>
                     <ul>
-                        <li><NavLink to="/">Guitars</NavLink></li>
-                        <li><NavLink to="/">Drums</NavLink></li>
-                        <li><NavLink to="/">Sound</NavLink></li>
-                        <li><NavLink to="/">Microphones</NavLink></li>
-                        <li><NavLink to="/">Orchestra</NavLink></li>
+                        {
+                            [...categories].map((cat, index) => (
+                                <li key={index}><NavLink to={`/products/${cat.id}`}>{cat.name}</NavLink></li>
+                            ))
+                        }
+                        {/*<li><NavLink to="/">Guitars</NavLink></li>*/}
+                        {/*<li><NavLink to="/">Drums</NavLink></li>*/}
+                        {/*<li><NavLink to="/">Sound</NavLink></li>*/}
+                        {/*<li><NavLink to="/">Microphones</NavLink></li>*/}
+                        {/*<li><NavLink to="/">Orchestra</NavLink></li>*/}
                     </ul>
                 </div>
             </nav>

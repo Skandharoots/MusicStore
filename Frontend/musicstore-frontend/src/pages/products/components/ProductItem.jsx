@@ -69,7 +69,7 @@ function ProductItem(props) {
               key={props.item.id}
         >
             <div className="product-img"
-                 style={{width: '100%', maxHeight: '150px', aspectRatio: "10 / 6",
+                 style={{width: '100%', maxHeight: '150px', aspectRatio: "16 / 9",
                      display: 'flex', justifyContent: 'center', alignItems: 'center',
                      backgroundSize: 'cover',}}
             >

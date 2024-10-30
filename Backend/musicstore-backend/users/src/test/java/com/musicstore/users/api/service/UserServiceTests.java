@@ -2,6 +2,7 @@ package com.musicstore.users.api.service;
 
 import com.musicstore.users.dto.LoginResponse;
 import com.musicstore.users.dto.RegisterRequest;
+import com.musicstore.users.dto.UserInformationResponse;
 import com.musicstore.users.mail.EmailService;
 import com.musicstore.users.model.ConfirmationToken;
 import com.musicstore.users.model.UserRole;
@@ -142,6 +143,33 @@ public class UserServiceTests {
         UserDetails userDetails = userService.loadUserByUsername("test@test.com");
         Assertions.assertThat(userDetails).isNotNull();
 
+    }
+
+    @Test
+    public void getUserInfoTest() {
+        UUID uuid = UUID.randomUUID();
+        Users user = new Users();
+        user.setUuid(uuid);
+        user.setEmail("test@test.com");
+        user.setFirstName("Marek");
+        user.setLastName("Kopania");
+        Optional<Users> userOptional = Optional.of(user);
+
+        when(userRepository.findByUuid(uuid)).thenReturn(userOptional);
+        UserInformationResponse info = userService.getUserInfo(uuid);
+        Assertions.assertThat(info).isNotNull();
+        Assertions.assertThat(info.getEmail()).isEqualTo(user.getEmail());
+        Assertions.assertThat(info.getFirstName()).isEqualTo(user.getFirstName());
+        Assertions.assertThat(info.getLastName()).isEqualTo(user.getLastName());
+    }
+
+    @Test
+    public void getUserInfoExceptionNotFoundTest() {
+        Optional<Users> userOptional = Optional.empty();
+        UUID uuid = UUID.randomUUID();
+
+        when(userRepository.findByUuid(uuid)).thenReturn(userOptional);
+        Assertions.assertThatThrownBy(() -> userService.getUserInfo(uuid)).isNotNull();
     }
 
     @Test

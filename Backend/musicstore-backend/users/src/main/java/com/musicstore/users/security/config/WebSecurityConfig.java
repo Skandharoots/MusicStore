@@ -63,6 +63,7 @@ public class WebSecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/users/register/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/users/validate").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/users/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/users/get/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/users/csrf/token").permitAll()
                         .requestMatchers(HttpMethod.PUT, "/api/users/update/**").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "api/users/delete/**").permitAll()

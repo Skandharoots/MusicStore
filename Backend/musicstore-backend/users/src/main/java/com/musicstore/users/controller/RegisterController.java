@@ -3,6 +3,7 @@ package com.musicstore.users.controller;
 import com.musicstore.users.dto.LoginRequest;
 import com.musicstore.users.dto.LoginResponse;
 import com.musicstore.users.dto.RegisterRequest;
+import com.musicstore.users.dto.UserInformationResponse;
 import com.musicstore.users.service.LoginService;
 import com.musicstore.users.service.RegisterService;
 import com.musicstore.users.service.UserService;
@@ -48,6 +49,14 @@ public class RegisterController {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
         return ResponseEntity.ok(loginService.loginUser(request));
+    }
+
+    @PostMapping("/get/{uuid}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<UserInformationResponse> getUserInformation(
+            @PathVariable(name = "uuid") UUID uuid
+    ) {
+        return ResponseEntity.ok(userService.getUserInfo(uuid));
     }
 
     @GetMapping("/validate")

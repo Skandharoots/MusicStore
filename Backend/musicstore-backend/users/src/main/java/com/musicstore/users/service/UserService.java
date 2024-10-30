@@ -2,6 +2,7 @@ package com.musicstore.users.service;
 
 import com.musicstore.users.dto.LoginResponse;
 import com.musicstore.users.dto.RegisterRequest;
+import com.musicstore.users.dto.UserInformationResponse;
 import com.musicstore.users.mail.EmailService;
 import com.musicstore.users.model.ConfirmationToken;
 import com.musicstore.users.model.Users;
@@ -112,6 +113,19 @@ public class UserService implements UserDetailsService {
 
             return tokenUuid;
         }
+    }
+
+    public UserInformationResponse getUserInfo(UUID uuid) {
+
+        Users user = userRepository.findByUuid(uuid).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found")
+        );
+
+        return UserInformationResponse.builder()
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .email(user.getUsername())
+                .build();
     }
 
     public void enableUser(String email) {

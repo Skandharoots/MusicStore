@@ -5,8 +5,10 @@ import com.musicstore.users.controller.RegisterController;
 import com.musicstore.users.dto.LoginRequest;
 import com.musicstore.users.dto.LoginResponse;
 import com.musicstore.users.dto.RegisterRequest;
+import com.musicstore.users.dto.UserInformationResponse;
 import com.musicstore.users.model.UserRole;
 import com.musicstore.users.service.*;
+import jakarta.servlet.http.Cookie;
 import org.junit.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
@@ -121,6 +123,27 @@ public class RegistryControllerTests {
         resultActions
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().string(token));
+    }
+
+    @Test
+    public void getUserInformationTest() throws Exception {
+        UUID uuid = UUID.randomUUID();
+        UserInformationResponse info = UserInformationResponse
+                .builder()
+                .firstName("Marek")
+                .lastName("Kopania")
+                .email("test@test.com")
+                .build();
+
+        when(userService.getUserInfo(uuid)).thenReturn(info);
+
+        ResultActions resultActions = mockMvc.perform(post("/api/users/get/{uuid}", uuid)
+        .contentType(MediaType.APPLICATION_JSON));
+
+        resultActions.andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value("Marek"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.lastName").value("Kopania"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.email").value("test@test.com"));
     }
 
     @Test

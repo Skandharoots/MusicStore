@@ -1,0 +1,10 @@
+.product-metrics-main {
+  font-size: 12px;
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.5em; /* Define height of line */
+  height: 7.5em; /* height of div = 15 * lineheight */
+}

@@ -1,11 +1,25 @@
 import {useNavigate, useParams} from "react-router-dom";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import axios from "axios";
 import './style/ProductsPage.scss';
 import ribbonImg from '../../assets/ribbon-img.jpg';
-import {Button, FormControl, FormControlLabel, Radio, RadioGroup, Typography} from "@mui/material";
+import {
+    Button,
+    FormControl,
+    FormControlLabel,
+    FormHelperText, InputLabel,
+    MenuItem,
+    Radio,
+    RadioGroup, Select,
+    Typography
+} from "@mui/material";
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
+import Grid from "@mui/material/Grid2";
+import ProductItem from "./components/ProductItem.jsx"
+import Stack from "@mui/material/Stack";
+import Pagination from "@mui/material/Pagination";
 
+const pageSize = 10;
 
 function ProductsPage() {
 
@@ -15,6 +29,14 @@ function ProductsPage() {
     const [selectedCountryName, setSelectedCountryName] = useState('');
     const [subcategories, setSubcategories] = useState([]);
     const [selectedSubcategoryName, setSelectedSubcategoryName] = useState('');
+    const [totalPages, setTotalPages] = useState(1);
+    const [totalElements, setTotalElements] = useState(0);
+    const [currentPage, setCurrentPage] = useState(1);
+
+    const [products, setProducts] = useState([]);
+    const [sortBy, setSortBy] = useState(JSON.stringify({sortBy: 'dateAdded', direction: 'desc'}));
+    const [lowPrice, setLowPrice] = useState(0);
+    const [highPrice, setHighPrice] = useState(100000);
 
     const categoryId = useParams();
     const navigate = useNavigate();
@@ -40,6 +62,25 @@ function ProductsPage() {
                 setManufacturers(response.data);
             }).catch(() => {});
     }, [selectedSubcategoryName, selectedCountryName]);
+
+    useEffect(() => {
+        let sorting = JSON.parse(sortBy);
+        console.log(selectedManufacturerName);
+        console.log(selectedSubcategoryName);
+        console.log(selectedCountryName);
+        axios.get(`api/products/items/get/values/${categoryId.categoryId}?country=${selectedCountryName}&manufacturer=${selectedManufacturerName}&subcategory=${selectedSubcategoryName}&lowPrice=${lowPrice}&highPrice=${highPrice}&sortBy=${sorting.sortBy}&sortDir=${sorting.direction}&page=${currentPage - 1}&pageSize=${pageSize}`)
+            .then(res => {
+                setProducts(res.data.content);
+                setTotalPages(res.data.totalPages);
+                setTotalElements(res.data.numberOfElements);
+            }).catch(() => {});
+
+    }, [sortBy, selectedSubcategoryName, selectedCountryName, selectedManufacturerName]);
+
+
+    const changePage = (event, value) => {
+        setCurrentPage(value);
+    }
 
     return (
         <div className="products-page">
@@ -248,7 +289,61 @@ function ProductsPage() {
             </div>
 
             <div className="products-page-content">
-                <h1>Content</h1>
+                <div className="content-controls">
+                    <FormControl
+                        size="small"
+                        sx={{
+                        m: 1,
+                        minWidth: 300,
+                        "& label.Mui-focused": {
+                            color: 'rgb(39, 99, 24)'
+                        },
+                        "& .MuiOutlinedInput-root": {
+                            "&.Mui-focused fieldset": {
+                                borderColor: 'rgb(39, 99, 24)'
+                            }
+                        }
+                    }}>
+                        <InputLabel id="sortBy-label">Sort by:</InputLabel>
+                        <Select
+                            labelId="sortBy-label"
+                            id="sortBy"
+                            value={sortBy}
+                            label="Sort by:"
+                            onChange={e => setSortBy(e.target.value)}
+                            variant={"outlined"}
+                        >
+                            <MenuItem value={JSON.stringify({sortBy: 'dateAdded', direction: 'desc'})}>Newest (default)</MenuItem>
+                            <MenuItem value={JSON.stringify({sortBy: 'productPrice', direction: 'desc'})}>Price (from highest)</MenuItem>
+                            <MenuItem value={JSON.stringify({sortBy: 'productPrice', direction: 'asc'})}>Price (from lowest)</MenuItem>
+                        </Select>
+                    </FormControl>
+                </div>
+                <div className="content-grid">
+                    <Grid container style={{ marginLeft: '16px'}} rowSpacing={3} columnSpacing={3}>
+                        {
+                            [...products].map((product) => (
+                                <ProductItem key={product.id} id={product.id} item={product}/>
+                            ))
+                        }
+                    </Grid>
+                    <div  style={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', padding: '16px 0 16px 0'}}>
+                        <Stack spacing={2}>
+                            <Pagination page={currentPage} count={totalPages} onChange={changePage} shape={"rounded"}
+                                        sx={{
+                                            '& .MuiPaginationItem-rounded': {
+                                                outline: 'none !important',
+                                                "&:hover": {outline: 'none !important', backgroundColor: 'rgba(39, 99, 24, 0.2)'},
+                                            },
+                                            '& .Mui-selected': {
+                                                backgroundColor: 'rgba(39, 99, 24, 0.5) !important',
+                                                "&:hover": {outline: 'none !important', backgroundColor: 'rgba(39, 99, 24, 0.2) !important'},
+                                            }
+                                        }}
+                            />
+                        </Stack>
+                    </div>
+                </div>
             </div>
         </div>
     )

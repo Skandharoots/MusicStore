@@ -96,11 +96,36 @@
   }
 
   .products-page-content {
-    height: fit-content;
+    min-height: 80dvh;
+    padding: 0 20vw 0 0;
+    margin: 0 0;
+    width: 100%;
+    background-color: white;
     display: flex;
     flex-direction: column;
-    min-height: 80dvh;
-    width: 80vw;
-    background-color: white;
+    justify-content: flex-start;
+    align-items: center;
+
+    .content-controls {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      height: fit-content;
+      padding: 8px 0;
+      width: 100%;
+      border-bottom: rgba(0, 0, 0, 0.2);
+    }
+
+    .content-grid {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-start;
+      margin-top: 16px;
+      padding: 8px 0;
+      width: 100%;
+      border: rgba(0, 0, 0, 0.2);
+    }
   }
 }

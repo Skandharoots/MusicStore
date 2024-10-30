@@ -37,6 +37,11 @@ class LocalStorageHelper {
         }
     }
 
+    static updateUserFirstName(userName) {
+        LocalStorageHelper.ActiveCheck();
+        localStorage.setItem('userName', userName);
+    }
+
     static LoginUser(userUuid, userFirstName, jwt, userRole) {
         localStorage.setItem('userUuid', userUuid);
         localStorage.setItem('authValidUntil', Date.now() + (23 * 60 * 60 * 1000)); // 2 hours

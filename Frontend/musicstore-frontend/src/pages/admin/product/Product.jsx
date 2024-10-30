@@ -12,7 +12,7 @@ import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 
-const pageSize = 3;
+const pageSize = 4;
 
 function Product() {
 
@@ -121,7 +121,7 @@ function Product() {
 
             </div>
 
-            <Grid container style={{marginRight: '20%', marginLeft: '16px'}} rowSpacing={2} columnSpacing={2}>
+            <Grid container style={{ marginLeft: '16px'}} rowSpacing={3} columnSpacing={3}>
                 {
                     products.map((product) => (
                         <ProductItem key={product.id} id={product.id} item={product}
@@ -133,14 +133,14 @@ function Product() {
                 <Stack spacing={2}>
                     <Pagination page={currentPage} count={totalPages} onChange={changePage} shape={"rounded"}
                                 sx={{
-                                    '& .Mui-selected': {
+                                    '& .MuiPaginationItem-rounded': {
                                         outline: 'none !important',
-                                        backgroundColor: 'rgba(49, 140, 23, 0.4)',
+                                        "&:hover": {outline: 'none !important', backgroundColor: 'rgba(39, 99, 24, 0.2)'},
                                     },
-                                    '& .MuiPaginationItem-root': {
-                                        color: 'black',
-                                        "&:hover": {outline: 'none !important', backgroundColor: 'rgba(49, 140, 23, 0.2)'},
-                                    },
+                                    '& .Mui-selected': {
+                                        backgroundColor: 'rgba(39, 99, 24, 0.5) !important',
+                                        "&:hover": {outline: 'none !important', backgroundColor: 'rgba(39, 99, 24, 0.2) !important'},
+                                    }
                                 }}
                     />
                 </Stack>

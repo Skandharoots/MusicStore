@@ -19,7 +19,7 @@
       justify-content: flex-start;
       align-items: flex-end;
       margin: 0 0;
-      padding: 0 0;
+      padding: 0;
       height: fit-content;
       min-height: 80dvh;
       width: 12dvw;
@@ -27,6 +27,26 @@
       border-right: 1px solid rgba(0, 0, 0, 0.1);
       border-left: 1px solid rgba(0, 0, 0, 0.1);
       border-top: 1px solid rgba(0, 0, 0, 0.1);
+
+      .products-ribbon-image {
+        width: 100%;
+        height: fit-content;
+        max-height: 250px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        .img-container {
+
+          width: 80%;
+          height: 80%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          background-size: cover;
+        }
+      }
 
       .ribbon-header {
         display: flex;

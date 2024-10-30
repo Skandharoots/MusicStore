@@ -2,7 +2,8 @@ import {useNavigate, useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import axios from "axios";
 import './style/ProductsPage.scss';
-import {Button, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, Typography} from "@mui/material";
+import ribbonImg from '../../assets/ribbon-img.jpg';
+import {Button, FormControl, FormControlLabel, Radio, RadioGroup, Typography} from "@mui/material";
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 
 
@@ -17,6 +18,7 @@ function ProductsPage() {
 
     const categoryId = useParams();
     const navigate = useNavigate();
+
 
     useEffect(() => {
         axios.get(`api/products/subcategories/get/search/${categoryId.categoryId}?country=${selectedCountryName}&manufacturer=${selectedManufacturerName}`)
@@ -43,6 +45,22 @@ function ProductsPage() {
         <div className="products-page">
             <div className="products-page-ribbon-wrapper">
                 <div className="products-page-ribbon">
+                    <div className="products-ribbon-image">
+                        <div className="img-container">
+                            <img src={ribbonImg}
+                                 alt={"For music enthusiasts"}
+                                 style={{
+                                     objectFit: 'cover',
+                                     maxWidth: '100%',
+                                     maxHeight: '100%',
+                                     display: 'block',
+                                     flexShrink: '0',
+                                     flexGrow: '0',
+                                     borderRadius: '4em',
+                                 }}
+                            />
+                        </div>
+                    </div>
                     <div className="ribbon-header">
                         <h4 style={{margin: '4px 0'}}>Filters</h4>
                         <Button

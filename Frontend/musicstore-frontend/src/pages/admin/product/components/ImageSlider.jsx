@@ -46,24 +46,27 @@ export function ImageSlider({ imageBinaries, onDelete }) {
         <section
             style={{ width: "100%", height: "100%", position: "relative" }}
         >
-            <div
-                style={{
-                    width: "100%",
-                    height: "100%",
-                    display: "flex",
-                    overflow: "hidden",
-                }}
-            >
-                {images.map(( url, index) => (
-                    <img
-                        key={index}
-                        src={url}
-                        alt={url.name}
-                        aria-hidden={imageIndex !== index}
-                        className="img-slider-img"
-                        style={{ translate: `${-100 * imageIndex}%` }}
-                    />
-                ))}
+            <div style={{
+                width: "100%",
+                height: "100%",
+                display: "flex",
+                overflow: "hidden",
+            }}>
+
+                    {images.map((url, index) => (
+                        <div key={{index}} className={'img-slider-img-cont'} style={{ maxHeight: '100%', aspectRatio: "10 / 6",
+                            display: 'flex', justifyContent: 'center', alignItems: 'center', flexShrink: '0',
+                            flexGrow: '0', backgroundSize: 'cover', translate: `${-100 * imageIndex}%`}}>
+                        <img
+                            key={index}
+                            src={url}
+                            alt={url.name}
+                            aria-hidden={imageIndex !== index}
+                            className="img-slider-img"
+                            style={{}}
+                        />
+                        </div>
+                    ))}
             </div>
             <button
                 onClick={showPrevImage}
@@ -71,7 +74,7 @@ export function ImageSlider({ imageBinaries, onDelete }) {
                 formNoValidate={true}
                 style={{left: 0}}
             >
-                <ArrowBackIosNewOutlinedIcon />
+                <ArrowBackIosNewOutlinedIcon/>
             </button>
             <button
                 onClick={showNextImage}
@@ -80,10 +83,10 @@ export function ImageSlider({ imageBinaries, onDelete }) {
                 style={{right: 0}}
                 aria-label={"View Next Image"}
             >
-                <ArrowForwardIosOutlinedIcon />
+                <ArrowForwardIosOutlinedIcon/>
             </button>
             <Tooltip title={"Remove current photo"}>
-                <button
+            <button
                     className="img-slider-del-btn"
                     formNoValidate={true}
                     aria-label="Delete Image"

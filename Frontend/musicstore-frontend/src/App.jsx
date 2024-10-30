@@ -31,6 +31,7 @@ import AddSubcategory from "./pages/admin/subcategory/AddSubcategory.jsx";
 import UpdateSubcategory from "./pages/admin/subcategory/UpdateSubcategory.jsx";
 import AddProduct from "./pages/admin/product/AddProduct.jsx";
 import UpdateProduct from "./pages/admin/product/UpdateProduct.jsx";
+import SignupConfirm from "./pages/signup/SignupConfirm.jsx";
 
 axios.defaults.baseURL = "http://localhost:8222/";
 axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
@@ -85,6 +86,10 @@ const router = createBrowserRouter([
             {
                 path: '/signup',
                 element: <Signup />,
+            },
+            {
+                path: '/signup/confirm/:token',
+                element: <SignupConfirm />,
             },
             {
                 path: '/',

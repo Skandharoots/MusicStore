@@ -724,8 +724,8 @@ function AddProduct() {
                             sx={{
                                 width: '70%',
                                 marginBottom: '8px',
-                                backgroundColor: 'rgb(97,12,12)',
-                                "&:hover": {backgroundColor: 'rgb(175,38,38)'}
+                                backgroundColor: 'rgb(159,20,20)',
+                                "&:hover": {backgroundColor: 'rgb(193,56,56)'},
                             }}
                     >
                         Delete Gallery Photos
@@ -747,6 +747,7 @@ function AddProduct() {
                         type="button"
                         fullWidth
                         variant="contained"
+                        endIcon={<AddOutlinedIcon />}
                         onClick={submitProduct}
                         sx={{
                             width: '70%',
@@ -754,7 +755,7 @@ function AddProduct() {
                             "&:hover": {backgroundColor: 'rgb(49,140,23)'}
                         }}
                     >
-                        Add Product <AddOutlinedIcon />
+                        Add Product
                     </Button>
                 </Box>
             </div>

@@ -71,7 +71,11 @@ function Signup() {
 
         if (!password || password.length < 6) {
             setPasswordError(true);
-            setPasswordErrorMessage('Password must be at least 6 characters long.');
+            setPasswordErrorMessage('Password must be at least 6 characters and max 20 long.');
+            isValid = false;
+        } else if (!/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–\[{}\]:;',?/*~$^+=<>]).{6,20}$/.test(password)) {
+            setPasswordError(true);
+            setPasswordErrorMessage('Password must contain one lower and upper case letter, one number and one special character.');
             isValid = false;
         } else {
             setPasswordError(false);

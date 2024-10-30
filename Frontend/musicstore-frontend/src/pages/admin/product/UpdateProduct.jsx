@@ -875,8 +875,8 @@ function UpdateProduct() {
                                 sx={{
                                     width: '70%',
                                     marginBottom: '8px',
-                                    backgroundColor: 'rgb(97,12,12)',
-                                    "&:hover": {backgroundColor: 'rgb(175,38,38)'}
+                                    backgroundColor: 'rgb(159,20,20)',
+                                    "&:hover": {backgroundColor: 'rgb(193,56,56)'},
                                 }}
                         >
                             Delete Gallery Photos

@@ -61,7 +61,6 @@ export function ImageSlider({ imageBinaries, onDelete }) {
                             key={index}
                             src={url}
                             alt={url.name}
-                            aria-hidden={imageIndex !== index}
                             className="img-slider-img"
                             style={{}}
                         />
@@ -81,7 +80,6 @@ export function ImageSlider({ imageBinaries, onDelete }) {
                 className="img-slider-btn"
                 formNoValidate={true}
                 style={{right: 0}}
-                aria-label={"View Next Image"}
             >
                 <ArrowForwardIosOutlinedIcon/>
             </button>
@@ -89,7 +87,6 @@ export function ImageSlider({ imageBinaries, onDelete }) {
             <button
                     className="img-slider-del-btn"
                     formNoValidate={true}
-                    aria-label="Delete Image"
                     onClick={removeCurrentPhoto}
                 >
                     <DeleteIcon fontSize={"inherit"}/>
@@ -114,9 +111,9 @@ export function ImageSlider({ imageBinaries, onDelete }) {
                         onClick={() => setImageIndex(index)}
                     >
                         {index === imageIndex ? (
-                            <CircleIcon aria-hidden="true" />
+                            <CircleIcon fontSize={"small"} />
                         ) : (
-                            <LensOutlinedIcon aria-hidden="true" />
+                            <LensOutlinedIcon fontSize={"small"} />
                         )}
                     </button>
                 ))}

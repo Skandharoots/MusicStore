@@ -44,16 +44,41 @@ function ProductsPage() {
             <div className="products-page-ribbon-wrapper">
                 <div className="products-page-ribbon">
                     <div className="ribbon-header">
-                        <h4>Filters</h4>
+                        <h4 style={{margin: '4px 0'}}>Filters</h4>
+                        <Button
+                            sx={{
+                                backgroundColor: 'transparent',
+                                color: 'rgba(0,0,0,0.7)',
+                                fontSize: '8px',
+                                height: 'fit-content',
+                                padding: '0 0',
+                                "&:hover": {
+                                    boxShadow: '0 5px 15px rgba(0, 0, 0, 0.2)',
+                                },
+                                "&:focus": {
+                                    outline: 'none !important',
+                                }
+                            }}
+                            endIcon={<CloseOutlinedIcon fontSize="small"/>}
+                            onClick={() => {
+                                setSelectedSubcategoryName('');
+                                setSelectedManufacturerName('');
+                                setSelectedCountryName('');
+                            }}
+                        >
+                            Clear
+                        </Button>
                     </div>
                     <div className="ribbon-subcat">
                         <div style={{
                             display: "flex",
                             justifyContent: "space-between",
                             alignItems: "center",
-                            width: "100%"
+                            width: "100%",
+                            height: 'fit-content',
+                            padding: "0",
                         }}>
-                            <h4>Subcategories</h4>
+                            <h4 style={{margin: '4px 0'}}>Subcategories</h4>
                             <Button
                                 sx={{
                                     backgroundColor: 'transparent',
@@ -105,7 +130,7 @@ function ProductsPage() {
                             alignItems: "center",
                             width: "100%"
                         }}>
-                            <h4>Manufacturers</h4>
+                            <h4 style={{margin: '4px 0'}}>Manufacturers</h4>
                             <Button
                                 sx={{
                                     backgroundColor: 'transparent',
@@ -157,7 +182,7 @@ function ProductsPage() {
                             alignItems: "center",
                             width: "100%"
                         }}>
-                            <h4>Produced in</h4>
+                            <h4 style={{margin: '4px 0'}}>Produced in</h4>
                             <Button
                                 sx={{
                                     backgroundColor: 'transparent',
@@ -180,7 +205,6 @@ function ProductsPage() {
                                 Clear
                             </Button>
                         </div>
-
                         <FormControl sx={{color: 'rgba(0, 0, 0, 0.5)'}}>
                             <RadioGroup
                                 value={selectedCountryName}

@@ -58,11 +58,11 @@ function AddProduct() {
         document.title = 'Add Product';
     }, []);
 
-    // useEffect(() => {
-    //     if (LocalStorageHelper.IsUserLogged() === false || LocalStorageHelper.isUserAdmin() === false) {
-    //         navigate('/');
-    //     }
-    // }, []);
+    useEffect(() => {
+        if (LocalStorageHelper.IsUserLogged() === false || LocalStorageHelper.isUserAdmin() === false) {
+            navigate('/');
+        }
+    }, []);
 
     useEffect(() => {
         axios.get('api/products/categories/get', {})

@@ -12,7 +12,7 @@ import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 
-const pageSize = 4;
+const pageSize = 3;
 
 function Product() {
 
@@ -129,7 +129,7 @@ function Product() {
                     ))
                 }
             </Grid>
-            <div  style={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', padding: '16px 25% 0 0'}}>
+            <div  style={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', padding: '16px 0 16px 0'}}>
                 <Stack spacing={2}>
                     <Pagination page={currentPage} count={totalPages} onChange={changePage} shape={"rounded"}
                                 sx={{

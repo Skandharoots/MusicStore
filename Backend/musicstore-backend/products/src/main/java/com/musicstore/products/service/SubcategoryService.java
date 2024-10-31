@@ -46,7 +46,7 @@ public class SubcategoryService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Subcategory name or category id cannot be empty");
         }
 
-        Pattern namePattern = Pattern.compile("^[A-Z][A-Za-z ']{1,29}$");
+        Pattern namePattern = Pattern.compile("^[A-Z][A-Za-z ']{1,49}$");
 
         if (!namePattern.matcher(subcategory.getName()).matches()) {
             log.error("Bad subcategory name format");
@@ -99,7 +99,7 @@ public class SubcategoryService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Subcategory name cannot be empty");
         }
 
-        Pattern namePattern = Pattern.compile("^[A-Z][A-Za-z ']{1,29}$");
+        Pattern namePattern = Pattern.compile("^[A-Z][A-Za-z ']{1,49}$");
 
         if (!namePattern.matcher(subcategory.getName()).matches()) {
             log.error("Bad subcategory name format");

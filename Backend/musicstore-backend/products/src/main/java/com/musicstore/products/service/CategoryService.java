@@ -37,7 +37,7 @@ public class CategoryService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Category name cannot be empty");
         }
 
-        Pattern namePattern = Pattern.compile("^[A-Z][A-Za-z ']{1,29}$");
+        Pattern namePattern = Pattern.compile("^[A-Z][A-Za-z ']{1,49}$");
 
         if (!namePattern.matcher(category.getCategoryName()).matches()) {
             log.error("Bad category name format.");
@@ -76,7 +76,7 @@ public class CategoryService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Category name cannot be empty");
         }
 
-        Pattern namePattern = Pattern.compile("^[A-Z][A-Za-z ']{1,29}$");
+        Pattern namePattern = Pattern.compile("^[A-Z][A-Za-z ']{1,49}$");
 
         if (!namePattern.matcher(category.getCategoryName()).matches()) {
             log.error("Bad category name format.");

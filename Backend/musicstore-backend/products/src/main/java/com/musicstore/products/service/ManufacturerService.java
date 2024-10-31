@@ -37,7 +37,7 @@ public class ManufacturerService {
             throw new IllegalArgumentException("Manufacturer name cannot be empty");
         }
 
-        Pattern namePattern = Pattern.compile("^[A-Z][A-Za-z ']{1,29}$");
+        Pattern namePattern = Pattern.compile("^[A-Z][A-Za-z ']{1,49}$");
 
         if (!namePattern.matcher(manufacturer.getName()).matches()) {
             log.error("Bad request for manufacturer creation. Wrong name format.");
@@ -81,7 +81,7 @@ public class ManufacturerService {
             throw new IllegalArgumentException("Manufacturer name cannot be empty");
         }
 
-        Pattern namePattern = Pattern.compile("^[A-Z][A-Za-z ']{1,29}$");
+        Pattern namePattern = Pattern.compile("^[A-Z][A-Za-z ']{1,49}$");
 
         if (!namePattern.matcher(manufacturer.getName()).matches()) {
             log.error("Bad request for manufacturer creation. Wrong name format.");

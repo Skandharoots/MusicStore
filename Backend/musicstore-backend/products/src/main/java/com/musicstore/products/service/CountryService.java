@@ -37,7 +37,7 @@ public class CountryService {
             throw new IllegalArgumentException("Country name cannot be empty");
         }
 
-        Pattern namePattern = Pattern.compile("^[A-Z][A-Za-z ']{1,29}$");
+        Pattern namePattern = Pattern.compile("^[A-Z][A-Za-z ']{1,49}$");
 
         if (!namePattern.matcher(country.getName()).matches()) {
             log.error("Bad request for country creation. Wrong name format.");
@@ -80,7 +80,7 @@ public class CountryService {
             throw new IllegalArgumentException("Country name cannot be empty");
         }
 
-        Pattern namePattern = Pattern.compile("^[A-Z][A-Za-z ']{1,29}$");
+        Pattern namePattern = Pattern.compile("^[A-Z][A-Za-z ']{1,49}$");
 
         if (!namePattern.matcher(country.getName()).matches()) {
             log.error("Bad request for country update. Wrong name format.");

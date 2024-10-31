@@ -60,7 +60,7 @@ function ProductDetailsPage() {
             margin: '0',
             fontSize: '20px',
             fontWeight: 'bold',
-            color: 'rgb(39, 99, 24)'
+            color: 'rgb(53,166,26)'
         }}>In Stock</p>
     } else {
         inStockBanner = <p style={{
@@ -79,7 +79,7 @@ function ProductDetailsPage() {
                         maxWidth: "1200px",
                         width: "45%",
                         aspectRatio: "10 / 6",
-                        boxSizing: 'border-box',
+
                     }}>
                     <ImageSlider imageBinaries={imageGallery}/>
                 </div>

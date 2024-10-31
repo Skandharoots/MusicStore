@@ -1,5 +1,5 @@
 import {useParams} from "react-router-dom";
-import React, {useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import './style/ProductsDetailsPage.scss';
 import {ImageSlider} from "./components/ImageSlider.jsx";
 import {Button, FormControl, MenuItem, Select} from "@mui/material";

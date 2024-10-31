@@ -1,0 +1,36 @@
+.productDetails {
+
+  margin: 0 0;
+  padding: 0 20vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  background-color: white;
+  min-height: 80dvh;
+  color: black;
+
+  .productDetails-header {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+    width: 100%;
+    padding: 8px 4% 16px 4%;
+    height: fit-content;
+    box-sizing: border-box;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+
+    .productDetails-info {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-start;
+      width: 45%;
+      box-sizing: border-box;
+      padding: 2%;
+      border-radius: 1em;
+    }
+  }
+
+}

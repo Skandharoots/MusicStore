@@ -66,7 +66,7 @@ function ProductItem(props) {
                 cursor: 'pointer',
             },
         }}
-              onClick={() => {navigate('#')}}
+              onClick={() => {navigate(`/product/${props.item.productSkuId}`)}}
               key={props.item.id}
         >
             <div className="product-img"

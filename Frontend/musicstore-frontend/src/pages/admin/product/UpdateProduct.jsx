@@ -160,7 +160,7 @@ function UpdateProduct() {
                         axios.get(`api/azure/read?path=${path}`, {responseType: 'blob'})
                             .then(res => {
                                 let blob = new Blob([res.data], { type: "image/*" });
-                                setProductGalleryPhoto(oldGallery => [...oldGallery,blob]);
+                                setProductGalleryPhoto(oldGallery => [blob, ...oldGallery]);
                             })
                     });
                     setHideGallery(false);

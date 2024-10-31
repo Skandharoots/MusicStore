@@ -33,6 +33,7 @@ import AddProduct from "./pages/admin/product/AddProduct.jsx";
 import UpdateProduct from "./pages/admin/product/UpdateProduct.jsx";
 import SignupConfirm from "./pages/signup/SignupConfirm.jsx";
 import ProductsPage from "./pages/products/ProductsPage.jsx";
+import ProductDetailsPage from "./pages/products/ProductDetailsPage.jsx";
 
 axios.defaults.baseURL = "http://localhost:8222/";
 axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
@@ -94,7 +95,11 @@ const router = createBrowserRouter([
             },
             {
                 path: '/products/:categoryId/:name',
-                element: <ProductsPage />
+                element: <ProductsPage />,
+            },
+            {
+                path: '/product/:productSkuId',
+                element: <ProductDetailsPage />,
             },
             {
                 path: '/',
@@ -106,7 +111,7 @@ const router = createBrowserRouter([
                     },
                     {
                         path: '/myorders',
-                        element: <MyOrders />
+                        element: <MyOrders />,
                     }
                 ]
             },
@@ -120,11 +125,11 @@ const router = createBrowserRouter([
                     },
                     {
                         path: '/admin/category/add',
-                        element: <AddCategory />
+                        element: <AddCategory />,
                     },
                     {
                         path: '/admin/category/update/:id',
-                        element: <UpdateCategory />
+                        element: <UpdateCategory />,
                     },
                     {
                         path: '/admin/country',
@@ -132,11 +137,11 @@ const router = createBrowserRouter([
                     },
                     {
                         path: '/admin/country/add',
-                        element: <AddCountry />
+                        element: <AddCountry />,
                     },
                     {
                         path: '/admin/country/update/:id',
-                        element: <UpdateCountry />
+                        element: <UpdateCountry />,
                     },
                     {
                         path: '/admin/manufacturer',
@@ -144,27 +149,27 @@ const router = createBrowserRouter([
                     },
                     {
                         path: '/admin/manufacturer/add',
-                        element: <AddManufacturer />
+                        element: <AddManufacturer />,
                     },
                     {
                         path: '/admin/manufacturer/update/:id',
-                        element: <UpdateManufacturer />
+                        element: <UpdateManufacturer />,
                     },
                     {
                         path: '/admin/order',
-                        element: <Order />
+                        element: <Order />,
                     },
                     {
                         path: '/admin/product',
-                        element: <Product />
+                        element: <Product />,
                     },
                     {
                         path: '/admin/product/add',
-                        element: <AddProduct />
+                        element: <AddProduct />,
                     },
                     {
                         path: '/admin/product/update/:skuId',
-                        element: <UpdateProduct />
+                        element: <UpdateProduct />,
                     },
                     {
                         path: '/admin/subcategory',
@@ -172,11 +177,11 @@ const router = createBrowserRouter([
                     },
                     {
                         path: '/admin/subcategory/add',
-                        element: <AddSubcategory />
+                        element: <AddSubcategory />,
                     },
                     {
                         path: '/admin/subcategory/update/:id',
-                        element: <UpdateSubcategory />
+                        element: <UpdateSubcategory />,
                     },
                 ]
             },

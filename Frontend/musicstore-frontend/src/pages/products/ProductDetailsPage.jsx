@@ -2,7 +2,7 @@ import {useParams} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import './style/ProductsDetailsPage.scss';
 import {ImageSlider} from "./components/ImageSlider.jsx";
-import {Button, FormControl, InputLabel, MenuItem, Select} from "@mui/material";
+import {Button, FormControl, MenuItem, Select} from "@mui/material";
 import ShareIcon from '@mui/icons-material/Share';
 import axios from "axios";
 

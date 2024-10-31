@@ -1,5 +1,5 @@
 import '../style/Category.scss';
-import {Box, Button} from "@mui/material";
+import {Button} from "@mui/material";
 import Grid from '@mui/material/Grid2';
 import { useNavigate } from "react-router-dom";
 import {useEffect, useState} from "react";

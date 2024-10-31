@@ -2,7 +2,7 @@ import '../style/Product.scss';
 import {Button} from "@mui/material";
 import Grid from '@mui/material/Grid2';
 import { useNavigate } from "react-router-dom";
-import React, {useCallback, useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import LocalStorageHelper from "../../../helpers/LocalStorageHelper.jsx";
 import ProductItem from "./components/ProductItem.jsx";
 import AddIcon from '@mui/icons-material/Add';

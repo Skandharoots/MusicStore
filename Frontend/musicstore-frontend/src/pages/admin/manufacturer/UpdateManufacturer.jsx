@@ -40,7 +40,7 @@ function UpdateManufacturer() {
                 transition: Bounce,
             });
         })
-    }, [])
+    }, [id.id])
 
     const validateInputs = () => {
 

@@ -1,8 +1,7 @@
 import {useNavigate, useParams} from "react-router-dom";
-import React, {useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import axios from "axios";
 import './style/ProductsPage.scss';
-import ribbonImg from '../../assets/ribbon-img.jpg';
 import {
     Button,
     FormControl,
@@ -92,18 +91,6 @@ function ProductsPage() {
                 <div className="products-page-ribbon">
                     <div className="products-ribbon-image">
                         <div className="img-container">
-                            {/*<img src={ribbonImg}*/}
-                            {/*     alt={"For music enthusiasts"}*/}
-                            {/*     style={{*/}
-                            {/*         objectFit: 'cover',*/}
-                            {/*         maxWidth: '100%',*/}
-                            {/*         maxHeight: '100%',*/}
-                            {/*         display: 'block',*/}
-                            {/*         flexShrink: '0',*/}
-                            {/*         flexGrow: '0',*/}
-                            {/*         borderRadius: '4em',*/}
-                            {/*     }}*/}
-                            {/*/>*/}
                         </div>
                     </div>
                     <div className="ribbon-header">

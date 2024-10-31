@@ -41,7 +41,7 @@ function UpdateCountry() {
                 transition: Bounce,
             });
         })
-    }, [])
+    }, [id.id])
 
     const validateInputs = () => {
 

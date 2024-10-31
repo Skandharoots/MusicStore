@@ -26,7 +26,7 @@ public class EmailService implements EmailSender {
             helper.setTo(to);
             helper.setText(email, true);
             helper.setSubject("Email confirmation");
-            helper.setFrom("Fancy Strings");
+            helper.setFrom("fancy.strings.org@gmail.com");
             mailSender.send(message);
             log.info("Email sent to: " + to);
         } catch (MessagingException e) {

@@ -47,27 +47,24 @@ function ProductsPage() {
         .then((response) => {
             setSubcategories(response.data);
         }).catch(() => {});
-    }, [selectedManufacturerName, selectedCountryName]);
+    }, [selectedManufacturerName, selectedCountryName, categoryId]);
 
     useEffect(() => {
         axios.get(`api/products/countries/get/search/${categoryId.categoryId}?subcategory=${selectedSubcategoryName}&manufacturer=${selectedManufacturerName}`)
             .then((response) => {
                 setCountries(response.data);
             }).catch(() => {});
-    }, [selectedSubcategoryName, selectedManufacturerName]);
+    }, [selectedSubcategoryName, selectedManufacturerName, categoryId]);
 
     useEffect(() => {
         axios.get(`api/products/manufacturers/get/search/${categoryId.categoryId}?country=${selectedCountryName}&subcategory=${selectedSubcategoryName}`)
             .then((response) => {
                 setManufacturers(response.data);
             }).catch(() => {});
-    }, [selectedSubcategoryName, selectedCountryName]);
+    }, [selectedSubcategoryName, selectedCountryName, categoryId]);
 
     useEffect(() => {
         let sorting = JSON.parse(sortBy);
-        console.log(selectedManufacturerName);
-        console.log(selectedSubcategoryName);
-        console.log(selectedCountryName);
         axios.get(`api/products/items/get/values/${categoryId.categoryId}?country=${selectedCountryName}&manufacturer=${selectedManufacturerName}&subcategory=${selectedSubcategoryName}&lowPrice=${lowPrice}&highPrice=${highPrice}&sortBy=${sorting.sortBy}&sortDir=${sorting.direction}&page=${currentPage - 1}&pageSize=${pageSize}`)
             .then(res => {
                 setProducts(res.data.content);
@@ -75,7 +72,7 @@ function ProductsPage() {
                 setTotalElements(res.data.numberOfElements);
             }).catch(() => {});
 
-    }, [sortBy, selectedSubcategoryName, selectedCountryName, selectedManufacturerName]);
+    }, [sortBy, selectedSubcategoryName, selectedCountryName, selectedManufacturerName, categoryId]);
 
 
     const changePage = (event, value) => {

@@ -75,7 +75,34 @@ function Product() {
     }, [currentPage]);
 
     const onSubmitSearch = () => {
-        navigate(`/admin/product/update/${search}`);
+        axios.get(`api/products/items/get/${search}`, {})
+        .then(res => {
+            const products = [res.data];
+            setProducts(products);
+            toast.success("Product found.", {
+                position: "bottom-center",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: false,
+                progress: undefined,
+                theme: "colored",
+                transition: Bounce,
+            });
+        }).catch(() => {
+            toast.error("Product not found.", {
+                position: "bottom-center",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: false,
+                progress: undefined,
+                theme: "colored",
+                transition: Bounce,
+            });
+        })
     }
 
     return (
@@ -106,7 +133,7 @@ function Product() {
                         <input
                             type="text"
                             className="search-prod-input"
-                            placeholder="Update product by skuId"
+                            placeholder="Search product by skuId"
                             required
                             value={search}
                             onChange={e => setSearch(e.target.value)}

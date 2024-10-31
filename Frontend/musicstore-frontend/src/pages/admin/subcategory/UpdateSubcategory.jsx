@@ -147,6 +147,7 @@ function UpdateSubcategory() {
                         autoComplete="id"
                         required
                         fullWidth
+                        size="small"
                         variant="outlined"
                         label="Subcategory Id"
                         value={id.id}
@@ -166,6 +167,7 @@ function UpdateSubcategory() {
                         autoComplete="subcategoryName"
                         required
                         fullWidth
+                        size="small"
                         variant="outlined"
                         color={subcategoryNameError ? 'error' : 'primary'}
                         label="Subcategory"

@@ -31,7 +31,7 @@ function Navbar() {
             .then(res => {
                 setCategories(res.data);
             }).catch(() => {})
-    }, [])
+    }, []);
 
     const logoutUser = () => {
         LocalStorageHelper.LogoutUser();
@@ -146,11 +146,6 @@ function Navbar() {
                                 <li key={index}><NavLink to={`/products/${cat.id}`}>{cat.name}</NavLink></li>
                             ))
                         }
-                        {/*<li><NavLink to="/">Guitars</NavLink></li>*/}
-                        {/*<li><NavLink to="/">Drums</NavLink></li>*/}
-                        {/*<li><NavLink to="/">Sound</NavLink></li>*/}
-                        {/*<li><NavLink to="/">Microphones</NavLink></li>*/}
-                        {/*<li><NavLink to="/">Orchestra</NavLink></li>*/}
                     </ul>
                 </div>
             </nav>

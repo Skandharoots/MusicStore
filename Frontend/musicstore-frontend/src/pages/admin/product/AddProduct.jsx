@@ -5,6 +5,7 @@ import {
     MenuItem,
     Typography,
     InputLabel,
+    FormControlLabel,
     FormControl, InputAdornment, FormHelperText,
 } from "@mui/material";
 import TextField from "@mui/material/TextField";
@@ -429,14 +430,15 @@ function AddProduct() {
                 </Typography>
                 <Box
                 >
-                    <FormControl variant="outlined"
-                                 size={"small"}
+                    <FormControl
                                  autoFocus
                                  noValidate
                                  required
                                  error={categoryError}
                                  color={categoryError ? 'error' : 'primary'}
+                                 size="small"
                                  sx={{
+                                     m: 1,
                                      width: '70%',
                                      margin: '0 auto 5% auto',
                                      "& label.Mui-focused": {
@@ -453,10 +455,11 @@ function AddProduct() {
                         <Select
                             labelId="categoryLabel"
                             id="category"
+                            label={"Select category"}
                             value={selectCategoryId}
                             onChange={handleCategoryChange}
                             required
-                            variant={"filled"}>
+                            variant={"outlined"}>
                             {
                                 categories.map(({id, name}) => (
                                     <MenuItem key={id} value={id}>{name}</MenuItem>
@@ -465,13 +468,14 @@ function AddProduct() {
                         </Select>
                         <FormHelperText>{categoryErrorMsg}</FormHelperText>
                     </FormControl>
-                    <FormControl variant="outlined"
-                                 size={"small"}
+                    <FormControl
+                                 size="small"
                                  required
                                  noValidate
                                  error={subcategoryError}
                                  color={subcategoryError ? 'error' : 'primary'}
                                  sx={{
+                                     m: 1,
                                      width: '70%',
                                      margin: '0 auto 5% auto',
                                      "& label.Mui-focused": {
@@ -488,10 +492,11 @@ function AddProduct() {
                         <Select
                             labelId="subcategoryLabel"
                             id="subcategory"
+                            label={"Select subcategory"}
                             value={selectedSubcategoryId}
                             onChange={handleSubcategoryChange}
                             required
-                            variant={"filled"}>
+                            variant={"outlined"}>
                             {
                                 subcategories.map(({id, name}) => (
                                     <MenuItem key={id} value={id}>{name}</MenuItem>
@@ -500,13 +505,14 @@ function AddProduct() {
                         </Select>
                         <FormHelperText>{subcategoryErrorMsg}</FormHelperText>
                     </FormControl>
-                    <FormControl variant="outlined"
-                                 size={"small"}
+                    <FormControl
+                                 size="small"
                                  required
                                  noValidate
                                  error={countryError}
                                  color={countryError ? 'error' : 'primary'}
                                  sx={{
+                                     m: 1,
                                      width: '70%',
                                      margin: '0 auto 5% auto',
                                      "& label.Mui-focused": {
@@ -523,10 +529,11 @@ function AddProduct() {
                         <Select
                             labelId="countryLabel"
                             id="country"
+                            label={"Select country"}
                             value={selectedCountryId}
                             onChange={handleCountryChange}
                             required
-                            variant={"filled"}>
+                            variant={"outlined"}>
                             {
                                 countries.map(({id, name}) => (
                                     <MenuItem key={id} value={id}>{name}</MenuItem>
@@ -535,12 +542,13 @@ function AddProduct() {
                         </Select>
                         <FormHelperText>{countryErrorMsg}</FormHelperText>
                     </FormControl>
-                    <FormControl variant="outlined"
-                                 size={"small"}
+                    <FormControl
+                                 size="small"
                                  required
                                  error={manufacturerError}
                                  color={manufacturerError ? 'error' : 'primary'}
                                  sx={{
+                                     m: 1,
                                      width: '70%',
                                      margin: '0 auto 5% auto',
                                      "& label.Mui-focused": {
@@ -557,10 +565,11 @@ function AddProduct() {
                         <Select
                             labelId="manufacturerLabel"
                             id="manufacturer"
+                            label={"Select manufacturer"}
                             value={selectedManufacturerId}
                             onChange={handleManufacturerChange}
                             required
-                            variant={"filled"}>
+                            variant={"outlined"}>
                             {
                                 manufacturers.map(({id, name}) => (
                                     <MenuItem key={id} value={id}>{name}</MenuItem>

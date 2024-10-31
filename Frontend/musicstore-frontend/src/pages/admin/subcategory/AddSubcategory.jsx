@@ -149,9 +149,11 @@ function AddSubcategory() {
                     noValidate
 
                 >
-                    <FormControl variant="outlined"
+                    <FormControl
+                                 size="small"
                                  autoFocus
                                  sx={{
+                                     m: 1,
                                      width: '70%',
                                      margin: '0 auto 5% auto',
                                      "& label.Mui-focused": {
@@ -168,9 +170,10 @@ function AddSubcategory() {
                         <Select
                             labelId="demo-simple-select-outlined-label"
                             id="demo-simple-select-outlined"
+                            label={"Select category"}
                             value={selectCategoryId}
                             onChange={handleCategoryChange}
-                         variant={"filled"}>
+                         variant={"outlined"}>
                             {
                                 categories.map(({id, name}) => (
                                     <MenuItem key={id} value={id}>{name}</MenuItem>
@@ -188,6 +191,7 @@ function AddSubcategory() {
                         autoComplete="subcategoryName"
                         required
                         fullWidth
+                        size="small"
                         variant="outlined"
                         color={subcategoryNameError ? 'error' : 'primary'}
                         label="Subcategory"

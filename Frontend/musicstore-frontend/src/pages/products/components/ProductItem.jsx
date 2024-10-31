@@ -5,7 +5,8 @@ import Grid from "@mui/material/Grid2";
 import '../style/ProductItem.scss';
 import {useNavigate} from "react-router-dom";
 import Tooltip from "@mui/material/Tooltip";
-
+import {Button} from "@mui/material";
+import AddShoppingCartOutlinedIcon from '@mui/icons-material/AddShoppingCartOutlined';
 
 function ProductItem(props) {
     const [img, setImg] = useState(null);
@@ -86,19 +87,65 @@ function ProductItem(props) {
             </div>
             <div className="product-metrics-main"
                  style={{
-                     width: '90%',
-                     padding: '2%',
+                     width: '100%',
+                     padding: '0 2%',
                      marginTop: '4px',
                  }}
             >
-                <p style={{margin: '0', fontSize: '16px', fontWeight: 'bold', overflow: 'hidden', textWrap: 'nowrap'}}>{props.item.manufacturer.name}</p>
-                <p style={{margin: '0', fontSize: '16px', overflow: 'hidden', textWrap: 'nowrap'}}>{props.item.productName}</p>
-                <p style={{margin: '0', overflow: 'hidden', textWrap: 'nowrap'}}>{props.item.productPrice}$</p>
-                <Tooltip title={props.item.productDescription}>
-                <p style={{margin: '0', overflow: 'hidden', textWrap: 'nowrap'}}>{props.item.productDescription}</p>
+                <Tooltip title={props.item.productName}>
+                    <p style={{
+                        margin: '0',
+                        fontSize: '16px',
+                        overflow: 'hidden',
+                        textWrap: 'nowrap'
+                    }}>{props.item.productName}</p>
                 </Tooltip>
+                <p style={{margin: '0', overflow: 'hidden', textWrap: 'nowrap'}}>Brand: {props.item.manufacturer.name}</p>
                 <p style={{margin: '0', overflow: 'hidden', textWrap: 'nowrap'}}>Made in: {props.item.builtinCountry.name}</p>
-
+            </div>
+            <div className="product-item-buttons"
+                 style={{
+                     display: 'flex',
+                     flexDirection: 'row',
+                     justifyContent: 'space-between',
+                     alignItems: 'center',
+                     width: '100%',
+                     padding: '0 2%',
+                     boxSizing: 'border-box',
+                 }}
+            >
+                <p style={{
+                    fontSize: '16px',
+                    fontWeight: 'bold',
+                    overflow: 'hidden',
+                    textWrap: 'nowrap'
+                }}>{props.item.productPrice}$</p>
+                <Tooltip title={"Add to basket"}>
+                    <Button
+                        variant={"outlined"}
+                        fullWidth={false}
+                        sx={{
+                            borderColor: 'rgb(39, 99, 24)',
+                            backgroundColor: 'transparent',
+                            width: '35px',
+                            minWidth: '0',
+                            height: '35px',
+                            display: 'flex',
+                            "&:hover": {
+                                backgroundColor: 'rgba(49,140,23, 0.2)',
+                                outline: 'none !important',
+                                borderColor: 'rgb(39, 99, 24)'
+                            },
+                            "&:focus": {
+                                backgroundColor: 'rgba(49,140,23, 0.2)',
+                                outline: 'none !important',
+                                borderColor: 'rgb(39, 99, 24)'
+                            }
+                        }}
+                    >
+                        <AddShoppingCartOutlinedIcon size={"small"} sx={{color: 'rgb(39, 99, 24)', fontSize: '16px'}}/>
+                    </Button>
+                </Tooltip>
             </div>
 
         </Grid>

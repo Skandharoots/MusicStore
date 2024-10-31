@@ -253,7 +253,7 @@ function Account() {
                     transition: Bounce,
                 });
                 LocalStorageHelper.LogoutUser();
-                navigate('/');
+                setTimeout(() => {navigate('/');}, 3000);
             }).catch(() => {
                 toast.error("Account deletion failed.", {
                     position: "bottom-center",

@@ -318,8 +318,8 @@ function ProductsPage() {
                             variant={"outlined"}
                         >
                             <MenuItem value={JSON.stringify({sortBy: 'dateAdded', direction: 'desc'})}>Newest (default)</MenuItem>
-                            <MenuItem value={JSON.stringify({sortBy: 'productPrice', direction: 'desc'})}>Price (from highest)</MenuItem>
-                            <MenuItem value={JSON.stringify({sortBy: 'productPrice', direction: 'asc'})}>Price (from lowest)</MenuItem>
+                            <MenuItem value={JSON.stringify({sortBy: 'productPrice', direction: 'desc'})}>Price: highest to lowest</MenuItem>
+                            <MenuItem value={JSON.stringify({sortBy: 'productPrice', direction: 'asc'})}>Price: lowest to highest</MenuItem>
                         </Select>
                     </FormControl>
                 </div>

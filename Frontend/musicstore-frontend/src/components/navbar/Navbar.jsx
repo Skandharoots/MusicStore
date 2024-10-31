@@ -143,7 +143,7 @@ function Navbar() {
                     <ul>
                         {
                             [...categories].map((cat, index) => (
-                                <li key={index}><NavLink to={`/products/${cat.id}`}>{cat.name}</NavLink></li>
+                                <li key={index}><NavLink to={`/products/${cat.id}/${cat.name}`}>{cat.name}</NavLink></li>
                             ))
                         }
                     </ul>

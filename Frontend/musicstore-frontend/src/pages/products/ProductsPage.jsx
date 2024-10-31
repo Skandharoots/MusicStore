@@ -7,7 +7,7 @@ import {
     Button,
     FormControl,
     FormControlLabel,
-    FormHelperText, InputLabel,
+    InputLabel,
     MenuItem,
     Radio,
     RadioGroup, Select,
@@ -41,6 +41,13 @@ function ProductsPage() {
     const categoryId = useParams();
     const navigate = useNavigate();
 
+    useEffect(() => {
+        document.title = `${categoryId.name}`;
+    }, []);
+
+    useEffect(() => {
+        window.scrollTo(0, 0)
+    }, [currentPage]);
 
     useEffect(() => {
         axios.get(`api/products/subcategories/get/search/${categoryId.categoryId}?country=${selectedCountryName}&manufacturer=${selectedManufacturerName}`)

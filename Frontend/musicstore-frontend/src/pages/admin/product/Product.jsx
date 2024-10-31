@@ -29,6 +29,10 @@ function Product() {
         document.title = 'Product management';
     }, []);
 
+    useEffect(() => {
+        window.scrollTo(0, 0)
+    }, [currentPage]);
+
     const redirect = () => {
         navigate('/admin/product/add');
     }

@@ -14,7 +14,7 @@ function Footer() {
               </div>
               <div className="right-container">
                   <h5>Contact</h5>
-                  <p>E-mail: fancystrings@gmail.com</p>
+                  <p>E-mail: fancy.strings.org@gmail.com</p>
               </div>
           </div>
       </div>

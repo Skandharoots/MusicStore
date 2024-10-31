@@ -19,7 +19,7 @@ import ProductItem from "./components/ProductItem.jsx"
 import Stack from "@mui/material/Stack";
 import Pagination from "@mui/material/Pagination";
 
-const pageSize = 10;
+const pageSize = 20;
 
 function ProductsPage() {
 
@@ -92,18 +92,18 @@ function ProductsPage() {
                 <div className="products-page-ribbon">
                     <div className="products-ribbon-image">
                         <div className="img-container">
-                            {/*<img src={ribbonImg}*/}
-                            {/*     alt={"For music enthusiasts"}*/}
-                            {/*     style={{*/}
-                            {/*         objectFit: 'cover',*/}
-                            {/*         maxWidth: '100%',*/}
-                            {/*         maxHeight: '100%',*/}
-                            {/*         display: 'block',*/}
-                            {/*         flexShrink: '0',*/}
-                            {/*         flexGrow: '0',*/}
-                            {/*         borderRadius: '4em',*/}
-                            {/*     }}*/}
-                            {/*/>*/}
+                            <img src={ribbonImg}
+                                 alt={"For music enthusiasts"}
+                                 style={{
+                                     objectFit: 'cover',
+                                     maxWidth: '100%',
+                                     maxHeight: '100%',
+                                     display: 'block',
+                                     flexShrink: '0',
+                                     flexGrow: '0',
+                                     borderRadius: '4em',
+                                 }}
+                            />
                         </div>
                     </div>
                     <div className="ribbon-header">
@@ -324,14 +324,14 @@ function ProductsPage() {
                     </FormControl>
                 </div>
                 <div className="content-grid">
-                    <Grid container style={{ marginLeft: '16px'}} rowSpacing={3} columnSpacing={3}>
+                    <Grid container style={{ marginLeft: '16px', paddingBottom: '16px', borderBottom: '1px solid rgba(0, 0, 0, 0.1)'}} rowSpacing={2} columnSpacing={2}>
                         {
                             [...products].map((product) => (
                                 <ProductItem key={product.id} id={product.id} item={product}/>
                             ))
                         }
                     </Grid>
-                    <div  style={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', padding: '16px 0 16px 0'}}>
+                    <div  style={{display: 'flex', width: '100%', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', padding: '16px 0 16px 0'}}>
                         <Stack spacing={2}>
                             <Pagination page={currentPage} count={totalPages} onChange={changePage} shape={"rounded"}
                                         sx={{

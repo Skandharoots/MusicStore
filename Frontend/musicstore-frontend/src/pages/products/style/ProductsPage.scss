@@ -2,6 +2,7 @@
   margin: 0 0;
   padding: 0;
   display: flex;
+  width: 100%;
   flex-direction: row;
   background-color: white;
   min-height: 80dvh;
@@ -18,11 +19,12 @@
       flex-direction: column;
       justify-content: flex-start;
       align-items: flex-end;
+      width: 12dvw;
+      overflow: hidden;
       margin: 0 0;
       padding: 0;
       height: fit-content;
       min-height: 80dvh;
-      width: 250px;
       background-color: white;
       border-right: 1px solid rgba(0, 0, 0, 0.1);
       border-left: 1px solid rgba(0, 0, 0, 0.1);
@@ -56,6 +58,7 @@
         width: 100%;
         padding: 0 8px;
         height: fit-content;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
       }
 
       .ribbon-subcat {
@@ -90,7 +93,6 @@
     }
 
     .products-page-ribbon > * {
-      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
       box-sizing: border-box;
     }
   }

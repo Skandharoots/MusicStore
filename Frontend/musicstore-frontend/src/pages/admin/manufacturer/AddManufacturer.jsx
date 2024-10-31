@@ -32,7 +32,7 @@ function AddManufacturer() {
         let isValid = true;
 
         if (!manufacturerName
-            || !/^[A-Z][A-Z 'a-z]+$/i.test(manufacturerName)) {
+            || !/^[A-Z][A-Za-z ']{1,49}/i.test(manufacturerName)) {
             setManufacturerNameError(true);
             setManufacturerNameErrorMsg('Please enter a valid manufacturer name.');
             isValid = false;

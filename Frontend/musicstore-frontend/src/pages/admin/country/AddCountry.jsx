@@ -32,7 +32,7 @@ function AddCountry() {
         let isValid = true;
 
         if (!countryName
-            || !/^[A-Z][A-Z 'a-z]+$/i.test(countryName)) {
+            || !/^[A-Z][A-Za-z ']{1,49}/i.test(countryName)) {
             setCountryNameError(true);
             setCountryNameErrorMsg('Please enter a valid country name.');
             isValid = false;

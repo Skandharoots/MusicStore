@@ -61,11 +61,11 @@ function AddProduct() {
         document.title = 'Add Product';
     }, []);
 
-    // useEffect(() => {
-    //     if (LocalStorageHelper.IsUserLogged() === false || LocalStorageHelper.isUserAdmin() === false) {
-    //         navigate('/');
-    //     }
-    // }, []);
+    useEffect(() => {
+        if (LocalStorageHelper.IsUserLogged() === false || LocalStorageHelper.isUserAdmin() === false) {
+            navigate('/');
+        }
+    }, []);
 
     useEffect(() => {
         axios.get('api/products/categories/get', {})
@@ -251,16 +251,16 @@ function AddProduct() {
         }
 
         if (!productName
-            || !/^[A-Z][A-Z 'a-z]+$/i.test(productName)) {
+            || !/^[A-Za-z0-9][A-Za-z0-9&' :+=#?%()/"-]{1,49}$/i.test(productName)) {
             setProductNameError(true);
-            setProductNameErrorMsg('Please enter a valid product name.');
+            setProductNameErrorMsg('Please enter a valid product name. Permitted special characters: &\':+=#?()%/"-');
             isValid = false;
         } else {
             setProductNameError(false);
             setProductNameErrorMsg('');
         }
 
-        if (!/^[ -~]+$/gm.test(productDescription)) {
+        if (!/^[ -~]*$/gm.test(productDescription)) {
             setProductDescriptionError(true);
             setProductDescriptionErrorMsg('Please enter a valid product description.');
             isValid = false;

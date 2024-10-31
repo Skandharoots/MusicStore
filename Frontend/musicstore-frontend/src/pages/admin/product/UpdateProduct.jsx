@@ -68,11 +68,11 @@ function UpdateProduct() {
         document.title = 'Edit Product';
     }, []);
 
-    // useEffect(() => {
-    //     if (LocalStorageHelper.IsUserLogged() === false || LocalStorageHelper.isUserAdmin() === false) {
-    //         navigate('/');
-    //     }
-    // }, []);
+    useEffect(() => {
+        if (LocalStorageHelper.IsUserLogged() === false || LocalStorageHelper.isUserAdmin() === false) {
+            navigate('/');
+        }
+    }, []);
 
     useEffect(() => {
 
@@ -304,16 +304,16 @@ function UpdateProduct() {
         }
 
         if (!productName
-            || !/^[A-Z][A-Z 'a-z]+$/i.test(productName)) {
+            || !/^[A-Za-z0-9][A-Za-z0-9&' :+=#?()%/"-]{1,49}$/i.test(productName)) {
             setProductNameError(true);
-            setProductNameErrorMsg('Please enter a valid product name.');
+            setProductNameErrorMsg('Please enter a valid product name. Permitted special characters: &\':+=#?()%/"-');
             isValid = false;
         } else {
             setProductNameError(false);
             setProductNameErrorMsg('');
         }
 
-        if (!/^[ -~]+$/gm.test(productDescription)) {
+        if (!/^[ -~]*$/gm.test(productDescription)) {
             setProductDescriptionError(true);
             setProductDescriptionErrorMsg('Please enter a valid product description.');
             isValid = false;

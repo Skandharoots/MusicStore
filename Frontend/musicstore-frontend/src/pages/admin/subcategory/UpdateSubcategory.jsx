@@ -49,7 +49,7 @@ function UpdateSubcategory() {
         let isValid = true;
 
         if (!subcategoryName
-            || !/^[A-Z][A-Z 'a-z]+$/i.test(subcategoryName)) {
+            || !/^[A-Z][A-Za-z ']{1,49}/i.test(subcategoryName)) {
             setSubcategoryNameError(true);
             setSubcategoryNameErrorMsg('Please enter a valid subcategory name.');
             isValid = false;

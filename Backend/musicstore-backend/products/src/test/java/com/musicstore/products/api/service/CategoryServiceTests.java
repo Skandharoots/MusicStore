@@ -104,6 +104,23 @@ public class CategoryServiceTests {
     }
 
     @Test
+    public void addCategoryExceptionWrongNameFormatTest() {
+        String jwtToken = token.substring(7);
+
+        CategoryRequest categoryRequest = CategoryRequest.builder()
+                .categoryName(" ^&#%$%&SFSsdf90 67")
+                .build();
+
+        when(webClientBuilder.build()).thenReturn(webClient);
+        when(webClient.get()).thenReturn(requestHeadersUriSpec);
+        when(requestHeadersUriSpec.uri(variablesConfiguration.getAdminUrl() + jwtToken)).thenReturn(requestHeadersSpec);
+        when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+        when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
+
+        Assertions.assertThatThrownBy(() -> categoryService.createCategories(token, categoryRequest));
+    }
+
+    @Test
     public void addCategoryExceptionInvalidTokenTest() {
 
         String jwtToken = token.substring(7);
@@ -200,6 +217,23 @@ public class CategoryServiceTests {
 
         Assertions.assertThatThrownBy(() -> categoryService.updateCategory(token, 1L, categoryRequest));
 
+    }
+
+    @Test
+    public void updateCategoryExceptionWrongNameFormatTest() {
+        String jwtToken = token.substring(7);
+
+        CategoryRequest categoryRequest = CategoryRequest.builder()
+                .categoryName(" ^&#%$%&SFSsdf90 67")
+                .build();
+
+        when(webClientBuilder.build()).thenReturn(webClient);
+        when(webClient.get()).thenReturn(requestHeadersUriSpec);
+        when(requestHeadersUriSpec.uri(variablesConfiguration.getAdminUrl() + jwtToken)).thenReturn(requestHeadersSpec);
+        when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+        when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
+
+        Assertions.assertThatThrownBy(() -> categoryService.updateCategory(token, 1L, categoryRequest));
     }
 
     @Test

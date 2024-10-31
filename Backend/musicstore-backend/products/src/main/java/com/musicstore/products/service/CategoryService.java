@@ -5,6 +5,7 @@ import com.musicstore.products.model.Category;
 import com.musicstore.products.repository.CategoryRepository;
 import com.musicstore.products.security.config.VariablesConfiguration;
 import java.util.List;
+import java.util.regex.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -34,6 +35,13 @@ public class CategoryService {
         if (category.getCategoryName() == null || category.getCategoryName().isEmpty()) {
             log.error("Bad request for category creation.");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Category name cannot be empty");
+        }
+
+        Pattern namePattern = Pattern.compile("^[A-Z][A-Za-z ']{1,29}$");
+
+        if (!namePattern.matcher(category.getCategoryName()).matches()) {
+            log.error("Bad category name format.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Bad category name format");
         }
 
         Category categoryEntity = new Category();
@@ -66,6 +74,13 @@ public class CategoryService {
         if (category.getCategoryName() == null || category.getCategoryName().isEmpty()) {
             log.error("Bad request for category update.");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Category name cannot be empty");
+        }
+
+        Pattern namePattern = Pattern.compile("^[A-Z][A-Za-z ']{1,29}$");
+
+        if (!namePattern.matcher(category.getCategoryName()).matches()) {
+            log.error("Bad category name format.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Bad category name format");
         }
 
         Category categoryToUpdate = categoryRepository

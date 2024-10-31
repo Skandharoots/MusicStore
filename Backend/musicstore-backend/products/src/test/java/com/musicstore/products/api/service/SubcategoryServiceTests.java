@@ -130,6 +130,22 @@ public class SubcategoryServiceTests {
     }
 
     @Test
+    public void addSubcategoryWrongNameFormatTest() {
+        SubcategoryRequest subcategoryRequest = SubcategoryRequest.builder()
+                .name(" $%^%$ adASD2134")
+                .categoryId(1L)
+                .build();
+
+        when(webClientBuilder.build()).thenReturn(webClient);
+        when(webClient.get()).thenReturn(requestHeadersUriSpec);
+        when(requestHeadersUriSpec.uri(variablesConfiguration.getAdminUrl() + token.substring(7))).thenReturn(requestHeadersSpec);
+        when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+        when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
+
+        Assertions.assertThatThrownBy(() -> subcategoryService.createSubcategories(token, subcategoryRequest));
+    }
+
+    @Test
     public void addSubcategoryExceptionFaultyTokenTest() {
         Assertions.assertThatThrownBy(() -> subcategoryService.createSubcategories(token.substring(7), new SubcategoryRequest("Acoustic", 1L)));
     }
@@ -222,6 +238,22 @@ public class SubcategoryServiceTests {
     public void updateSubcategoryExceptionEmptyNameTest() {
 
         SubcategoryUpdateRequest subcategoryRequest = new SubcategoryUpdateRequest();
+
+        when(webClientBuilder.build()).thenReturn(webClient);
+        when(webClient.get()).thenReturn(requestHeadersUriSpec);
+        when(requestHeadersUriSpec.uri(variablesConfiguration.getAdminUrl() + token.substring(7))).thenReturn(requestHeadersSpec);
+        when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+        when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
+
+        Assertions.assertThatThrownBy(() -> subcategoryService.updateSubcategory(token, 1L, subcategoryRequest));
+
+    }
+
+    @Test
+    public void updateSubcategoryWrongNameFormatTest() {
+        SubcategoryUpdateRequest subcategoryRequest = SubcategoryUpdateRequest.builder()
+                .name(" $%^%$ adASD2134")
+                .build();
 
         when(webClientBuilder.build()).thenReturn(webClient);
         when(webClient.get()).thenReturn(requestHeadersUriSpec);

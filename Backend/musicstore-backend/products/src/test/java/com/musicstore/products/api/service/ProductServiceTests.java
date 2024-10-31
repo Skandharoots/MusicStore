@@ -181,6 +181,99 @@ public class ProductServiceTests {
     }
 
     @Test
+    public void createProductFaultyNameRequestTest() {
+        when(webClientBuilder.build()).thenReturn(webClient);
+        when(webClient.get()).thenReturn(requestHeadersUriSpec);
+        when(requestHeadersUriSpec.uri(variablesConfiguration.getAdminUrl() + token.substring(7))).thenReturn(requestHeadersSpec);
+        when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+        when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
+
+        ProductRequest badProductRequest = new ProductRequest(
+                "Strat 56*()_+-@#$!;'~./as|.,&*()-_=+[]{}§",
+                "Desc",
+                BigDecimal.valueOf(23.00),
+                -1,
+                1L,
+                1L,
+                1L,
+                1L
+        );
+
+        Assertions.assertThatThrownBy(() -> productService.createProducts(token, badProductRequest));
+    }
+
+    @Test
+    public void createProductFaultyDescriptionRequestTest() {
+        when(webClientBuilder.build()).thenReturn(webClient);
+        when(webClient.get()).thenReturn(requestHeadersUriSpec);
+        when(requestHeadersUriSpec.uri(variablesConfiguration.getAdminUrl() + token.substring(7))).thenReturn(requestHeadersSpec);
+        when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+        when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
+
+        int asciiVal = 17;
+        String desc = Character.toString((char) asciiVal);
+
+        ProductRequest badProductRequest = new ProductRequest(
+                "Strat Telecaster",
+                desc,
+                BigDecimal.valueOf(23.00),
+                -1,
+                1L,
+                1L,
+                1L,
+                1L
+        );
+
+        Assertions.assertThatThrownBy(() -> productService.createProducts(token, badProductRequest));
+    }
+
+    @Test
+    public void createProductFaultyPriceTest() {
+
+        when(webClientBuilder.build()).thenReturn(webClient);
+        when(webClient.get()).thenReturn(requestHeadersUriSpec);
+        when(requestHeadersUriSpec.uri(variablesConfiguration.getAdminUrl() + token.substring(7))).thenReturn(requestHeadersSpec);
+        when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+        when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
+
+        ProductRequest badProductRequest = new ProductRequest(
+                "Strat",
+                "Desc",
+                BigDecimal.valueOf(0.00),
+                57,
+                1L,
+                1L,
+                1L,
+                1L
+        );
+
+        Assertions.assertThatThrownBy(() -> productService.createProducts(token, badProductRequest));
+
+    }
+
+    @Test
+    public void createProductFaultyQuantityTest() {
+        when(webClientBuilder.build()).thenReturn(webClient);
+        when(webClient.get()).thenReturn(requestHeadersUriSpec);
+        when(requestHeadersUriSpec.uri(variablesConfiguration.getAdminUrl() + token.substring(7))).thenReturn(requestHeadersSpec);
+        when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+        when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
+
+        ProductRequest badProductRequest = new ProductRequest(
+                "Strat",
+                "Desc",
+                BigDecimal.valueOf(23.00),
+                -1,
+                1L,
+                1L,
+                1L,
+                1L
+        );
+
+        Assertions.assertThatThrownBy(() -> productService.createProducts(token, badProductRequest));
+    }
+
+    @Test
     public void createProductFaultyTokenTest() {
         Assertions.assertThatThrownBy(() -> productService.createProducts(token.substring(7), productRequest));
     }
@@ -484,6 +577,7 @@ public class ProductServiceTests {
 
     }
 
+
     @Test
     public void updateProductInvalidTokenTest() {
 
@@ -528,6 +622,104 @@ public class ProductServiceTests {
 
         Assertions.assertThatThrownBy(() -> productService.updateProduct(token, skuId, faultyProductRequest));
 
+    }
+
+    @Test
+    public void updateProductBadNameFormatTest() {
+        when(webClientBuilder.build()).thenReturn(webClient);
+        when(webClient.get()).thenReturn(requestHeadersUriSpec);
+        when(requestHeadersUriSpec.uri(variablesConfiguration.getAdminUrl() + token.substring(7))).thenReturn(requestHeadersSpec);
+        when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+        when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
+
+        UUID skuId = UUID.randomUUID();
+
+        ProductRequest badProductRequest = new ProductRequest(
+                "Strat 56*()_+-@#$!;'~./as|.,&*()-_=+[]{}§",
+                "Desc",
+                BigDecimal.valueOf(23.00),
+                -1,
+                1L,
+                1L,
+                1L,
+                1L
+        );
+
+        Assertions.assertThatThrownBy(() -> productService.updateProduct(token, skuId, badProductRequest));
+    }
+
+    @Test
+    public void updateProductBadDescriptionFormatTest() {
+        when(webClientBuilder.build()).thenReturn(webClient);
+        when(webClient.get()).thenReturn(requestHeadersUriSpec);
+        when(requestHeadersUriSpec.uri(variablesConfiguration.getAdminUrl() + token.substring(7))).thenReturn(requestHeadersSpec);
+        when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+        when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
+
+        UUID skuId = UUID.randomUUID();
+        int asciiVal = 17;
+        String desc = Character.toString((char) asciiVal);
+
+        ProductRequest badProductRequest = new ProductRequest(
+                "Strat Telecaster",
+                desc,
+                BigDecimal.valueOf(23.00),
+                -1,
+                1L,
+                1L,
+                1L,
+                1L
+        );
+
+        Assertions.assertThatThrownBy(() -> productService.updateProduct(token, skuId, badProductRequest));
+    }
+
+    @Test
+    public void updateProductFaultyPriceTest() {
+        when(webClientBuilder.build()).thenReturn(webClient);
+        when(webClient.get()).thenReturn(requestHeadersUriSpec);
+        when(requestHeadersUriSpec.uri(variablesConfiguration.getAdminUrl() + token.substring(7))).thenReturn(requestHeadersSpec);
+        when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+        when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
+
+        UUID skuId = UUID.randomUUID();
+
+        ProductRequest badProductRequest = new ProductRequest(
+                "Strat Telecaster",
+                "Description",
+                BigDecimal.valueOf(0),
+                23,
+                1L,
+                1L,
+                1L,
+                1L
+        );
+
+        Assertions.assertThatThrownBy(() -> productService.updateProduct(token, skuId, badProductRequest));
+    }
+
+    @Test
+    public void updateProductBadQuantityTest() {
+        when(webClientBuilder.build()).thenReturn(webClient);
+        when(webClient.get()).thenReturn(requestHeadersUriSpec);
+        when(requestHeadersUriSpec.uri(variablesConfiguration.getAdminUrl() + token.substring(7))).thenReturn(requestHeadersSpec);
+        when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+        when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
+
+        UUID skuId = UUID.randomUUID();
+
+        ProductRequest badProductRequest = new ProductRequest(
+                "Strat Telecaster",
+                "Dse",
+                BigDecimal.valueOf(23.00),
+                -1,
+                1L,
+                1L,
+                1L,
+                1L
+        );
+
+        Assertions.assertThatThrownBy(() -> productService.updateProduct(token, skuId, badProductRequest));
     }
 
     @Test

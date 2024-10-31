@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -65,6 +66,30 @@ public class ProductService {
         ) {
             log.error("Bad product creation request.");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid and empty product request parameters");
+        }
+
+        Pattern namePattern = Pattern.compile("^[A-Za-z0-9][A-Za-z0-9&' .,:+=#?()%/\"-]{1,49}$");
+
+        if (!namePattern.matcher(productRequest.getProductName()).matches()) {
+            log.error("Bad product name format - " + productRequest.getProductName());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid product name format. Possibly containing forbidden characters.");
+        }
+
+        Pattern descriptionPattern = Pattern.compile("^[ -~\\r\\n]*$", Pattern.MULTILINE);
+
+        if (!descriptionPattern.matcher(productRequest.getDescription()).matches()) {
+            log.error("Bad product description format - " + productRequest.getDescription());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid product description format.");
+        }
+
+        if (productRequest.getPrice().compareTo(BigDecimal.ZERO) <= 0) {
+            log.error("Bad product creation request. Price must be greater than zero");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Product price must be greater than zero");
+        }
+
+        if (productRequest.getQuantity() < 0) {
+            log.error("Bad product creation request. Quantity cannot be negative");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Quantity cannot be negative");
         }
 
         Category category = categoryService.getCategoryById(productRequest.getCategoryId());
@@ -239,6 +264,30 @@ public class ProductService {
                 || product.getCountryId() == null || product.getSubcategoryId() == null) {
             log.error("Bad product update request.");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid and empty product request parameters");
+        }
+
+        Pattern namePattern = Pattern.compile("^[A-Za-z0-9][A-Za-z0-9&' .,:+=#?()%/\"-]{1,49}$");
+
+        if (!namePattern.matcher(product.getProductName()).matches()) {
+            log.error("Bad product name format - " + product.getProductName());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid product name format. Possibly containing forbidden characters.");
+        }
+
+        Pattern descriptionPattern = Pattern.compile("^[ -~\\r\\n]*$", Pattern.MULTILINE);
+
+        if (!descriptionPattern.matcher(product.getDescription()).matches()) {
+            log.error("Bad product description format - " + product.getDescription());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid product description format.");
+        }
+
+        if (product.getPrice().compareTo(BigDecimal.ZERO) <= 0) {
+            log.error("Bad product creation request. Price must be greater than zero");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Product price must be greater than zero");
+        }
+
+        if (product.getQuantity() < 0) {
+            log.error("Bad product creation request. Quantity cannot be negative");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Quantity cannot be negative");
         }
 
         Product productToUpdate = productRepository.findByProductSkuId(id)

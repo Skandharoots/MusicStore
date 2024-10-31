@@ -5,6 +5,7 @@ import com.musicstore.products.model.Country;
 import com.musicstore.products.repository.CountryRepository;
 import com.musicstore.products.security.config.VariablesConfiguration;
 import java.util.List;
+import java.util.regex.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -34,6 +35,13 @@ public class CountryService {
         if (country.getName() == null || country.getName().isEmpty()) {
             log.error("Bad request for country creation.");
             throw new IllegalArgumentException("Country name cannot be empty");
+        }
+
+        Pattern namePattern = Pattern.compile("^[A-Z][A-Za-z ']{1,29}$");
+
+        if (!namePattern.matcher(country.getName()).matches()) {
+            log.error("Bad request for country creation. Wrong name format.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wrong name format");
         }
 
         Country newCountry = new Country(country.getName());
@@ -70,6 +78,13 @@ public class CountryService {
         if (country.getName() == null || country.getName().isEmpty()) {
             log.error("Bad request for country update.");
             throw new IllegalArgumentException("Country name cannot be empty");
+        }
+
+        Pattern namePattern = Pattern.compile("^[A-Z][A-Za-z ']{1,29}$");
+
+        if (!namePattern.matcher(country.getName()).matches()) {
+            log.error("Bad request for country update. Wrong name format.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wrong name format");
         }
 
         Country countryToUpdate = countryRepository

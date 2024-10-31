@@ -92,18 +92,18 @@ function ProductsPage() {
                 <div className="products-page-ribbon">
                     <div className="products-ribbon-image">
                         <div className="img-container">
-                            <img src={ribbonImg}
-                                 alt={"For music enthusiasts"}
-                                 style={{
-                                     objectFit: 'cover',
-                                     maxWidth: '100%',
-                                     maxHeight: '100%',
-                                     display: 'block',
-                                     flexShrink: '0',
-                                     flexGrow: '0',
-                                     borderRadius: '4em',
-                                 }}
-                            />
+                            {/*<img src={ribbonImg}*/}
+                            {/*     alt={"For music enthusiasts"}*/}
+                            {/*     style={{*/}
+                            {/*         objectFit: 'cover',*/}
+                            {/*         maxWidth: '100%',*/}
+                            {/*         maxHeight: '100%',*/}
+                            {/*         display: 'block',*/}
+                            {/*         flexShrink: '0',*/}
+                            {/*         flexGrow: '0',*/}
+                            {/*         borderRadius: '4em',*/}
+                            {/*     }}*/}
+                            {/*/>*/}
                         </div>
                     </div>
                     <div className="ribbon-header">

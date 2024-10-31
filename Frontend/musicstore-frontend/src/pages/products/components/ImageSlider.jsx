@@ -3,11 +3,9 @@ import ArrowBackIosNewOutlinedIcon from '@mui/icons-material/ArrowBackIosNewOutl
 import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutlined';
 import LensOutlinedIcon from '@mui/icons-material/LensOutlined';
 import CircleIcon from '@mui/icons-material/Circle';
-import DeleteIcon from '@mui/icons-material/Delete';
 import "../style/ImageSlider.scss";
-import Tooltip from '@mui/material/Tooltip';
 
-export function ImageSlider({ imageBinaries, onDelete }) {
+export function ImageSlider({ imageBinaries }) {
     const [imageIndex, setImageIndex] = useState(0)
     const [images, setImages] = useState([])
 
@@ -33,15 +31,6 @@ export function ImageSlider({ imageBinaries, onDelete }) {
         })
     }
 
-    const removeCurrentPhoto = () => {
-        onDelete(imageBinaries[imageIndex]);
-        if (imageIndex - 1 < 0) {
-            setImageIndex(0)
-        } else {
-            setImageIndex(imageIndex - 1)
-        }
-    }
-
     return (
         <section
             style={{ width: "100%", height: "100%", position: "relative" }}
@@ -54,13 +43,13 @@ export function ImageSlider({ imageBinaries, onDelete }) {
             }}>
 
                 {images.map((url, index) => (
-                    <div key={{index}} className={'img-slider-img-cont'} style={{ maxHeight: '100%', aspectRatio: "10 / 6",
+                    <div key={index * 100} className={'img-slider-img-cont'} style={{ maxHeight: '100%', aspectRatio: "10 / 6",
                         display: 'flex', justifyContent: 'center', alignItems: 'center', flexShrink: '0',
                         flexGrow: '0', backgroundSize: 'cover', translate: `${-100 * imageIndex}%`}}>
                         <img
                             key={index}
                             src={url}
-                            alt={url.name}
+                            alt={url.id}
                             className="img-slider-img"
                             style={{}}
                         />

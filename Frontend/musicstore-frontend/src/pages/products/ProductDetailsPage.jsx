@@ -53,6 +53,16 @@ function ProductDetailsPage() {
         }).catch(() => {});
     }, []);
 
+    const renderQuantityItems = () => {
+        let items = []
+        for (let i = 1; i < 10; i++) {
+            if (i + 1 <= productQuantity) {
+                items.push(<MenuItem value={i + 1}>{i + 1}</MenuItem>)
+            }
+        }
+        return items;
+    }
+
     let inStockBanner;
 
     if (productQuantity >= 10) {
@@ -186,7 +196,7 @@ function ProductDetailsPage() {
                                 >
                                     <Select
                                         id="quantity-select"
-                                        disabled={productQuantity <= 0}
+                                        disabled={productQuantity === 0}
                                         value={selectedQuantity}
                                         onChange={e => setSelectedQuantity(e.target.value)}
                                         variant={"outlined"}
@@ -195,22 +205,14 @@ function ProductDetailsPage() {
                                         }}
                                     >
                                         <MenuItem value={1}>1</MenuItem>
-                                        <MenuItem value={2}>2</MenuItem>
-                                        <MenuItem value={3}>3</MenuItem>
-                                        <MenuItem value={4}>4</MenuItem>
-                                        <MenuItem value={5}>5</MenuItem>
-                                        <MenuItem value={6}>6</MenuItem>
-                                        <MenuItem value={7}>7</MenuItem>
-                                        <MenuItem value={8}>8</MenuItem>
-                                        <MenuItem value={9}>9</MenuItem>
-                                        <MenuItem value={10}>10</MenuItem>
+                                        {renderQuantityItems()}
                                     </Select>
                                 </FormControl>
                                 <Button
                                     className="purchase-btn"
                                     fullWidth
                                     variant="contained"
-                                    disabled={productQuantity <= 0}
+                                    disabled={productQuantity === 0}
                                     sx={{
                                         width: '60%',
                                         height: '40px',

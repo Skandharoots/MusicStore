@@ -50,7 +50,7 @@ function ProductDetailsPage() {
                 })
             }).catch(() => {})
         }).catch(() => {});
-    }, []);
+    }, [productId.productSkuId]);
 
     const renderQuantityItems = () => {
         let items = []

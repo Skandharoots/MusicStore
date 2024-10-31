@@ -76,12 +76,9 @@ function ProductDetailsPage() {
             <div className="productDetails-header">
                 <div
                     style={{
-                        maxWidth: "1500px",
+                        maxWidth: "1200px",
                         width: "45%",
-                        aspectRatio: "16 / 9",
-                        margin: "0",
-                        borderRadius: '1em',
-                        padding: '1em',
+                        aspectRatio: "10 / 6",
                         boxSizing: 'border-box',
                     }}>
                     <ImageSlider imageBinaries={imageGallery}/>

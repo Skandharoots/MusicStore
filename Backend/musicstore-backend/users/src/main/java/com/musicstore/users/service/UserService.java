@@ -324,7 +324,7 @@ public class UserService implements UserDetailsService {
                 "                                        <tr>\n" +
                 "                                            <td class=\"pad\">\n" +
                 "                                                <div style=\"color:#444a5b;direction:ltr;font-family:Arial, 'Helvetica Neue', Helvetica, sans-serif;font-size:16px;font-weight:400;letter-spacing:0px;line-height:120%;text-align:left;mso-line-height-alt:19.2px;\">\n" +
-                "                                                    <p style=\"margin: 0; margin-bottom: 16px;\">Fancy Strings team are glad You're with us! <br>Let's get your gear nice and ready!<br><br>Before You begin exploring, we need to ask You to to tell us, that You are really You \uD83D\uDE0E</p>\n" +
+                "                                                    <p style=\"margin: 0; margin-bottom: 16px;\">Fancy Strings team are glad You're with us! <br>Let's get Your gear nice and ready!<br><br>Before You begin exploring, we need to ask You to to tell us, that You are really You \uD83D\uDE0E</p>\n" +
                 "                                                    <p style=\"margin: 0;\">Please click on the link below, to verify Your brand new account.</p>\n" +
                 "                                                </div>\n" +
                 "                                            </td>\n" +

@@ -53,6 +53,8 @@ function UpdateProduct() {
     const [manufacturerErrorMsg, setManufacturerErrorMsg] = useState('');
     const [productNameError, setProductNameError] = useState(false);
     const [productNameErrorMsg, setProductNameErrorMsg] = useState('');
+    const [productDescriptionError, setProductDescriptionError] = useState(false);
+    const [productDescriptionErrorMsg, setProductDescriptionErrorMsg] = useState('');
     const [productPriceError, setProductPriceError] = useState(false);
     const [productPriceErrorMsg, setProductPriceErrorMsg] = useState('');
     const [productQuantityError, setProductQuantityError] = useState(false);
@@ -66,11 +68,11 @@ function UpdateProduct() {
         document.title = 'Edit Product';
     }, []);
 
-    useEffect(() => {
-        if (LocalStorageHelper.IsUserLogged() === false || LocalStorageHelper.isUserAdmin() === false) {
-            navigate('/');
-        }
-    }, []);
+    // useEffect(() => {
+    //     if (LocalStorageHelper.IsUserLogged() === false || LocalStorageHelper.isUserAdmin() === false) {
+    //         navigate('/');
+    //     }
+    // }, []);
 
     useEffect(() => {
 
@@ -311,19 +313,35 @@ function UpdateProduct() {
             setProductNameErrorMsg('');
         }
 
+        if (!/^[ -~]+$/gm.test(productDescription)) {
+            setProductDescriptionError(true);
+            setProductDescriptionErrorMsg('Please enter a valid product description.');
+            isValid = false;
+        } else if (!productDescription) {
+            setProductDescriptionError(true);
+            setProductDescriptionErrorMsg('Product description cannot be empty.');
+            isValid = false;
+        } else {
+            setProductDescriptionError(false);
+            setProductDescriptionErrorMsg('');
+        }
+
         if (!productPrice || !/^[1-9][0-9]{0,10}[.][0-9]{2}$/i.test(productPrice)) {
             setProductPriceError(true);
-            setProductPriceErrorMsg('Please enter a valid price in format: 299.99');
+            setProductPriceErrorMsg('Please enter a valid price in format: 299.99.  Price cannot be smaller than 1.00.');
             isValid = false;
         } else {
             setProductPriceError(false);
             setProductPriceErrorMsg('');
         }
 
-        if (!productQuantity || !parseInt(productQuantity)) {
+        if (!productQuantity) {
             setProductQuantityError(true);
             setProductQuantityErrorMsg('Please enter a valid quantity.');
             isValid = false;
+        } else if (productQuantity < 0) {
+            setProductQuantityError(true);
+            setProductQuantityErrorMsg('Quantity cannot be less than 0.');
         } else {
             setProductQuantityError(false);
             setProductQuantityErrorMsg('');
@@ -764,6 +782,9 @@ function UpdateProduct() {
                         rows={4}
                         required
                         value={productDescription}
+                        error={productDescriptionError}
+                        helperText={productDescriptionErrorMsg}
+                        color={productDescriptionError ? 'error' : 'primary'}
                         onChange={e => setProductDescription(e.target.value)}
                         variant={"outlined"}
                         sx={{

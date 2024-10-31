@@ -5,7 +5,6 @@ import {ImageSlider} from "./components/ImageSlider.jsx";
 import {Button, FormControl, InputLabel, MenuItem, Select} from "@mui/material";
 import ShareIcon from '@mui/icons-material/Share';
 import axios from "axios";
-import {Bounce, toast} from "react-toastify";
 
 
 function ProductDetailsPage() {

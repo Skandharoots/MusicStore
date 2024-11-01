@@ -3,7 +3,8 @@ import {useEffect, useState} from "react";
 import axios from "axios";
 import './style/ProductsPage.scss';
 import {
-    Button,
+    Backdrop,
+    Button, CircularProgress,
     FormControl,
     FormControlLabel,
     InputLabel,
@@ -35,6 +36,8 @@ function ProductsPage() {
     const [sortBy, setSortBy] = useState(JSON.stringify({sortBy: 'dateAdded', direction: 'desc'}));
     const [lowPrice, setLowPrice] = useState(0);
     const [highPrice, setHighPrice] = useState(100000);
+
+    const [openBackdrop, setOpenBackdrop] = useState(false);
 
     const categoryId = useParams();
     const navigate = useNavigate();
@@ -69,13 +72,17 @@ function ProductsPage() {
     }, [selectedSubcategoryName, selectedCountryName, categoryId]);
 
     useEffect(() => {
+        setOpenBackdrop(true);
         let sorting = JSON.parse(sortBy);
         axios.get(`api/products/items/get/values/${categoryId.categoryId}?country=${selectedCountryName}&manufacturer=${selectedManufacturerName}&subcategory=${selectedSubcategoryName}&lowPrice=${lowPrice}&highPrice=${highPrice}&sortBy=${sorting.sortBy}&sortDir=${sorting.direction}&page=${currentPage - 1}&pageSize=${perPage}`)
             .then(res => {
                 setProducts(res.data.content);
                 setTotalPages(res.data.totalPages);
                 setTotalElements(res.data.numberOfElements);
-            }).catch(() => {});
+                setOpenBackdrop(false);
+            }).catch(() => {
+                setOpenBackdrop(false);
+        });
 
     }, [sortBy, selectedSubcategoryName, selectedCountryName, selectedManufacturerName, categoryId, perPage, currentPage]);
 
@@ -341,6 +348,12 @@ function ProductsPage() {
                     </FormControl>
                 </div>
                 <div className="content-grid">
+                    <Backdrop
+                        sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
+                        open={openBackdrop}
+                    >
+                        <CircularProgress color="inherit" />
+                    </Backdrop>
                     <Grid container style={{ marginLeft: '16px', paddingBottom: '16px', borderBottom: '1px solid rgba(0, 0, 0, 0.1)'}} rowSpacing={2} columnSpacing={2}>
                         {
                             [...products].map((product) => (

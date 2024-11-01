@@ -1,4 +1,4 @@
-import {Box, Button, Typography} from "@mui/material";
+import {Backdrop, Box, Button, CircularProgress, Typography} from "@mui/material";
 import TextField from "@mui/material/TextField";
 // eslint-disable-next-line no-unused-vars
 import React, {useEffect, useState} from "react";
@@ -17,6 +17,7 @@ function UpdateCountry() {
     const [countryName, setCountryName] = useState('');
     const [countryNameError, setCountryNameError] = useState(false);
     const [countryNameErrorMsg, setCountryNameErrorMsg] = useState('');
+    const [openBackdrop, setOpenBackdrop] = useState(false);
 
     const navigate = useNavigate();
 
@@ -65,9 +66,9 @@ function UpdateCountry() {
         if (validateInputs() === false) {
             return;
         }
-
         axios.get('api/users/csrf/token', {})
             .then((response) => {
+                setOpenBackdrop(true);
                 axios.put(`api/products/countries/update/${id.id}`, {
                         name: countryName,
                     },
@@ -78,6 +79,7 @@ function UpdateCountry() {
                             'Authorization': 'Bearer ' + LocalStorageHelper.getJwtToken(),
                         }
                     }).then(() => {
+                    setOpenBackdrop(false);
                     toast.success("Country updated!", {
                         position: "bottom-center",
                         autoClose: 5000,
@@ -105,6 +107,7 @@ function UpdateCountry() {
                     });
                 })
             }).catch(() => {
+            setOpenBackdrop(false);
             toast.error("Cannot fetch token", {
                 position: "bottom-center",
                 autoClose: 3000,
@@ -122,6 +125,12 @@ function UpdateCountry() {
 
     return (
         <div className="CountryUpdate">
+            <Backdrop
+                sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
+                open={openBackdrop}
+            >
+                <CircularProgress color="inherit" />
+            </Backdrop>
             <div className="CountryUpdateForm">
                 <Typography
                     component="h1"

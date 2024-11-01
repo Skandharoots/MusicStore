@@ -1,4 +1,4 @@
-import {Box, Button, Typography} from "@mui/material";
+import {Backdrop, Box, Button, CircularProgress, Typography} from "@mui/material";
 import TextField from "@mui/material/TextField";
 import {useEffect, useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
@@ -16,6 +16,7 @@ function UpdateCategory() {
     const [categoryName, setCategoryName] = useState('');
     const [categoryNameError, setCategoryNameError] = useState(false);
     const [categoryNameErrorMsg, setCategoryNameErrorMsg] = useState('');
+    const [openBackdrop, setOpenBackdrop] = useState(false);
 
     const navigate = useNavigate();
 
@@ -64,9 +65,9 @@ function UpdateCategory() {
         if (validateInputs() === false) {
             return;
         }
-
         axios.get('api/users/csrf/token', {})
             .then((response) => {
+                setOpenBackdrop(true);
                 axios.put(`api/products/categories/update/${id.id}`, {
                         categoryName: categoryName,
                     },
@@ -77,6 +78,7 @@ function UpdateCategory() {
                             'Authorization': 'Bearer ' + LocalStorageHelper.getJwtToken(),
                         }
                     }).then(() => {
+                        setOpenBackdrop(false);
                         toast.success("Category updated ;)", {
                             position: "bottom-center",
                             autoClose: 5000,
@@ -91,6 +93,7 @@ function UpdateCategory() {
                         navigate('/admin/category');
 
                 }).catch((error) => {
+                    setOpenBackdrop(false);
                     toast.error(error.response.data.message, {
                         position: "bottom-center",
                         autoClose: 3000,
@@ -121,6 +124,12 @@ function UpdateCategory() {
 
     return (
         <div className="CategoryUpdate">
+            <Backdrop
+                sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
+                open={openBackdrop}
+            >
+                <CircularProgress color="inherit" />
+            </Backdrop>
             <div className="CategoryUpdateForm">
                 <Typography
                     component="h1"

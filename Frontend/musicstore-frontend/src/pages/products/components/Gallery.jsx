@@ -5,7 +5,7 @@ import LensOutlinedIcon from '@mui/icons-material/LensOutlined';
 import CircleIcon from '@mui/icons-material/Circle';
 import "../style/ImageSlider.scss";
 
-export function ImageSlider({ imageBinaries }) {
+export function Gallery({ imageBinaries }) {
     const [imageIndex, setImageIndex] = useState(0)
     const [images, setImages] = useState([])
 
@@ -43,11 +43,11 @@ export function ImageSlider({ imageBinaries }) {
             }}>
 
                 {images.map((url, index) => (
-                    <div key={index * 100} className={'img-slider-img-cont'} style={{ maxHeight: '100%', aspectRatio: "10 / 6",
+                    <div key={index} className={'img-slider-img-cont'} style={{ maxHeight: '100%', aspectRatio: "10 / 6",
                         display: 'flex', justifyContent: 'center', alignItems: 'center', flexShrink: '0',
                         flexGrow: '0', backgroundSize: 'cover', translate: `${-100 * imageIndex}%`}}>
                         <img
-                            key={index}
+                            key={index * 10}
                             src={url}
                             alt={url.id}
                             className="img-slider-img"

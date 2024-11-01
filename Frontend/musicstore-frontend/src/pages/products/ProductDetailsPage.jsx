@@ -1,7 +1,7 @@
 import {useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import './style/ProductsDetailsPage.scss';
-import {ImageSlider} from "./components/ImageSlider.jsx";
+import {Gallery} from "./components/Gallery.jsx";
 import {Button, FormControl, MenuItem, Select} from "@mui/material";
 import ShareIcon from '@mui/icons-material/Share';
 import axios from "axios";
@@ -41,13 +41,13 @@ function ProductDetailsPage() {
             setCountryName(res.data.builtinCountry.name);
             axios.get(`api/azure/list?path=${res.data.productSkuId}`)
             .then(res => {
-                [...res.data].map((path) => {
+                [...res.data].map((path) => (
                     axios.get(`api/azure/read?path=${path}`, {responseType: 'blob'})
                     .then(res => {
                         let blob = new Blob([res.data], { type: "image/*" });
-                        setImageGallery(oldGallery => [blob, ...oldGallery]);
+                        setImageGallery(oldGallery => [blob,...oldGallery]);
                     }).catch(() => {})
-                })
+                ))
             }).catch(() => {})
         }).catch(() => {});
     }, [productId.productSkuId]);
@@ -90,7 +90,7 @@ function ProductDetailsPage() {
                         aspectRatio: "10 / 6",
 
                     }}>
-                    <ImageSlider imageBinaries={imageGallery}/>
+                    <Gallery imageBinaries={imageGallery}/>
                 </div>
                 <div className="productDetails-info">
                     <div

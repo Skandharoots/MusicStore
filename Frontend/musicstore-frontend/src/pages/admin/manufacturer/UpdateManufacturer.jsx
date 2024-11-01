@@ -1,4 +1,4 @@
-import {Box, Button, Typography} from "@mui/material";
+import {Backdrop, Box, Button, CircularProgress, Typography} from "@mui/material";
 import TextField from "@mui/material/TextField";
 import {useEffect, useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
@@ -16,6 +16,7 @@ function UpdateManufacturer() {
     const [manufacturerName, setManufacturerName] = useState('');
     const [manufacturerNameError, setManufacturerNameError] = useState(false);
     const [manufacturerNameErrorMsg, setManufacturerNameErrorMsg] = useState('');
+    const [openBackdrop, setOpenBackdrop] = useState(false);
 
     const navigate = useNavigate();
 
@@ -67,6 +68,7 @@ function UpdateManufacturer() {
 
         axios.get('api/users/csrf/token', {})
             .then((response) => {
+                setOpenBackdrop(true);
                 axios.put(`api/products/manufacturers/update/${id.id}`, {
                         name: manufacturerName,
                     },
@@ -77,20 +79,22 @@ function UpdateManufacturer() {
                             'Authorization': 'Bearer ' + LocalStorageHelper.getJwtToken(),
                         }
                     }).then(() => {
-                    toast.success("Manufacturer updated!", {
-                        position: "bottom-center",
-                        autoClose: 5000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: false,
-                        progress: undefined,
-                        theme: "colored",
-                        transition: Bounce,
-                    });
-                    navigate('/admin/manufacturer');
+                        setOpenBackdrop(false);
+                        toast.success("Manufacturer updated!", {
+                            position: "bottom-center",
+                            autoClose: 5000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: false,
+                            progress: undefined,
+                            theme: "colored",
+                            transition: Bounce,
+                        });
+                        navigate('/admin/manufacturer');
 
                 }).catch((error) => {
+                    setOpenBackdrop(false);
                     toast.error(error.response.data.message, {
                         position: "bottom-center",
                         autoClose: 3000,
@@ -121,6 +125,12 @@ function UpdateManufacturer() {
 
     return (
         <div className="ManufacturerUpdate">
+            <Backdrop
+                sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
+                open={openBackdrop}
+            >
+                <CircularProgress color="inherit" />
+            </Backdrop>
             <div className="ManufacturerUpdateForm">
                 <Typography
                     component="h1"

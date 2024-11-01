@@ -54,11 +54,11 @@ export function ImageSlider({ imageBinaries, onDelete }) {
             }}>
 
                     {images.map((url, index) => (
-                        <div key={{index}} className={'img-slider-img-cont'} style={{ maxHeight: '100%', aspectRatio: "10 / 6",
+                        <div key={index} className={'img-slider-img-cont'} style={{ maxHeight: '100%', aspectRatio: "10 / 6",
                             display: 'flex', justifyContent: 'center', alignItems: 'center', flexShrink: '0',
                             flexGrow: '0', backgroundSize: 'cover', translate: `${-100 * imageIndex}%`}}>
                         <img
-                            key={index}
+                            key={index * 10}
                             src={url}
                             alt={url.name}
                             className="img-slider-img"

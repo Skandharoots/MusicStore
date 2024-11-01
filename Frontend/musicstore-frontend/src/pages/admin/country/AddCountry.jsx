@@ -1,4 +1,4 @@
-import {Box, Button, Typography} from "@mui/material";
+import {Backdrop, Box, Button, CircularProgress, Typography} from "@mui/material";
 import TextField from "@mui/material/TextField";
 import {useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
@@ -13,6 +13,7 @@ function AddCountry() {
     const [countryName, setCountryName] = useState('');
     const [countryNameError, setCountryNameError] = useState(false);
     const [countryNameErrorMsg, setCountryNameErrorMsg] = useState('');
+    const [openBackdrop, setOpenBackdrop] = useState(false);
 
     const navigate = useNavigate();
 
@@ -49,9 +50,9 @@ function AddCountry() {
         if (validateInputs() === false) {
             return;
         }
-
         axios.get('api/users/csrf/token', {})
             .then((response) => {
+                setOpenBackdrop(true);
                 axios.post('api/products/countries/create',
                     {
                         name: countryName,
@@ -63,6 +64,7 @@ function AddCountry() {
                             'Content-Type': 'application/json',
                         }
                     }).then(() => {
+                    setOpenBackdrop(false);
                     toast.success('Country Added!', {
                         position: "bottom-center",
                         autoClose: 5000,
@@ -76,6 +78,7 @@ function AddCountry() {
                     });
                     navigate('/admin/country');
                 }).catch((error) => {
+                    setOpenBackdrop(false);
                     toast.error(error.response.data.message, {
                         position: "bottom-center",
                         autoClose: 3000,
@@ -107,6 +110,12 @@ function AddCountry() {
 
     return (
         <div className="CountryAdd">
+            <Backdrop
+                sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
+                open={openBackdrop}
+            >
+                <CircularProgress color="inherit" />
+            </Backdrop>
             <div className="AddCountForm">
                 <Typography
                     component="h1"

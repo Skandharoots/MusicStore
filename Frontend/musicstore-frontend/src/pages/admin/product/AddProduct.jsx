@@ -5,7 +5,7 @@ import {
     MenuItem,
     Typography,
     InputLabel,
-    FormControl, InputAdornment, FormHelperText,
+    FormControl, InputAdornment, FormHelperText, CircularProgress, Backdrop,
 } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import {useNavigate} from "react-router-dom";
@@ -36,6 +36,7 @@ function AddProduct() {
     const [productGalleryPhoto, setProductGalleryPhoto] = useState([]);
     const [hideGallery, setHideGallery] = useState(true);
     const [hideDeleteGalBtn, setHideDeleteGalBtn] = useState(true);
+    const [openBackdrop, setOpenBackdrop] = useState(false);
 
     const [categoryError, setCategoryError] = useState(false);
     const [categoryErrorMsg, setCategoryErrorMsg] = useState('');
@@ -318,6 +319,7 @@ function AddProduct() {
         }
         axios.get('api/users/csrf/token', {})
             .then((response) => {
+                setOpenBackdrop(true);
                 axios.post('api/products/items/create',
                     {
                         productName: productName,
@@ -377,6 +379,7 @@ function AddProduct() {
                                         })
                                     })
                                 })
+                                setOpenBackdrop(false);
                                 toast.success('New product added!', {
                                     position: "bottom-center",
                                     autoClose: 3000,
@@ -403,6 +406,7 @@ function AddProduct() {
                                 })
                         })
                 }).catch((error) => {
+                    setOpenBackdrop(false);
                     toast.error(error.response.data.message, {
                         position: "bottom-center",
                         autoClose: 3000,
@@ -434,6 +438,12 @@ function AddProduct() {
 
     return (
         <div className="ProductAdd">
+            <Backdrop
+                sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
+                open={openBackdrop}
+            >
+                <CircularProgress color="inherit" />
+            </Backdrop>
             <div className="AddProductForm">
                 <Typography
                     component="h1"

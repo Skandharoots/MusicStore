@@ -1,6 +1,7 @@
 import {
+    Backdrop,
     Box,
-    Button,
+    Button, CircularProgress,
     FormControl,
     FormHelperText,
     InputAdornment,
@@ -42,6 +43,8 @@ function UpdateProduct() {
     const [hideDeleteGalBtn, setHideDeleteGalBtn] = useState(true);
     const [wasGalleryUpdated, setWasGalleryUpdated] = useState(false);
     const [imagesPaths, setImagesPaths] = useState([]);
+    const [openBackdrop, setOpenBackdrop] = useState(false);
+    const [testArr, setTestArr] = useState([]);
 
     const [categoryError, setCategoryError] = useState(false);
     const [categoryErrorMsg, setCategoryErrorMsg] = useState('');
@@ -156,13 +159,13 @@ function UpdateProduct() {
             .then(res => {
                 setImagesPaths(res.data);
                 if (res.data.length > 0) {
-                    [...res.data].map((path) => {
+                    [...res.data].map((path) => (
                         axios.get(`api/azure/read?path=${path}`, {responseType: 'blob'})
                             .then(res => {
                                 let blob = new Blob([res.data], { type: "image/*" });
-                                setProductGalleryPhoto(oldGallery => [blob, ...oldGallery]);
-                            })
-                    });
+                                setProductGalleryPhoto(old => [blob,...old]);
+                            }).catch(() => {})
+                    ));
                     setHideGallery(false);
                     setHideDeleteGalBtn(false);
                 } else {
@@ -398,6 +401,7 @@ function UpdateProduct() {
             });
             axios.get('api/users/csrf/token', {})
                 .then((response) => {
+                    setOpenBackdrop(true);
                     axios.put(`api/products/items/update/${skuId.skuId}`,
                         {
                             productName: productName,
@@ -457,6 +461,7 @@ function UpdateProduct() {
                                         })
                                     })
                                 })
+                                setOpenBackdrop(false);
                                 toast.success('Product updated!', {
                                     position: "bottom-center",
                                     autoClose: 3000,
@@ -483,6 +488,7 @@ function UpdateProduct() {
                             })
                         })
                     }).catch((error) => {
+                        setOpenBackdrop(false);
                         toast.error(error.response.data.message, {
                             position: "bottom-center",
                             autoClose: 3000,
@@ -511,6 +517,7 @@ function UpdateProduct() {
         } else {
             axios.get('api/users/csrf/token', {})
                 .then((response) => {
+                    setOpenBackdrop(true);
                     axios.put(`api/products/items/update/${skuId.skuId}`,
                         {
                             productName: productName,
@@ -529,6 +536,7 @@ function UpdateProduct() {
                                 'Content-Type': 'application/json',
                             }
                         }).then((response) => {
+                            setOpenBackdrop(false);
                             toast.success(response.data, {
                                 position: "bottom-center",
                                 autoClose: 3000,
@@ -542,6 +550,7 @@ function UpdateProduct() {
                             });
                             setTimeout(() => {navigate('/admin/product')}, 3000);
                         }).catch((error) => {
+                            setOpenBackdrop(false);
                             toast.error(error.response.data.message, {
                                 position: "bottom-center",
                                 autoClose: 3000,
@@ -572,6 +581,12 @@ function UpdateProduct() {
 
     return (
         <div className="ProductUpdate">
+            <Backdrop
+                sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
+                open={openBackdrop}
+            >
+                <CircularProgress color="inherit" />
+            </Backdrop>
             <div className="ProductUpdateForm">
                 <Typography
                     component="h1"

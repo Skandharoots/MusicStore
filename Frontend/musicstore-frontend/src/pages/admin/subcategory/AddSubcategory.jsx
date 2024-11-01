@@ -1,4 +1,14 @@
-import {Box, Button, Select, MenuItem, Typography, InputLabel, FormControl} from "@mui/material";
+import {
+    Box,
+    Button,
+    Select,
+    MenuItem,
+    Typography,
+    InputLabel,
+    FormControl,
+    CircularProgress,
+    Backdrop
+} from "@mui/material";
 import TextField from "@mui/material/TextField";
 import {useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
@@ -15,6 +25,7 @@ function AddSubcategory() {
     const [selectCategoryId, setSelectCategoryId] = useState('');
     const [subcategoryNameError, setSubcategoryNameError] = useState(false);
     const [subcategoryNameErrorMsg, setSubcategoryNameErrorMsg] = useState('');
+    const [openBackdrop, setOpenBackdrop] = useState(false);
 
     const navigate = useNavigate();
 
@@ -76,6 +87,7 @@ function AddSubcategory() {
 
         axios.get('api/users/csrf/token', {})
             .then((response) => {
+                setOpenBackdrop(true);
                 axios.post('api/products/subcategories/create',
                     {
                         name: subcategoryName,
@@ -88,6 +100,7 @@ function AddSubcategory() {
                             'Content-Type': 'application/json',
                         }
                     }).then(() => {
+                    setTimeout(() => {setOpenBackdrop(false)}, 500);
                     toast.success('Subcategory Added!', {
                         position: "bottom-center",
                         autoClose: 5000,
@@ -101,6 +114,7 @@ function AddSubcategory() {
                     });
                     navigate('/admin/subcategory');
                 }).catch((error) => {
+                    setTimeout(() => {setOpenBackdrop(false)}, 500);
                     toast.error(error.response.data.message, {
                         position: "bottom-center",
                         autoClose: 3000,
@@ -132,6 +146,12 @@ function AddSubcategory() {
 
     return (
         <div className="SubcategoryAdd">
+            <Backdrop
+                sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
+                open={openBackdrop}
+            >
+                <CircularProgress color="inherit" />
+            </Backdrop>
             <div className="AddSubcatForm">
                 <Typography
                     component="h1"

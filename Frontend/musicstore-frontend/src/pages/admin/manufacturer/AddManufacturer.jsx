@@ -65,7 +65,7 @@ function AddManufacturer() {
                             'Content-Type': 'application/json',
                         }
                     }).then(() => {
-                        setOpenBackdrop(false);
+                        setTimeout(() => {setOpenBackdrop(false)}, 500);
                         toast.success('Manufacturer Added!', {
                             position: "bottom-center",
                             autoClose: 5000,
@@ -79,7 +79,7 @@ function AddManufacturer() {
                         });
                         navigate('/admin/manufacturer');
                 }).catch((error) => {
-                    setOpenBackdrop(false);
+                    setTimeout(() => {setOpenBackdrop(false)}, 500);
                     toast.error(error.response.data.message, {
                         position: "bottom-center",
                         autoClose: 3000,

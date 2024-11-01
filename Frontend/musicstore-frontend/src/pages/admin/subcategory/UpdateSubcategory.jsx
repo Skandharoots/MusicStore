@@ -1,4 +1,4 @@
-import {Box, Button, Typography} from "@mui/material";
+import {Backdrop, Box, Button, CircularProgress, Typography} from "@mui/material";
 import TextField from "@mui/material/TextField";
 // eslint-disable-next-line no-unused-vars
 import React, {useEffect, useState} from "react";
@@ -17,6 +17,7 @@ function UpdateSubcategory() {
     const [subcategoryName, setSubcategoryName] = useState('');
     const [subcategoryNameError, setSubcategoryNameError] = useState(false);
     const [subcategoryNameErrorMsg, setSubcategoryNameErrorMsg] = useState('');
+    const [openBackdrop, setOpenBackdrop] = useState(false);
 
     const navigate = useNavigate();
 
@@ -69,6 +70,7 @@ function UpdateSubcategory() {
 
         axios.get('api/users/csrf/token', {})
             .then((response) => {
+                setOpenBackdrop(true);
                 axios.put(`api/products/subcategories/update/${id.id}`, {
                         name: subcategoryName,
                     },
@@ -79,6 +81,7 @@ function UpdateSubcategory() {
                             'Authorization': 'Bearer ' + LocalStorageHelper.getJwtToken(),
                         }
                     }).then(() => {
+                    setTimeout(() => {setOpenBackdrop(false)}, 500);
                     toast.success("Subcategory updated!", {
                         position: "bottom-center",
                         autoClose: 5000,
@@ -93,6 +96,7 @@ function UpdateSubcategory() {
                     navigate('/admin/subcategory');
 
                 }).catch((error) => {
+                    setTimeout(() => {setOpenBackdrop(false)}, 500);
                     toast.error(error.response.data.message, {
                         position: "bottom-center",
                         autoClose: 3000,
@@ -123,6 +127,12 @@ function UpdateSubcategory() {
 
     return (
         <div className="SubcategoryUpdate">
+            <Backdrop
+                sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
+                open={openBackdrop}
+            >
+                <CircularProgress color="inherit" />
+            </Backdrop>
             <div className="SubcategoryUpdateForm">
                 <Typography
                     component="h1"

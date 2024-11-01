@@ -379,7 +379,7 @@ function AddProduct() {
                                         })
                                     })
                                 })
-                                setOpenBackdrop(false);
+                                setTimeout(() => {setOpenBackdrop(false)}, 500);
                                 toast.success('New product added!', {
                                     position: "bottom-center",
                                     autoClose: 3000,
@@ -406,7 +406,7 @@ function AddProduct() {
                                 })
                         })
                 }).catch((error) => {
-                    setOpenBackdrop(false);
+                    setTimeout(() => {setOpenBackdrop(false)}, 500);
                     toast.error(error.response.data.message, {
                         position: "bottom-center",
                         autoClose: 3000,

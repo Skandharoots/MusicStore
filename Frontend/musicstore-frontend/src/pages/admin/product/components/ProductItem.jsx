@@ -1,4 +1,4 @@
-import {Button} from "@mui/material";
+import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from "@mui/material";
 import {Link} from "react-router-dom";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -6,7 +6,7 @@ import LocalStorageHelper from "../../../../helpers/LocalStorageHelper.jsx";
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 import Grid from "@mui/material/Grid2";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Bounce, toast} from "react-toastify";
 
 
@@ -14,6 +14,15 @@ function ProductItem(props) {
 
     const [img, setImg] = useState(null);
     const [filePaths, setFilePaths] = useState([]);
+    const [open, setOpen] = useState(false);
+
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
 
     useEffect(() => {
         axios.get(`api/azure/list?path=${props.item.productSkuId}`, {})
@@ -110,7 +119,7 @@ function ProductItem(props) {
                             'X-XSRF-TOKEN': response.data.token,
                         }
                     }).then(() => {
-                            toast.success("Product image nr: " + (index + 1) + "deleted", {
+                            toast.success("Product image nr: " + (index + 1) + " deleted", {
                                 position: "bottom-center",
                                 autoClose: 3000,
                                 hideProgressBar: false,
@@ -217,21 +226,57 @@ function ProductItem(props) {
                 >
                     <EditIcon fontSize="small" />
                 </Button>
-                <Button
-                    variant="contained"
-                    size="small"
-                    type="button"
-                    onClick={deleteProduct}
-                    fullWidth
-                    sx={{
-                        width: 'fit-content',
-                        margin: '4px 0',
-                        backgroundColor: 'rgb(159,20,20)',
-                        "&:hover": {backgroundColor: 'rgb(193,56,56)'},
-                    }}
-                >
-                    <DeleteIcon fontSize="small" />
-                </Button>
+                <React.Fragment>
+                    <Button
+                        variant="contained"
+                        size="small"
+                        type="button"
+                        onClick={handleClickOpen}
+                        fullWidth
+                        sx={{
+                            width: 'fit-content',
+                            margin: '4px 0',
+                            backgroundColor: 'rgb(159,20,20)',
+                            "&:hover": {backgroundColor: 'rgb(193,56,56)'},
+                            "&:focus": {outline: 'none !important'},
+                        }}
+                    >
+                        <DeleteIcon fontSize="small" />
+                    </Button>
+                    <Dialog
+                        open={open}
+                        onClose={handleClose}
+                    >
+                        <DialogTitle>Delete product</DialogTitle>
+                        <DialogContent>
+                            <DialogContentText>
+                                Do you want to delete {props.item.productName} product?
+                            </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button
+                                variant="contained"
+                                onClick={handleClose}
+                                sx={{
+                                    backgroundColor: 'rgb(11,108,128)',
+                                    "&:hover": {backgroundColor: 'rgb(16,147,177)'},
+                                }}
+                            >
+                                Cancel
+                            </Button>
+                            <Button
+                                variant="contained"
+                                onClick={deleteProduct}
+                                sx={{
+                                    backgroundColor: 'rgb(159,20,20)',
+                                    "&:hover": {backgroundColor: 'rgb(193,56,56)'},
+                                }}
+                            >
+                                Delete
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
+                </React.Fragment>
             </div>
 
         </Grid>

@@ -45,7 +45,6 @@ function UpdateProduct() {
     const [wasGalleryUpdated, setWasGalleryUpdated] = useState(false);
     const [imagesPaths, setImagesPaths] = useState([]);
     const [openBackdrop, setOpenBackdrop] = useState(false);
-    const [testArr, setTestArr] = useState([]);
 
     const [categoryError, setCategoryError] = useState(false);
     const [categoryErrorMsg, setCategoryErrorMsg] = useState('');
@@ -464,7 +463,7 @@ function UpdateProduct() {
                                         })
                                     })
                                 })
-                                setOpenBackdrop(false);
+                                setTimeout(() => {setOpenBackdrop(false)}, 500);
                                 toast.success('Product updated!', {
                                     position: "bottom-center",
                                     autoClose: 3000,
@@ -491,7 +490,7 @@ function UpdateProduct() {
                             })
                         })
                     }).catch((error) => {
-                        setOpenBackdrop(false);
+                        setTimeout(() => {setOpenBackdrop(false)}, 500);
                         toast.error(error.response.data.message, {
                             position: "bottom-center",
                             autoClose: 3000,
@@ -539,7 +538,7 @@ function UpdateProduct() {
                                 'Content-Type': 'application/json',
                             }
                         }).then((response) => {
-                            setOpenBackdrop(false);
+                            setTimeout(() => {setOpenBackdrop(false)}, 500);
                             toast.success(response.data, {
                                 position: "bottom-center",
                                 autoClose: 3000,
@@ -553,7 +552,7 @@ function UpdateProduct() {
                             });
                             setTimeout(() => {navigate('/admin/product')}, 3000);
                         }).catch((error) => {
-                            setOpenBackdrop(false);
+                            setTimeout(() => {setOpenBackdrop(false)}, 500);
                             toast.error(error.response.data.message, {
                                 position: "bottom-center",
                                 autoClose: 3000,

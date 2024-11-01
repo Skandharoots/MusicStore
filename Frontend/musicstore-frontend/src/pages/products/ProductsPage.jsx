@@ -28,7 +28,6 @@ function ProductsPage() {
     const [subcategories, setSubcategories] = useState([]);
     const [selectedSubcategoryName, setSelectedSubcategoryName] = useState('');
     const [totalPages, setTotalPages] = useState(1);
-    const [totalElements, setTotalElements] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);
     const [perPage, setPerPage] = useState(20);
 
@@ -78,10 +77,9 @@ function ProductsPage() {
             .then(res => {
                 setProducts(res.data.content);
                 setTotalPages(res.data.totalPages);
-                setTotalElements(res.data.numberOfElements);
-                setOpenBackdrop(false);
+                setTimeout(() => {setOpenBackdrop(false)}, 500);
             }).catch(() => {
-                setOpenBackdrop(false);
+                setTimeout(() => {setOpenBackdrop(false)}, 500);
         });
 
     }, [sortBy, selectedSubcategoryName, selectedCountryName, selectedManufacturerName, categoryId, perPage, currentPage]);

@@ -1,5 +1,5 @@
 import '../style/Product.scss';
-import {Button} from "@mui/material";
+import {Backdrop, Button, CircularProgress} from "@mui/material";
 import Grid from '@mui/material/Grid2';
 import { useNavigate } from "react-router-dom";
 import {useEffect, useState} from "react";
@@ -24,7 +24,7 @@ function Product() {
     const [currentPage, setCurrentPage] = useState(1);
     const [hideClearButton, setHideClearButton] = useState(true);
     const [restoreDefaults, setRestoreDefaults] = useState(1);
-
+    const [openBackdrop, setOpenBackdrop] = useState(false);
 
     const navigate = useNavigate();
 
@@ -61,12 +61,15 @@ function Product() {
     }, []);
 
     useEffect(() => {
+        setOpenBackdrop(true);
         axios.get(`api/products/items/get?page=${currentPage - 1}&pageSize=${pageSize}`, {})
             .then(res => {
                 setTotalPages(res.data.totalPages);
                 setTotalElements(res.data.numberOfElements);
                 setProducts(res.data.content);
+                setTimeout(() => {setOpenBackdrop(false)}, 500);
             }).catch(error => {
+            setTimeout(() => {setOpenBackdrop(false)}, 500);
             toast.error(error.response.data.message, {
                 position: "bottom-center",
                 autoClose: 3000,
@@ -115,6 +118,12 @@ function Product() {
 
     return (
         <div className="product">
+            <Backdrop
+                sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
+                open={openBackdrop}
+            >
+                <CircularProgress color="inherit" />
+            </Backdrop>
             <div className="page-title">
                 <h5>Products</h5>
             </div>

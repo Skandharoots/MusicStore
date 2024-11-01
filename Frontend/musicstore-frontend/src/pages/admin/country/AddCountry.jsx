@@ -64,7 +64,7 @@ function AddCountry() {
                             'Content-Type': 'application/json',
                         }
                     }).then(() => {
-                    setOpenBackdrop(false);
+                    setTimeout(() => {setOpenBackdrop(false)}, 500);
                     toast.success('Country Added!', {
                         position: "bottom-center",
                         autoClose: 5000,
@@ -78,7 +78,7 @@ function AddCountry() {
                     });
                     navigate('/admin/country');
                 }).catch((error) => {
-                    setOpenBackdrop(false);
+                    setTimeout(() => {setOpenBackdrop(false)}, 500);
                     toast.error(error.response.data.message, {
                         position: "bottom-center",
                         autoClose: 3000,

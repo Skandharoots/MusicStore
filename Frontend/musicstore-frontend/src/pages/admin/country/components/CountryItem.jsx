@@ -1,4 +1,4 @@
-import {Button} from "@mui/material";
+import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from "@mui/material";
 import {Link} from "react-router-dom";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -7,9 +7,20 @@ import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 import LocalStorageHelper from "../../../../helpers/LocalStorageHelper.jsx";
 import Grid from "@mui/material/Grid2";
+import React, {useState} from "react";
 
 
 function CountryItem(props) {
+
+    const [open, setOpen] = useState(false);
+
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
 
     const deleteCountry = (event) => {
         event.preventDefault();
@@ -113,19 +124,55 @@ function CountryItem(props) {
                 >
                     <EditIcon fontSize="small" />
                 </Button>
-                <Button
-                    variant="contained"
-                    size="small"
-                    type="button"
-                    onClick={deleteCountry}
-                    sx={{
-                        width: 'fit-content',
-                        backgroundColor: 'rgb(159,20,20)',
-                        "&:hover": {backgroundColor: 'rgb(193,56,56)'},
-                    }}
-                >
-                    <DeleteIcon fontSize="small" />
-                </Button>
+                <React.Fragment>
+                    <Button
+                        variant="contained"
+                        size="small"
+                        type="button"
+                        onClick={handleClickOpen}
+                        sx={{
+                            width: 'fit-content',
+                            backgroundColor: 'rgb(159,20,20)',
+                            "&:hover": {backgroundColor: 'rgb(193,56,56)'},
+                            "&:focus": {outline: 'none !important'},
+                        }}
+                    >
+                        <DeleteIcon fontSize="small" />
+                    </Button>
+                    <Dialog
+                        open={open}
+                        onClose={handleClose}
+                    >
+                        <DialogTitle>Delete country</DialogTitle>
+                        <DialogContent>
+                            <DialogContentText>
+                                Do you want to delete {props.name} country?
+                            </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button
+                                variant="contained"
+                                onClick={handleClose}
+                                sx={{
+                                    backgroundColor: 'rgb(11,108,128)',
+                                    "&:hover": {backgroundColor: 'rgb(16,147,177)'},
+                                }}
+                            >
+                                Cancel
+                            </Button>
+                            <Button
+                                variant="contained"
+                                onClick={deleteCountry}
+                                sx={{
+                                    backgroundColor: 'rgb(159,20,20)',
+                                    "&:hover": {backgroundColor: 'rgb(193,56,56)'},
+                                }}
+                            >
+                                Delete
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
+                </React.Fragment>
             </div>
 
         </Grid>

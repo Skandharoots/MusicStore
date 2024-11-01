@@ -28,7 +28,7 @@ function ProductDetailsPage() {
     const productId = useParams();
 
     useEffect(() => {
-        document.title = `Product page`;
+        document.title = `Product - ${productId.productName}`;
     }, []);
 
     useEffect(() => {

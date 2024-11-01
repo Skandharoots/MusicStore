@@ -1,0 +1,10 @@
+.basket-container {
+  display: flex;
+  flex-direction: row;
+  min-height: 80dvh;
+  background-color: white;
+  color: black;
+  padding: 0 30vw;
+  justify-content: space-between;
+  align-items: flex-start;
+}

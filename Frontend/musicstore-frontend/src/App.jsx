@@ -34,6 +34,7 @@ import UpdateProduct from "./pages/admin/product/UpdateProduct.jsx";
 import SignupConfirm from "./pages/signup/SignupConfirm.jsx";
 import ProductsPage from "./pages/products/ProductsPage.jsx";
 import ProductDetailsPage from "./pages/products/ProductDetailsPage.jsx";
+import Basket from "./pages/basket/Basket.jsx";
 
 axios.defaults.baseURL = "http://localhost:8222/";
 axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
@@ -100,6 +101,10 @@ const router = createBrowserRouter([
             {
                 path: '/product/:productSkuId',
                 element: <ProductDetailsPage />,
+            },
+            {
+                path: '/basket',
+                element: <Basket />
             },
             {
                 path: '/',

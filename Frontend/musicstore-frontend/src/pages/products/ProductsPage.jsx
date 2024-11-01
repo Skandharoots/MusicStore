@@ -18,8 +18,6 @@ import ProductItem from "./components/ProductItem.jsx"
 import Stack from "@mui/material/Stack";
 import Pagination from "@mui/material/Pagination";
 
-const pageSize = 20;
-
 function ProductsPage() {
 
     const [manufacturers, setManufacturers] = useState([]);
@@ -31,6 +29,7 @@ function ProductsPage() {
     const [totalPages, setTotalPages] = useState(1);
     const [totalElements, setTotalElements] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);
+    const [perPage, setPerPage] = useState(20);
 
     const [products, setProducts] = useState([]);
     const [sortBy, setSortBy] = useState(JSON.stringify({sortBy: 'dateAdded', direction: 'desc'}));
@@ -71,14 +70,14 @@ function ProductsPage() {
 
     useEffect(() => {
         let sorting = JSON.parse(sortBy);
-        axios.get(`api/products/items/get/values/${categoryId.categoryId}?country=${selectedCountryName}&manufacturer=${selectedManufacturerName}&subcategory=${selectedSubcategoryName}&lowPrice=${lowPrice}&highPrice=${highPrice}&sortBy=${sorting.sortBy}&sortDir=${sorting.direction}&page=${currentPage - 1}&pageSize=${pageSize}`)
+        axios.get(`api/products/items/get/values/${categoryId.categoryId}?country=${selectedCountryName}&manufacturer=${selectedManufacturerName}&subcategory=${selectedSubcategoryName}&lowPrice=${lowPrice}&highPrice=${highPrice}&sortBy=${sorting.sortBy}&sortDir=${sorting.direction}&page=${currentPage - 1}&pageSize=${perPage}`)
             .then(res => {
                 setProducts(res.data.content);
                 setTotalPages(res.data.totalPages);
                 setTotalElements(res.data.numberOfElements);
             }).catch(() => {});
 
-    }, [sortBy, selectedSubcategoryName, selectedCountryName, selectedManufacturerName, categoryId]);
+    }, [sortBy, selectedSubcategoryName, selectedCountryName, selectedManufacturerName, categoryId, perPage, currentPage]);
 
 
     const changePage = (event, value) => {
@@ -281,11 +280,14 @@ function ProductsPage() {
 
             <div className="products-page-content">
                 <div className="content-controls">
+                    <div>
+
+                    </div>
                     <FormControl
                         size="small"
                         sx={{
                         m: 1,
-                        minWidth: 300,
+                        minWidth: 200,
                         "& label.Mui-focused": {
                             color: 'rgb(39, 99, 24)'
                         },
@@ -307,6 +309,34 @@ function ProductsPage() {
                             <MenuItem value={JSON.stringify({sortBy: 'dateAdded', direction: 'desc'})}>Newest (default)</MenuItem>
                             <MenuItem value={JSON.stringify({sortBy: 'productPrice', direction: 'desc'})}>Price: highest to lowest</MenuItem>
                             <MenuItem value={JSON.stringify({sortBy: 'productPrice', direction: 'asc'})}>Price: lowest to highest</MenuItem>
+                        </Select>
+                    </FormControl>
+                    <FormControl
+                        size="small"
+                        sx={{
+                            m: 1,
+                            minWidth: 100,
+                            "& label.Mui-focused": {
+                                color: 'rgb(39, 99, 24)'
+                            },
+                            "& .MuiOutlinedInput-root": {
+                                "&.Mui-focused fieldset": {
+                                    borderColor: 'rgb(39, 99, 24)'
+                                }
+                            }
+                        }}>
+                        <InputLabel id="sortBy-label">Page size</InputLabel>
+                        <Select
+                            labelId="sortBy-label"
+                            id="sortBy"
+                            value={perPage}
+                            label="Page size"
+                            onChange={e => setPerPage(e.target.value)}
+                            variant={"outlined"}
+                        >
+                            <MenuItem value={20}>20</MenuItem>
+                            <MenuItem value={30}>30</MenuItem>
+                            <MenuItem value={50}>50</MenuItem>
                         </Select>
                     </FormControl>
                 </div>

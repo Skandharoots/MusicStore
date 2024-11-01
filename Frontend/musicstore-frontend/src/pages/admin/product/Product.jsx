@@ -11,6 +11,7 @@ import {Bounce, toast} from "react-toastify";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
+import {RestoreRounded} from "@mui/icons-material";
 
 const pageSize = 20;
 
@@ -21,6 +22,8 @@ function Product() {
     const [totalPages, setTotalPages] = useState(1);
     const [totalElements, setTotalElements] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);
+    const [hideClearButton, setHideClearButton] = useState(true);
+    const [restoreDefaults, setRestoreDefaults] = useState(1);
 
 
     const navigate = useNavigate();
@@ -76,13 +79,14 @@ function Product() {
                 transition: Bounce,
             });
         })
-    }, [currentPage]);
+    }, [currentPage, restoreDefaults]);
 
     const onSubmitSearch = () => {
         axios.get(`api/products/items/get/${search}`, {})
         .then(res => {
             const products = [res.data];
             setProducts(products);
+            setHideClearButton(false);
             toast.success("Product found.", {
                 position: "bottom-center",
                 autoClose: 3000,
@@ -149,6 +153,25 @@ function Product() {
                             <SearchOutlinedIcon fontSize={"small"}/>
                         </button>
                     </form>
+                <div>
+                    { !hideClearButton &&
+                        <Button
+                            className="add-button"
+                            variant="contained"
+                            type="button"
+                            endIcon={<RestoreRounded/>}
+                            fullWidth
+                            onClick={() => {setHideClearButton(true); setRestoreDefaults(restoreDefaults + 1); setSearch('')}}
+                            sx={{
+                                width: 'fit-content',
+                                backgroundColor: 'rgb(39, 99, 24)',
+                                "&:hover": {backgroundColor: 'rgb(49,140,23)'},
+                            }}
+                        >
+                            Clear Search
+                        </Button>
+                    }
+                </div>
 
             </div>
 

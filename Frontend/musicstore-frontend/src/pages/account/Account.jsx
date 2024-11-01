@@ -46,6 +46,12 @@ function Account() {
     }, []);
 
     useEffect(() => {
+        if (LocalStorageHelper.IsUserLogged() === false) {
+            navigate('/');
+        }
+    }, []);
+
+    useEffect(() => {
         axios.get('api/users/csrf/token')
         .then(res => {
             axios.post(`api/users/get/${LocalStorageHelper.GetActiveUser()}`, {}, {
@@ -519,8 +525,26 @@ function Account() {
                                     />
                                 </DialogContent>
                                 <DialogActions>
-                                    <Button onClick={handleClose}>Cancel</Button>
-                                    <Button onClick={deleteUser}>Delete</Button>
+                                    <Button
+                                        variant="contained"
+                                        onClick={handleClose}
+                                        sx={{
+                                            backgroundColor: 'rgb(11,108,128)',
+                                            "&:hover": {backgroundColor: 'rgb(16,147,177)'},
+                                        }}
+                                    >
+                                        Cancel
+                                    </Button>
+                                    <Button
+                                        variant="contained"
+                                        onClick={deleteUser}
+                                        sx={{
+                                            backgroundColor: 'rgb(159,20,20)',
+                                            "&:hover": {backgroundColor: 'rgb(193,56,56)'},
+                                        }}
+                                    >
+                                        Delete
+                                    </Button>
                                 </DialogActions>
                             </Dialog>
                         </React.Fragment>

@@ -11,7 +11,7 @@ export function Gallery({ imageBinaries }) {
 
     useEffect(() => {
         let imagesURL = [];
-        imageBinaries.forEach((f) => (
+        [...imageBinaries].map((f) => (
             imagesURL.push(URL.createObjectURL(f))
         ))
         setImages(imagesURL);
@@ -43,11 +43,11 @@ export function Gallery({ imageBinaries }) {
             }}>
 
                 {images.map((url, index) => (
-                    <div key={index} className={'img-slider-img-cont'} style={{ maxHeight: '100%', aspectRatio: "10 / 6",
+                    <div key={index * 100} className={'img-slider-img-cont'} style={{ maxHeight: '100%', aspectRatio: "10 / 6",
                         display: 'flex', justifyContent: 'center', alignItems: 'center', flexShrink: '0',
                         flexGrow: '0', backgroundSize: 'cover', translate: `${-100 * imageIndex}%`}}>
                         <img
-                            key={index * 10}
+                            key={index}
                             src={url}
                             alt={url.id}
                             className="img-slider-img"

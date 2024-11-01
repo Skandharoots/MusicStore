@@ -1,7 +1,8 @@
 import {
     Backdrop,
     Box,
-    Button, CircularProgress,
+    Button,
+    CircularProgress,
     FormControl,
     FormHelperText,
     InputAdornment,
@@ -159,21 +160,23 @@ function UpdateProduct() {
             .then(res => {
                 setImagesPaths(res.data);
                 if (res.data.length > 0) {
-                    [...res.data].forEach((path) => (
-                        axios.get(`api/azure/read?path=${path}`, {responseType: 'blob'})
-                            .then(response => {
-                                let blob = new Blob([response.data], { type: "image/*" });
-                                setProductGalleryPhoto(old => [blob,...old]);
-                            }).catch(() => {})
-                    ));
+                    const promises = [];
+                    [...res.data].map((path) => {
+                        promises.push(axios.get(`api/azure/read?path=${path}`, {responseType: 'blob'}))
+                    })
+                    Promise.all(promises).then(ordered_array => {
+                        ordered_array.forEach( result => {
+                            let blob = new Blob([result.data], {type: "image/*"});
+                            setProductGalleryPhoto(old => [...old, blob]);
+                        } );
+                    });
                     setHideGallery(false);
                     setHideDeleteGalBtn(false);
                 } else {
                     setHideDeleteGalBtn(true);
                     setHideGallery(true);
                 }
-
-            })
+            }).catch(() => {})
 
     }, [])
 

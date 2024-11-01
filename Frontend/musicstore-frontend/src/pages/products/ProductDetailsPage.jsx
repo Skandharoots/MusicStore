@@ -41,13 +41,16 @@ function ProductDetailsPage() {
             setCountryName(res.data.builtinCountry.name);
             axios.get(`api/azure/list?path=${res.data.productSkuId}`)
             .then(res => {
-                [...res.data].map((path) => (
-                    axios.get(`api/azure/read?path=${path}`, {responseType: 'blob'})
-                    .then(res => {
-                        let blob = new Blob([res.data], { type: "image/*" });
-                        setImageGallery(oldGallery => [blob,...oldGallery]);
-                    }).catch(() => {})
-                ))
+                const promises = [];
+                [...res.data].map((path) => {
+                    promises.push(axios.get(`api/azure/read?path=${path}`, {responseType: 'blob'}))
+                })
+                Promise.all(promises).then(ordered_array => {
+                    ordered_array.forEach( result => {
+                        let blob = new Blob([result.data], {type: "image/*"});
+                        setImageGallery(old => [...old, blob]);
+                    } );
+                });
             }).catch(() => {})
         }).catch(() => {});
     }, [productId.productSkuId]);

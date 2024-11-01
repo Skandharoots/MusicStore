@@ -13,9 +13,9 @@ export function ImageSlider({ imageBinaries, onDelete }) {
 
     useEffect(() => {
         let imagesURL = [];
-        imageBinaries.forEach((f) => (
+        imageBinaries.map((f) => (
             imagesURL.push(URL.createObjectURL(f))
-        ))
+        ));
         setImages(imagesURL);
     }, [imageBinaries])
 

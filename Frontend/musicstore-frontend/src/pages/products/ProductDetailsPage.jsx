@@ -5,6 +5,7 @@ import {Gallery} from "./components/Gallery.jsx";
 import {Button, FormControl, MenuItem, Select} from "@mui/material";
 import ShareIcon from '@mui/icons-material/Share';
 import axios from "axios";
+import {Bounce, toast} from "react-toastify";
 
 
 function ProductDetailsPage() {
@@ -65,6 +66,21 @@ function ProductDetailsPage() {
         return items;
     }
 
+    const copyToClipboard = () => {
+        navigator.clipboard.writeText(`${window.location.href}`);
+        toast.info('Copied url to clipboard!', {
+            position: "bottom-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: false,
+            progress: undefined,
+            theme: "colored",
+            transition: Bounce,
+        });
+    }
+
     let inStockBanner;
 
     if (productQuantity >= 10) {
@@ -74,12 +90,19 @@ function ProductDetailsPage() {
             fontWeight: 'bold',
             color: 'rgb(53,166,26)'
         }}>In Stock</p>
-    } else {
+    } else if (productQuantity === 0) {
         inStockBanner = <p style={{
             margin: '0',
             fontSize: '20px',
             fontWeight: 'bold',
             color: 'rgb(184,16,16)'
+        }}>Out of stock</p>
+    } else {
+        inStockBanner = <p style={{
+            margin: '0',
+            fontSize: '20px',
+            fontWeight: 'bold',
+            color: 'rgb(243,148,5)'
         }}>Last items</p>
     }
 
@@ -198,7 +221,7 @@ function ProductDetailsPage() {
                                 >
                                     <Select
                                         id="quantity-select"
-                                        disabled={productQuantity === 0}
+                                        disabled={parseInt(productQuantity) === 0}
                                         value={selectedQuantity}
                                         onChange={e => setSelectedQuantity(e.target.value)}
                                         variant={"outlined"}
@@ -214,7 +237,7 @@ function ProductDetailsPage() {
                                     className="purchase-btn"
                                     fullWidth
                                     variant="contained"
-                                    disabled={productQuantity === 0}
+                                    disabled={parseInt(productQuantity) === 0}
                                     sx={{
                                         width: '60%',
                                         height: '40px',
@@ -241,6 +264,7 @@ function ProductDetailsPage() {
                                 <Button
                                     variant={"outlined"}
                                     fullWidth={false}
+                                    onClick={() => {copyToClipboard()}}
                                     sx={{
                                         borderColor: 'rgb(39, 99, 24)',
                                         backgroundColor: 'transparent',

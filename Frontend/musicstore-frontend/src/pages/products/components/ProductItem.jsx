@@ -10,6 +10,8 @@ import AddShoppingCartOutlinedIcon from '@mui/icons-material/AddShoppingCartOutl
 
 function ProductItem(props) {
     const [img, setImg] = useState(null);
+    const [opacity, setOpacity] = useState(0);
+    const [disableBasket, setDisableBasket] = useState(false);
 
     const navigate = useNavigate();
 
@@ -48,10 +50,20 @@ function ProductItem(props) {
         })
     }, [])
 
+    useEffect(() => {
+        if (props.item.inStock === 0) {
+            setOpacity(0.5);
+            setDisableBasket(true);
+        } else {
+            setOpacity(1);
+        }
+    }, [])
+
     return (
         <Grid sx={{
             display: 'flex',
             flexDirection: 'column',
+            opacity: opacity,
             width: '240px',
             height: 'fit-content',
             alignItems: 'flex-start',
@@ -124,6 +136,7 @@ function ProductItem(props) {
                     <Button
                         variant={"outlined"}
                         fullWidth={false}
+                        disabled={disableBasket}
                         sx={{
                             borderColor: 'rgb(39, 99, 24)',
                             backgroundColor: 'transparent',

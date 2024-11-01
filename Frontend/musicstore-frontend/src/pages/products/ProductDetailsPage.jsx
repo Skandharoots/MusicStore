@@ -56,7 +56,7 @@ function ProductDetailsPage() {
         let items = []
         for (let i = 1; i < 10; i++) {
             if (i + 1 <= productQuantity) {
-                items.push(<MenuItem value={i + 1}>{i + 1}</MenuItem>)
+                items.push(<MenuItem key={i + 1} value={i + 1}>{i + 1}</MenuItem>)
             }
         }
         return items;
@@ -203,7 +203,7 @@ function ProductDetailsPage() {
                                             height: '40px',
                                         }}
                                     >
-                                        <MenuItem value={1}>1</MenuItem>
+                                        <MenuItem key={1} value={1}>1</MenuItem>
                                         {renderQuantityItems()}
                                     </Select>
                                 </FormControl>

@@ -159,10 +159,10 @@ function UpdateProduct() {
             .then(res => {
                 setImagesPaths(res.data);
                 if (res.data.length > 0) {
-                    [...res.data].map((path) => (
+                    [...res.data].forEach((path) => (
                         axios.get(`api/azure/read?path=${path}`, {responseType: 'blob'})
-                            .then(res => {
-                                let blob = new Blob([res.data], { type: "image/*" });
+                            .then(response => {
+                                let blob = new Blob([response.data], { type: "image/*" });
                                 setProductGalleryPhoto(old => [blob,...old]);
                             }).catch(() => {})
                     ));

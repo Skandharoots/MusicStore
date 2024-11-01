@@ -11,7 +11,7 @@ export function Gallery({ imageBinaries }) {
 
     useEffect(() => {
         let imagesURL = [];
-        [...imageBinaries].map((f) => (
+        imageBinaries.forEach((f) => (
             imagesURL.push(URL.createObjectURL(f))
         ))
         setImages(imagesURL);

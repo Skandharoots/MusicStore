@@ -39,7 +39,6 @@ function ProductsPage() {
     const [openBackdrop, setOpenBackdrop] = useState(false);
 
     const categoryId = useParams();
-    const navigate = useNavigate();
 
     useEffect(() => {
         document.title = `${categoryId.name}`;

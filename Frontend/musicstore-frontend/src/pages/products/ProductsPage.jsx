@@ -1,4 +1,4 @@
-import {useNavigate, useParams} from "react-router-dom";
+import {useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import axios from "axios";
 import './style/ProductsPage.scss';
@@ -10,7 +10,7 @@ import {
     InputLabel,
     MenuItem,
     Radio,
-    RadioGroup, Select,
+    RadioGroup, Select, Slider,
     Typography
 } from "@mui/material";
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
@@ -18,6 +18,7 @@ import Grid from "@mui/material/Grid2";
 import ProductItem from "./components/ProductItem.jsx"
 import Stack from "@mui/material/Stack";
 import Pagination from "@mui/material/Pagination";
+import TextField from "@mui/material/TextField";
 
 function ProductsPage() {
 
@@ -33,8 +34,11 @@ function ProductsPage() {
 
     const [products, setProducts] = useState([]);
     const [sortBy, setSortBy] = useState(JSON.stringify({sortBy: 'dateAdded', direction: 'desc'}));
+    const [sliderValue, setSliderValue] = useState([0, 1]);
+    const [sliderMaxValue, setSliderMaxValue] = useState(1);
     const [lowPrice, setLowPrice] = useState(0);
     const [highPrice, setHighPrice] = useState(100000);
+
 
     const [openBackdrop, setOpenBackdrop] = useState(false);
 
@@ -47,6 +51,14 @@ function ProductsPage() {
     useEffect(() => {
         window.scrollTo(0, 0)
     }, [currentPage]);
+
+    useEffect(() => {
+        axios.get(`api/products/items/get/max_price/${categoryId.categoryId}?country=${selectedCountryName}&manufacturer=${selectedManufacturerName}&subcategory=${selectedSubcategoryName}`)
+            .then(res => {
+                setSliderValue([0, res.data]);
+                setSliderMaxValue(res.data);
+            }).catch(() => {})
+    }, [selectedSubcategoryName, selectedCountryName, selectedManufacturerName])
 
     useEffect(() => {
         axios.get(`api/products/subcategories/get/search/${categoryId.categoryId}?country=${selectedCountryName}&manufacturer=${selectedManufacturerName}`)
@@ -81,11 +93,24 @@ function ProductsPage() {
                 setTimeout(() => {setOpenBackdrop(false)}, 500);
         });
 
-    }, [sortBy, selectedSubcategoryName, selectedCountryName, selectedManufacturerName, categoryId, perPage, currentPage]);
+    }, [sortBy, selectedSubcategoryName, selectedCountryName, selectedManufacturerName, lowPrice, highPrice , categoryId, perPage, currentPage]);
 
 
     const changePage = (event, value) => {
         setCurrentPage(value);
+    }
+
+    const handleSliderChange = (event, newValue) => {
+        setSliderValue(newValue);
+    };
+
+    const sliderValueText = (value) => {
+        return `${value}$`;
+    }
+
+    const setLowAndHighPrice = () => {
+        setLowPrice(sliderValue[0]);
+        setHighPrice(sliderValue[1]);
     }
 
     return (
@@ -279,6 +304,120 @@ function ProductsPage() {
                             </RadioGroup>
                         </FormControl>
                     </div>
+                    <div className="ribbon-price">
+                        <h4 style={{margin: '4px 0'}}>Price range</h4>
+                        <div style={{
+                            width: '100%',
+                            height: 'fit-content',
+                            display: 'flex',
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            marginBottom: '4px',
+                        }}>
+                            <TextField
+                                id="lowPrice"
+                                type="email"
+                                variant="outlined"
+                                size="small"
+                                value={sliderValue[0]}
+                                onChange={e => setSliderValue([e.target.value, sliderValue[1]])}
+                                sx={{
+                                    width: '80px',
+                                    height: '40px',
+                                    justifyContent: 'center',
+                                    input: {
+                                        textAlign: "center",
+                                        fontSize: '12px',
+                                    },
+                                    fontSize: '8px !important',
+                                    "& label.Mui-focused": {
+                                        color: 'rgb(39, 99, 24)'
+                                    },
+                                    "& .MuiOutlinedInput-root": {
+                                        "&.Mui-focused fieldset": {
+                                            borderColor: 'rgb(39, 99, 24)'
+                                        }
+                                    }
+                                }}
+                            />
+                            <TextField
+                                id="lowPrice"
+                                type="email"
+                                variant="outlined"
+                                size="small"
+                                value={sliderValue[1]}
+                                onChange={e => setSliderValue([sliderValue[0], e.target.value])}
+                                sx={{
+                                    width: '80px',
+                                    height: '40px',
+                                    justifyContent: 'center',
+                                    input: {
+                                        textAlign: "center",
+                                        fontSize: '12px',
+                                    },
+                                    fontSize: '8px !important',
+                                    "& label.Mui-focused": {
+                                        color: 'rgb(39, 99, 24)'
+                                    },
+                                    "& .MuiOutlinedInput-root": {
+                                        "&.Mui-focused fieldset": {
+                                            borderColor: 'rgb(39, 99, 24)'
+                                        }
+                                    }
+                                }}
+                            />
+                        </div>
+                        <div className="ribbon-price-range"
+                             style={{
+                                 display: "flex",
+                                 justifyContent: "center",
+                                 alignItems: "center",
+                                 width: "100%"
+                             }}
+                        >
+                            <Slider
+                                getAriaLabel={() => 'Price range'}
+                                value={sliderValue}
+                                min={0.00}
+                                max={sliderMaxValue}
+                                step={0.01}
+                                onChange={handleSliderChange}
+                                valueLabelDisplay="off"
+                                getAriaValueText={sliderValueText}
+                                sx={{
+                                    width: '90%',
+                                    color: 'rgb(39, 99, 24)',
+                                }}
+                            />
+                        </div>
+                        <div style={{
+                            width: '100%',
+                            height: 'fit-content',
+                            marginTop: '4px',
+                            display: 'flex',
+                            flexDirection: 'row',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                        }}>
+                            <Button
+                                className="signup-btn"
+                                type="submit"
+                                fullWidth
+                                size="small"
+                                variant="contained"
+                                onClick={setLowAndHighPrice}
+                                sx={{
+                                    width: '100%',
+                                    backgroundColor: 'rgb(39, 99, 24)',
+                                    "&:hover": {backgroundColor: 'rgb(49,140,23)'},
+                                    "&:focus": {outline: 'none'},
+                                }}
+                            >
+                                Search
+                            </Button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -290,18 +429,18 @@ function ProductsPage() {
                     <FormControl
                         size="small"
                         sx={{
-                        m: 1,
-                        minWidth: 200,
-                        "& label.Mui-focused": {
-                            color: 'rgb(39, 99, 24)'
-                        },
-                        "& .MuiOutlinedInput-root": {
-                            "&.Mui-focused fieldset": {
-                                borderColor: 'rgb(39, 99, 24)'
+                            m: 1,
+                            minWidth: 200,
+                            "& label.Mui-focused": {
+                                color: 'rgb(39, 99, 24)'
+                            },
+                            "& .MuiOutlinedInput-root": {
+                                "&.Mui-focused fieldset": {
+                                    borderColor: 'rgb(39, 99, 24)'
+                                }
                             }
-                        }
-                    }}>
-                        <InputLabel id="sortBy-label">Sort by:</InputLabel>
+                        }}>
+                    <InputLabel id="sortBy-label">Sort by:</InputLabel>
                         <Select
                             labelId="sortBy-label"
                             id="sortBy"

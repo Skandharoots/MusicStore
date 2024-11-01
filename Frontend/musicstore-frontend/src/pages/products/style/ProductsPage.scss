@@ -20,7 +20,7 @@
       justify-content: flex-start;
       align-items: flex-end;
       width: 12dvw;
-      overflow: hidden;
+      overflow: visible;
       margin: 0 0;
       padding: 0;
       height: fit-content;
@@ -82,6 +82,16 @@
       }
 
       .ribbon-country {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+        width: 100%;
+        padding: 0 8px;
+        height: fit-content;
+      }
+
+      .ribbon-price {
         display: flex;
         flex-direction: column;
         justify-content: flex-start;

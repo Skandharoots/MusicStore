@@ -149,11 +149,7 @@ function ProductItem(props) {
                     overflow: 'hidden',
                     textWrap: 'nowrap'
                 }}>{props.item.productPrice}$</p>
-                <React.Fragment style={{
-                    width: '700px',
-                    height: 'fit-content',
-                    padding: '4%',
-                }}>
+                <React.Fragment>
                     <Tooltip title={"Add to basket"}>
                         <Button
                             variant={"outlined"}

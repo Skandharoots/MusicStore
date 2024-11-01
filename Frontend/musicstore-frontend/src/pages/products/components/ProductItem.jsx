@@ -96,7 +96,7 @@ function ProductItem(props) {
               key={props.item.id}
         >
             <div className="product-img"
-                 onClick={() => {navigate(`/product/${props.item.productSkuId}`)}}
+                 onClick={() => {navigate(`/product/${props.item.productSkuId}/${props.item.productName}`)}}
                  style={{width: '100%', maxHeight: '150px', aspectRatio: "16 / 9",
                      display: 'flex', justifyContent: 'center', alignItems: 'center',
                      backgroundSize: 'cover',}}
@@ -119,7 +119,7 @@ function ProductItem(props) {
                      marginTop: '4px',
                      "&:hover": {cursor: 'pointer'}
                  }}
-                 onClick={() => {navigate(`/product/${props.item.productSkuId}`)}}
+                 onClick={() => {navigate(navigate(`/product/${props.item.productSkuId}/${props.item.productName}`))}}
             >
                 <Tooltip title={props.item.productName}>
                     <p style={{

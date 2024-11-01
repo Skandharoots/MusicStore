@@ -99,7 +99,7 @@ const router = createBrowserRouter([
                 element: <ProductsPage />,
             },
             {
-                path: '/product/:productSkuId',
+                path: '/product/:productSkuId/:productName',
                 element: <ProductDetailsPage />,
             },
             {

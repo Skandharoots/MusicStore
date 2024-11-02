@@ -73,7 +73,7 @@ function Subcategory() {
                         marginBottom: '16px',
                     }}
                 >
-                    Add New
+                    Add
                 </Button>
             </div>
 

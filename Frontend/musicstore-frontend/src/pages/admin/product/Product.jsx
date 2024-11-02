@@ -62,6 +62,7 @@ function Product() {
 
     useEffect(() => {
         setOpenBackdrop(true);
+        setHideClearButton(true);
         axios.get(`api/products/items/get?page=${currentPage - 1}&pageSize=${pageSize}`, {})
             .then(res => {
                 setTotalPages(res.data.totalPages);
@@ -142,7 +143,7 @@ function Product() {
                             "&:hover": {backgroundColor: 'rgb(49,140,23)'},
                         }}
                     >
-                        Add New
+                        Add
                     </Button>
                 </div>
 
@@ -177,7 +178,7 @@ function Product() {
                                 "&:hover": {backgroundColor: 'rgb(49,140,23)'},
                             }}
                         >
-                            Clear Search
+                            Clear
                         </Button>
                     }
                 </div>

@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import ShareIcon from '@mui/icons-material/Share';
 import axios from "axios";
-import {Bounce, toast} from "react-toastify";
+import {Bounce, toast, ToastContainer} from "react-toastify";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import LocalStorageHelper from "../../helpers/LocalStorageHelper.jsx";
 
@@ -533,8 +533,9 @@ function ProductDetailsPage() {
     )
 
 }
-
+            <ToastContainer />
 </div>
+
 )
 }
 

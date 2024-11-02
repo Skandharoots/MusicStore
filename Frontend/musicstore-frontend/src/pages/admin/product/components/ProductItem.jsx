@@ -10,7 +10,6 @@ import React, {useEffect, useState} from "react";
 import {Bounce, toast} from "react-toastify";
 import Tooltip from "@mui/material/Tooltip";
 
-
 function ProductItem(props) {
 
     const [img, setImg] = useState(null);
@@ -281,7 +280,6 @@ function ProductItem(props) {
                     </Dialog>
                 </React.Fragment>
             </div>
-
         </Grid>
     )
 

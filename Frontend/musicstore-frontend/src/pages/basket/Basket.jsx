@@ -10,7 +10,7 @@ import {useNavigate} from "react-router-dom";
 
 function Basket() {
 
-    const [basketItems, setBasketItems] = useState([]);
+    const [basketItems, setBasketItems] = useState([{}]);
     const [totalCost, setTotalCost] = useState(0);
     const [open, setOpen] = useState(false);
 

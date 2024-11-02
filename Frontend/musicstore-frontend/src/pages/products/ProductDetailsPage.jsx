@@ -209,19 +209,22 @@ function ProductDetailsPage() {
         navigate('/basket');
     }
 
-    const copyToClipboard = () => {
-        navigator.clipboard.writeText(`${window.location.href}`);
-        toast.info('Copied url to clipboard!', {
-            position: "bottom-center",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: false,
-            progress: undefined,
-            theme: "colored",
-            transition: Bounce,
+    const copyToClipboard = (event) => {
+        event.preventDefault();
+        navigator.clipboard.writeText(`${window.location.href}`).then(() => {
+            toast.success('Copied url to clipboard!', {
+                position: "bottom-center",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: false,
+                progress: undefined,
+                theme: "colored",
+                transition: Bounce,
+            });
         });
+
     }
 
     let inStockBanner;
@@ -489,9 +492,7 @@ function ProductDetailsPage() {
                                     <Button
                                         variant={"outlined"}
                                         fullWidth={false}
-                                        onClick={() => {
-                                            copyToClipboard()
-                                        }}
+                                        onClick={copyToClipboard}
                                         sx={{
                                             borderColor: 'rgb(39, 99, 24)',
                                             backgroundColor: 'transparent',

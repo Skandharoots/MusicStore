@@ -26,6 +26,12 @@ function UpdateCountry() {
     }, []);
 
     useEffect(() => {
+        if (LocalStorageHelper.IsUserLogged() === false || LocalStorageHelper.isUserAdmin() === false) {
+            navigate('/');
+        }
+    }, []);
+
+    useEffect(() => {
         axios.get(`api/products/countries/get/${id.id}`, {})
             .then(res => {
                 setCountryName(res.data.name);

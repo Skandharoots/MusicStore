@@ -25,6 +25,12 @@ function UpdateSubcategory() {
         document.title = 'Edit Subcategory';
     }, []);
 
+    useEffect(() => {
+        if (LocalStorageHelper.IsUserLogged() === false || LocalStorageHelper.isUserAdmin() === false) {
+            navigate('/');
+        }
+    }, []);
+
 
     useEffect(() => {
         axios.get(`api/products/subcategories/get/${id.id}`, {})

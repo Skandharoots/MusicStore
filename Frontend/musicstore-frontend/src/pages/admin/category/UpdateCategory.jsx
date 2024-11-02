@@ -25,6 +25,12 @@ function UpdateCategory() {
     }, []);
 
     useEffect(() => {
+        if (LocalStorageHelper.IsUserLogged() === false || LocalStorageHelper.isUserAdmin() === false) {
+            navigate('/');
+        }
+    }, []);
+
+    useEffect(() => {
         axios.get(`api/products/categories/get/${id.id}`, {})
             .then(res => {
                 setCategoryName(res.data.name);

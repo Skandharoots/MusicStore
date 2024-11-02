@@ -18,6 +18,12 @@ function Manufacturer() {
         document.title = 'Manufacturer management';
     }, []);
 
+    useEffect(() => {
+        if (LocalStorageHelper.IsUserLogged() === false || LocalStorageHelper.isUserAdmin() === false) {
+            navigate('/');
+        }
+    }, []);
+
     const redirect = () => {
         navigate('/admin/manufacturer/add');
     }

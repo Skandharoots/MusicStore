@@ -33,6 +33,12 @@ function Product() {
     }, []);
 
     useEffect(() => {
+        if (LocalStorageHelper.IsUserLogged() === false || LocalStorageHelper.isUserAdmin() === false) {
+            navigate('/');
+        }
+    }, []);
+
+    useEffect(() => {
         window.scrollTo(0, 0)
     }, [currentPage]);
 

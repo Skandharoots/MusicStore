@@ -18,6 +18,12 @@ function Category() {
         document.title = 'Category management';
     }, []);
 
+    useEffect(() => {
+        if (LocalStorageHelper.IsUserLogged() === false || LocalStorageHelper.isUserAdmin() === false) {
+            navigate('/');
+        }
+    }, []);
+
     const redirect = () => {
         navigate('/admin/category/add');
     }

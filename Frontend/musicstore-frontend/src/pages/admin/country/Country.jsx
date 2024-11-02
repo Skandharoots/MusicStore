@@ -18,6 +18,12 @@ function Country() {
         document.title = 'Country management';
     }, []);
 
+    useEffect(() => {
+        if (LocalStorageHelper.IsUserLogged() === false || LocalStorageHelper.isUserAdmin() === false) {
+            navigate('/');
+        }
+    }, []);
+
     const redirect = () => {
         navigate('/admin/country/add');
     }

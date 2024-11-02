@@ -25,6 +25,12 @@ function UpdateManufacturer() {
     }, []);
 
     useEffect(() => {
+        if (LocalStorageHelper.IsUserLogged() === false || LocalStorageHelper.isUserAdmin() === false) {
+            navigate('/');
+        }
+    }, []);
+
+    useEffect(() => {
         axios.get(`api/products/manufacturers/get/${id.id}`, {})
             .then(res => {
                 setManufacturerName(res.data.name);

@@ -41,7 +41,7 @@ function Signup() {
         let isValid = true;
 
         if (!firstName
-            || !/^(?=.{1,50}$)[a-zżźćńółęąśŻŹĆĄŚĘŁÓŃ]+(?:['_.\s][a-zżźćńółęąśŻŹĆĄŚĘŁÓŃ]+)*$/i.test(firstName)) {
+            || !/^(?=.{1,50}$)[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ]+(?:[-'_.\s][A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ]+)*$/i.test(firstName)) {
             setFirstNameError(true);
             setFirstNameErrorMessage('Please enter a valid first name.');
             isValid = false;
@@ -51,7 +51,7 @@ function Signup() {
         }
 
         if (!lastName
-            || !/^(?=.{1,50}$)[a-zżźćńółęąśŻŹĆĄŚĘŁÓŃ]+(?:['_.\s][a-zżźćńółęąśŻŹĆĄŚĘŁÓŃ]+)*$/i.test(lastName)) {
+            || !/^(?=.{1,50}$)[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ]+(?:[-'_.\s][A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ]+)*$/i.test(lastName)) {
             setLastNameError(true);
             setLastNameErrorMessage('Please enter a valid last name.');
             isValid = false;

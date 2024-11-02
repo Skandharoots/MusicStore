@@ -8,6 +8,7 @@ import Tooltip from "@mui/material/Tooltip";
 import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from "@mui/material";
 import AddShoppingCartOutlinedIcon from '@mui/icons-material/AddShoppingCartOutlined';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import LocalStorageHelper from "../../../helpers/LocalStorageHelper.jsx";
 
 function ProductItem(props) {
     const [img, setImg] = useState(null);
@@ -17,8 +18,58 @@ function ProductItem(props) {
 
     const navigate = useNavigate();
 
-    const handleClickOpen = () => {
+    useEffect(() => {
+        if (!LocalStorageHelper.IsUserLogged()) {
+            setDisableBasket(true);
+        } else {
+            setDisableBasket(false);
+        }
+    }, [])
+
+    const handleClickOpen = (event) => {
+        event.preventDefault();
         setOpen(true);
+
+        axios.get('api/users/csrf/token')
+        .then((response) => {
+            axios.post(`api/cart/create`, {
+                userUuid: LocalStorageHelper.GetActiveUser(),
+                productSkuId: props.item.productSkuId,
+                productPrice: props.item.productPrice,
+                productName: props.item.productName,
+                quantity: 1
+            }, {
+                headers: {
+                    'Authorization': 'Bearer ' + LocalStorageHelper.getJwtToken(),
+                    'X-XSRF-TOKEN': response.data.token,
+                }
+            }).then(() => {})
+                .catch((error) => {
+                    toast.error(error.response.data.message, {
+                        position: "bottom-center",
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: false,
+                        progress: undefined,
+                        theme: "colored",
+                        transition: Bounce,
+                    });
+                });
+        }).catch(() => {
+            toast.error('Cannot fetch token', {
+                position: "bottom-center",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: false,
+                progress: undefined,
+                theme: "colored",
+                transition: Bounce,
+            });
+        });
     };
 
     const handleClose = () => {
@@ -27,7 +78,7 @@ function ProductItem(props) {
 
     const goToBasket = (event) => {
         event.preventDefault();
-        navigate('/basket')
+        navigate('/basket');
     }
 
     useEffect(() => {

@@ -19,6 +19,7 @@ import ProductItem from "./components/ProductItem.jsx"
 import Stack from "@mui/material/Stack";
 import Pagination from "@mui/material/Pagination";
 import TextField from "@mui/material/TextField";
+import {AttachMoney} from "@mui/icons-material";
 
 function ProductsPage() {
 
@@ -106,6 +107,14 @@ function ProductsPage() {
 
     const sliderValueText = (value) => {
         return `${value}$`;
+    }
+
+    const handleLowPriceChange = (e) => {
+        setSliderValue([e.target.value === '' ? 0 : Number(e.target.value), sliderValue[1]]);
+    }
+
+    const handleHighPriceChange = (e) => {
+        setSliderValue([sliderValue[0], e.target.value === '' ? sliderMaxValue : Number(e.target.value)]);
     }
 
     const setLowAndHighPrice = () => {
@@ -305,7 +314,7 @@ function ProductsPage() {
                         </FormControl>
                     </div>
                     <div className="ribbon-price">
-                        <h4 style={{margin: '4px 0'}}>Price range</h4>
+                        <h4 style={{margin: '4px 0'}}>Price range </h4>
                         <div style={{
                             width: '100%',
                             height: 'fit-content',
@@ -317,11 +326,11 @@ function ProductsPage() {
                         }}>
                             <TextField
                                 id="lowPrice"
-                                type="email"
+                                type="number"
                                 variant="outlined"
                                 size="small"
                                 value={sliderValue[0]}
-                                onChange={e => setSliderValue([e.target.value, sliderValue[1]])}
+                                onChange={handleLowPriceChange}
                                 sx={{
                                     width: '80px',
                                     height: '40px',
@@ -343,11 +352,11 @@ function ProductsPage() {
                             />
                             <TextField
                                 id="lowPrice"
-                                type="email"
+                                type="number"
                                 variant="outlined"
                                 size="small"
                                 value={sliderValue[1]}
-                                onChange={e => setSliderValue([sliderValue[0], e.target.value])}
+                                onChange={handleHighPriceChange}
                                 sx={{
                                     width: '80px',
                                     height: '40px',

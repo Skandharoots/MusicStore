@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.regex.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -52,8 +53,60 @@ public class OrderService {
                 || request.getZipCode() == null || request.getZipCode().isEmpty()
                 || request.getItems().isEmpty()
         ) {
-            log.error("Bad order creation request");
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid order request");
+            log.error("Bad order creation request, empty request fields.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Invalid order request, empty request fields.");
+        }
+
+        Pattern cityAndCountryAndNameAndSurnameAndStreetaddressPattern =
+                Pattern.compile("^(?=.{1,50}$)[A-Za-z0-9żźćńółęąśŻŹĆĄŚĘŁÓŃ]+"
+                + "(?:[-'_./ \\s][A-Za-z0-9żźćńółęąśŻŹĆĄŚĘŁÓŃ]+)*$");
+
+        if (!cityAndCountryAndNameAndSurnameAndStreetaddressPattern.matcher(request.getCity()).matches()
+            || !cityAndCountryAndNameAndSurnameAndStreetaddressPattern.matcher(request.getCountry()).matches()
+                || !cityAndCountryAndNameAndSurnameAndStreetaddressPattern.matcher(request.getStreetAddress()).matches()
+                || !cityAndCountryAndNameAndSurnameAndStreetaddressPattern.matcher(request.getName()).matches()
+                || !cityAndCountryAndNameAndSurnameAndStreetaddressPattern.matcher(request.getSurname()).matches()
+        ) {
+            log.error("Bad order creation request, invalid request city, "
+                    + "country, name, surname, or streetaddress fields.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Bad order creation request, invalid request city, country, "
+                            + "name, surname, or streetaddress fields. "
+                            + "Those fields can contain letters, numbers "
+                            + "and special characters - \"-'_/ and .\".");
+        }
+
+        Pattern emailPattern = Pattern.compile("^(?![^\"]+.*[^\"]+\\.\\.)"
+                        + "[a-zA-Z0-9 !#\"$%&'*+-/=?^_`{|}~]*"
+                        + "[a-zA-Z0-9\"]+@[a-zA-Z0-9.-]+$",
+                Pattern.CASE_INSENSITIVE);
+
+        if (!emailPattern.matcher(request.getEmail()).matches()) {
+            log.error("Bad order creation request, invalid request email, email address is invalid.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Bad order creation request, invalid request, email address is invalid.");
+        }
+
+        Pattern zipCodePattern = Pattern
+                .compile("(?i)^[a-z0-9][a-z0-9\\- ]{0,10}[a-z0-9]$");
+
+        if (!zipCodePattern.matcher(request.getZipCode()).matches()) {
+            log.error("Bad order creation request, invalid request zipCode, zip code is invalid.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Bad order creation request, invalid request, zip code is invalid.");
+        }
+
+        Pattern phonePattern = Pattern
+                .compile("^[+]?[ (]?[0-9]{1,3}[) ]?[-\\s.]?[0-9]{3}[-\\s.]?[0-9 -]{1,7}$");
+
+        if (!phonePattern.matcher(request.getPhone()).matches()) {
+            log.error("Bad order creation request, invalid request phone, phone number is invalid.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Bad order creation request, invalid request, phone number is invalid. "
+                    + "Phone number must be in a format +(432) 456 545 222, where \"()\" are optional"
+                    + "It can also be only numbers like 5555555 or 003823984523"
+                    + "It can contain spaces and dashes \"-\"");
         }
 
         if (!jwtToken.startsWith("Bearer ")) {

@@ -20,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.security.web.csrf.DefaultCsrfToken;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;
@@ -122,29 +123,29 @@ public class OrderServiceTests {
 
         order = new Order();
         order.setStatus(OrderStatus.IN_PROGRESS);
-        order.setName("Test");
-        order.setCity("Test");
-        order.setCountry("Test");
+        order.setName("Grzegoż");
+        order.setCity("Łęgockiążćźqweśłó");
+        order.setCountry("Chrząszczyrzewoszyce");
         order.setDateCreated(orderDate);
-        order.setCountry("Test");
+        order.setCountry("Łękołody");
         order.setEmail("test@test.com");
         order.setPhone("+48 739 847 394");
-        order.setStreetAddress("Test");
-        order.setSurname("Test");
+        order.setStreetAddress("Puławska 78/80");
+        order.setSurname("Brzęczyszczykiewicz");
         order.setUserIdentifier(userId);
         order.setZipCode("83-234");
         order.setTotalPrice(BigDecimal.valueOf(3672.00));
         order.setOrderItems(orderLineItemsList);
 
         orderRequest = new OrderRequest();
-        orderRequest.setName("Test");
-        orderRequest.setCity("Test");
-        orderRequest.setCountry("Test");
-        orderRequest.setCountry("Test");
+        orderRequest.setName("Grzegoż");
+        orderRequest.setCity("Łęgockiążćźqweśłó");
+        orderRequest.setCountry("Chrząszczyrzewoszyce");
+        orderRequest.setCountry("Łękołody");
         orderRequest.setEmail("test@test.com");
-        orderRequest.setPhone("+48 739 847 394");
-        orderRequest.setStreetAddress("Test");
-        orderRequest.setSurname("Test");
+        orderRequest.setPhone("+(48)-739-847-394");
+        orderRequest.setStreetAddress("Puławska 78/80");
+        orderRequest.setSurname("Brzęczyszczykiewicz");
         orderRequest.setUserIdentifier(userId);
         orderRequest.setZipCode("83-234");
         orderRequest.setOrderTotalPrice(BigDecimal.valueOf(3672.00));
@@ -191,6 +192,99 @@ public class OrderServiceTests {
         Assertions.assertThat(response).isNotNull();
         Assertions.assertThat(response).isEqualTo("Order placed successfully");
 
+    }
+
+    @Test
+    public void createOrderFailureBadNamesOrStreetOrCityOrCountryTest() {
+
+        List<OrderLineItemsDto> itemsDto = new ArrayList<>();
+        itemsDto.add(orderLineItemsDTO);
+
+        OrderRequest request = new OrderRequest();
+        request.setName("Grzegoż");
+        request.setCity("Łęgockiążćźqweśłó");
+        request.setCountry("Chrząszczyrzewoszyce");
+        request.setCountry("%^*!@$#?><ASDQW043asd-23=-");
+        request.setEmail("test@test.com");
+        request.setPhone("+(48)-739-847-394");
+        request.setStreetAddress("Puławska 78/80");
+        request.setSurname("Brzęczyszczykiewicz");
+        request.setUserIdentifier(userId);
+        request.setZipCode("83-234");
+        request.setOrderTotalPrice(BigDecimal.valueOf(3672.00));
+        request.setItems(itemsDto);
+
+        Assertions.assertThatThrownBy(() -> orderService.createOrder(request, csrfToken.getToken(), token)).isNotNull();
+    }
+
+    @Test
+    public void createOrderBadRequestEmailTest() {
+
+        List<OrderLineItemsDto> itemsDto = new ArrayList<>();
+        itemsDto.add(orderLineItemsDTO);
+
+        OrderRequest request = new OrderRequest();
+        request.setName("Grzegoż");
+        request.setCity("Łęgockiążćźqweśłó");
+        request.setCountry("Chrząszczyrzewoszyce");
+        request.setCountry("Łękołody");
+        request.setEmail("te..st@test.com");
+        request.setPhone("+(48)-739-847-394");
+        request.setStreetAddress("Puławska 78/80");
+        request.setSurname("Brzęczyszczykiewicz");
+        request.setUserIdentifier(userId);
+        request.setZipCode("83-234");
+        request.setOrderTotalPrice(BigDecimal.valueOf(3672.00));
+        request.setItems(itemsDto);
+
+        Assertions.assertThatThrownBy(() -> orderService.createOrder(request, csrfToken.getToken(), token)).isNotNull();
+
+    }
+
+    @Test
+    public void createOrderBadRequestPhoneTest() {
+
+        List<OrderLineItemsDto> itemsDto = new ArrayList<>();
+        itemsDto.add(orderLineItemsDTO);
+
+        OrderRequest request = new OrderRequest();
+        request.setName("Grzegoż");
+        request.setCity("Łęgockiążćźqweśłó");
+        request.setCountry("Chrząszczyrzewoszyce");
+        request.setCountry("Łękołody");
+        request.setEmail("test@test.com");
+        request.setPhone("+(48)-739?2354-847-394");
+        request.setStreetAddress("Puławska 78/80");
+        request.setSurname("Brzęczyszczykiewicz");
+        request.setUserIdentifier(userId);
+        request.setZipCode("83-234");
+        request.setOrderTotalPrice(BigDecimal.valueOf(3672.00));
+        request.setItems(itemsDto);
+
+        Assertions.assertThatThrownBy(() -> orderService.createOrder(request, csrfToken.getToken(), token)).isNotNull();
+    }
+
+    @Test
+    public void createOrderBadZipCodeTest() {
+
+        List<OrderLineItemsDto> itemsDto = new ArrayList<>();
+        itemsDto.add(orderLineItemsDTO);
+
+        OrderRequest request = new OrderRequest();
+        request.setName("Grzegoż");
+        request.setCity("Łęgockiążćźqweśłó");
+        request.setCountry("Chrząszczyrzewoszyce");
+        request.setCountry("Łękołody");
+        request.setEmail("test@test.com");
+        request.setPhone("+(48)-235-847-394");
+        request.setStreetAddress("Puławska 78/80");
+        request.setSurname("Brzęczyszczykiewicz");
+        request.setUserIdentifier(userId);
+        request.setZipCode("AGSDS%^&E-2S2D4");
+        request.setOrderTotalPrice(BigDecimal.valueOf(3672.00));
+        request.setItems(itemsDto);
+
+        Assertions.assertThatThrownBy(() -> orderService.createOrder(request, csrfToken.getToken(), token)).isNotNull();
     }
 
     @Test

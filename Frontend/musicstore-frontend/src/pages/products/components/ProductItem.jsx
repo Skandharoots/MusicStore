@@ -28,24 +28,51 @@ function ProductItem(props) {
 
     const handleClickOpen = (event) => {
         event.preventDefault();
-        setOpen(true);
-
-        axios.get('api/users/csrf/token')
-        .then((response) => {
-            axios.post(`api/cart/create`, {
-                userUuid: LocalStorageHelper.GetActiveUser(),
-                productSkuId: props.item.productSkuId,
-                productPrice: props.item.productPrice,
-                productName: props.item.productName,
-                quantity: 1
-            }, {
-                headers: {
-                    'Authorization': 'Bearer ' + LocalStorageHelper.getJwtToken(),
-                    'X-XSRF-TOKEN': response.data.token,
-                }
-            }).then(() => {})
-                .catch((error) => {
-                    toast.error(error.response.data.message, {
+        axios.get(`api/cart/get/${LocalStorageHelper.GetActiveUser()}`, {
+            headers: {
+                'Authorization': 'Bearer ' + LocalStorageHelper.getJwtToken(),
+            }
+        }).then(res => {
+            let exists = false;
+            let id = null;
+            let currentQuantity = 0;
+            if (res.data.length > 0) {
+                [...res.data].map((item) => {
+                    if (item.productSkuId === props.item.productSkuId) {
+                        exists = true;
+                        id = item.id;
+                        currentQuantity = item.quantity;
+                    }
+                });
+            }
+            if (exists) {
+                axios.get('api/users/csrf/token')
+                    .then((response) => {
+                        axios.put(`api/cart/update/${id}`, {
+                            quantity: currentQuantity + 1,
+                        },{
+                            headers: {
+                                'Authorization': 'Bearer ' + LocalStorageHelper.getJwtToken(),
+                                'X-XSRF-TOKEN': response.data.token,
+                                'Content-Type': 'application/json',
+                            }
+                        }).then(() => {
+                            setOpen(true);
+                        }).catch(() => {
+                            toast.error("Could not update basket items", {
+                                position: "bottom-center",
+                                autoClose: 3000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: false,
+                                progress: undefined,
+                                theme: "colored",
+                                transition: Bounce,
+                            });
+                        });
+                    }).catch(() => {
+                    toast.error("Cannot fetch token", {
                         position: "bottom-center",
                         autoClose: 3000,
                         hideProgressBar: false,
@@ -57,8 +84,52 @@ function ProductItem(props) {
                         transition: Bounce,
                     });
                 });
+            } else {
+                axios.get('api/users/csrf/token')
+                    .then((response) => {
+                        axios.post(`api/cart/create`, {
+                            userUuid: LocalStorageHelper.GetActiveUser(),
+                            productSkuId: props.item.productSkuId,
+                            productPrice: props.item.productPrice,
+                            productName: props.item.productName,
+                            quantity: 1
+                        }, {
+                            headers: {
+                                'Authorization': 'Bearer ' + LocalStorageHelper.getJwtToken(),
+                                'X-XSRF-TOKEN': response.data.token,
+                                'Content-Type': 'application/json',
+                            }
+                        }).then(() => {
+                            setOpen(true);
+                        }).catch((error) => {
+                            toast.error(error.response.data.message, {
+                                position: "bottom-center",
+                                autoClose: 3000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: false,
+                                progress: undefined,
+                                theme: "colored",
+                                transition: Bounce,
+                            });
+                        });
+                    }).catch(() => {
+                    toast.error('Cannot fetch token', {
+                        position: "bottom-center",
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: false,
+                        progress: undefined,
+                        theme: "colored",
+                        transition: Bounce,
+                    });
+                });
+            }
         }).catch(() => {
-            toast.error('Cannot fetch token', {
+            toast.error('Error getting existing cart items.', {
                 position: "bottom-center",
                 autoClose: 3000,
                 hideProgressBar: false,
@@ -70,6 +141,7 @@ function ProductItem(props) {
                 transition: Bounce,
             });
         });
+
     };
 
     const handleClose = () => {

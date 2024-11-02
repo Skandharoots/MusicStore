@@ -24,23 +24,25 @@ public class RegisterService {
 
     public String register(RegisterRequest request) {
 
-        Pattern pattern = Pattern.compile("^(?![^\"]+.*[^\"]+\\.\\.)"
+        Pattern emailPattern = Pattern.compile("^(?![^\"]+.*[^\"]+\\.\\.)"
                         + "[a-zA-Z0-9 !#\"$%&'*+-/=?^_`{|}~]*"
                         + "[a-zA-Z0-9\"]+@[a-zA-Z0-9.-]+$",
                 Pattern.CASE_INSENSITIVE);
-        Matcher matcher = pattern.matcher(request.getEmail());
+        Matcher matcher = emailPattern.matcher(request.getEmail());
+
+        if (!matcher.matches()) {
+            log.error("Invalid email address provided - " + request.getEmail());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Email not valid");
+        }
 
         Pattern passPattern = Pattern
                 .compile("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])"
                         + "(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{6,20}$");
         Matcher passMatcher = passPattern.matcher(request.getPassword());
 
-        if (!matcher.matches()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "Email not valid");
-        }
-
         if (!passMatcher.matches()) {
+            log.error("Invalid password provided - " + request.getPassword());
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "Password must contain lower and upper case letters, "
                     + "at least one number, as well as one special character. "
@@ -49,8 +51,22 @@ public class RegisterService {
 
         if (request.getFirstName().isEmpty() || request.getLastName().isEmpty()
         || request.getEmail().isEmpty() || request.getPassword().isEmpty()) {
+            log.error("Empty registration request fields.");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "First and Last name, as well as email or password fields cannot be empty");
+        }
+
+        Pattern firstAndLastNamePattern =
+                Pattern.compile("^(?=.{1,50}$)[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ]+"
+                        + "(?:[-'_.\\s][A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ]+)*$");
+
+        if (!firstAndLastNamePattern.matcher(request.getFirstName()).matches()
+                || !firstAndLastNamePattern.matcher(request.getLastName()).matches()) {
+            log.error("Invalid first or last name provided - " + request.getFirstName()
+                    + ", " + request.getLastName());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Invalid first or last name: for first name [" + request.getFirstName()
+                            + "] and last name [" + request.getLastName() + "]");
         }
 
         return userService.signUpUser(

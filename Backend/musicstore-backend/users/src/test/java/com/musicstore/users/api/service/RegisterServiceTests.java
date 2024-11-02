@@ -54,7 +54,7 @@ public class RegisterServiceTests {
     public void registerUserTest() {
         RegisterRequest registerRequest = new RegisterRequest(
                 "Marek",
-                "Kopania",
+                "Łęgocki-Ką",
                 "marek@gmail.com",
                 "Tes7p$s"
         );
@@ -87,7 +87,7 @@ public class RegisterServiceTests {
     }
 
     @Test
-    public void registerUserExceptionEmptyFirstOrLastNameTest() {
+    public void registerUserExceptionEmptyFirstOrLastNameEmptyTest() {
         RegisterRequest registerRequest = new RegisterRequest(
                 "",
                 "",
@@ -96,6 +96,17 @@ public class RegisterServiceTests {
         );
         Assertions.assertThatThrownBy(() -> registerService.register(registerRequest)).isNotNull();
 
+    }
+
+    @Test
+    public void registerUserExceptionEmptyLastOrFirstNameInvalidFormatTest() {
+        RegisterRequest registerRequest = new RegisterRequest(
+                "%JDS@#%(*@#",
+                "#$*%(ASD@#923",
+                "marek@gmail.com",
+                "Tes7p$s"
+        );
+        Assertions.assertThatThrownBy(() -> registerService.register(registerRequest)).isNotNull();
     }
 
     @Test

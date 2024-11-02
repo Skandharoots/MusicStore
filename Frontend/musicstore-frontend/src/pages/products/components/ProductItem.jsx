@@ -247,6 +247,7 @@ function ProductItem(props) {
                 <Tooltip title={props.item.productName}>
                     <p style={{
                         margin: '0',
+                        width: '95%',
                         fontSize: '16px',
                         overflow: 'hidden',
                         textWrap: 'nowrap'

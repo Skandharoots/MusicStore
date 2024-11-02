@@ -5,11 +5,13 @@ header {
 
 .top-container {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  height: 10dvh;
+  height: fit-content;
+  min-height: 10dvh;
   background: white;
-  padding: 10px 10%;
+  padding: 0 10%;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
@@ -30,6 +32,7 @@ header {
 
 .search-container {
   width: 30%;
+  min-width: 300px;
   height: fit-content;
 }
 

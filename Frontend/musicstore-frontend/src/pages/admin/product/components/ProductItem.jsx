@@ -8,6 +8,7 @@ import axios from 'axios';
 import Grid from "@mui/material/Grid2";
 import React, {useEffect, useState} from "react";
 import {Bounce, toast} from "react-toastify";
+import Tooltip from "@mui/material/Tooltip";
 
 
 function ProductItem(props) {
@@ -195,7 +196,9 @@ function ProductItem(props) {
                  }}>
                 <p style={{margin: '0', overflow: 'hidden', textWrap: 'nowrap'}}><b>Id: </b>{props.item.id}</p>
                 <p style={{margin: '0', overflow: 'hidden'}}><b>Sku Id: </b>{props.item.productSkuId}</p>
+                <Tooltip title={props.item.productName}>
                 <p style={{margin: '0', overflow: 'hidden', textWrap: 'nowrap'}}><b>Name: </b>{props.item.productName}</p>
+                </Tooltip>
                 <p style={{margin: '0', overflow: 'hidden', textWrap: 'nowrap'}}><b>Price: </b>{props.item.productPrice}$</p>
                 <p style={{margin: '0', overflow: 'hidden', textWrap: 'nowrap'}}><b>In stock: </b>{props.item.inStock}</p>
             </div>

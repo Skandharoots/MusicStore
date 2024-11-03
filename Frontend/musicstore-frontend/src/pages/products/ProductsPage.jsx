@@ -130,7 +130,7 @@ function ProductsPage() {
                         </div>
                     </div>
                     <div className="ribbon-header">
-                        <h4 style={{margin: '4px 0'}}>Filters</h4>
+                        <h4 style={{margin: '4px 0', fontSize: '20px'}}>Filters</h4>
                         <Button
                             sx={{
                                 backgroundColor: 'transparent',
@@ -500,7 +500,7 @@ function ProductsPage() {
                     </Backdrop>
                     <Grid container
                           style={{
-                              marginLeft: '16px',
+                              paddingLeft: '16px',
                               paddingBottom: '16px',
                               borderBottom: '1px solid rgba(0, 0, 0, 0.1)'
                             }}

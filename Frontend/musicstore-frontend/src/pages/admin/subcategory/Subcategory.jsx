@@ -77,7 +77,7 @@ function Subcategory() {
                 </Button>
             </div>
 
-            <Grid container style={{marginLeft: '16px'}} rowSpacing={2.7} columnSpacing={2.7}>
+            <Grid container style={{paddingLeft: '16px'}} rowSpacing={2.7} columnSpacing={2.7}>
                 {
                     subcategories.map((subcategory) => (
                         <SubcategoryItem key={subcategory.id} subcategory={subcategory} onDelete={removeById} { ...subcategory}/>

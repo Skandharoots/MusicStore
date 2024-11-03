@@ -77,7 +77,9 @@ function Navbar() {
                                                 Hi,<br/>{userName}
                                             </p>
                                         </div>
-                                        <PersonOutlineOutlinedIcon fontSize={"medium"}/>
+                                        <PersonOutlineOutlinedIcon
+                                            fontSize={"medium"}
+                                        />
                                     </NavLink>
                                 </Tooltip>
                             </li>

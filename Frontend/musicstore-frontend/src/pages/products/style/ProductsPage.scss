@@ -8,6 +8,7 @@
   flex-direction: row;
   background-color: white;
   min-height: 80dvh;
+  height: fit-content;
   color: black;
 
 
@@ -19,11 +20,11 @@
     width: 240px;
     overflow: hidden;
     margin: 0 0;
-    padding: 0;
-    height: fit-content;
-    min-height: inherit;
+    padding: 0 0 16px 0;
+
+    min-height: 80vh;
     background-color: white;
-    border-left: 1px solid rgba(0, 0, 0, 0.1);
+
 
 
 
@@ -54,7 +55,7 @@
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    padding: 0 8px;
+    padding: 20px 8px 16px 8px;
     height: fit-content;
     border-top: 1px solid rgba(0, 0, 0, 0.1);
   }

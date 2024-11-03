@@ -198,7 +198,8 @@ function ProductItem(props) {
     }, [])
 
     return (
-        <Grid sx={{
+        <Grid
+            sx={{
             display: 'flex',
             flexDirection: 'column',
             opacity: opacity,

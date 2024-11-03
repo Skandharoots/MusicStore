@@ -216,6 +216,7 @@ function Basket() {
                                         width: '55%',
                                         minWidth: '170px',
                                         boxShadow: '0 5px 15px rgba(0, 0, 0, 0.1)',
+                                        borderRadius: '1em',
                                         boxSizing: 'border-box',
                                         padding: '4%',
                                     }}

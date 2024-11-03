@@ -11,18 +11,20 @@
   color: black;
 
 
-
   .products-page-ribbon {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-end;
-  width: 240px;
-  overflow: hidden;
-  margin: 0 0;
-  padding: 0;
-  height: 100%;
-  background-color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-end;
+    width: 240px;
+    overflow: hidden;
+    margin: 0 0;
+    padding: 0;
+    height: fit-content;
+    min-height: inherit;
+    background-color: white;
+    border-left: 1px solid rgba(0, 0, 0, 0.1);
+
 
 
 
@@ -117,6 +119,8 @@
     justify-content: flex-start;
     align-items: center;
     border-left: 1px solid rgba(0, 0, 0, 0.1);
+    height: fit-content;
+    min-height: inherit;
 
     .content-controls {
       display: flex;

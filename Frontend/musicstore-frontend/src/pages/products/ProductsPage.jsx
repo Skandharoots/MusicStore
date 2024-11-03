@@ -19,7 +19,6 @@ import ProductItem from "./components/ProductItem.jsx"
 import Stack from "@mui/material/Stack";
 import Pagination from "@mui/material/Pagination";
 import TextField from "@mui/material/TextField";
-import {AttachMoney} from "@mui/icons-material";
 
 function ProductsPage() {
 

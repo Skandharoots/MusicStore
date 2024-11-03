@@ -21,11 +21,9 @@
   overflow: hidden;
   margin: 0 0;
   padding: 0;
-  height: fit-content;
-  min-height: 80dvh;
+  height: 100%;
   background-color: white;
-  border-right: 1px solid rgba(0, 0, 0, 0.1);
-  border-left: 1px solid rgba(0, 0, 0, 0.1);
+
 
 
   .products-ribbon-image {
@@ -118,6 +116,7 @@
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
+    border-left: 1px solid rgba(0, 0, 0, 0.1);
 
     .content-controls {
       display: flex;

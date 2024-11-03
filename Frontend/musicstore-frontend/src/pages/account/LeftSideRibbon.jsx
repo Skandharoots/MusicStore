@@ -7,7 +7,6 @@ import {NavLink} from "react-router-dom";
 function LeftSideRibbon() {
 
     return (
-        <div className="left-side-wrapper">
             <div className="left-side">
                 <h4>Welcome to<br/>Your account</h4>
                 <ul>
@@ -29,7 +28,6 @@ function LeftSideRibbon() {
                     </li>
                 </ul>
             </div>
-        </div>
     )
 }
 

@@ -83,14 +83,13 @@ function Category() {
                 </Button>
             </div>
 
-            <Grid container style={{marginRight: '20%', marginLeft: '16px'}} rowSpacing={2} columnSpacing={2}>
+            <Grid container style={{marginLeft: '16px'}} rowSpacing={2.7} columnSpacing={2.7}>
                 {
                     categories.map((category) => (
                         <CategoryItem key={category.id} id={category.id} name={category.name} onDelete={removeById} { ...category}/>
                     ))
                 }
             </Grid>
-
         </div>
     )
 }

@@ -55,9 +55,18 @@ const Dashboard = () => {
 const DashboardMyAcc = () => {
     return (
         <div className={"my-acc-dash"}>
-            <ToastContainer />
-            <LeftSideRibbon />
-            <Outlet />
+            <div style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "flex-start",
+                width: "100%",
+                backgroundColor: "white",
+            }}>
+                <ToastContainer />
+                <LeftSideRibbon />
+                <Outlet />
+            </div>
         </div>
     )
 }
@@ -65,9 +74,18 @@ const DashboardMyAcc = () => {
 const DashboardAdmin = () => {
     return (
         <div className={"admin-dash"}>
-            <ToastContainer />
-            <LeftSideAdminRibbon />
-            <Outlet />
+            <div style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "flex-start",
+                width: "100%",
+                backgroundColor: "white",
+            }}>
+                <ToastContainer />
+                <LeftSideAdminRibbon />
+                <Outlet />
+            </div>
         </div>
     )
 }

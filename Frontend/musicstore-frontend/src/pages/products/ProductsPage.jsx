@@ -124,7 +124,7 @@ function ProductsPage() {
 
     return (
         <div className="products-page">
-            <div className="products-page-ribbon-wrapper">
+
                 <div className="products-page-ribbon">
                     <div className="products-ribbon-image">
                         <div className="img-container">
@@ -428,7 +428,7 @@ function ProductsPage() {
                         </div>
                     </div>
                 </div>
-            </div>
+
 
             <div className="products-page-content">
                 <div className="content-controls">

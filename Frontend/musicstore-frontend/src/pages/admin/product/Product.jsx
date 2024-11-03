@@ -191,7 +191,7 @@ function Product() {
 
             </div>
 
-            <Grid container style={{ marginLeft: '16px', paddingBottom: '16px', borderBottom: '1px solid rgba(0, 0, 0, 0.1)'}} rowSpacing={2} columnSpacing={2}>
+            <Grid container style={{ marginLeft: '16px', paddingBottom: '16px', borderBottom: '1px solid rgba(0, 0, 0, 0.1)'}} rowSpacing={2.7} columnSpacing={2.7}>
                 {
                     products.map((product) => (
                         <ProductItem key={product.id} id={product.id} item={product}

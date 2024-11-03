@@ -83,7 +83,7 @@ function Manufacturer() {
                 </Button>
             </div>
 
-            <Grid container style={{marginRight: '20%', marginLeft: '16px'}} rowSpacing={2} columnSpacing={2}>
+            <Grid container style={{marginLeft: '16px'}} rowSpacing={2.7} columnSpacing={2.7}>
                 {
                     manufacturers.map((country) => (
                         <ManufacturerItem key={country.id} id={country.id} name={country.name} onDelete={removeById} { ...country}/>

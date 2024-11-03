@@ -11,7 +11,6 @@ import AssignmentOutlinedIcon from "@mui/icons-material/AssignmentOutlined";
 function LeftSideAdminRibbon() {
 
     return (
-        <div className="left-side-admin-wrapper">
             <div className="left-side-admin">
                 <h4>Welcome to<br/>Admin panel</h4>
                 <ul>
@@ -52,7 +51,6 @@ function LeftSideAdminRibbon() {
                     </li>
                 </ul>
             </div>
-        </div>
     )
 
 }

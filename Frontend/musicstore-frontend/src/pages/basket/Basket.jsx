@@ -251,7 +251,7 @@ function Basket() {
                                             variant="contained"
                                             fullWidth
                                             endIcon={<CreditCard />}
-                                            //TODO onclick to order
+                                            onClick={() => {navigate('/order/place')}}
                                             sx={{
                                                 backgroundColor: 'rgb(39, 99, 24)',
                                                 "&:hover": {backgroundColor: 'rgb(49,140,23)'}

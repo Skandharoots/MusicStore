@@ -53,7 +53,6 @@
       padding: 16px 8px 0 8px;
       height: fit-content;
       border-top: 1px solid rgba(0, 0, 0, 0.1);
-      border-right: 1px solid rgba(0, 0, 0, 0.1);
     }
 
     .ribbon-subcat {
@@ -64,7 +63,6 @@
       width: 100%;
       padding: 0 8px;
       height: fit-content;
-      border-right: 1px solid rgba(0, 0, 0, 0.1);
     }
 
     .ribbon-manufacturer {
@@ -75,7 +73,6 @@
       width: 100%;
       padding: 0 8px;
       height: fit-content;
-      border-right: 1px solid rgba(0, 0, 0, 0.1);
     }
 
     .ribbon-country {
@@ -86,7 +83,6 @@
       width: 100%;
       padding: 0 8px;
       height: fit-content;
-      border-right: 1px solid rgba(0, 0, 0, 0.1);
     }
 
     .ribbon-price {
@@ -97,7 +93,6 @@
       width: 100%;
       padding: 0 8px;
       height: fit-content;
-      border-right: 1px solid rgba(0, 0, 0, 0.1);
 
       input[type=number]::-webkit-inner-spin-button,
       input[type=number]::-webkit-outer-spin-button {
@@ -117,12 +112,13 @@
 
   .products-page-content {
     margin: 0 0;
-    width: 780px;
+    width: 781px;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
     box-sizing: border-box;
+    border-left: 1px solid rgba(0, 0, 0, 0.1);
 
     .content-controls {
       display: flex;

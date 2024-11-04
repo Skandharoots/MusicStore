@@ -12,6 +12,7 @@ function Basket() {
 
     const [basketItems, setBasketItems] = useState([{}]);
     const [totalCost, setTotalCost] = useState(0);
+    const [totalItems, setTotalItems] = useState(0);
     const [open, setOpen] = useState(false);
 
     const navigate = useNavigate();
@@ -25,10 +26,12 @@ function Basket() {
         .then(res => {
             setBasketItems(res.data);
             let total = 0;
+            let items = 0;
             [...res.data].map((item) => {
-                console.log(item.productPrice);
+                items += item.quantity;
                 total += item.quantity * item.productPrice;
             })
+            setTotalItems(items);
             setTotalCost(total);
         }).catch(() => {});
     }, []);
@@ -143,7 +146,7 @@ function Basket() {
                                         marginBottom: '1em',
                                     }}
                                 >
-                                    <p style={{margin: '0', fontSize: '28px', fontWeight: 'bold'}}>Your basket <span style={{margin: '0', fontSize: '18px', fontWeight: 'normal'}}>({basketItems.length} items)</span></p>
+                                    <p style={{margin: '0', fontSize: '28px', fontWeight: 'bold'}}>Your basket <span style={{margin: '0', fontSize: '18px', fontWeight: 'normal'}}>({totalItems} items)</span></p>
                                     <React.Fragment>
                                         <Button
                                             variant="outlined"

@@ -5,6 +5,7 @@
   justify-content: flex-start;
   align-items: center;
   width: 100%;
+  min-height: 80vh;
   height: fit-content;
   background-color: white;
   color: black;
@@ -17,15 +18,64 @@
     align-items: flex-start;
     width: 80%;
     height: fit-content;
+    margin-top: 16px;
+    box-sizing: border-box;
 
     .order-form {
       display: flex;
       flex-direction: column;
-      justify-content: flex-start;
+      justify-content: space-between;
       align-items: center;
-      width: 45%;
-      border-radius: 1em;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+      text-align: center;
+      min-width: 550px;
+      width: 20%;
+      height: fit-content;
+      box-sizing: border-box;
+
+      .personal-info {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        width: 100%;
+        max-width: 500px;
+        margin: 0 0 16px 0;
+        padding: 4%;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        border-radius: 1em;
+        box-sizing: border-box;
+      }
+
+      .delivery-info {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        width: 100%;
+        max-width: 500px;
+        padding: 4%;
+        margin: 16px 0;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        border-radius: 1em;
+        box-sizing: border-box;
+      }
+
+      .submit-order {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        width: 100%;
+        max-width: 500px;
+        padding: 4%;
+        margin: 16px 0;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        border-radius: 1em;
+        box-sizing: border-box;
+      }
     }
 
     .order-items {
@@ -33,7 +83,9 @@
       flex-direction: column;
       justify-content: flex-start;
       align-items: center;
-      width: 45%;
+      width: 25%;
+      box-sizing: border-box;
+      min-width: 500px;
     }
 
 

@@ -308,7 +308,7 @@ function Signup() {
                             "&:hover": {backgroundColor: 'rgb(49,140,23)'}
                         }}
                     >
-                        Sign in
+                        Sign up
                     </Button>
                 </Box>
             </div>
@@ -321,7 +321,7 @@ function Signup() {
                        margin: '5% auto 0 auto',
                    }}>
                 <AlertTitle>Success</AlertTitle>
-                Registration successfull, please check your email to verify your account.
+                Registration successful, please check your email to verify your account.
             </Alert>
             <Alert variant='filled'
                    severity='error'

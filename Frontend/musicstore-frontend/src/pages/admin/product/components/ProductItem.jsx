@@ -25,40 +25,42 @@ function ProductItem(props) {
     };
 
     useEffect(() => {
-        axios.get(`api/azure/list?path=${props.item.productSkuId}`, {})
-            .then((response) => {
+        if (props.item.productSkuId !== null && props.item.productSkuId !== undefined) {
+            axios.get(`api/azure/list?path=${props.item.productSkuId}`, {})
+                .then((response) => {
                     setFilePaths(response.data);
                     axios.get(`api/azure/read?path=${response.data[0]}`, {responseType: 'blob'})
                         .then(res => {
-                            var blob = new Blob([res.data], { type: "image/*" });
+                            var blob = new Blob([res.data], {type: "image/*"});
                             setImg(URL.createObjectURL(blob));
                         }).catch((error) => {
-                            toast.error(error.response.data.message, {
-                                position: "bottom-center",
-                                autoClose: 3000,
-                                hideProgressBar: false,
-                                closeOnClick: true,
-                                pauseOnHover: true,
-                                draggable: false,
-                                progress: undefined,
-                                theme: "colored",
-                                transition: Bounce,
-                            })
+                        toast.error(error.response.data.message, {
+                            position: "bottom-center",
+                            autoClose: 3000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: false,
+                            progress: undefined,
+                            theme: "colored",
+                            transition: Bounce,
+                        })
                     })
-            }).catch(error => {
-            toast.error(error.response.data.message, {
-                position: "bottom-center",
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: false,
-                progress: undefined,
-                theme: "colored",
-                transition: Bounce,
+                }).catch(error => {
+                toast.error(error.response.data.message, {
+                    position: "bottom-center",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: false,
+                    progress: undefined,
+                    theme: "colored",
+                    transition: Bounce,
+                })
             })
-        })
-    }, [])
+        }
+    }, [props.item])
 
 
     const deleteProduct = (event) => {

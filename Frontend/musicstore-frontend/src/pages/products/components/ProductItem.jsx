@@ -210,6 +210,7 @@ function ProductItem(props) {
             padding: '4px',
             color: 'black',
             fontSize: '12px',
+                boxSizing: 'border-box',
             boxShadow: '0 5px 15px rgba(0, 0, 0, 0.1)',
             transition: 'all 0.3s',
             "&:hover": {

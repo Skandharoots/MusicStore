@@ -98,14 +98,17 @@ function Navbar() {
                                 </Tooltip>
                             </li>
                         }
-                        <li>
-                            <Tooltip title={"Basket"}>
-                                <NavLink to="/basket">
-                                    <ShoppingCartOutlinedIcon fontSize={"medium"}/>
-                                </NavLink>
-                            </Tooltip>
-                        </li>
-                        { LocalStorageHelper.isUserAdmin() === true &&
+                        {
+                            LocalStorageHelper.IsUserLogged() === true &&
+                            <li>
+                                <Tooltip title={"Basket"}>
+                                    <NavLink to="/basket">
+                                        <ShoppingCartOutlinedIcon fontSize={"medium"}/>
+                                    </NavLink>
+                                </Tooltip>
+                            </li>
+                        }
+                        {LocalStorageHelper.isUserAdmin() === true &&
                             <li>
                                 <Tooltip title={"Admin panel"}>
                                     <NavLink to="/admin/category">

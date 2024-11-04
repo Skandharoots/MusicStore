@@ -18,6 +18,12 @@ function Basket() {
     const navigate = useNavigate();
 
     useEffect(() => {
+        if (LocalStorageHelper.IsUserLogged() === false) {
+            navigate('/');
+        }
+    }, []);
+
+    useEffect(() => {
         axios.get(`api/cart/get/${LocalStorageHelper.GetActiveUser()}`, {
             headers: {
                 'Authorization': 'Bearer ' + LocalStorageHelper.getJwtToken(),
@@ -204,8 +210,8 @@ function Basket() {
                                     </React.Fragment>
                                 </div>
                                 {
-                                    [...basketItems].map(item => (
-                                        <BasketItem key={item.id} item={item} onDelete={removeById} {...item} />
+                                    [...basketItems].map((item, index) => (
+                                        <BasketItem key={index} item={item} onDelete={removeById} {...item} />
                                     ))
                                 }
                             </div>

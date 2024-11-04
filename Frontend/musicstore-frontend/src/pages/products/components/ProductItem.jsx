@@ -275,13 +275,12 @@ function ProductItem(props) {
                     overflow: 'hidden',
                     textWrap: 'nowrap'
                 }}>{props.item.productPrice}$</p>
-                <React.Fragment>
-                    <Tooltip title={"Add to basket"}>
+                { LocalStorageHelper.IsUserLogged() === false &&
+                    <Tooltip title={"Login to add to basket"}>
                         <Button
                             variant={"outlined"}
                             fullWidth={false}
-                            disabled={disableBasket}
-                            onClick={handleClickOpen}
+                            onClick={() => {navigate('/login')}}
                             sx={{
                                 borderColor: 'rgb(39, 99, 24)',
                                 backgroundColor: 'transparent',
@@ -305,51 +304,86 @@ function ProductItem(props) {
                             <AddShoppingCartOutlinedIcon size={"small"} sx={{color: 'rgb(39, 99, 24)', fontSize: '16px'}}/>
                         </Button>
                     </Tooltip>
-                    <Dialog
-                        open={open}
-                        onClose={handleClose}
-                    >
-                        <DialogTitle>Product added to basket</DialogTitle>
-                        <DialogContent>
-                            <DialogContentText>
-                                Do you want to continue shopping?
-                            </DialogContentText>
-                        </DialogContent>
-                        <DialogActions sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                }
+                { LocalStorageHelper.IsUserLogged() === true &&
+
+                    <React.Fragment>
+                        <Tooltip title={"Add to basket"}>
                             <Button
-                                variant="outlined"
-                                onClick={handleClose}
-                                size="small"
+                                variant={"outlined"}
+                                fullWidth={false}
+                                disabled={disableBasket}
+                                onClick={handleClickOpen}
                                 sx={{
-                                    borderColor: 'rgb(11, 108, 128)',
-                                    color: 'rgb(11, 108, 128)',
-                                    fontSize: '12px',
+                                    borderColor: 'rgb(39, 99, 24)',
+                                    backgroundColor: 'transparent',
+                                    width: '35px',
+                                    zIndex: 20,
+                                    minWidth: '0',
+                                    height: '35px',
+                                    display: 'flex',
                                     "&:hover": {
+                                        backgroundColor: 'rgba(49,140,23, 0.2)',
                                         outline: 'none !important',
-                                        color: 'black',
-                                        backgroundColor: 'rgba(16,147,177, 0.2)',
-                                        borderColor: 'rgba(16,147,177, 0.2)',
+                                        borderColor: 'rgb(39, 99, 24)'
                                     },
+                                    "&:focus": {
+                                        backgroundColor: 'rgba(49,140,23, 0.2)',
+                                        outline: 'none !important',
+                                        borderColor: 'rgb(39, 99, 24)'
+                                    }
                                 }}
                             >
-                                Continue shopping
+                                <AddShoppingCartOutlinedIcon size={"small"} sx={{color: 'rgb(39, 99, 24)', fontSize: '16px'}}/>
                             </Button>
-                            <Button
-                                variant="contained"
-                                size="small"
-                                onClick={goToBasket}
-                                endIcon={<ArrowForwardIcon/>}
-                                sx={{
-                                    fontSize: '12px',
-                                    backgroundColor: 'rgb(39, 99, 24)',
-                                    "&:hover": {backgroundColor: 'rgb(49,140,23)'}
-                                }}
-                            >
-                                Basket
-                            </Button>
-                        </DialogActions>
-                    </Dialog>
-                </React.Fragment>
+                        </Tooltip>
+                        <Dialog
+                            open={open}
+                            onClose={handleClose}
+                        >
+                            <DialogTitle>Product added to basket</DialogTitle>
+                            <DialogContent>
+                                <DialogContentText>
+                                    Do you want to continue shopping?
+                                </DialogContentText>
+                            </DialogContent>
+                            <DialogActions sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                                <Button
+                                    variant="outlined"
+                                    onClick={handleClose}
+                                    size="small"
+                                    sx={{
+                                        borderColor: 'rgb(11, 108, 128)',
+                                        color: 'rgb(11, 108, 128)',
+                                        fontSize: '12px',
+                                        "&:hover": {
+                                            outline: 'none !important',
+                                            color: 'black',
+                                            backgroundColor: 'rgba(16,147,177, 0.2)',
+                                            borderColor: 'rgba(16,147,177, 0.2)',
+                                        },
+                                    }}
+                                >
+                                    Continue shopping
+                                </Button>
+                                <Button
+                                    variant="contained"
+                                    size="small"
+                                    onClick={goToBasket}
+                                    endIcon={<ArrowForwardIcon/>}
+                                    sx={{
+                                        fontSize: '12px',
+                                        backgroundColor: 'rgb(39, 99, 24)',
+                                        "&:hover": {backgroundColor: 'rgb(49,140,23)'}
+                                    }}
+                                >
+                                    Basket
+                                </Button>
+                            </DialogActions>
+                        </Dialog>
+                    </React.Fragment>
+                }
+
             </div>
 
         </Grid>

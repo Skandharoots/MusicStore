@@ -414,13 +414,12 @@ function ProductDetailsPage() {
                                             {renderQuantityItems()}
                                         </Select>
                                     </FormControl>
-                                    <React.Fragment>
+                                    { LocalStorageHelper.IsUserLogged() === false &&
                                         <Button
                                             className="purchase-btn"
                                             fullWidth
                                             variant="contained"
-                                            disabled={parseInt(productQuantity) === 0}
-                                            onClick={handleClickOpen}
+                                            onClick={() => {navigate('/login')}}
                                             sx={{
                                                 width: '60%',
                                                 height: '40px',
@@ -431,53 +430,75 @@ function ProductDetailsPage() {
                                                 "&:hover": {backgroundColor: 'rgb(49,140,23)'}
                                             }}
                                         >
-                                            Add to basket
+                                            Login to add to basket
                                         </Button>
-                                        <Dialog
-                                            open={open}
-                                            onClose={handleClose}
-                                        >
-                                            <DialogTitle>Product added to basket</DialogTitle>
-                                            <DialogContent>
-                                                <DialogContentText>
-                                                    Do you want to continue shopping?
-                                                </DialogContentText>
-                                            </DialogContent>
-                                            <DialogActions sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-                                                <Button
-                                                    variant="outlined"
-                                                    onClick={handleClose}
-                                                    size="small"
-                                                    sx={{
-                                                        borderColor: 'rgb(11, 108, 128)',
-                                                        color: 'rgb(11, 108, 128)',
-                                                        fontSize: '12px',
-                                                        "&:hover": {
-                                                            outline: 'none !important',
-                                                            color: 'black',
-                                                            backgroundColor: 'rgba(16,147,177, 0.2)',
-                                                            borderColor: 'rgba(16,147,177, 0.2)',
-                                                        },
-                                                    }}
-                                                >
-                                                    Continue shopping
-                                                </Button>
-                                                <Button
-                                                    variant="contained"
-                                                    size="small"
-                                                    onClick={goToBasket}
-                                                    endIcon={<ArrowForwardIcon/>}
-                                                    sx={{
-                                                        fontSize: '12px',
-                                                        backgroundColor: 'rgb(39, 99, 24)',
-                                                        "&:hover": {backgroundColor: 'rgb(49,140,23)'}
-                                                    }}
-                                                >
-                                                    Basket
-                                                </Button>
-                                            </DialogActions>
-                                        </Dialog>
-                                    </React.Fragment>
+                                    }
+                                    { LocalStorageHelper.IsUserLogged() === true &&
+                                        <React.Fragment>
+                                            <Button
+                                                className="purchase-btn"
+                                                fullWidth
+                                                variant="contained"
+                                                disabled={parseInt(productQuantity) === 0}
+                                                onClick={handleClickOpen}
+                                                sx={{
+                                                    width: '60%',
+                                                    height: '40px',
+                                                    padding: '0',
+                                                    borderRadius: '1em',
+                                                    fontSize: '10px',
+                                                    backgroundColor: 'rgb(39, 99, 24)',
+                                                    "&:hover": {backgroundColor: 'rgb(49,140,23)'}
+                                                }}
+                                            >
+                                                Add to basket
+                                            </Button>
+                                            <Dialog
+                                                open={open}
+                                                onClose={handleClose}
+                                            >
+                                                <DialogTitle>Product added to basket</DialogTitle>
+                                                <DialogContent>
+                                                    <DialogContentText>
+                                                        Do you want to continue shopping?
+                                                    </DialogContentText>
+                                                </DialogContent>
+                                                <DialogActions sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                                                    <Button
+                                                        variant="outlined"
+                                                        onClick={handleClose}
+                                                        size="small"
+                                                        sx={{
+                                                            borderColor: 'rgb(11, 108, 128)',
+                                                            color: 'rgb(11, 108, 128)',
+                                                            fontSize: '12px',
+                                                            "&:hover": {
+                                                                outline: 'none !important',
+                                                                color: 'black',
+                                                                backgroundColor: 'rgba(16,147,177, 0.2)',
+                                                                borderColor: 'rgba(16,147,177, 0.2)',
+                                                            },
+                                                        }}
+                                                    >
+                                                        Continue shopping
+                                                    </Button>
+                                                    <Button
+                                                        variant="contained"
+                                                        size="small"
+                                                        onClick={goToBasket}
+                                                        endIcon={<ArrowForwardIcon/>}
+                                                        sx={{
+                                                            fontSize: '12px',
+                                                            backgroundColor: 'rgb(39, 99, 24)',
+                                                            "&:hover": {backgroundColor: 'rgb(49,140,23)'}
+                                                        }}
+                                                    >
+                                                        Basket
+                                                    </Button>
+                                                </DialogActions>
+                                            </Dialog>
+                                        </React.Fragment>
+                                    }
                                 </div>
                                 <div style={{
                                     width: '100%',

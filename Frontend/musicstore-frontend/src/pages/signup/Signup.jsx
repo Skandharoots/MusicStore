@@ -60,7 +60,7 @@ function Signup() {
             setLastNameErrorMessage('');
         }
 
-        if (!email || !/\S+@\S+\.\S+/.test(email)) {
+        if (!email || !/(?![^"]+.*[^"]+\\.\\.)[a-zA-Z0-9 !#"$%&'*+-/=?^_`{|}~]*[a-zA-Z0-9"]+@[a-zA-Z0-9.-]+$/s.test(email)) {
             setEmailError(true);
             setEmailErrorMessage('Please enter a valid email address.');
             isValid = false;

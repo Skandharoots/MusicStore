@@ -52,7 +52,7 @@ public class Order {
 
     private BigDecimal totalPrice;
 
-    private OrderStatus status = OrderStatus.IN_PROGRESS;
+    private OrderStatus status;
 
     @OneToMany(cascade = CascadeType.ALL)
     private List<OrderLineItems> orderItems;
@@ -81,5 +81,6 @@ public class Order {
         this.zipCode = zipCode;
         this.totalPrice = totalPrice;
         this.orderItems = orderItems;
+        this.status = OrderStatus.IN_PROGRESS;
     }
 }

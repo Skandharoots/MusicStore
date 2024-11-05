@@ -218,7 +218,6 @@ public class OrderService {
         }
 
         if (request.getStatus() == null
-                || request.getStatus().toString().isEmpty()
                 || request.getItemsToCancel() == null
                 || request.getItemsToCancel().isEmpty()
         ) {
@@ -234,15 +233,13 @@ public class OrderService {
                                 "Order not found")
                 );
 
-        Boolean response = null;
-
         if (
                 request.getStatus().equals(OrderStatus.CANCELED)
                 || request.getStatus().equals(OrderStatus.FAILED)
         ) {
             OrderCancelRequest orderCancelRequest = new OrderCancelRequest();
             orderCancelRequest.setItems(request.getItemsToCancel());
-            response = webClient.build()
+            Boolean response = webClient.build()
                     .post()
                     .uri(variablesConfiguration.getOrderCancellationUrl())
                     .header("X-XSRF-TOKEN", csrfToken)
@@ -253,11 +250,11 @@ public class OrderService {
                     .bodyToMono(Boolean.class)
                     .block();
 
-        }
+            if (!Boolean.TRUE.equals(response)) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                        "Order update failed because of bad products in list");
+            }
 
-        if (!Boolean.TRUE.equals(response)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "Order update failed because of bad products in list");
         }
 
         order.setStatus(request.getStatus());

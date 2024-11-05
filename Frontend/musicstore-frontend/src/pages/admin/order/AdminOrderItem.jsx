@@ -1,13 +1,17 @@
-import Tooltip from "@mui/material/Tooltip";
-import {useEffect, useState} from "react";
-import Grid from "@mui/material/Grid2";
+import React, {useEffect, useState} from "react";
 import axios from "axios";
-import { format } from "date-fns";
+import Grid from "@mui/material/Grid2";
+import {format} from "date-fns";
+import Tooltip from "@mui/material/Tooltip";
+import {Link} from "react-router-dom";
+import EditIcon from "@mui/icons-material/Edit";
+import {Button} from "@mui/material";
 
 
-function OrderUserItem(props) {
+function AdminOrderItem(props) {
 
     const [images, setImages] = useState([]);
+    const [disableEdition, setDisableEdition] = useState(false);
 
     useEffect(() => {
         if (props.item.orderItems !== null && props.item.orderItems !== undefined) {
@@ -23,6 +27,14 @@ function OrderUserItem(props) {
                     setImages(old => [...old, imgUrl]);
                 } );
             });
+        }
+    }, []);
+
+    useEffect(() => {
+        if (props.item.status !== null && props.item.status !== undefined) {
+            if (props.item.status === 'CANCELED' || props.item.status === 'FAILED' || props.item.status === 'COMPLETED') {
+                setDisableEdition(true);
+            }
         }
     }, [props.item]);
 
@@ -99,12 +111,41 @@ function OrderUserItem(props) {
             }}
             key={props.item.id}
         >
+            <div>
+                <Button
+                    component={Link}
+                    to={"/admin/order/update/" + props.item.orderIdentifier}
+                    disabled={disableEdition}
+                    variant="contained"
+                    size="large"
+                    type="button"
+                    sx={{
+                        height: '100px',
+                        width: '40px',
+                        minWidth: '0',
+                        minHeight: '0',
+                        margin: '0 0 0 4%',
+                        backgroundColor: 'rgb(255, 189, 3)',
+                        "&:hover": {backgroundColor: 'rgb(255,211,51)'}
+                    }}
+                >
+                    <EditIcon fontSize="small"/>
+                </Button>
+            </div>
             <div className="order-details"
                  style={{
-                     width: '50%', display: 'block',
+                     width: '40%', display: 'block',
+                     height: '100%',
                      padding: '2%',
                  }}>
                 {parseStatus(props.item.status)}
+                <p style={{
+                    margin: '0',
+                    fontSize: '12px',
+                    fontWeight: 'bold',
+                    overflow: 'hidden',
+                    textWrap: 'nowrap'
+                }}>{props.item.name} {props.item.surname}</p>
                 <p style={{
                     margin: '0',
                     fontSize: '12px',
@@ -124,41 +165,40 @@ function OrderUserItem(props) {
                         <b>nr: </b>{props.item.orderIdentifier}</p>
                 </Tooltip>
             </div>
-            <div style={{
-                display: 'flex',
+            <div style={{display: 'flex',
                 flexDirection: 'row',
                 height: '100%',
                 width: '50%',
                 justifyContent: 'flex-start',
                 alignItems: 'center',
             }}>
-                {
-                    [...images].map((image, index) => (
-                        <div
-                            className="order-item-img"
-                            key={index}
-                            style={{
-                                maxHeight: '70px', aspectRatio: "10 / 6",
-                                display: 'flex', justifyContent: 'center', alignItems: 'center',
-                                backgroundSize: 'cover',
-                            }}
-                        >
-                            <img alt={'Order item photo'} src={image}
-                                 style={{
-                                     objectFit: 'cover',
-                                     maxWidth: '100%',
-                                     maxHeight: '100%',
-                                     display: 'block',
-                                     flexShrink: '0',
-                                     flexGrow: '0',
-                                 }}
-                            />
-                        </div>
-                    ))
-                }
+            {
+                [...images].map((image, index) => (
+                    <div
+                        className="order-item-img"
+                        key={index}
+                        style={{
+                            maxHeight: '70px', aspectRatio: "10 / 6",
+                            display: 'flex', justifyContent: 'center', alignItems: 'center',
+                            backgroundSize: 'cover',
+                        }}
+                    >
+                        <img alt={'Order item photo'} src={image}
+                             style={{
+                                 objectFit: 'cover',
+                                 maxWidth: '100%',
+                                 maxHeight: '100%',
+                                 display: 'block',
+                                 flexShrink: '0',
+                                 flexGrow: '0',
+                             }}
+                        />
+                    </div>
+                ))
+            }
             </div>
         </Grid>
-)
+    )
 }
 
-export default OrderUserItem;
+export default AdminOrderItem

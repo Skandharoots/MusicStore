@@ -1,4 +1,13 @@
-import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from "@mui/material";
+import {
+    Backdrop,
+    Button,
+    CircularProgress,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle
+} from "@mui/material";
 import {Link} from "react-router-dom";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -15,6 +24,7 @@ function ProductItem(props) {
     const [img, setImg] = useState(null);
     const [filePaths, setFilePaths] = useState([]);
     const [open, setOpen] = useState(false);
+    const [openBackdrop, setOpenBackdrop] = useState(false);
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -65,6 +75,7 @@ function ProductItem(props) {
 
     const deleteProduct = (event) => {
         event.preventDefault();
+        setOpenBackdrop(true);
         axios.get('api/users/csrf/token', {})
             .then((response) => {
                 axios.delete(`api/products/items/delete/${props.item.productSkuId}`, {
@@ -73,6 +84,7 @@ function ProductItem(props) {
                         'X-XSRF-TOKEN': response.data.token,
                     }
                 }).then(() => {
+                    setTimeout(() => {setOpenBackdrop(false)}, 500);
                     toast.success("Product deleted!", {
                         position: "bottom-center",
                         autoClose: 5000,
@@ -86,6 +98,7 @@ function ProductItem(props) {
                     });
                     props.onDelete(props.id);
                 }).catch((error) => {
+                    setTimeout(() => {setOpenBackdrop(false)}, 500);
                     toast.error(error.response.data.message, {
                         position: "bottom-center",
                         autoClose: 3000,
@@ -99,17 +112,18 @@ function ProductItem(props) {
                     });
                 })
             }).catch(() => {
-            toast.error("Cannot fetch token", {
-                position: "bottom-center",
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: false,
-                progress: undefined,
-                theme: "colored",
-                transition: Bounce,
-            });
+                setTimeout(() => {setOpenBackdrop(false)}, 500);
+                toast.error("Cannot fetch token", {
+                    position: "bottom-center",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: false,
+                    progress: undefined,
+                    theme: "colored",
+                    transition: Bounce,
+                });
         });
 
         axios.get('api/users/csrf/token', {})
@@ -172,6 +186,12 @@ function ProductItem(props) {
         }}
               key={props.item.id}
         >
+            <Backdrop
+                sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
+                open={openBackdrop}
+            >
+                <CircularProgress color="inherit" />
+            </Backdrop>
             <div className="product-img"
                     style={{width: '100%', maxHeight: '150px', aspectRatio: "10 / 6",
                     display: 'flex', justifyContent: 'center', alignItems: 'center',

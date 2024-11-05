@@ -60,11 +60,6 @@ function Product() {
         setCurrentPage(value);
     }
 
-    useEffect(() => {
-        if (LocalStorageHelper.IsUserLogged() === false || LocalStorageHelper.isUserAdmin() === false) {
-            navigate('/');
-        }
-    }, []);
 
     useEffect(() => {
         setOpenBackdrop(true);
@@ -166,7 +161,7 @@ function Product() {
                             type="button"
                             className="search-prod-btn"
                             onClick={onSubmitSearch}>
-                            <SearchOutlinedIcon fontSize={"small"}/>
+                            <SearchOutlinedIcon fontSize="small" />
                         </button>
                     </form>
                 <div>

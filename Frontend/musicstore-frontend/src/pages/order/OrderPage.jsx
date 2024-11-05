@@ -146,6 +146,18 @@ function OrderPage() {
             return;
         }
         setOpenBackdrop(true);
+
+        let itemsDto = [];
+        [...basketItems].map((item) => {
+            let orderItem = {
+                productSkuId: item.productSkuId,
+                productName: item.productName,
+                quantity: item.quantity,
+                unitPrice: item.productPrice,
+            };
+            itemsDto.push(orderItem);
+        })
+
         axios.get('api/users/csrf/token', {})
         .then((response) => {
             axios.post(`api/order/create`, {
@@ -159,8 +171,7 @@ function OrderPage() {
                 city: city,
                 zipCode: zipCode,
                 orderTotalPrice: totalCost,
-                items: basketItems
-
+                items: itemsDto
             }, {
                 headers: {
                     'Authorization': `Bearer ` + LocalStorageHelper.getJwtToken(),

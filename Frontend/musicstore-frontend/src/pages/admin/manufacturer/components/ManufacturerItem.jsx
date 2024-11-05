@@ -1,4 +1,13 @@
-import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from "@mui/material";
+import {
+    Backdrop,
+    Button,
+    CircularProgress,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle
+} from "@mui/material";
 import {Link} from "react-router-dom";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -13,6 +22,7 @@ import React, {useState} from "react";
 function ManufacturerItem(props) {
 
     const [open, setOpen] = useState(false);
+    const [openBackdrop, setOpenBackdrop] = useState(false);
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -24,6 +34,7 @@ function ManufacturerItem(props) {
 
     const deleteManufacturer = (event) => {
         event.preventDefault();
+        setOpenBackdrop(true);
         axios.get('api/users/csrf/token', {})
             .then((response) => {
                 axios.delete(`api/products/manufacturers/delete/${props.id}`, {
@@ -32,6 +43,7 @@ function ManufacturerItem(props) {
                         'X-XSRF-TOKEN': response.data.token,
                     }
                 }).then(() => {
+                    setTimeout(() => {setOpenBackdrop(false)}, 500);
                     toast.success("Manufacturer deleted!", {
                         position: "bottom-center",
                         autoClose: 5000,
@@ -45,6 +57,7 @@ function ManufacturerItem(props) {
                     });
                     props.onDelete(props.id);
                 }).catch((error) => {
+                    setTimeout(() => {setOpenBackdrop(false)}, 500);
                     toast.error(error.response.data.message, {
                         position: "bottom-center",
                         autoClose: 3000,
@@ -58,6 +71,7 @@ function ManufacturerItem(props) {
                     });
                 })
             }).catch(() => {
+                setTimeout(() => {setOpenBackdrop(false)}, 500);
             toast.error("Cannot fetch token", {
                 position: "bottom-center",
                 autoClose: 3000,
@@ -91,6 +105,12 @@ function ManufacturerItem(props) {
         }}
               key={props.id}
         >
+            <Backdrop
+                sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
+                open={openBackdrop}
+            >
+                <CircularProgress color="inherit" />
+            </Backdrop>
             <div className="manufacturer-metrics"
                  style={{width: '60%', display: 'block',
                      padding: '2%'

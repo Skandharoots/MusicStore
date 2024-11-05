@@ -38,7 +38,7 @@ public class RegisterService {
 
         Pattern passPattern = Pattern
                 .compile("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])"
-                        + "(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{6,20}$");
+                        + "(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{6,50}$");
         Matcher passMatcher = passPattern.matcher(request.getPassword());
 
         if (!passMatcher.matches()) {

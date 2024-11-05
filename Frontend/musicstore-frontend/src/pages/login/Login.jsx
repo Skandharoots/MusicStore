@@ -39,9 +39,9 @@ function Login() {
             setEmailErrorMessage('');
         }
 
-        if (!password || password.length < 6) {
+        if (!password || password.length < 6 || password.length > 50) {
             setPasswordError(true);
-            setPasswordErrorMessage('Password must be at least 6 characters long.');
+            setPasswordErrorMessage('Password must be at least 6 and max 50 characters long.');
             isValid = false;
         } else {
             setPasswordError(false);

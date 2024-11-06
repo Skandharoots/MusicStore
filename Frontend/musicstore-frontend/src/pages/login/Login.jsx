@@ -192,9 +192,7 @@ function Login() {
                             }
                         }
                         localStorage.removeItem('basket');
-                    }).catch((error) => {
-                        console.log(JSON.stringify(error.response.data.message));
-                    });
+                    }).catch(() => {});
 
                     toast.success("Welcome, " + response.data.firstName + "!", {
                         position: "bottom-center",

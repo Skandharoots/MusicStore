@@ -22,7 +22,6 @@ function Navbar() {
 
     const navigate = useNavigate();
 
-
     window.addEventListener('storage', () => {
         setUserName(LocalStorageHelper.getUserName());
     })
@@ -99,16 +98,13 @@ function Navbar() {
                                 </Tooltip>
                             </li>
                         }
-                        {
-                            LocalStorageHelper.IsUserLogged() === true &&
-                            <li>
-                                <Tooltip title={"Basket"}>
-                                    <NavLink to="/basket">
-                                        <ShoppingCartOutlinedIcon fontSize={"medium"}/>
-                                    </NavLink>
-                                </Tooltip>
-                            </li>
-                        }
+                        <li>
+                            <Tooltip title={"Basket"}>
+                                <NavLink to="/basket">
+                                    <ShoppingCartOutlinedIcon fontSize={"medium"}/>
+                                </NavLink>
+                            </Tooltip>
+                        </li>
                         {LocalStorageHelper.isUserAdmin() === true &&
                             <li>
                                 <Tooltip title={"Admin panel"}>

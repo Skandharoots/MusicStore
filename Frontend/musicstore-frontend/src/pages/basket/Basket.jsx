@@ -10,7 +10,7 @@ import {useNavigate} from "react-router-dom";
 
 function Basket() {
 
-    const [basketItems, setBasketItems] = useState([{}]);
+    const [basketItems, setBasketItems] = useState([]);
     const [totalCost, setTotalCost] = useState(0);
     const [totalItems, setTotalItems] = useState(0);
     const [open, setOpen] = useState(false);
@@ -18,29 +18,37 @@ function Basket() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (LocalStorageHelper.IsUserLogged() === false) {
-            navigate('/');
-        }
-    }, []);
-
-    useEffect(() => {
-        axios.get(`api/cart/get/${LocalStorageHelper.GetActiveUser()}`, {
-            headers: {
-                'Authorization': 'Bearer ' + LocalStorageHelper.getJwtToken(),
-            }
-        })
-        .then(res => {
-            setBasketItems(res.data);
+        if (LocalStorageHelper.IsUserLogged() === true) {
+            axios.get(`api/cart/get/${LocalStorageHelper.GetActiveUser()}`, {
+                headers: {
+                    'Authorization': 'Bearer ' + LocalStorageHelper.getJwtToken(),
+                }
+            }).then(res => {
+                    setBasketItems(res.data);
+                    let total = 0;
+                    let items = 0;
+                    [...res.data].map((item) => {
+                        items += item.quantity;
+                        total += item.quantity * item.productPrice;
+                    })
+                    setTotalItems(items);
+                    setTotalCost(total);
+                }).catch(() => {});
+        } else {
+            let basket = JSON.parse(localStorage.getItem("basket"));
             let total = 0;
             let items = 0;
-            [...res.data].map((item) => {
-                items += item.quantity;
-                total += item.quantity * item.productPrice;
-            })
+            if (basket) {
+                setBasketItems(basket);
+                [...basket].map((item) => {
+                    items += item.quantity;
+                    total += item.quantity * item.productPrice;
+                });
+            }
             setTotalItems(items);
             setTotalCost(total);
-        }).catch(() => {});
-    }, []);
+        }
+    }, [LocalStorageHelper.getBasketItems()]);
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -58,28 +66,42 @@ function Basket() {
 
     const clearCart = (event) => {
         event.preventDefault();
-        axios.get('api/users/csrf/token', {})
-        .then(res => {
-            axios.delete(`api/cart/clear/${LocalStorageHelper.GetActiveUser()}`, {
-                headers: {
-                    'Authorization': 'Bearer ' + LocalStorageHelper.getJwtToken(),
-                    'X-XSRF-TOKEN': res.data.token,
-                }
-            }).then(() => {
-                setBasketItems([]);
-                toast.info("Basket cleared successfully.", {
-                    position: "bottom-center",
-                    autoClose: 3000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: false,
-                    progress: undefined,
-                    theme: "colored",
-                    transition: Bounce,
-                });
-            }).catch(() => {
-                toast.error("Basket could not be cleared. Try again later", {
+        if (LocalStorageHelper.IsUserLogged()) {
+            axios.get('api/users/csrf/token', {})
+                .then(res => {
+                    axios.delete(`api/cart/clear/${LocalStorageHelper.GetActiveUser()}`, {
+                        headers: {
+                            'Authorization': 'Bearer ' + LocalStorageHelper.getJwtToken(),
+                            'X-XSRF-TOKEN': res.data.token,
+                        }
+                    }).then(() => {
+                        setBasketItems([]);
+                        toast.info("Basket cleared successfully.", {
+                            position: "bottom-center",
+                            autoClose: 3000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: false,
+                            progress: undefined,
+                            theme: "colored",
+                            transition: Bounce,
+                        });
+                    }).catch(() => {
+                        toast.error("Basket could not be cleared. Try again later", {
+                            position: "bottom-center",
+                            autoClose: 3000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: false,
+                            progress: undefined,
+                            theme: "colored",
+                            transition: Bounce,
+                        });
+                    });
+                }).catch(() => {
+                toast.error("Cannot fetch token", {
                     position: "bottom-center",
                     autoClose: 3000,
                     hideProgressBar: false,
@@ -91,19 +113,10 @@ function Basket() {
                     transition: Bounce,
                 });
             });
-        }).catch(() => {
-            toast.error("Cannot fetch token", {
-                position: "bottom-center",
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: false,
-                progress: undefined,
-                theme: "colored",
-                transition: Bounce,
-            });
-        });
+        } else {
+            localStorage.removeItem("basket");
+            setBasketItems([]);
+        }
 
     }
 
@@ -256,18 +269,33 @@ function Basket() {
                                             borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
                                         }}
                                     >
-                                        <Button
-                                            variant="contained"
-                                            fullWidth
-                                            endIcon={<CreditCard />}
-                                            onClick={() => {navigate('/order/place')}}
-                                            sx={{
-                                                backgroundColor: 'rgb(39, 99, 24)',
-                                                "&:hover": {backgroundColor: 'rgb(49,140,23)'}
-                                            }}
-                                        >
-                                            Purchase
-                                        </Button>
+                                        {LocalStorageHelper.IsUserLogged() === true &&
+                                            <Button
+                                                variant="contained"
+                                                fullWidth
+                                                endIcon={<CreditCard />}
+                                                onClick={() => {navigate('/order/place')}}
+                                                sx={{
+                                                    backgroundColor: 'rgb(39, 99, 24)',
+                                                    "&:hover": {backgroundColor: 'rgb(49,140,23)'}
+                                                }}
+                                            >
+                                                Purchase
+                                            </Button>
+                                        }
+                                        {LocalStorageHelper.IsUserLogged() === false &&
+                                            <Button
+                                                variant="contained"
+                                                fullWidth
+                                                onClick={() => {navigate('/login')}}
+                                                sx={{
+                                                    backgroundColor: 'rgb(39, 99, 24)',
+                                                    "&:hover": {backgroundColor: 'rgb(49,140,23)'}
+                                                }}
+                                            >
+                                                Log in to purchase
+                                            </Button>
+                                        }
                                     </div>
                                 </div>
                             </div>

@@ -29,7 +29,39 @@ function BasketItem(props) {
             axios.get(`api/products/items/get/${props.item.productSkuId}`)
                 .then(res => {
                     setMaxQuantity(res.data.inStock);
-                    setSelectedQuantity(props.item.quantity);
+                    if (props.item.quantity > res.data.inStock) {
+                        const newQuantity = res.data.inStock;
+                        setSelectedQuantity(newQuantity);
+                        if (LocalStorageHelper.IsUserLogged()) {
+                            axios.get('api/users/csrf/token')
+                                .then(res => {
+                                    axios.put(`api/cart/update/${props.item.id}`, {
+                                        quantity: newQuantity,
+                                    }, {
+                                        headers: {
+                                            'Authorization': 'Bearer ' + LocalStorageHelper.getJwtToken(),
+                                            'X-XSRF-TOKEN': res.data.token,
+                                            'Content-Type': 'application/json',
+                                        }
+                                    }).then(() => {})
+                                        .catch(() => {})
+                                }).catch(() => {
+                                toast.error('Cannot fetch token', {
+                                    position: "bottom-center",
+                                    autoClose: 3000,
+                                    hideProgressBar: false,
+                                    closeOnClick: true,
+                                    pauseOnHover: true,
+                                    draggable: false,
+                                    progress: undefined,
+                                    theme: "colored",
+                                    transition: Bounce,
+                                });
+                            })
+                        }
+                    } else {
+                        setSelectedQuantity(props.item.quantity);
+                    }
                 }).catch(() => {});
 
             axios.get(`api/azure/list?path=${props.item.productSkuId}`, {})
@@ -79,29 +111,45 @@ function BasketItem(props) {
     const deleteCartItem = (event) => {
         event.preventDefault();
 
-        axios.get('api/users/csrf/token', {})
-        .then((response) => {
-            axios.delete(`api/cart/delete/${LocalStorageHelper.GetActiveUser()}/${props.item.productSkuId}`, {
-                headers: {
-                    'Authorization': 'Bearer ' + LocalStorageHelper.getJwtToken(),
-                    'X-XSRF-TOKEN': response.data.token,
+        if (LocalStorageHelper.IsUserLogged()) {
+            axios.get('api/users/csrf/token', {})
+                .then((response) => {
+                    axios.delete(`api/cart/delete/${LocalStorageHelper.GetActiveUser()}/${props.item.productSkuId}`, {
+                        headers: {
+                            'Authorization': 'Bearer ' + LocalStorageHelper.getJwtToken(),
+                            'X-XSRF-TOKEN': response.data.token,
+                        }
+                    })
+                        .then(() => {
+                            props.onDelete(props.item.id);
+                            toast.info("Cart deleted successfully.", {
+                                position: "bottom-center",
+                                autoClose: 3000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: false,
+                                progress: undefined,
+                                theme: "colored",
+                                transition: Bounce,
+                            });
+                        })
+                })
+        } else {
+            let basket = JSON.parse(localStorage.getItem('basket'));
+            let itemToRemove = null;
+            [...basket].map((item) => {
+                if (item.productSkuId === props.item.productSkuId) {
+                    itemToRemove = item;
                 }
-            })
-            .then(() => {
+            });
+            if (itemToRemove) {
+                const index = basket.indexOf(itemToRemove);
+                basket.splice(index, 1);
+                localStorage.setItem('basket', JSON.stringify(basket));
                 props.onDelete(props.item.id);
-                toast.info("Cart deleted successfully.", {
-                    position: "bottom-center",
-                    autoClose: 3000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: false,
-                    progress: undefined,
-                    theme: "colored",
-                    transition: Bounce,
-                });
-            })
-        })
+            }
+        }
     }
 
     const renderQuantityItems = () => {

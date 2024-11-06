@@ -23,6 +23,10 @@ class LocalStorageHelper {
         return localStorage.getItem('credentials');
     }
 
+    static getBasketItems() {
+        return localStorage.getItem("basket");
+    }
+
     static isUserAdmin() {
         LocalStorageHelper.ActiveCheck();
         return LocalStorageHelper.IsUserLogged() && localStorage.getItem('userRole') !== null && localStorage.getItem('userRole') !== undefined && localStorage.getItem('userRole') === 'ADMIN';

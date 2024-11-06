@@ -84,11 +84,12 @@ function ProductDetailsPage() {
 
     const handleClickOpen = () => {
 
-        axios.get(`api/cart/get/${LocalStorageHelper.GetActiveUser()}`, {
-            headers: {
-                'Authorization': 'Bearer ' + LocalStorageHelper.getJwtToken(),
-            }
-        }).then(res => {
+        if (LocalStorageHelper.IsUserLogged()) {
+            axios.get(`api/cart/get/${LocalStorageHelper.GetActiveUser()}`, {
+                headers: {
+                    'Authorization': 'Bearer ' + LocalStorageHelper.getJwtToken(),
+                }
+            }).then(res => {
                 let exists = false;
                 let id = null;
                 let currentQuantity = 0;
@@ -128,18 +129,18 @@ function ProductDetailsPage() {
                                 });
                             });
                         }).catch(() => {
-                            toast.error("Cannot fetch token", {
-                                position: "bottom-center",
-                                autoClose: 3000,
-                                hideProgressBar: false,
-                                closeOnClick: true,
-                                pauseOnHover: true,
-                                draggable: false,
-                                progress: undefined,
-                                theme: "colored",
-                                transition: Bounce,
-                            });
+                        toast.error("Cannot fetch token", {
+                            position: "bottom-center",
+                            autoClose: 3000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: false,
+                            progress: undefined,
+                            theme: "colored",
+                            transition: Bounce,
                         });
+                    });
                 } else {
                     axios.get('api/users/csrf/token')
                         .then((response) => {
@@ -197,6 +198,48 @@ function ProductDetailsPage() {
                     transition: Bounce,
                 });
             });
+        } else {
+            let basket = JSON.parse(localStorage.getItem('basket'));
+            if (!basket) {
+                const newBasket = [
+                    {
+                        productSkuId: productId.productSkuId,
+                        productPrice: productPrice,
+                        productName: productName,
+                        quantity: selectedQuantity
+                    },
+                ];
+                localStorage.setItem('basket', JSON.stringify(newBasket));
+            } else {
+                let itemToUpdate = null;
+                [...basket].map((item) => {
+                    if (item.productSkuId === productId.productSkuId) {
+                        itemToUpdate = item;
+                    }
+                });
+                if (itemToUpdate) {
+                    let newItem = {
+                        productSkuId: productId.productSkuId,
+                        productPrice: productPrice,
+                        productName: productName,
+                        quantity: itemToUpdate.quantity + selectedQuantity
+                    };
+                    let index = basket.indexOf(itemToUpdate);
+                    basket.splice(index, 1);
+                    basket.push(newItem);
+                    localStorage.setItem('basket', JSON.stringify(basket));
+                } else {
+                    let newItem = {
+                        productSkuId: productId.productSkuId,
+                        productPrice: productPrice,
+                        productName: productName,
+                        quantity: selectedQuantity
+                    };
+                    basket.push(newItem);
+                    localStorage.setItem('basket', JSON.stringify(basket));
+                }
+            }
+        }
 
     };
 
@@ -414,12 +457,13 @@ function ProductDetailsPage() {
                                             {renderQuantityItems()}
                                         </Select>
                                     </FormControl>
-                                    { LocalStorageHelper.IsUserLogged() === false &&
+                                    <React.Fragment>
                                         <Button
                                             className="purchase-btn"
                                             fullWidth
                                             variant="contained"
-                                            onClick={() => {navigate('/login')}}
+                                            disabled={parseInt(productQuantity) === 0}
+                                            onClick={handleClickOpen}
                                             sx={{
                                                 width: '60%',
                                                 height: '40px',
@@ -430,75 +474,53 @@ function ProductDetailsPage() {
                                                 "&:hover": {backgroundColor: 'rgb(49,140,23)'}
                                             }}
                                         >
-                                            Login to add to basket
+                                            Add to basket
                                         </Button>
-                                    }
-                                    { LocalStorageHelper.IsUserLogged() === true &&
-                                        <React.Fragment>
-                                            <Button
-                                                className="purchase-btn"
-                                                fullWidth
-                                                variant="contained"
-                                                disabled={parseInt(productQuantity) === 0}
-                                                onClick={handleClickOpen}
-                                                sx={{
-                                                    width: '60%',
-                                                    height: '40px',
-                                                    padding: '0',
-                                                    borderRadius: '1em',
-                                                    fontSize: '10px',
-                                                    backgroundColor: 'rgb(39, 99, 24)',
-                                                    "&:hover": {backgroundColor: 'rgb(49,140,23)'}
-                                                }}
-                                            >
-                                                Add to basket
-                                            </Button>
-                                            <Dialog
-                                                open={open}
-                                                onClose={handleClose}
-                                            >
-                                                <DialogTitle>Product added to basket</DialogTitle>
-                                                <DialogContent>
-                                                    <DialogContentText>
-                                                        Do you want to continue shopping?
-                                                    </DialogContentText>
-                                                </DialogContent>
-                                                <DialogActions sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-                                                    <Button
-                                                        variant="outlined"
-                                                        onClick={handleClose}
-                                                        size="small"
-                                                        sx={{
-                                                            borderColor: 'rgb(11, 108, 128)',
-                                                            color: 'rgb(11, 108, 128)',
-                                                            fontSize: '12px',
-                                                            "&:hover": {
-                                                                outline: 'none !important',
-                                                                color: 'black',
-                                                                backgroundColor: 'rgba(16,147,177, 0.2)',
-                                                                borderColor: 'rgba(16,147,177, 0.2)',
-                                                            },
-                                                        }}
-                                                    >
-                                                        Continue shopping
-                                                    </Button>
-                                                    <Button
-                                                        variant="contained"
-                                                        size="small"
-                                                        onClick={goToBasket}
-                                                        endIcon={<ArrowForwardIcon/>}
-                                                        sx={{
-                                                            fontSize: '12px',
-                                                            backgroundColor: 'rgb(39, 99, 24)',
-                                                            "&:hover": {backgroundColor: 'rgb(49,140,23)'}
-                                                        }}
-                                                    >
-                                                        Basket
-                                                    </Button>
-                                                </DialogActions>
-                                            </Dialog>
-                                        </React.Fragment>
-                                    }
+                                        <Dialog
+                                            open={open}
+                                            onClose={handleClose}
+                                        >
+                                            <DialogTitle>Product added to basket</DialogTitle>
+                                            <DialogContent>
+                                                <DialogContentText>
+                                                    Do you want to continue shopping?
+                                                </DialogContentText>
+                                            </DialogContent>
+                                            <DialogActions sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                                                <Button
+                                                    variant="outlined"
+                                                    onClick={handleClose}
+                                                    size="small"
+                                                    sx={{
+                                                        borderColor: 'rgb(11, 108, 128)',
+                                                        color: 'rgb(11, 108, 128)',
+                                                        fontSize: '12px',
+                                                        "&:hover": {
+                                                            outline: 'none !important',
+                                                            color: 'black',
+                                                            backgroundColor: 'rgba(16,147,177, 0.2)',
+                                                            borderColor: 'rgba(16,147,177, 0.2)',
+                                                        },
+                                                    }}
+                                                >
+                                                    Continue shopping
+                                                </Button>
+                                                <Button
+                                                    variant="contained"
+                                                    size="small"
+                                                    onClick={goToBasket}
+                                                    endIcon={<ArrowForwardIcon/>}
+                                                    sx={{
+                                                        fontSize: '12px',
+                                                        backgroundColor: 'rgb(39, 99, 24)',
+                                                        "&:hover": {backgroundColor: 'rgb(49,140,23)'}
+                                                    }}
+                                                >
+                                                    Basket
+                                                </Button>
+                                            </DialogActions>
+                                        </Dialog>
+                                    </React.Fragment>
                                 </div>
                                 <div style={{
                                     width: '100%',

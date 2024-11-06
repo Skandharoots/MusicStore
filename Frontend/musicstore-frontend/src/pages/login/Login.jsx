@@ -76,6 +76,126 @@ function Login() {
                     LocalStorageHelper.LoginUser(response.data.uuid, response.data.firstName,
                         response.data.token, response.data.role);
                     window.dispatchEvent(new Event("storage"));
+
+                    const basket = JSON.parse(localStorage.getItem("basket"));
+
+                    axios.get(`api/cart/get/${LocalStorageHelper.GetActiveUser()}`, {
+                        headers: {
+                            'Authorization': 'Bearer ' + LocalStorageHelper.getJwtToken(),
+                        }
+                    }).then(res => {
+                        if (basket) {
+                            basket.forEach((item) => {
+                                item.userUuid = LocalStorageHelper.GetActiveUser();
+                            })
+                            let itemsToAdd;
+                            let itemsToUpdate;
+                            if (res.data.length > 0) {
+                                itemsToAdd = basket.filter(o => !res.data.some(({productSkuId}) => o.productSkuId === productSkuId));
+                                itemsToUpdate = basket.filter(o => res.data.some(({productSkuId}) => o.productSkuId === productSkuId));
+                                itemsToUpdate.forEach(value => {
+                                    res.data.forEach((item) => {
+                                        if (item.productSkuId === value.productSkuId) {
+                                            value.quantity = value.quantity + item.quantity;
+                                            value.id = item.id;
+                                        }
+                                    })
+                                });
+                            } else {
+                                itemsToAdd = basket;
+                            }
+                            if (itemsToAdd.length > 0) {
+                                [...itemsToAdd].map((item) => {
+                                    axios.get('api/users/csrf/token')
+                                        .then((response) => {
+                                            axios.post(`api/cart/create`, {
+                                                userUuid: LocalStorageHelper.GetActiveUser(),
+                                                productSkuId: item.productSkuId,
+                                                productPrice: item.productPrice,
+                                                productName: item.productName,
+                                                quantity: item.quantity,
+                                            }, {
+                                                headers: {
+                                                    'Authorization': 'Bearer ' + LocalStorageHelper.getJwtToken(),
+                                                    'X-XSRF-TOKEN': response.data.token,
+                                                    'Content-Type': 'application/json',
+                                                }
+                                            }).then(() => {
+                                            }).catch(() => {
+                                                toast.error('Could not add items to basket', {
+                                                    position: "bottom-center",
+                                                    autoClose: 3000,
+                                                    hideProgressBar: false,
+                                                    closeOnClick: true,
+                                                    pauseOnHover: true,
+                                                    draggable: false,
+                                                    progress: undefined,
+                                                    theme: "colored",
+                                                    transition: Bounce,
+                                                });
+                                            });
+                                        }).catch(() => {
+                                        toast.error('Cannot fetch token', {
+                                            position: "bottom-center",
+                                            autoClose: 3000,
+                                            hideProgressBar: false,
+                                            closeOnClick: true,
+                                            pauseOnHover: true,
+                                            draggable: false,
+                                            progress: undefined,
+                                            theme: "colored",
+                                            transition: Bounce,
+                                        });
+                                    });
+                                });
+                            }
+                            if (itemsToUpdate.length > 0) {
+                                [...itemsToUpdate].map((item) => {
+                                    axios.get('api/users/csrf/token')
+                                        .then((response) => {
+                                            axios.put(`api/cart/update/${item.id}`, {
+                                                quantity: item.quantity
+                                            },{
+                                                headers: {
+                                                    'Authorization': 'Bearer ' + LocalStorageHelper.getJwtToken(),
+                                                    'X-XSRF-TOKEN': response.data.token,
+                                                    'Content-Type': 'application/json',
+                                                }
+                                            }).then(() => {
+                                            }).catch(() => {
+                                                toast.error("Could not update basket items", {
+                                                    position: "bottom-center",
+                                                    autoClose: 3000,
+                                                    hideProgressBar: false,
+                                                    closeOnClick: true,
+                                                    pauseOnHover: true,
+                                                    draggable: false,
+                                                    progress: undefined,
+                                                    theme: "colored",
+                                                    transition: Bounce,
+                                                });
+                                            });
+                                        }).catch(() => {
+                                        toast.error("Cannot fetch token", {
+                                            position: "bottom-center",
+                                            autoClose: 3000,
+                                            hideProgressBar: false,
+                                            closeOnClick: true,
+                                            pauseOnHover: true,
+                                            draggable: false,
+                                            progress: undefined,
+                                            theme: "colored",
+                                            transition: Bounce,
+                                        });
+                                    });
+                                })
+                            }
+                        }
+                        localStorage.removeItem('basket');
+                    }).catch((error) => {
+                        console.log(JSON.stringify(error.response.data.message));
+                    });
+
                     toast.success("Welcome, " + response.data.firstName + "!", {
                         position: "bottom-center",
                         autoClose: 5000,

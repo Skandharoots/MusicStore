@@ -18,130 +18,166 @@ function ProductItem(props) {
 
     const navigate = useNavigate();
 
-    useEffect(() => {
-        if (!LocalStorageHelper.IsUserLogged()) {
-            setDisableBasket(true);
-        } else {
-            setDisableBasket(false);
-        }
-    }, [])
-
     const handleClickOpen = (event) => {
         event.preventDefault();
-        axios.get(`api/cart/get/${LocalStorageHelper.GetActiveUser()}`, {
-            headers: {
-                'Authorization': 'Bearer ' + LocalStorageHelper.getJwtToken(),
-            }
-        }).then(res => {
-            let exists = false;
-            let id = null;
-            let currentQuantity = 0;
-            if (res.data.length > 0) {
-                [...res.data].map((item) => {
+        setOpen(true);
+        if (LocalStorageHelper.IsUserLogged()) {
+            axios.get(`api/cart/get/${LocalStorageHelper.GetActiveUser()}`, {
+                headers: {
+                    'Authorization': 'Bearer ' + LocalStorageHelper.getJwtToken(),
+                }
+            }).then(res => {
+                let exists = false;
+                let id = null;
+                let currentQuantity = 0;
+                if (res.data.length > 0) {
+                    [...res.data].map((item) => {
+                        if (item.productSkuId === props.item.productSkuId) {
+                            exists = true;
+                            id = item.id;
+                            currentQuantity = item.quantity;
+                        }
+                    });
+                }
+                if (exists) {
+                    axios.get('api/users/csrf/token')
+                        .then((response) => {
+                            axios.put(`api/cart/update/${id}`, {
+                                quantity: currentQuantity + 1,
+                            },{
+                                headers: {
+                                    'Authorization': 'Bearer ' + LocalStorageHelper.getJwtToken(),
+                                    'X-XSRF-TOKEN': response.data.token,
+                                    'Content-Type': 'application/json',
+                                }
+                            }).then(() => {
+                                setOpen(true);
+                            }).catch(() => {
+                                toast.error("Could not update basket items", {
+                                    position: "bottom-center",
+                                    autoClose: 3000,
+                                    hideProgressBar: false,
+                                    closeOnClick: true,
+                                    pauseOnHover: true,
+                                    draggable: false,
+                                    progress: undefined,
+                                    theme: "colored",
+                                    transition: Bounce,
+                                });
+                            });
+                        }).catch(() => {
+                        toast.error("Cannot fetch token", {
+                            position: "bottom-center",
+                            autoClose: 3000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: false,
+                            progress: undefined,
+                            theme: "colored",
+                            transition: Bounce,
+                        });
+                    });
+                } else {
+                    axios.get('api/users/csrf/token')
+                        .then((response) => {
+                            axios.post(`api/cart/create`, {
+                                userUuid: LocalStorageHelper.GetActiveUser(),
+                                productSkuId: props.item.productSkuId,
+                                productPrice: props.item.productPrice,
+                                productName: props.item.productName,
+                                quantity: 1
+                            }, {
+                                headers: {
+                                    'Authorization': 'Bearer ' + LocalStorageHelper.getJwtToken(),
+                                    'X-XSRF-TOKEN': response.data.token,
+                                    'Content-Type': 'application/json',
+                                }
+                            }).then(() => {
+                                setOpen(true);
+                            }).catch((error) => {
+                                toast.error(error.response.data.message, {
+                                    position: "bottom-center",
+                                    autoClose: 3000,
+                                    hideProgressBar: false,
+                                    closeOnClick: true,
+                                    pauseOnHover: true,
+                                    draggable: false,
+                                    progress: undefined,
+                                    theme: "colored",
+                                    transition: Bounce,
+                                });
+                            });
+                        }).catch(() => {
+                        toast.error('Cannot fetch token', {
+                            position: "bottom-center",
+                            autoClose: 3000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: false,
+                            progress: undefined,
+                            theme: "colored",
+                            transition: Bounce,
+                        });
+                    });
+                }
+            }).catch(() => {
+                toast.error('Error getting existing cart items.', {
+                    position: "bottom-center",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: false,
+                    progress: undefined,
+                    theme: "colored",
+                    transition: Bounce,
+                });
+            });
+
+        } else {
+            let basket = JSON.parse(localStorage.getItem('basket'));
+            if (!basket) {
+                const newBasket = [
+                    {
+                        productSkuId: props.item.productSkuId,
+                        productPrice: props.item.productPrice,
+                        productName: props.item.productName,
+                        quantity: 1
+                    },
+                ];
+                localStorage.setItem('basket', JSON.stringify(newBasket));
+            } else {
+                let itemToUpdate = null;
+                [...basket].map((item) => {
                     if (item.productSkuId === props.item.productSkuId) {
-                        exists = true;
-                        id = item.id;
-                        currentQuantity = item.quantity;
+                        itemToUpdate = item;
                     }
                 });
+                if (itemToUpdate) {
+                    let newItem = {
+                        productSkuId: props.item.productSkuId,
+                        productPrice: props.item.productPrice,
+                        productName: props.item.productName,
+                        quantity: itemToUpdate.quantity + 1
+                    };
+                    let index = basket.indexOf(itemToUpdate);
+                    basket.splice(index, 1);
+                    basket.push(newItem);
+                    localStorage.setItem('basket', JSON.stringify(basket));
+                } else {
+                    let newItem = {
+                        productSkuId: props.item.productSkuId,
+                        productPrice: props.item.productPrice,
+                        productName: props.item.productName,
+                        quantity: 1
+                    };
+                    basket.push(newItem);
+                    localStorage.setItem('basket', JSON.stringify(basket));
+                }
             }
-            if (exists) {
-                axios.get('api/users/csrf/token')
-                    .then((response) => {
-                        axios.put(`api/cart/update/${id}`, {
-                            quantity: currentQuantity + 1,
-                        },{
-                            headers: {
-                                'Authorization': 'Bearer ' + LocalStorageHelper.getJwtToken(),
-                                'X-XSRF-TOKEN': response.data.token,
-                                'Content-Type': 'application/json',
-                            }
-                        }).then(() => {
-                            setOpen(true);
-                        }).catch(() => {
-                            toast.error("Could not update basket items", {
-                                position: "bottom-center",
-                                autoClose: 3000,
-                                hideProgressBar: false,
-                                closeOnClick: true,
-                                pauseOnHover: true,
-                                draggable: false,
-                                progress: undefined,
-                                theme: "colored",
-                                transition: Bounce,
-                            });
-                        });
-                    }).catch(() => {
-                    toast.error("Cannot fetch token", {
-                        position: "bottom-center",
-                        autoClose: 3000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: false,
-                        progress: undefined,
-                        theme: "colored",
-                        transition: Bounce,
-                    });
-                });
-            } else {
-                axios.get('api/users/csrf/token')
-                    .then((response) => {
-                        axios.post(`api/cart/create`, {
-                            userUuid: LocalStorageHelper.GetActiveUser(),
-                            productSkuId: props.item.productSkuId,
-                            productPrice: props.item.productPrice,
-                            productName: props.item.productName,
-                            quantity: 1
-                        }, {
-                            headers: {
-                                'Authorization': 'Bearer ' + LocalStorageHelper.getJwtToken(),
-                                'X-XSRF-TOKEN': response.data.token,
-                                'Content-Type': 'application/json',
-                            }
-                        }).then(() => {
-                            setOpen(true);
-                        }).catch((error) => {
-                            toast.error(error.response.data.message, {
-                                position: "bottom-center",
-                                autoClose: 3000,
-                                hideProgressBar: false,
-                                closeOnClick: true,
-                                pauseOnHover: true,
-                                draggable: false,
-                                progress: undefined,
-                                theme: "colored",
-                                transition: Bounce,
-                            });
-                        });
-                    }).catch(() => {
-                    toast.error('Cannot fetch token', {
-                        position: "bottom-center",
-                        autoClose: 3000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: false,
-                        progress: undefined,
-                        theme: "colored",
-                        transition: Bounce,
-                    });
-                });
-            }
-        }).catch(() => {
-            toast.error('Error getting existing cart items.', {
-                position: "bottom-center",
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: false,
-                progress: undefined,
-                theme: "colored",
-                transition: Bounce,
-            });
-        });
-
+        }
     };
 
     const handleClose = () => {
@@ -277,12 +313,13 @@ function ProductItem(props) {
                     overflow: 'hidden',
                     textWrap: 'nowrap'
                 }}>{props.item.productPrice}$</p>
-                { LocalStorageHelper.IsUserLogged() === false &&
-                    <Tooltip title={"Login to add to basket"}>
+                <React.Fragment>
+                    <Tooltip title={"Add to basket"}>
                         <Button
                             variant={"outlined"}
                             fullWidth={false}
-                            onClick={() => {navigate('/login')}}
+                            disabled={disableBasket}
+                            onClick={handleClickOpen}
                             sx={{
                                 borderColor: 'rgb(39, 99, 24)',
                                 backgroundColor: 'transparent',
@@ -306,86 +343,51 @@ function ProductItem(props) {
                             <AddShoppingCartOutlinedIcon size={"small"} sx={{color: 'rgb(39, 99, 24)', fontSize: '16px'}}/>
                         </Button>
                     </Tooltip>
-                }
-                { LocalStorageHelper.IsUserLogged() === true &&
-
-                    <React.Fragment>
-                        <Tooltip title={"Add to basket"}>
+                    <Dialog
+                        open={open}
+                        onClose={handleClose}
+                    >
+                        <DialogTitle>Product added to basket</DialogTitle>
+                        <DialogContent>
+                            <DialogContentText>
+                                Do you want to continue shopping?
+                            </DialogContentText>
+                        </DialogContent>
+                        <DialogActions sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                             <Button
-                                variant={"outlined"}
-                                fullWidth={false}
-                                disabled={disableBasket}
-                                onClick={handleClickOpen}
+                                variant="outlined"
+                                onClick={handleClose}
+                                size="small"
                                 sx={{
-                                    borderColor: 'rgb(39, 99, 24)',
-                                    backgroundColor: 'transparent',
-                                    width: '35px',
-                                    zIndex: 20,
-                                    minWidth: '0',
-                                    height: '35px',
-                                    display: 'flex',
+                                    borderColor: 'rgb(11, 108, 128)',
+                                    color: 'rgb(11, 108, 128)',
+                                    fontSize: '12px',
                                     "&:hover": {
-                                        backgroundColor: 'rgba(49,140,23, 0.2)',
                                         outline: 'none !important',
-                                        borderColor: 'rgb(39, 99, 24)'
+                                        color: 'black',
+                                        backgroundColor: 'rgba(16,147,177, 0.2)',
+                                        borderColor: 'rgba(16,147,177, 0.2)',
                                     },
-                                    "&:focus": {
-                                        backgroundColor: 'rgba(49,140,23, 0.2)',
-                                        outline: 'none !important',
-                                        borderColor: 'rgb(39, 99, 24)'
-                                    }
                                 }}
                             >
-                                <AddShoppingCartOutlinedIcon size={"small"} sx={{color: 'rgb(39, 99, 24)', fontSize: '16px'}}/>
+                                Continue shopping
                             </Button>
-                        </Tooltip>
-                        <Dialog
-                            open={open}
-                            onClose={handleClose}
-                        >
-                            <DialogTitle>Product added to basket</DialogTitle>
-                            <DialogContent>
-                                <DialogContentText>
-                                    Do you want to continue shopping?
-                                </DialogContentText>
-                            </DialogContent>
-                            <DialogActions sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-                                <Button
-                                    variant="outlined"
-                                    onClick={handleClose}
-                                    size="small"
-                                    sx={{
-                                        borderColor: 'rgb(11, 108, 128)',
-                                        color: 'rgb(11, 108, 128)',
-                                        fontSize: '12px',
-                                        "&:hover": {
-                                            outline: 'none !important',
-                                            color: 'black',
-                                            backgroundColor: 'rgba(16,147,177, 0.2)',
-                                            borderColor: 'rgba(16,147,177, 0.2)',
-                                        },
-                                    }}
-                                >
-                                    Continue shopping
-                                </Button>
-                                <Button
-                                    variant="contained"
-                                    size="small"
-                                    onClick={goToBasket}
-                                    endIcon={<ArrowForwardIcon/>}
-                                    sx={{
-                                        fontSize: '12px',
-                                        backgroundColor: 'rgb(39, 99, 24)',
-                                        "&:hover": {backgroundColor: 'rgb(49,140,23)'}
-                                    }}
-                                >
-                                    Basket
-                                </Button>
-                            </DialogActions>
-                        </Dialog>
-                    </React.Fragment>
-                }
-
+                            <Button
+                                variant="contained"
+                                size="small"
+                                onClick={goToBasket}
+                                endIcon={<ArrowForwardIcon/>}
+                                sx={{
+                                    fontSize: '12px',
+                                    backgroundColor: 'rgb(39, 99, 24)',
+                                    "&:hover": {backgroundColor: 'rgb(49,140,23)'}
+                                }}
+                            >
+                                Basket
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
+                </React.Fragment>
             </div>
 
         </Grid>

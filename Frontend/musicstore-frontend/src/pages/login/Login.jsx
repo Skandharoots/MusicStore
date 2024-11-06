@@ -75,6 +75,7 @@ function Login() {
                 ).then((response) => {
                     LocalStorageHelper.LoginUser(response.data.uuid, response.data.firstName,
                         response.data.token, response.data.role);
+                    window.dispatchEvent(new Event("storage"));
                     toast.success("Welcome, " + response.data.firstName + "!", {
                         position: "bottom-center",
                         autoClose: 5000,

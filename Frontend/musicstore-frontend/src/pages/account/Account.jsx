@@ -192,6 +192,7 @@ function Account() {
                     transition: Bounce,
                 });
                 LocalStorageHelper.updateUserFirstName(firstName);
+                window.dispatchEvent(new Event("storage"));
                 setTimeout(() => {navigate('/')}, 2000);
 
             }).catch((error) => {

@@ -37,6 +37,7 @@ import ProductDetailsPage from "./pages/products/ProductDetailsPage.jsx";
 import Basket from "./pages/basket/Basket.jsx";
 import OrderPage from "./pages/order/OrderPage.jsx";
 import UpdateOrder from "./pages/admin/order/UpdateOrder.jsx";
+import MyOrderPage from "./pages/account/MyOrderPage.jsx";
 
 axios.defaults.baseURL = "http://localhost:8222/";
 axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
@@ -141,7 +142,11 @@ const router = createBrowserRouter([
                     {
                         path: '/myorders',
                         element: <MyOrders />,
-                    }
+                    },
+                    {
+                        path: '/myorders/:orderId',
+                        element: <MyOrderPage />
+                    },
                 ]
             },
             {

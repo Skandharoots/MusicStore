@@ -3,11 +3,13 @@ import {useEffect, useState} from "react";
 import Grid from "@mui/material/Grid2";
 import axios from "axios";
 import { format } from "date-fns";
+import {useNavigate} from "react-router-dom";
 
 
 function OrderUserItem(props) {
 
     const [images, setImages] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (props.item.orderItems !== null && props.item.orderItems !== undefined) {
@@ -95,9 +97,11 @@ function OrderUserItem(props) {
                 transition: 'all 0.3s',
                 "&:hover": {
                     boxShadow: '0 5px 15px rgba(0, 0, 0, 0.4)',
+                    cursor: 'pointer',
                 },
             }}
             key={props.item.id}
+            onClick={() => {navigate(`/myorders/${props.item.orderIdentifier}`)}}
         >
             <div className="order-details"
                  style={{

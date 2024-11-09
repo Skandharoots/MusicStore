@@ -5,6 +5,7 @@ import com.musicstore.products.model.Country;
 import com.musicstore.products.repository.CountryRepository;
 import com.musicstore.products.security.config.VariablesConfiguration;
 import java.util.List;
+import java.util.concurrent.Semaphore;
 import java.util.regex.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -68,37 +69,51 @@ public class CountryService {
         return countryRepository.findAllBySearchParameters(categoryId, manufacturer, subcategory);
     }
 
-    public ResponseEntity<String> updateCountry(String token, Long id, CountryRequest country) {
+    public ResponseEntity<String> updateCountry(String token, Long id, CountryRequest country)  throws InterruptedException {
 
-        if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
-            log.error("No admin authority for token - " + token);
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No admin authority");
+        Semaphore semaphore = new Semaphore(1);
+
+        if (semaphore.tryAcquire()) {
+            try {
+
+                if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
+                    log.error("No admin authority for token - " + token);
+                    throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No admin authority");
+                }
+
+                if (country.getName() == null || country.getName().isEmpty()) {
+                    log.error("Bad request for country update.");
+                    throw new IllegalArgumentException("Country name cannot be empty");
+                }
+
+                Pattern namePattern = Pattern.compile("^[A-Z][A-Za-z ']{1,49}$");
+
+                if (!namePattern.matcher(country.getName()).matches()) {
+                    log.error("Bad request for country update. Wrong name format.");
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wrong name format");
+                }
+
+                Country countryToUpdate = countryRepository
+                        .findById(id)
+                        .orElseThrow(
+                                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Country not found")
+                        );
+
+                countryToUpdate.setName(country.getName());
+
+                countryRepository.save(countryToUpdate);
+                log.info("Country updated: " + countryToUpdate.getName());
+
+                return ResponseEntity.ok("Country updated");
+
+            } finally {
+                semaphore.release();
+            }
+        } else {
+            throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS, "Another admin is already updating the country.");
         }
 
-        if (country.getName() == null || country.getName().isEmpty()) {
-            log.error("Bad request for country update.");
-            throw new IllegalArgumentException("Country name cannot be empty");
-        }
 
-        Pattern namePattern = Pattern.compile("^[A-Z][A-Za-z ']{1,49}$");
-
-        if (!namePattern.matcher(country.getName()).matches()) {
-            log.error("Bad request for country update. Wrong name format.");
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wrong name format");
-        }
-
-        Country countryToUpdate = countryRepository
-                .findById(id)
-                .orElseThrow(
-                         () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Country not found")
-                );
-
-        countryToUpdate.setName(country.getName());
-
-        countryRepository.save(countryToUpdate);
-        log.info("Country updated: " + countryToUpdate.getName());
-
-        return ResponseEntity.ok("Country updated");
     }
 
     public ResponseEntity<String> deleteCountry(String token, Long id) {

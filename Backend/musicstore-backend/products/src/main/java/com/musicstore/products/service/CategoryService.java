@@ -5,6 +5,7 @@ import com.musicstore.products.model.Category;
 import com.musicstore.products.repository.CategoryRepository;
 import com.musicstore.products.security.config.VariablesConfiguration;
 import java.util.List;
+import java.util.concurrent.Semaphore;
 import java.util.regex.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -64,36 +65,49 @@ public class CategoryService {
                 );
     }
 
-    public ResponseEntity<String> updateCategory(String token, Long id, CategoryRequest category) {
+    public ResponseEntity<String> updateCategory(String token, Long id, CategoryRequest category)  throws InterruptedException {
 
-        if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
-            log.error("No admin authority for token - " + token);
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No admin authority");
+        Semaphore semaphore = new Semaphore(1);
+
+        if (semaphore.tryAcquire()) {
+            try {
+                if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
+                    log.error("No admin authority for token - " + token);
+                    throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No admin authority");
+                }
+
+                if (category.getCategoryName() == null || category.getCategoryName().isEmpty()) {
+                    log.error("Bad request for category update.");
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Category name cannot be empty");
+                }
+
+                Pattern namePattern = Pattern.compile("^[A-Z][A-Za-z ']{1,49}$");
+
+                if (!namePattern.matcher(category.getCategoryName()).matches()) {
+                    log.error("Bad category name format.");
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Bad category name format");
+                }
+
+                Category categoryToUpdate = categoryRepository
+                        .findById(id)
+                        .orElseThrow(
+                                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found")
+                        );
+
+                categoryToUpdate.setName(category.getCategoryName());
+
+                categoryRepository.save(categoryToUpdate);
+                log.info("Category updated - " + categoryToUpdate.getName());
+                return ResponseEntity.ok("Category updated");
+
+            } finally {
+                semaphore.release();
+            }
+        } else {
+            throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS, "Another admin is already updating the category.");
         }
 
-        if (category.getCategoryName() == null || category.getCategoryName().isEmpty()) {
-            log.error("Bad request for category update.");
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Category name cannot be empty");
-        }
 
-        Pattern namePattern = Pattern.compile("^[A-Z][A-Za-z ']{1,49}$");
-
-        if (!namePattern.matcher(category.getCategoryName()).matches()) {
-            log.error("Bad category name format.");
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Bad category name format");
-        }
-
-        Category categoryToUpdate = categoryRepository
-                .findById(id)
-                .orElseThrow(
-                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found")
-                );
-
-        categoryToUpdate.setName(category.getCategoryName());
-
-        categoryRepository.save(categoryToUpdate);
-        log.info("Category updated - " + categoryToUpdate.getName());
-        return ResponseEntity.ok("Category updated");
     }
 
     public ResponseEntity<String> deleteCategory(String token, Long id) {

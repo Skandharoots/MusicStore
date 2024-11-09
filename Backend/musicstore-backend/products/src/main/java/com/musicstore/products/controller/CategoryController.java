@@ -51,7 +51,7 @@ public class CategoryController {
             @RequestHeader(HttpHeaders.AUTHORIZATION) String token,
             @PathVariable(name = "categoryId") Long id,
             @RequestBody CategoryRequest category
-    ) {
+    ) throws InterruptedException {
         return categoryService.updateCategory(token, id, category);
     }
 

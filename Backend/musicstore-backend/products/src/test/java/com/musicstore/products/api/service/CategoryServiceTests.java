@@ -176,7 +176,7 @@ public class CategoryServiceTests {
     }
 
     @Test
-    public void updateCategoryTest() {
+    public void updateCategoryTest() throws InterruptedException {
 
         String jwtToken = token.substring(7);
 

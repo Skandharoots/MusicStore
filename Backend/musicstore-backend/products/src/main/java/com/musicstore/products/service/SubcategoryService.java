@@ -7,6 +7,7 @@ import com.musicstore.products.repository.SubcategoryRepository;
 import com.musicstore.products.security.config.VariablesConfiguration;
 import jakarta.transaction.Transactional;
 import java.util.List;
+import java.util.concurrent.Semaphore;
 import java.util.regex.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -85,39 +86,52 @@ public class SubcategoryService {
         return subcategoryRepository.findAllBySearchParameters(categoryId, country, manufacturer);
     }
 
-    public ResponseEntity<String> updateSubcategory(String token, Long id, SubcategoryUpdateRequest subcategory) {
+    public ResponseEntity<String> updateSubcategory(String token, Long id, SubcategoryUpdateRequest subcategory) throws InterruptedException {
 
-        if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
-            log.error("No admin authority for token - " + token);
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No admin authority");
+        Semaphore semaphore = new Semaphore(1);
+
+        if (semaphore.tryAcquire()) {
+            try {
+
+                if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
+                    log.error("No admin authority for token - " + token);
+                    throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No admin authority");
+                }
+
+                if (subcategory.getName() == null
+                        || subcategory.getName().isEmpty()
+                ) {
+                    log.error("Bad subcategory update request.");
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Subcategory name cannot be empty");
+                }
+
+                Pattern namePattern = Pattern.compile("^[A-Z][A-Za-z ']{1,49}$");
+
+                if (!namePattern.matcher(subcategory.getName()).matches()) {
+                    log.error("Bad subcategory name format");
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Bad subcategory name format");
+                }
+
+                Subcategory subcategoryToUpdate = subcategoryRepository
+                        .findById(id)
+                        .orElseThrow(
+                                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Subcategory not found")
+                        );
+
+                subcategoryToUpdate.setName(subcategory.getName());
+
+                subcategoryRepository.save(subcategoryToUpdate);
+                log.info("Subcategory updated - " + subcategoryToUpdate.getName());
+
+                return ResponseEntity.ok("Subcategory updated");
+
+            } finally {
+                semaphore.release();
+            }
+        } else {
+            throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS, "Another admin is already updating the subcategory.");
         }
 
-        if (subcategory.getName() == null
-                || subcategory.getName().isEmpty()
-        ) {
-            log.error("Bad subcategory update request.");
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Subcategory name cannot be empty");
-        }
-
-        Pattern namePattern = Pattern.compile("^[A-Z][A-Za-z ']{1,49}$");
-
-        if (!namePattern.matcher(subcategory.getName()).matches()) {
-            log.error("Bad subcategory name format");
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Bad subcategory name format");
-        }
-
-        Subcategory subcategoryToUpdate = subcategoryRepository
-                .findById(id)
-                .orElseThrow(
-                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Subcategory not found")
-                );
-
-        subcategoryToUpdate.setName(subcategory.getName());
-
-        subcategoryRepository.save(subcategoryToUpdate);
-        log.info("Subcategory updated - " + subcategoryToUpdate.getName());
-
-        return ResponseEntity.ok("Subcategory updated");
     }
 
     public ResponseEntity<String> deleteSubcategory(String token, Long id) {

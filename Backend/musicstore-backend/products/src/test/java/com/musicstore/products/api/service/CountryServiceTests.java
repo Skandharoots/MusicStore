@@ -185,7 +185,7 @@ public class CountryServiceTests {
     }
 
     @Test
-    public void updateCountryTest() {
+    public void updateCountryTest() throws InterruptedException {
 
         CountryRequest countryRequest = new CountryRequest();
         countryRequest.setName("England");

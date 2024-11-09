@@ -69,7 +69,7 @@ public class SubcategoryController {
             @RequestHeader(HttpHeaders.AUTHORIZATION) String token,
             @PathVariable(name = "subcategoryId") Long id,
             @RequestBody SubcategoryUpdateRequest subcategory
-    ) {
+    ) throws InterruptedException {
         return subcategoryService.updateSubcategory(token, id, subcategory);
     }
 

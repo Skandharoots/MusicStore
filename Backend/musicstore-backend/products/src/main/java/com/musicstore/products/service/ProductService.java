@@ -16,6 +16,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
@@ -250,64 +251,77 @@ public class ProductService {
         );
     }
 
-    public ResponseEntity<String> updateProduct(String token, UUID id, ProductRequest product) {
+    public ResponseEntity<String> updateProduct(String token, UUID id, ProductRequest product)  throws InterruptedException {
 
-        if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
-            log.error("No admin authority for token - " + token);
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No admin authority");
+        Semaphore semaphore = new Semaphore(1);
+
+        if (semaphore.tryAcquire()) {
+            try {
+
+                if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
+                    log.error("No admin authority for token - " + token);
+                    throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No admin authority");
+                }
+
+                if (product.getProductName() == null || product.getProductName().isEmpty()
+                        || product.getPrice() == null || product.getQuantity() == null
+                        || product.getDescription() == null || product.getDescription().isEmpty()
+                        || product.getManufacturerId() == null || product.getCategoryId() == null
+                        || product.getCountryId() == null || product.getSubcategoryId() == null) {
+                    log.error("Bad product update request.");
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid and empty product request parameters");
+                }
+
+                Pattern namePattern = Pattern.compile("^[A-Za-z0-9][A-Za-z0-9&' .,:+=#?()%/\"-]{1,49}$");
+
+                if (!namePattern.matcher(product.getProductName()).matches()) {
+                    log.error("Bad product name format - " + product.getProductName());
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid product name format. Possibly containing forbidden characters.");
+                }
+
+                Pattern descriptionPattern = Pattern.compile("^[ -~\\r\\n]*$", Pattern.MULTILINE);
+
+                if (!descriptionPattern.matcher(product.getDescription()).matches()) {
+                    log.error("Bad product description format - " + product.getDescription());
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid product description format.");
+                }
+
+                if (product.getPrice().compareTo(BigDecimal.ZERO) <= 0) {
+                    log.error("Bad product creation request. Price must be greater than zero");
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Product price must be greater than zero");
+                }
+
+                if (product.getQuantity() < 0) {
+                    log.error("Bad product creation request. Quantity cannot be negative");
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Quantity cannot be negative");
+                }
+
+                Product productToUpdate = productRepository.findByProductSkuId(id)
+                        .orElseThrow(
+                                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found")
+                        );
+
+                productToUpdate.setProductName(product.getProductName());
+                productToUpdate.setProductPrice(product.getPrice());
+                productToUpdate.setProductDescription(product.getDescription());
+                productToUpdate.setInStock(product.getQuantity());
+                productToUpdate.setBuiltinCountry(countryService.getCountryById(product.getCountryId()));
+                productToUpdate.setCategory(categoryService.getCategoryById(product.getCategoryId()));
+                productToUpdate.setManufacturer(manufacturerService.getManufacturerById(product.getManufacturerId()));
+                productToUpdate.setSubcategory(subcategoryService.getSubcategoryById(product.getSubcategoryId()));
+
+                productRepository.save(productToUpdate);
+                log.info("Product updated - " + productToUpdate.getProductName());
+
+                return ResponseEntity.ok("Product updated");
+
+            } finally {
+                semaphore.release();
+            }
+        } else {
+            throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS, "Another admin is updating the product");
         }
 
-        if (product.getProductName() == null || product.getProductName().isEmpty()
-                || product.getPrice() == null || product.getQuantity() == null
-                || product.getDescription() == null || product.getDescription().isEmpty()
-                || product.getManufacturerId() == null || product.getCategoryId() == null
-                || product.getCountryId() == null || product.getSubcategoryId() == null) {
-            log.error("Bad product update request.");
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid and empty product request parameters");
-        }
-
-        Pattern namePattern = Pattern.compile("^[A-Za-z0-9][A-Za-z0-9&' .,:+=#?()%/\"-]{1,49}$");
-
-        if (!namePattern.matcher(product.getProductName()).matches()) {
-            log.error("Bad product name format - " + product.getProductName());
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid product name format. Possibly containing forbidden characters.");
-        }
-
-        Pattern descriptionPattern = Pattern.compile("^[ -~\\r\\n]*$", Pattern.MULTILINE);
-
-        if (!descriptionPattern.matcher(product.getDescription()).matches()) {
-            log.error("Bad product description format - " + product.getDescription());
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid product description format.");
-        }
-
-        if (product.getPrice().compareTo(BigDecimal.ZERO) <= 0) {
-            log.error("Bad product creation request. Price must be greater than zero");
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Product price must be greater than zero");
-        }
-
-        if (product.getQuantity() < 0) {
-            log.error("Bad product creation request. Quantity cannot be negative");
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Quantity cannot be negative");
-        }
-
-        Product productToUpdate = productRepository.findByProductSkuId(id)
-            .orElseThrow(
-                    () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found")
-            );
-
-        productToUpdate.setProductName(product.getProductName());
-        productToUpdate.setProductPrice(product.getPrice());
-        productToUpdate.setProductDescription(product.getDescription());
-        productToUpdate.setInStock(product.getQuantity());
-        productToUpdate.setBuiltinCountry(countryService.getCountryById(product.getCountryId()));
-        productToUpdate.setCategory(categoryService.getCategoryById(product.getCategoryId()));
-        productToUpdate.setManufacturer(manufacturerService.getManufacturerById(product.getManufacturerId()));
-        productToUpdate.setSubcategory(subcategoryService.getSubcategoryById(product.getSubcategoryId()));
-
-        productRepository.save(productToUpdate);
-        log.info("Product updated - " + productToUpdate.getProductName());
-
-        return ResponseEntity.ok("Product updated");
     }
 
     public ResponseEntity<String> deleteProduct(String token, UUID id) {

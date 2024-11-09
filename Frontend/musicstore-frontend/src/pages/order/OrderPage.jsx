@@ -1,5 +1,5 @@
 import './style/OrderPage.scss';
-import React, {useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import axios from "axios";
 import LocalStorageHelper from "../../helpers/LocalStorageHelper.jsx";
 import {Bounce, toast} from "react-toastify";

@@ -56,7 +56,7 @@ function OrderPage() {
 
     useEffect(() => {
         if (LocalStorageHelper.IsUserLogged() === false) {
-            navigate('/');
+            navigate('/login');
         }
     }, []);
 

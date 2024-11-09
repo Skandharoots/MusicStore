@@ -108,10 +108,10 @@ function BasketItem(props) {
         setOpen(false);
     };
 
-    const deleteCartItem = (event) => {
-        event.preventDefault();
+    const deleteCartItem = () => {
 
-        if (LocalStorageHelper.IsUserLogged()) {
+        setOpen(false);
+        if (LocalStorageHelper.IsUserLogged() === true) {
             axios.get('api/users/csrf/token', {})
                 .then((response) => {
                     axios.delete(`api/cart/delete/${LocalStorageHelper.GetActiveUser()}/${props.item.productSkuId}`, {
@@ -119,10 +119,9 @@ function BasketItem(props) {
                             'Authorization': 'Bearer ' + LocalStorageHelper.getJwtToken(),
                             'X-XSRF-TOKEN': response.data.token,
                         }
-                    })
-                        .then(() => {
+                    }).then(() => {
                             props.onDelete(props.item.id);
-                            toast.info("Cart deleted successfully.", {
+                            toast.info("Basket item deleted successfully.", {
                                 position: "bottom-center",
                                 autoClose: 3000,
                                 hideProgressBar: false,
@@ -133,7 +132,19 @@ function BasketItem(props) {
                                 theme: "colored",
                                 transition: Bounce,
                             });
-                        })
+                        }).catch((error) => {
+                            toast.error(error.response.data.message, {
+                                position: "bottom-center",
+                                autoClose: 3000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: false,
+                                progress: undefined,
+                                theme: "colored",
+                                transition: Bounce,
+                            })
+                    })
                 })
         } else {
             let basket = JSON.parse(localStorage.getItem('basket'));

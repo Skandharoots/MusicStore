@@ -84,6 +84,7 @@ function ProductDetailsPage() {
 
     const handleClickOpen = () => {
 
+        setOpen(true);
         if (LocalStorageHelper.IsUserLogged()) {
             axios.get(`api/cart/get/${LocalStorageHelper.GetActiveUser()}`, {
                 headers: {

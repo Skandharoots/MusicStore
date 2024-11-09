@@ -22,9 +22,9 @@ function Navbar() {
 
     const navigate = useNavigate();
 
-    window.addEventListener('storage', () => {
+    useEffect(() => {
         setUserName(LocalStorageHelper.getUserName());
-    })
+    });
 
     useEffect(() => {
         axios.get('api/products/categories/get')

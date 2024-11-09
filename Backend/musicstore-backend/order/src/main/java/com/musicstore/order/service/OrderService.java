@@ -40,7 +40,7 @@ public class OrderService {
 
     private final VariablesConfiguration variablesConfiguration;
 
-    public String createOrder(OrderRequest request, String csrfToken, String jwtToken) {
+    public synchronized String createOrder(OrderRequest request, String csrfToken, String jwtToken) {
 
         if (request.getCity() == null || request.getCity().isEmpty()
                 || request.getCountry() == null || request.getCountry().isEmpty()

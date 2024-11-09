@@ -4,6 +4,7 @@ import com.musicstore.shoppingcart.dto.CartRequest;
 import com.musicstore.shoppingcart.dto.CartUpdateRequest;
 import com.musicstore.shoppingcart.model.Cart;
 import com.musicstore.shoppingcart.repository.CartRepository;
+import jakarta.transaction.Transactional;
 import jakarta.ws.rs.NotFoundException;
 import java.util.List;
 import java.util.Optional;
@@ -79,6 +80,7 @@ public class CartService {
         return "Cart item added successfully";
     }
 
+    @Transactional
     public String updateCart(Long id, CartUpdateRequest cartUpdateRequest) {
 
         Cart cart = findById(id);
@@ -89,6 +91,7 @@ public class CartService {
         return "Cart item updated successfully";
     }
 
+    @Transactional
     public String deleteCartByUserUuidAndProductUuid(UUID userUuid, UUID productSkuId) {
 
         Cart cart = cartRepository.findCartByUserUuidAndProductSkuId(

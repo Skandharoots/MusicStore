@@ -149,31 +149,30 @@ function MyOrderPage() {
                 <CircularProgress color="inherit"/>
             </Backdrop>
             <div className="my-order-page-content">
+                <div style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    width: '100%',
+                    height: 'fit-content',
+                    justifyContent: 'flex-start',
+                    alignItems: 'flex-start',
+                    borderRadius: '1em',
+                    padding: '16px',
+                    boxSizing: 'border-box',
+                }}>
+                    {parseStatus(status)}
+                </div>
                 <div className="my-order-left">
-                    <div style={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                        width: 'fit-content',
-                        height: 'fit-content',
-                        justifyContent: 'flex-start',
-                        alignItems: 'center',
-                        borderRadius: '1em',
-                        padding: '16px',
-                        boxSizing: 'border-box',
-                    }}>
-                        {parseStatus(status)}
-                    </div>
                     <div className="order-details-header">
                         <p style={{margin: '0', fontSize: '18px', fontWeight: 'bold'}}>Order details:</p>
                     </div>
                     <div className="order-personal-details">
-                        <p style={{margin: '0', fontSize: '18px'}}>{totalPrice}$</p>
                         <p style={{margin: '0', fontSize: '14px'}}>{name} {surname}</p>
                         <p style={{margin: '0', fontSize: '14px'}}>{email}</p>
                         <p style={{margin: '0', fontSize: '14px'}}>{phone}</p>
                     </div>
                     <div className="order-delivery-header">
-                    <p style={{margin: '0', fontSize: '18px', fontWeight: 'bold'}}>Order delivery:</p>
+                        <p style={{margin: '0', fontSize: '18px', fontWeight: 'bold'}}>Order delivery:</p>
                     </div>
                     <div className="order-delivery">
                         <p style={{margin: '0', fontSize: '14px',}}>{country}</p>
@@ -189,6 +188,8 @@ function MyOrderPage() {
                             <OrderProductItem key={item.id} item={item}/>
                         ))
                     }
+                    <p style={{margin: '0', fontSize: '18px'}}>Total order price: <span
+                        style={{fontWeight: 'bold'}}>{totalPrice}$</span></p>
                 </div>
             </div>
 

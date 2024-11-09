@@ -60,7 +60,7 @@ public class ManufacturerController {
             @RequestHeader(HttpHeaders.AUTHORIZATION) String token,
             @PathVariable(name = "manufacturerId") Long id,
             @RequestBody ManufacturerRequest manufacturer
-    ) throws InterruptedException {
+    ) {
         return manufacturerService.updateManufacturer(token, id, manufacturer);
     }
 

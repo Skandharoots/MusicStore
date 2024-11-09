@@ -210,7 +210,7 @@ public class SubcategoryServiceTests {
     }
 
     @Test
-    public void updateSubcategoryTest() throws InterruptedException {
+    public void updateSubcategoryTest() {
 
         SubcategoryUpdateRequest subcategoryRequest = new SubcategoryUpdateRequest();
         subcategoryRequest.setName("Acoustasonic");

@@ -553,7 +553,7 @@ public class ProductServiceTests {
     }
 
     @Test
-    public void updateProductTest() throws InterruptedException {
+    public void updateProductTest() {
 
         UUID skuId = UUID.randomUUID();
 

@@ -123,7 +123,7 @@ public class ProductsController {
             @RequestHeader(HttpHeaders.AUTHORIZATION) String token,
             @PathVariable(name = "productSkuId") UUID id,
             @RequestBody ProductRequest product
-    ) throws InterruptedException {
+    ) {
         return productService.updateProduct(token, id, product);
     }
 

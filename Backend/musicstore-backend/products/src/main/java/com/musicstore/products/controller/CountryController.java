@@ -60,7 +60,7 @@ public class CountryController {
             @RequestHeader(HttpHeaders.AUTHORIZATION) String token,
             @PathVariable(name = "countryId") Long id,
             @RequestBody CountryRequest country
-    ) throws InterruptedException {
+    ) {
         return countryService.updateCountry(token, id, country);
     }
 

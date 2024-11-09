@@ -183,7 +183,7 @@ public class ManufacturerServiceTests {
     }
 
     @Test
-    public void updateManufacturerTest() throws InterruptedException {
+    public void updateManufacturerTest() {
 
         ManufacturerRequest manufacturerRequest = new ManufacturerRequest();
         manufacturerRequest.setName("Gretsch");

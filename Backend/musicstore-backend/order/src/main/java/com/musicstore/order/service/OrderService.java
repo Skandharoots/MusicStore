@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.regex.Pattern;
+
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -207,6 +209,7 @@ public class OrderService {
         return ResponseEntity.ok(order);
     }
 
+    @Transactional
     public ResponseEntity<String> updateOrderStatus(
             UUID orderId, String token,
             String csrfToken, OrderUpdateRequest request) {

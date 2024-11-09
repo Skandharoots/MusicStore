@@ -4,8 +4,8 @@ import com.musicstore.products.dto.ManufacturerRequest;
 import com.musicstore.products.model.Manufacturer;
 import com.musicstore.products.repository.ManufacturerRepository;
 import com.musicstore.products.security.config.VariablesConfiguration;
+import jakarta.transaction.Transactional;
 import java.util.List;
-import java.util.concurrent.Semaphore;
 import java.util.regex.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -70,52 +70,42 @@ public class ManufacturerService {
         return manufacturerRepository.findAllBySearchParameters(categoryId, country, subcategory);
     }
 
-    public ResponseEntity<String> updateManufacturer(String token, Long id, ManufacturerRequest manufacturer)  throws InterruptedException {
+    @Transactional
+    public ResponseEntity<String> updateManufacturer(String token, Long id, ManufacturerRequest manufacturer) {
 
-        Semaphore semaphore = new Semaphore(1);
-
-        if (semaphore.tryAcquire()) {
-            try {
-
-                if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
-                    log.error("No admin authority for token - " + token);
-                    throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No admin authority");
-                }
-
-                if (manufacturer.getName() == null || manufacturer.getName().isEmpty()) {
-                    log.error("Bad request for manufacturer update.");
-                    throw new IllegalArgumentException("Manufacturer name cannot be empty");
-                }
-
-                Pattern namePattern = Pattern.compile("^[A-Z][A-Za-z ']{1,49}$");
-
-                if (!namePattern.matcher(manufacturer.getName()).matches()) {
-                    log.error("Bad request for manufacturer creation. Wrong name format.");
-                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wrong name format.");
-                }
-
-                Manufacturer manufacurerToUpdate = manufacturerRepository
-                        .findById(id)
-                        .orElseThrow(
-                                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Manufacturer not found")
-                        );
-
-                manufacurerToUpdate.setName(manufacturer.getName());
-
-                manufacturerRepository.save(manufacurerToUpdate);
-                log.info("Manufacturer updated: " + manufacurerToUpdate.getName());
-
-                return ResponseEntity.ok("Manufacturer updated");
-
-            } finally {
-                semaphore.release();
-            }
-        } else {
-            throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS, "Another admin is already updating the manufacturer.");
+        if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
+            log.error("No admin authority for token - " + token);
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No admin authority");
         }
+
+        if (manufacturer.getName() == null || manufacturer.getName().isEmpty()) {
+            log.error("Bad request for manufacturer update.");
+            throw new IllegalArgumentException("Manufacturer name cannot be empty");
+        }
+
+        Pattern namePattern = Pattern.compile("^[A-Z][A-Za-z ']{1,49}$");
+
+        if (!namePattern.matcher(manufacturer.getName()).matches()) {
+            log.error("Bad request for manufacturer creation. Wrong name format.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wrong name format.");
+        }
+
+        Manufacturer manufacurerToUpdate = manufacturerRepository
+                .findById(id)
+                .orElseThrow(
+                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Manufacturer not found")
+                );
+
+        manufacurerToUpdate.setName(manufacturer.getName());
+
+        manufacturerRepository.save(manufacurerToUpdate);
+        log.info("Manufacturer updated: " + manufacurerToUpdate.getName());
+
+        return ResponseEntity.ok("Manufacturer updated");
 
     }
 
+    @Transactional
     public ResponseEntity<String> deleteManufacturer(String token, Long id) {
         if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
             log.error("No admin authority for token - " + token);

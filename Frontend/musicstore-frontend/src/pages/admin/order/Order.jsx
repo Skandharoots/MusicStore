@@ -84,10 +84,11 @@ function Order() {
     }, [restoreDefaults]);
 
     const onSubmitSearch = () => {
+        let searchId = search.trim();
         setOpenBackdrop(true);
         axios.get('api/users/csrf/token')
         .then(res => {
-            axios.post(`api/order/get/${search}`, {}, {
+            axios.post(`api/order/get/${searchId}`, {}, {
                 headers: {
                     'Authorization': 'Bearer ' + LocalStorageHelper.getJwtToken(),
                     'X-XSRF-TOKEN': res.data.token,

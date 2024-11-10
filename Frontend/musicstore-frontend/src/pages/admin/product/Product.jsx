@@ -87,11 +87,14 @@ function Product() {
     }, [currentPage, restoreDefaults]);
 
     const onSubmitSearch = () => {
-        axios.get(`api/products/items/get/${search}`, {})
+        const searchId = search.trim();
+        setOpenBackdrop(true);
+        axios.get(`api/products/items/get/${searchId}`, {})
         .then(res => {
             const products = [res.data];
             setProducts(products);
             setHideClearButton(false);
+            setOpenBackdrop(false);
             toast.success("Product found.", {
                 position: "bottom-center",
                 autoClose: 3000,
@@ -104,6 +107,7 @@ function Product() {
                 transition: Bounce,
             });
         }).catch(() => {
+            setOpenBackdrop(false);
             toast.error("Product not found.", {
                 position: "bottom-center",
                 autoClose: 3000,

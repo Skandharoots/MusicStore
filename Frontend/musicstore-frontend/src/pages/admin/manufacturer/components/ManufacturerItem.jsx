@@ -94,7 +94,8 @@ function ManufacturerItem(props) {
             width: '240px',
             height: '70px',
             alignItems: 'flex-start',
-            justifyContent: 'flex-start',
+            justifyContent: 'space-between',
+            paddingRight: '4px',
             color: 'black',
             fontSize: '12px',
             boxShadow: '0 5px 15px rgba(0, 0, 0, 0.1)',
@@ -112,8 +113,13 @@ function ManufacturerItem(props) {
                 <CircularProgress color="inherit" />
             </Backdrop>
             <div className="manufacturer-metrics"
-                 style={{width: '60%', display: 'block',
-                     padding: '2%'
+                 style={{width: '60%',
+                     display: 'flex',
+                     flexDirection: 'column',
+                     justifyContent: 'center',
+                     alignItems: 'flex-start',
+                     height: '100%',
+                     padding: '0 2%'
                  }}>
                 <p style={{margin: '0', overflow: 'hidden', textWrap: 'nowrap'}}><b>Id: </b>{props.id}</p>
                 <p style={{margin: '0', overflow: 'hidden', textWrap: 'nowrap'}}><b>Name: </b>{props.name}</p>

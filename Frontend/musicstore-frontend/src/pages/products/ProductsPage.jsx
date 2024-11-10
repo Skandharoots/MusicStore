@@ -503,6 +503,7 @@ function ProductsPage() {
                           style={{
                               boxSizing: 'border-box',
                               paddingLeft: '16px',
+                              width: '100%',
                               paddingBottom: '16px',
                               borderBottom: '1px solid rgba(0, 0, 0, 0.1)'
                           }}

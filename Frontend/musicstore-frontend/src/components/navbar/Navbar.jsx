@@ -16,7 +16,7 @@ import axios from "axios";
 function Navbar() {
 
 
-    const [serach, setSerach] = React.useState('');
+    const [search, setSearch] = React.useState('');
     const [userName, setUserName] = React.useState('');
     const [categories, setCategories] = React.useState([]);
 
@@ -39,7 +39,7 @@ function Navbar() {
     }
 
     const onSubmitSearch = () => {
-        //redirect
+        navigate(`/products/search/${search}`)
     }
 
     return (
@@ -55,13 +55,13 @@ function Navbar() {
                             className="search-input"
                             placeholder="Search products"
                             required
-                            value={serach}
-                            onChange={e => setSerach(e.target.value)}
+                            value={search}
+                            onChange={e => setSearch(e.target.value)}
                         />
                         <button
                             type="submit"
                             className="search-btn"
-                            onSubmit={onSubmitSearch}>
+                            onClick={onSubmitSearch}>
                             <SearchOutlinedIcon fontSize={"small"}/>
                         </button>
                     </form>

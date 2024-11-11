@@ -56,7 +56,7 @@ function Order() {
                         setTimeout(() => {setOpenBackdrop(false)}, 500);
                     }).catch(() => {
                     setTimeout(() => {setOpenBackdrop(false)}, 500);
-                    toast.error('We could not load your orders.', {
+                    toast.error('We could not load orders.', {
                         position: "bottom-center",
                         autoClose: 3000,
                         hideProgressBar: false,
@@ -99,7 +99,7 @@ function Order() {
                     setOrders(order);
                     setHideClearButton(false);
                     setTimeout(() => {setOpenBackdrop(false)}, 500);
-                    toast.success("Product found.", {
+                    toast.success("Order found.", {
                         position: "bottom-center",
                         autoClose: 3000,
                         hideProgressBar: false,
@@ -112,7 +112,7 @@ function Order() {
                     });
                 }).catch(() => {
                     setTimeout(() => {setOpenBackdrop(false)}, 500);
-                    toast.error("Product not found.", {
+                    toast.error("Order not found.", {
                         position: "bottom-center",
                         autoClose: 3000,
                         hideProgressBar: false,

@@ -76,6 +76,7 @@ function Basket() {
                         }
                     }).then(() => {
                         setBasketItems([]);
+                        setOpen(false);
                         toast.info("Basket cleared successfully.", {
                             position: "bottom-center",
                             autoClose: 3000,
@@ -88,6 +89,7 @@ function Basket() {
                             transition: Bounce,
                         });
                     }).catch(() => {
+                        setOpen(false);
                         toast.error("Basket could not be cleared. Try again later", {
                             position: "bottom-center",
                             autoClose: 3000,
@@ -101,6 +103,7 @@ function Basket() {
                         });
                     });
                 }).catch(() => {
+                    setOpen(false);
                 toast.error("Cannot fetch token", {
                     position: "bottom-center",
                     autoClose: 3000,

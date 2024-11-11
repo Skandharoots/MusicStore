@@ -25,7 +25,6 @@ function BasketItem(props) {
     const [open, setOpen] = useState(false);
 
     useEffect(() => {
-        if (props.item.productSkuId !== null && props.item.productSkuId !== undefined) {
             axios.get(`api/products/items/get/${props.item.productSkuId}`)
                 .then(res => {
                     setMaxQuantity(res.data.inStock);
@@ -96,9 +95,8 @@ function BasketItem(props) {
                     transition: Bounce,
                 })
             })
-        }
 
-    }, [props.item])
+    }, [])
 
     const handleClickOpen = () => {
         setOpen(true);

@@ -15,7 +15,6 @@ function OrderItem(props) {
     const [img, setImg] = useState(null);
 
     useEffect(() => {
-        if (props.item.productSkuId !== null && props.item.productSkuId !== undefined) {
             axios.get(`api/azure/list?path=${props.item.productSkuId}`, {})
                 .then((response) => {
                     axios.get(`api/azure/read?path=${response.data[0]}`, {responseType: 'blob'})
@@ -48,9 +47,8 @@ function OrderItem(props) {
                     transition: Bounce,
                 })
             })
-        }
 
-    }, [props.item]);
+    }, []);
 
 
     return (

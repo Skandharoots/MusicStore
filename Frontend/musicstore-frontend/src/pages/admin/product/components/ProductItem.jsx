@@ -35,7 +35,6 @@ function ProductItem(props) {
     };
 
     useEffect(() => {
-        if (props.item.productSkuId !== null && props.item.productSkuId !== undefined) {
             axios.get(`api/azure/list?path=${props.item.productSkuId}`, {})
                 .then((response) => {
                     setFilePaths(response.data);
@@ -69,8 +68,7 @@ function ProductItem(props) {
                     transition: Bounce,
                 })
             })
-        }
-    }, [props.item])
+    }, [])
 
 
     const deleteProduct = (event) => {

@@ -190,7 +190,6 @@ function ProductItem(props) {
     }
 
     useEffect(() => {
-        if (props.item.productSkuId !== null && props.item.productSkuId !== undefined) {
             axios.get(`api/azure/list?path=${props.item.productSkuId}`, {})
                 .then((response) => {
                     axios.get(`api/azure/read?path=${response.data[0]}`, {responseType: 'blob'})
@@ -223,8 +222,7 @@ function ProductItem(props) {
                     transition: Bounce,
                 })
             })
-        }
-    }, [props.item])
+    }, [])
 
     useEffect(() => {
         if (props.item.inStock === 0) {

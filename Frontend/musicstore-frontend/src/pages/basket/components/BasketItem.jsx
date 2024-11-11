@@ -15,6 +15,7 @@ import {
 } from "@mui/material";
 import LocalStorageHelper from "../../../helpers/LocalStorageHelper.jsx";
 import { DeleteOutlineOutlined } from "@mui/icons-material";
+import 'react-toastify/dist/ReactToastify.css';
 
 
 function BasketItem(props) {
@@ -106,8 +107,8 @@ function BasketItem(props) {
         setOpen(false);
     };
 
-    const deleteCartItem = () => {
-
+    const deleteCartItem = (event) => {
+        event.preventDefault();
         setOpen(false);
         if (LocalStorageHelper.IsUserLogged() === true) {
             axios.get('api/users/csrf/token', {})
@@ -118,18 +119,7 @@ function BasketItem(props) {
                             'X-XSRF-TOKEN': response.data.token,
                         }
                     }).then(() => {
-                            props.onDelete(props.item.id);
-                            toast.info("Basket item deleted successfully.", {
-                                position: "bottom-center",
-                                autoClose: 3000,
-                                hideProgressBar: false,
-                                closeOnClick: true,
-                                pauseOnHover: true,
-                                draggable: false,
-                                progress: undefined,
-                                theme: "colored",
-                                transition: Bounce,
-                            });
+                        props.onDelete(props.item.id);
                         }).catch((error) => {
                             toast.error(error.response.data.message, {
                                 position: "bottom-center",

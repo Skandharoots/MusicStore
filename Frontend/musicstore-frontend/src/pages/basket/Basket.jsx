@@ -7,6 +7,7 @@ import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogT
 import {CreditCard, DeleteOutlineOutlined, ShoppingBasket} from "@mui/icons-material";
 import {Bounce, toast} from "react-toastify";
 import {useNavigate} from "react-router-dom";
+import 'react-toastify/dist/ReactToastify.css';
 
 function Basket() {
 
@@ -77,17 +78,6 @@ function Basket() {
                     }).then(() => {
                         setBasketItems([]);
                         setOpen(false);
-                        toast.info("Basket cleared successfully.", {
-                            position: "bottom-center",
-                            autoClose: 3000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: false,
-                            progress: undefined,
-                            theme: "colored",
-                            transition: Bounce,
-                        });
                     }).catch(() => {
                         setOpen(false);
                         toast.error("Basket could not be cleared. Try again later", {
@@ -103,7 +93,6 @@ function Basket() {
                         });
                     });
                 }).catch(() => {
-                    setOpen(false);
                 toast.error("Cannot fetch token", {
                     position: "bottom-center",
                     autoClose: 3000,
@@ -115,6 +104,7 @@ function Basket() {
                     theme: "colored",
                     transition: Bounce,
                 });
+                    setOpen(false);
             });
         } else {
             localStorage.removeItem("basket");

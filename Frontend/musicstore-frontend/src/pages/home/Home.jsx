@@ -74,7 +74,6 @@ function Home() {
                     }}>
                         <p style={{margin: '0 0 16px 0', fontSize: '24px', fontWeight: 'bold'}}>Newest additions</p>
                     </div>
-
                     <Grid container
                           style={{
                               boxSizing: 'border-box',
@@ -90,7 +89,7 @@ function Home() {
                         }
                     </Grid>
                 </div>
-                <div className="new-products">
+                <div className="categories-grid">
 
                 </div>
             </div>

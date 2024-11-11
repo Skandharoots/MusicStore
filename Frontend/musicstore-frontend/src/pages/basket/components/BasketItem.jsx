@@ -119,6 +119,17 @@ function BasketItem(props) {
                             'X-XSRF-TOKEN': response.data.token,
                         }
                     }).then(() => {
+                            toast.info("Basket item deleted successfully.", {
+                                position: "bottom-center",
+                                autoClose: 3000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: false,
+                                progress: undefined,
+                                theme: "colored",
+                                transition: Bounce,
+                            });
                         props.onDelete(props.item.id);
                         }).catch((error) => {
                             toast.error(error.response.data.message, {
@@ -146,6 +157,17 @@ function BasketItem(props) {
                 const index = basket.indexOf(itemToRemove);
                 basket.splice(index, 1);
                 localStorage.setItem('basket', JSON.stringify(basket));
+                toast.info("Basket item deleted successfully.", {
+                    position: "bottom-center",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: false,
+                    progress: undefined,
+                    theme: "colored",
+                    transition: Bounce,
+                });
                 props.onDelete(props.item.id);
             }
         }

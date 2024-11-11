@@ -76,6 +76,17 @@ function Basket() {
                             'X-XSRF-TOKEN': res.data.token,
                         }
                     }).then(() => {
+                        toast.info("Basket cleared successfully.", {
+                            position: "bottom-center",
+                            autoClose: 3000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: false,
+                            progress: undefined,
+                            theme: "colored",
+                            transition: Bounce,
+                        });
                         setBasketItems([]);
                         setOpen(false);
                     }).catch(() => {
@@ -109,6 +120,17 @@ function Basket() {
         } else {
             localStorage.removeItem("basket");
             setBasketItems([]);
+            toast.info("Basket cleared successfully.", {
+                position: "bottom-center",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: false,
+                progress: undefined,
+                theme: "colored",
+                transition: Bounce,
+            });
         }
 
     }

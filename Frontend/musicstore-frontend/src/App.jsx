@@ -13,6 +13,7 @@ import MyOrders from "./pages/account/MyOrders.jsx";
 import Login from "./pages/login/Login.jsx";
 import axios from "axios";
 import {ToastContainer} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 import Signup from "./pages/signup/Signup.jsx";
 import LeftSideAdminRibbon from "./pages/admin/LeftSideAdminRibbon.jsx";
 import Category from "./pages/admin/category/Category.jsx";
@@ -48,7 +49,6 @@ axios.defaults.withCredentials = true;
 const Dashboard = () => {
     return (
         <>
-            <ToastContainer />
             <Navbar />
             <Outlet />
             <Footer />
@@ -67,7 +67,6 @@ const DashboardMyAcc = () => {
                 width: "100%",
                 backgroundColor: "white",
             }}>
-                <ToastContainer />
                 <LeftSideRibbon />
                 <Outlet />
             </div>
@@ -86,7 +85,6 @@ const DashboardAdmin = () => {
                 width: "100%",
                 backgroundColor: "white",
             }}>
-                <ToastContainer />
                 <LeftSideAdminRibbon />
                 <Outlet />
             </div>
@@ -235,6 +233,7 @@ const router = createBrowserRouter([
 function App() {
     return (
         <div className="App">
+            <ToastContainer />
             <RouterProvider router={router} />
         </div>
     );

@@ -77,7 +77,9 @@ function OrderItem(props) {
                 </div>
             </Tooltip>
             <div className="product-quantity">
-                <p style={{margin: '0 8px 0 0', fontSize: '14px'}}>{props.item.productPrice}$</p>
+                <div style={{width: '120px'}}>
+                    <p style={{margin: '0 8px 0 0', fontSize: '14px'}}>{props.item.productPrice}$</p>
+                </div>
                 <FormControl
                     size="small"
                     autoFocus

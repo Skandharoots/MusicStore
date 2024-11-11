@@ -1,7 +1,6 @@
 import {Backdrop, Box, Button, CircularProgress, Typography} from "@mui/material";
 import TextField from "@mui/material/TextField";
-// eslint-disable-next-line no-unused-vars
-import React, {useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import {Bounce, toast} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';

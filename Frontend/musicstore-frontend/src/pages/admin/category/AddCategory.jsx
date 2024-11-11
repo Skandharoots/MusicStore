@@ -109,8 +109,6 @@ function AddCategory() {
 
     }
 
-
-
     return (
         <div className="CategoryAdd">
             <Backdrop

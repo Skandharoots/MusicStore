@@ -44,7 +44,7 @@ function CategoryItem(props) {
                     }
                 }).then(() => {
                     setTimeout(() => {setOpenBackdrop(false)}, 500);
-                    toast.success("Category deleted !", {
+                    toast.success("Category deleted!", {
                         position: "bottom-center",
                         autoClose: 5000,
                         hideProgressBar: false,

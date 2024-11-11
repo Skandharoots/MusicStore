@@ -85,7 +85,7 @@ function UpdateCategory() {
                         }
                     }).then(() => {
                         setTimeout(() => {setOpenBackdrop(false)}, 500);
-                        toast.success("Category updated ;)", {
+                        toast.success("Category updated!", {
                             position: "bottom-center",
                             autoClose: 5000,
                             hideProgressBar: false,

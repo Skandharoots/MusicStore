@@ -105,7 +105,7 @@ function UpdateOrder() {
                 }
             }).then(() => {
                 setTimeout(() => {setOpenBackdrop(false)}, 500);
-                toast.success("Order status updated", {
+                toast.success("Order status updated!", {
                     position: "bottom-center",
                     autoClose: 3000,
                     hideProgressBar: false,

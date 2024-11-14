@@ -139,7 +139,7 @@ function AddManufacturer() {
                         error={manufacturerNameError}
                         helperText={manufacturerNameErrorMsg}
                         id="manufacturerName"
-                        type="email"
+                        type="search"
                         name="manufacturerName"
                         placeholder="Manufacturer"
                         autoComplete="manufacturerName"

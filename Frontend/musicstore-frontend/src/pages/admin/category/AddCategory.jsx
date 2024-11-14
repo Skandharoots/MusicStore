@@ -139,7 +139,7 @@ function AddCategory() {
                         error={categoryNameError}
                         helperText={categoryNameErrorMsg}
                         id="categoryName"
-                        type="email"
+                        type="search"
                         name="categoryName"
                         placeholder="Category"
                         autoComplete="categoryName"

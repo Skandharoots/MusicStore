@@ -331,7 +331,7 @@ function OrderPage() {
                                 error={nameError}
                                 helperText={nameErrorMsg}
                                 id="name"
-                                type="email"
+                                type="search"
                                 name="name"
                                 placeholder="First name"
                                 autoComplete="name"
@@ -360,7 +360,7 @@ function OrderPage() {
                                 error={surnameError}
                                 helperText={surnameErrorMsg}
                                 id="surname"
-                                type="email"
+                                type="search"
                                 name="surname"
                                 placeholder="Surname"
                                 autoComplete="surname"
@@ -461,7 +461,7 @@ function OrderPage() {
                                 error={countryError}
                                 helperText={countryErrorMsg}
                                 id="country"
-                                type="email"
+                                type="search"
                                 name="email"
                                 placeholder="Country"
                                 autoComplete="country"
@@ -490,7 +490,7 @@ function OrderPage() {
                                 error={cityError}
                                 helperText={cityErrorMsg}
                                 id="city"
-                                type="email"
+                                type="search"
                                 name="city"
                                 placeholder="Surname"
                                 autoComplete="city"
@@ -519,7 +519,7 @@ function OrderPage() {
                                 error={streetAddressError}
                                 helperText={streetAddressErrorMsg}
                                 id="streetAddress"
-                                type="email"
+                                type="search"
                                 name="streetAddress"
                                 placeholder="Street Address"
                                 autoComplete="streetAddress"
@@ -548,7 +548,7 @@ function OrderPage() {
                                 error={zipCodeError}
                                 helperText={zipCodeErrorMsg}
                                 id="zipCode"
-                                type="email"
+                                type="search"
                                 name="name"
                                 placeholder="Zip code"
                                 autoComplete="zipCode"

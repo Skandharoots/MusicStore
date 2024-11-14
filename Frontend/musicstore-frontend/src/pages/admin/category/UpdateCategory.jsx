@@ -155,7 +155,7 @@ function UpdateCategory() {
                 >
                     <TextField
                         id="categoryId"
-                        type="email"
+                        type="search"
                         name="categoryId"
                         autoComplete="id"
                         required
@@ -173,7 +173,7 @@ function UpdateCategory() {
                         error={categoryNameError}
                         helperText={categoryNameErrorMsg}
                         id="categoryName"
-                        type="email"
+                        type="search"
                         name="categoryName"
                         placeholder="Category"
                         autoComplete="categoryName"

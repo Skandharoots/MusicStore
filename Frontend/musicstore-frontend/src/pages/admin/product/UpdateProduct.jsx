@@ -767,7 +767,7 @@ function UpdateProduct() {
                         error={productNameError}
                         helperText={productNameErrorMsg}
                         id="productName"
-                        type="email"
+                        type="search"
                         name="productName"
                         placeholder="Product"
                         autoComplete="productName"
@@ -821,7 +821,7 @@ function UpdateProduct() {
                         error={productPriceError}
                         helperText={productPriceErrorMsg}
                         id="productPrice"
-                        type="email"
+                        type="search"
                         name="productPrice"
                         placeholder="2699.99"
                         autoComplete="productPrice"
@@ -858,7 +858,7 @@ function UpdateProduct() {
                         error={productQuantityError}
                         helperText={productQuantityErrorMsg}
                         id="productQuantity"
-                        type="email"
+                        type="search"
                         name="productQuantity"
                         placeholder="1"
                         autoComplete="productQuantity"

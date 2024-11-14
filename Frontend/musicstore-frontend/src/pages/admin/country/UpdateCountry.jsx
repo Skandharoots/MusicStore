@@ -156,7 +156,7 @@ function UpdateCountry() {
                 >
                     <TextField
                         id="countryId"
-                        type="email"
+                        type="search"
                         name="countryId"
                         autoComplete="id"
                         required
@@ -174,7 +174,7 @@ function UpdateCountry() {
                         error={countryNameError}
                         helperText={countryNameErrorMsg}
                         id="countryName"
-                        type="email"
+                        type="search"
                         name="countryName"
                         placeholder="Country"
                         autoComplete="countryName"

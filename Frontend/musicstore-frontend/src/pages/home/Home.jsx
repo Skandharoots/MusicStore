@@ -9,7 +9,6 @@ import banner from '../../assets/logo.svg';
 function Home() {
 
     const [newestProducts, setNewestProducts] = useState([]);
-    const [lastItems, setLastItems] = useState([]);
     const [openBackdrop, setOpenBackdrop] = useState(false);
 
     useEffect(() => {
@@ -47,7 +46,7 @@ function Home() {
                     >
                         Welcome to Fancy Strings!<br/>
                         Discover our products and<br/>
-                        try them out Yourself!
+                        try them out yourself!
                     </p>
                 </div>
                 <div className="banner">

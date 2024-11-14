@@ -156,7 +156,7 @@ function UpdateManufacturer() {
                 >
                     <TextField
                         id="manufacturerId"
-                        type="email"
+                        type="search"
                         name="manufacturerId"
                         autoComplete="id"
                         required
@@ -174,7 +174,7 @@ function UpdateManufacturer() {
                         error={manufacturerNameError}
                         helperText={manufacturerNameErrorMsg}
                         id="manufacturerName"
-                        type="email"
+                        type="search"
                         name="manufacturerName"
                         placeholder="Manufacturer"
                         autoComplete="manufacturerName"

@@ -157,7 +157,7 @@ function UpdateSubcategory() {
                 >
                     <TextField
                         id="subcategoryId"
-                        type="email"
+                        type="search"
                         name="subcategoryId"
                         autoComplete="id"
                         required
@@ -176,7 +176,7 @@ function UpdateSubcategory() {
                         error={subcategoryNameError}
                         helperText={subcategoryNameErrorMsg}
                         id="subcategoryName"
-                        type="email"
+                        type="search"
                         name="subcategoryName"
                         placeholder="Subcategory"
                         autoComplete="subcategoryName"

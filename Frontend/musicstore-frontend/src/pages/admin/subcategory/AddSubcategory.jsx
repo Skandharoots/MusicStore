@@ -205,7 +205,7 @@ function AddSubcategory() {
                         error={subcategoryNameError}
                         helperText={subcategoryNameErrorMsg}
                         id="subcategoryName"
-                        type="email"
+                        type="search"
                         name="subcategoryName"
                         placeholder="Subcategory"
                         autoComplete="subcategoryName"

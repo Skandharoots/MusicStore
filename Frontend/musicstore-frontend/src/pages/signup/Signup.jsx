@@ -161,7 +161,7 @@ function Signup() {
                         error={firstNameError}
                         helperText={firstNameErrorMessage}
                         id="firstName"
-                        type="email"
+                        type="search"
                         name="firstName"
                         placeholder="John"
                         autoComplete="firstName"
@@ -190,7 +190,7 @@ function Signup() {
                         error={lastNameError}
                         helperText={lastNameErrorMessage}
                         id="lastName"
-                        type="email"
+                        type="search"
                         name="lastName"
                         placeholder="Doe"
                         autoComplete="lastName"

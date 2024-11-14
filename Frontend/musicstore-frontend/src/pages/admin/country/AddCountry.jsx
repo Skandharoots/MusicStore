@@ -138,7 +138,7 @@ function AddCountry() {
                         error={countryNameError}
                         helperText={countryNameErrorMsg}
                         id="countryName"
-                        type="email"
+                        type="search"
                         name="countryName"
                         placeholder="Country"
                         autoComplete="countryName"

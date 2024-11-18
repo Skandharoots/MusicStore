@@ -6,7 +6,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import LocalStorageHelper from "../../helpers/LocalStorageHelper.jsx";
 import TextField from '@mui/material/TextField';
 import {useState} from "react";
-import {Box, Button, Typography} from "@mui/material";
+import {Backdrop, Box, Button, CircularProgress, Typography} from "@mui/material";
 import {Link} from "react-router-dom";
 import axios from "axios";
 
@@ -19,6 +19,7 @@ function Login() {
     const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
     const [passwordError, setPasswordError] = React.useState(false);
     const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
+    const [openBackdrop, setOpenBackdrop] = React.useState(false);
 
     const navigate = useNavigate();
 
@@ -57,7 +58,7 @@ function Login() {
         if (validateInputs() === false) {
             return;
         }
-
+        setOpenBackdrop(true);
         axios.get('api/users/csrf/token', {})
             .then((response) => {
                 const headers = {
@@ -193,7 +194,7 @@ function Login() {
                         }
                         localStorage.removeItem('basket');
                     }).catch(() => {});
-
+                    setOpenBackdrop(false);
                     toast.success("Welcome, " + response.data.firstName + "!", {
                         position: "bottom-center",
                         autoClose: 5000,
@@ -208,6 +209,7 @@ function Login() {
                     navigate("/");
 
                 }).catch(() => {
+                    setOpenBackdrop(false);
                     toast.error("Wrong credentials provided", {
                         position: "bottom-center",
                         autoClose: 3000,
@@ -222,6 +224,7 @@ function Login() {
                 })
             })
             .catch(() => {
+                setOpenBackdrop(false);
                 toast.error("Cannot fetch token", {
                     position: "bottom-center",
                     autoClose: 3000,
@@ -239,6 +242,12 @@ function Login() {
 
     return (
         <div className="Login">
+            <Backdrop
+                sx={(theme) => ({color: '#fff', zIndex: theme.zIndex.drawer + 1})}
+                open={openBackdrop}
+            >
+                <CircularProgress color="inherit"/>
+            </Backdrop>
             <div className="LoginForm">
                 <Typography
                     component="h1"

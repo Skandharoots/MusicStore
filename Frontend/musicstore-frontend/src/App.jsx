@@ -43,7 +43,7 @@ import ProductsSearchPage from "./pages/products/ProductsSearchPage.jsx";
 
 axios.defaults.baseURL = "http://localhost:8222/";
 axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
-axios.defaults.headers["Access-Control-Allow-Origin"] = "http://localhost:3000";
+axios.defaults.headers["Access-Control-Allow-Origin"] = "http://localhost:4000";
 axios.defaults.withCredentials = true;
 
 const Dashboard = () => {

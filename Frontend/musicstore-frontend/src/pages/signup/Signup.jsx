@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import './style/Signup.scss';
-import { Alert, AlertTitle } from '@mui/material';
+import {Alert, AlertTitle, Backdrop, CircularProgress} from '@mui/material';
 import CheckIcon from '@mui/icons-material/Check';
 import {Bounce, toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -31,6 +31,8 @@ function Signup() {
     const [firstNameErrorMessage, setFirstNameErrorMessage] = React.useState('');
     const [lastNameError, setLastNameError] = React.useState(false);
     const [lastNameErrorMessage, setLastNameErrorMessage] = React.useState('');
+
+    const [openBackdrop, setOpenBackdrop] = React.useState(false);
 
     useEffect(() => {
         document.title = 'Sign up';
@@ -99,7 +101,7 @@ function Signup() {
         if (validateInputs() === false) {
             return;
         }
-
+        setOpenBackdrop(true);
         axios.get('api/users/csrf/token', {})
         .then((response) => {
             const headers = {
@@ -118,11 +120,14 @@ function Signup() {
                 })
                 .then(() => {
                     setShowSuccessMsg('flex');
+                    setOpenBackdrop(false);
                 }).catch((error) => {
                     setRegisterErrorMsg(error.response.data.message);
                     setShowErrorMsg('flex');
+                    setOpenBackdrop(false);
             })
         }).catch(() => {
+            setOpenBackdrop(false);
             toast.error("Cannot fetch token", {
                 position: "bottom-center",
                 autoClose: 3000,
@@ -140,6 +145,12 @@ function Signup() {
 
     return (
         <div className="Signup">
+            <Backdrop
+                sx={(theme) => ({color: '#fff', zIndex: theme.zIndex.drawer + 1})}
+                open={openBackdrop}
+            >
+                <CircularProgress color="inherit"/>
+            </Backdrop>
             <div className="SignupForm">
                 <Typography
                     component="h1"

@@ -52,9 +52,9 @@ function SignupConfirm() {
         } else {
             return (
                 <Button color="inherit" size="small" onClick={() => {
-                    navigate('/login')
+                    navigate('/signup')
                 }}>
-                    Login
+                    Register
                 </Button>
             )
         }

@@ -18,6 +18,7 @@ function MyOrders() {
     const [totalPages, setTotalPages] = useState(1);
     const [currentPage, setCurrentPage] = useState(1);
     const [openBackdrop, setOpenBackdrop] = useState(false);
+    const [showNoOrdersInformation, setShowNoOrdersInformation] = useState(false);
 
     const navigate = useNavigate();
 
@@ -49,9 +50,12 @@ function MyOrders() {
                 .then(res => {
                     setOrders(res.data.content);
                     setTotalPages(res.data.totalPages);
-                    setTimeout(() => {setOpenBackdrop(false)}, 500);
+                    if (res.data.totalPages < 1) {
+                        setShowNoOrdersInformation(true);
+                    }
+                    setOpenBackdrop(false);
                 }).catch(() => {
-                setTimeout(() => {setOpenBackdrop(false)}, 500);
+                setOpenBackdrop(false);
                 toast.error('We could not load your orders.', {
                     position: "bottom-center",
                     autoClose: 3000,
@@ -91,54 +95,79 @@ function MyOrders() {
             >
                 <CircularProgress color="inherit" />
             </Backdrop>
-            <Grid container
-                  style={{
-                      boxSizing: 'border-box',
-                      paddingLeft: '16px',
-                      paddingBottom: '16px',
-                      paddingTop: '16px',
-                      borderBottom: '1px solid rgba(0, 0, 0, 0.1)'
-                  }}
-                  rowSpacing={2.7}
-                  columnSpacing={2.7}
-            >
-                {
-                    [...orders].map((order) => (
-                        <OrderUserItem key={order.id} id={order.id} item={order}/>
-                    ))
-                }
-            </Grid>
-            <div style={{
-                display: 'flex',
-                width: '100%',
-                boxSizing: 'border-box',
-                flexDirection: 'row',
-                justifyContent: 'flex-end',
-                alignItems: 'center',
-                padding: '16px 0 16px 0'
-            }}>
-                <Stack spacing={2} sx={{boxSizing: 'border-box',}}>
-                    <Pagination page={currentPage} count={totalPages} onChange={changePage} shape={"rounded"}
-                                sx={{
-                                    boxSizing: 'border-box',
-                                    '& .MuiPaginationItem-rounded': {
-                                        outline: 'none !important',
-                                        "&:hover": {
-                                            outline: 'none !important',
-                                            backgroundColor: 'rgba(39, 99, 24, 0.2)'
-                                        },
-                                    },
-                                    '& .Mui-selected': {
-                                        backgroundColor: 'rgba(39, 99, 24, 0.5) !important',
-                                        "&:hover": {
-                                            outline: 'none !important',
-                                            backgroundColor: 'rgba(39, 99, 24, 0.2) !important'
-                                        },
-                                    }
-                                }}
-                    />
-                </Stack>
-            </div>
+            {!showNoOrdersInformation && (
+                <>
+                    <Grid container
+                          style={{
+                              boxSizing: 'border-box',
+                              paddingLeft: '16px',
+                              paddingBottom: '16px',
+                              paddingTop: '16px',
+                              borderBottom: '1px solid rgba(0, 0, 0, 0.1)'
+                          }}
+                          rowSpacing={2.7}
+                          columnSpacing={2.7}
+                    >
+                        {
+                            [...orders].map((order) => (
+                                <OrderUserItem key={order.id} id={order.id} item={order}/>
+                            ))
+                        }
+                    </Grid>
+                    <div
+                        style={{
+                            display: 'flex',
+                            width: '100%',
+                            boxSizing: 'border-box',
+                            flexDirection: 'row',
+                            justifyContent: 'flex-end',
+                            alignItems: 'center',
+                            padding: '16px 0 16px 0'
+                            }}
+                    >
+                        <Stack spacing={2} sx={{boxSizing: 'border-box',}}>
+                            <Pagination page={currentPage} count={totalPages} onChange={changePage} shape={"rounded"}
+                                        sx={{
+                                            boxSizing: 'border-box',
+                                            '& .MuiPaginationItem-rounded': {
+                                                outline: 'none !important',
+                                                "&:hover": {
+                                                    outline: 'none !important',
+                                                    backgroundColor: 'rgba(39, 99, 24, 0.2)'
+                                                },
+                                            },
+                                            '& .Mui-selected': {
+                                                backgroundColor: 'rgba(39, 99, 24, 0.5) !important',
+                                                "&:hover": {
+                                                    outline: 'none !important',
+                                                    backgroundColor: 'rgba(39, 99, 24, 0.2) !important'
+                                                },
+                                            }
+                                        }}
+                            />
+                        </Stack>
+                    </div>
+                </>
+            )}
+            {showNoOrdersInformation && (
+                <>
+                    <div
+                        style={{
+                            width: '70%',
+                            height: 'fit-content',
+                            padding: '4%',
+                            margin: '32px auto',
+                            boxSizing: 'border-box',
+                            boxShadow: '0 5px 15px rgba(0, 0, 0, 0.1)',
+                            borderRadius: '1em',
+                            textAlign: 'center',
+                        }}
+                    >
+                        <p style={{margin: '0 auto', fontSize: '26px'}}>You have not placed any orders yet.</p>
+                    </div>
+                </>
+            )}
+
         </div>
     )
 

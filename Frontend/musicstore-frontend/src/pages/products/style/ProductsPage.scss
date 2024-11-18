@@ -21,8 +21,10 @@
     margin: 0 0;
     padding: 0;
     height: 100%;
+    min-height: 80vh;
     background-color: white;
     box-sizing: border-box;
+    border-left: 1px solid rgba(0, 0, 0, 0.1);
 
     .products-ribbon-image {
       width: 100%;
@@ -119,6 +121,7 @@
     align-items: center;
     box-sizing: border-box;
     border-left: 1px solid rgba(0, 0, 0, 0.1);
+    min-height: 80dvh;
 
     .content-controls {
       display: flex;

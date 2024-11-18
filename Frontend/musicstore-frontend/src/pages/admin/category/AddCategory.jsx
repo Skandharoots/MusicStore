@@ -64,7 +64,7 @@ function AddCategory() {
                             'Content-Type': 'application/json',
                         }
                     }).then(() => {
-                        setTimeout(() => {setOpenBackdrop(false)}, 500);
+                        setOpenBackdrop(false);
                         toast.success('Category Added', {
                             position: "bottom-center",
                             autoClose: 5000,
@@ -78,7 +78,7 @@ function AddCategory() {
                         });
                         navigate('/admin/category');
                 }).catch((error) => {
-                    setTimeout(() => {setOpenBackdrop(false)}, 500);
+                    setOpenBackdrop(false);
                     toast.error(error.response.data.message, {
                         position: "bottom-center",
                         autoClose: 3000,

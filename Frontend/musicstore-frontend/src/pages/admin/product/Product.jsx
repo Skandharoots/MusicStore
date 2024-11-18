@@ -69,9 +69,9 @@ function Product() {
                 setTotalPages(res.data.totalPages);
                 setTotalElements(res.data.numberOfElements);
                 setProducts(res.data.content);
-                setTimeout(() => {setOpenBackdrop(false)}, 500);
+                setOpenBackdrop(false);
             }).catch(error => {
-            setTimeout(() => {setOpenBackdrop(false)}, 500);
+            setOpenBackdrop(false);
             toast.error(error.response.data.message, {
                 position: "bottom-center",
                 autoClose: 3000,

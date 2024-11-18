@@ -463,7 +463,7 @@ function UpdateProduct() {
                                         })
                                     })
                                 })
-                                setTimeout(() => {setOpenBackdrop(false)}, 500);
+                                setOpenBackdrop(false);
                                 toast.success('Product updated!', {
                                     position: "bottom-center",
                                     autoClose: 3000,
@@ -490,7 +490,7 @@ function UpdateProduct() {
                             })
                         })
                     }).catch((error) => {
-                        setTimeout(() => {setOpenBackdrop(false)}, 500);
+                        setOpenBackdrop(false);
                         toast.error(error.response.data.message, {
                             position: "bottom-center",
                             autoClose: 3000,
@@ -538,7 +538,7 @@ function UpdateProduct() {
                                 'Content-Type': 'application/json',
                             }
                         }).then((response) => {
-                            setTimeout(() => {setOpenBackdrop(false)}, 500);
+                            setOpenBackdrop(false);
                             toast.success(response.data, {
                                 position: "bottom-center",
                                 autoClose: 3000,
@@ -552,7 +552,7 @@ function UpdateProduct() {
                             });
                             setTimeout(() => {navigate('/admin/product')}, 3000);
                         }).catch((error) => {
-                            setTimeout(() => {setOpenBackdrop(false)}, 500);
+                            setOpenBackdrop(false);
                             toast.error(error.response.data.message, {
                                 position: "bottom-center",
                                 autoClose: 3000,

@@ -3,7 +3,16 @@ import React, {useEffect, useState} from "react";
 import LocalStorageHelper from "../../helpers/LocalStorageHelper.jsx";
 import axios from "axios";
 import BasketItem from "./components/BasketItem.jsx";
-import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from "@mui/material";
+import {
+    Backdrop,
+    Button,
+    CircularProgress,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle
+} from "@mui/material";
 import {CreditCard, DeleteOutlineOutlined, ShoppingBasket} from "@mui/icons-material";
 import {Bounce, toast} from "react-toastify";
 import {useNavigate} from "react-router-dom";
@@ -15,10 +24,12 @@ function Basket() {
     const [totalCost, setTotalCost] = useState(0);
     const [totalItems, setTotalItems] = useState(0);
     const [open, setOpen] = useState(false);
+    const [openBackdrop, setOpenBackdrop] = useState(false);
 
     const navigate = useNavigate();
 
     useEffect(() => {
+        setOpenBackdrop(true);
         if (LocalStorageHelper.IsUserLogged() === true) {
             axios.get(`api/cart/get/${LocalStorageHelper.GetActiveUser()}`, {
                 headers: {
@@ -34,7 +45,21 @@ function Basket() {
                     })
                     setTotalItems(items);
                     setTotalCost(total);
-                }).catch(() => {});
+                    setOpenBackdrop(false);
+                }).catch(() => {
+                    setOpenBackdrop(false);
+                    toast.error('Failed to load basket items', {
+                        position: "bottom-center",
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: false,
+                        progress: undefined,
+                        theme: "colored",
+                        transition: Bounce,
+                    })
+                });
         } else {
             let basket = JSON.parse(localStorage.getItem("basket"));
             let total = 0;
@@ -48,6 +73,7 @@ function Basket() {
             }
             setTotalItems(items);
             setTotalCost(total);
+            setOpenBackdrop(false);
         }
     }, [LocalStorageHelper.getBasketItems()]);
 
@@ -67,6 +93,7 @@ function Basket() {
 
     const clearCart = (event) => {
         event.preventDefault();
+        setOpenBackdrop(true);
         if (LocalStorageHelper.IsUserLogged()) {
             axios.get('api/users/csrf/token', {})
                 .then(res => {
@@ -76,6 +103,7 @@ function Basket() {
                             'X-XSRF-TOKEN': res.data.token,
                         }
                     }).then(() => {
+                        setOpenBackdrop(false);
                         toast.info("Basket cleared successfully.", {
                             position: "bottom-center",
                             autoClose: 3000,
@@ -91,6 +119,7 @@ function Basket() {
                         setOpen(false);
                     }).catch(() => {
                         setOpen(false);
+                        setOpenBackdrop(false);
                         toast.error("Basket could not be cleared. Try again later", {
                             position: "bottom-center",
                             autoClose: 3000,
@@ -137,6 +166,12 @@ function Basket() {
 
     return (
         <div className="basket-container">
+            <Backdrop
+                sx={(theme) => ({color: '#fff', zIndex: theme.zIndex.drawer + 1})}
+                open={openBackdrop}
+            >
+                <CircularProgress color="inherit"/>
+            </Backdrop>
             {basketItems.length <= 0 && (
                 <>
                     <div className="basket-empty">

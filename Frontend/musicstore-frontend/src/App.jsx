@@ -233,8 +233,8 @@ const router = createBrowserRouter([
 function App() {
     return (
         <div className="App">
-            <ToastContainer />
             <RouterProvider router={router} />
+            <ToastContainer />
         </div>
     );
 }

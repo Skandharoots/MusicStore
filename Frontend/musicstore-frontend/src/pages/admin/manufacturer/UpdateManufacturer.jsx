@@ -85,7 +85,7 @@ function UpdateManufacturer() {
                             'Authorization': 'Bearer ' + LocalStorageHelper.getJwtToken(),
                         }
                     }).then(() => {
-                        setTimeout(() => {setOpenBackdrop(false)}, 500);
+                        setOpenBackdrop(false);
                         toast.success("Manufacturer updated!", {
                             position: "bottom-center",
                             autoClose: 5000,
@@ -100,7 +100,7 @@ function UpdateManufacturer() {
                         navigate('/admin/manufacturer');
 
                 }).catch((error) => {
-                    setTimeout(() => {setOpenBackdrop(false)}, 500);
+                    setOpenBackdrop(false);
                     toast.error(error.response.data.message, {
                         position: "bottom-center",
                         autoClose: 3000,

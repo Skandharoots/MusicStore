@@ -64,7 +64,7 @@ function OrderPage() {
 
         let isValid = true;
 
-        if (!/^(?=.{1,50}$)[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ]+(?:[-'_. \\s][A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ]+)*$/s.test(name)) {
+        if (!name || !/^(?=.{1,50}$)[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ]+(?:[-'_. \\s][A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ]+)*$/s.test(name)) {
             setNameError(true);
             setNameErrorMsg('Please enter a valid name.');
             isValid = false;
@@ -73,7 +73,7 @@ function OrderPage() {
             setNameErrorMsg('');
         }
 
-        if (!/^(?=.{1,50}$)[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ]+(?:[-'_. \\s][A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ]+)*$/s.test(surname)) {
+        if (!surname || !/^(?=.{1,50}$)[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ]+(?:[-'_. \\s][A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ]+)*$/s.test(surname)) {
             setSurnameError(true);
             setSurnameErrorMsg('Please enter a valid surname.');
             isValid = false;
@@ -82,7 +82,7 @@ function OrderPage() {
             setSurnameErrorMsg('');
         }
 
-        if (!/(?![^"]+.*[^"]+\\.\\.)[a-zA-Z0-9 !#"$%&'*+-/=?^_`{|}~]*[a-zA-Z0-9"]+@[a-zA-Z0-9.-]+$/s.test(email)) {
+        if (!email || !/^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i.test(email)) {
             setEmailError(true);
             setEmailErrorMsg('Please enter a valid email address.');
             isValid = false;
@@ -91,7 +91,7 @@ function OrderPage() {
             setEmailErrorMsg('');
         }
 
-        if (!/^[+]?[ (]?[0-9]{1,3}[) ]?[-\s.]?[0-9]{3}[-\s.]?[0-9 -]{1,7}$/s.test(phone)) {
+        if (!phone || !/^[+]?[ (]?[0-9]{1,3}[) ]?[-\s.]?[0-9]{3}[-\s.]?[0-9 -]{1,7}$/s.test(phone)) {
             setPhoneError(true);
             setPhoneErrorMsg('Please enter a valid phone number. Can be +(48) 456 239 430, braces are optional, can contain dashes "-"');
             isValid = false;
@@ -100,7 +100,7 @@ function OrderPage() {
             setPhoneErrorMsg('');
         }
 
-        if (!/^(?=.{1,50}$)[A-Za-z0-9żźćńółęąśŻŹĆĄŚĘŁÓŃ]+(?:[-'_./ \\s][A-Za-z0-9żźćńółęąśŻŹĆĄŚĘŁÓŃ]+)*$/s.test(country)) {
+        if (!country || !/^(?=.{1,50}$)[A-Za-z0-9żźćńółęąśŻŹĆĄŚĘŁÓŃ]+(?:[-'_./ \\s][A-Za-z0-9żźćńółęąśŻŹĆĄŚĘŁÓŃ]+)*$/s.test(country)) {
             setCountryError(true);
             setCountryErrorMsg('Please enter a valid country name.');
             isValid = false;
@@ -109,7 +109,7 @@ function OrderPage() {
             setCountryErrorMsg('');
         }
 
-        if (!/^(?=.{1,50}$)[A-Za-z0-9żźćńółęąśŻŹĆĄŚĘŁÓŃ]+(?:[-'_./ \\s][A-Za-z0-9żźćńółęąśŻŹĆĄŚĘŁÓŃ]+)*$/s.test(city)) {
+        if (!city || !/^(?=.{1,50}$)[A-Za-z0-9żźćńółęąśŻŹĆĄŚĘŁÓŃ]+(?:[-'_./ \\s][A-Za-z0-9żźćńółęąśŻŹĆĄŚĘŁÓŃ]+)*$/s.test(city)) {
             setCityError(true);
             setCityErrorMsg('Please enter a valid city name.');
             isValid = false;
@@ -118,7 +118,7 @@ function OrderPage() {
             setCityErrorMsg('');
         }
 
-        if (!/^(?=.{1,50}$)[A-Za-z0-9żźćńółęąśŻŹĆĄŚĘŁÓŃ]+(?:[-'_./ \\s][A-Za-z0-9żźćńółęąśŻŹĆĄŚĘŁÓŃ]+)*$/s.test(streetAddress)) {
+        if (!streetAddress || !/^(?=.{1,50}$)[A-Za-z0-9żźćńółęąśŻŹĆĄŚĘŁÓŃ]+(?:[-'_./ \\s][A-Za-z0-9żźćńółęąśŻŹĆĄŚĘŁÓŃ]+)*$/s.test(streetAddress)) {
             setStreetAddressError(true);
             setStreetAddressErrorMsg('Please enter a valid street name.');
             isValid = false;
@@ -127,7 +127,7 @@ function OrderPage() {
             setStreetAddressErrorMsg('');
         }
 
-        if (!/^[a-z0-9][a-z0-9\- ]{0,10}[a-z0-9]$/is.test(zipCode)) {
+        if (!zipCode || !/^[a-z0-9][a-z0-9\- ]{0,10}[a-z0-9]$/is.test(zipCode)) {
             setZipCodeError(true);
             setZipCodeErrorMsg('Please enter a valid zip code. Can be in any european format.');
             isValid = false;
@@ -187,10 +187,10 @@ function OrderPage() {
                             'X-XSRF-TOKEN': response.data.token,
                         }
                     }).then(() => {
-                        setTimeout(() => {setOpenBackdrop(false);}, 500);
+                        setOpenBackdrop(false);
                     })
                     .catch(() => {
-                        setTimeout(() => {setOpenBackdrop(false);}, 500);
+                        setOpenBackdrop(false);
                         toast.error('Could not clear basket', {
                             position: "bottom-center",
                             autoClose: 3000,
@@ -204,7 +204,7 @@ function OrderPage() {
                         });
                     })
                 })
-                setTimeout(() => {setOpenBackdrop(false);}, 500);
+                setOpenBackdrop(false);
                 toast.success('Successfully placed an order! You can find more details in your account.', {
                     position: "bottom-center",
                     autoClose: 3000,
@@ -218,7 +218,7 @@ function OrderPage() {
                 });
                 navigate('/myorders');
             }).catch(error => {
-                setTimeout(() => {setOpenBackdrop(false);}, 500);
+                setOpenBackdrop(false);
                 toast.error(error.response.data.message, {
                     position: "bottom-center",
                     autoClose: 3000,
@@ -232,7 +232,7 @@ function OrderPage() {
                 });
             });
         }).catch(() => {
-            setTimeout(() => {setOpenBackdrop(false);}, 500);
+            setOpenBackdrop(false);
             toast.error('Cannot fetch token', {
                 position: "bottom-center",
                 autoClose: 3000,
@@ -264,7 +264,7 @@ function OrderPage() {
                     })
                     setTotalItems(items);
                     setTotalCost(totalCostOfItems);
-                    setTimeout(() => {setOpenBackdrop(false);}, 500);
+                    setOpenBackdrop(false);
                     if (items <= 0) {
                         toast.info('No items in order. Find inspiration at our home page', {
                             position: "bottom-center",
@@ -280,7 +280,7 @@ function OrderPage() {
                         navigate('/');
                     }
                 }).catch(error => {
-                    setTimeout(() => {setOpenBackdrop(false);}, 500);
+                    setOpenBackdrop(false);
                     toast.error(error.response.data.message, {
                         position: "bottom-center",
                         autoClose: 3000,

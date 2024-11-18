@@ -97,7 +97,7 @@ function AdminOrderItem(props) {
                 height: 'fit-content',
                 alignItems: 'center',
                 justifyContent: 'flex-start',
-                minWidth: '760px',
+                minWidth: '300px',
                 padding: '4px',
                 color: 'black',
                 fontSize: '12px',

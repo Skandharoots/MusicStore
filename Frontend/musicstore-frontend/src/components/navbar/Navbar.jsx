@@ -24,7 +24,11 @@ function Navbar() {
 
     useEffect(() => {
         setUserName(LocalStorageHelper.getUserName());
-    });
+    }, []);
+
+    window.addEventListener('storage', () => {
+        setUserName(LocalStorageHelper.getUserName());
+    })
 
     useEffect(() => {
         axios.get('api/products/categories/get')

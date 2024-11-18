@@ -88,9 +88,9 @@ function ProductsPage() {
             .then(res => {
                 setProducts(res.data.content);
                 setTotalPages(res.data.totalPages);
-                setTimeout(() => {setOpenBackdrop(false)}, 500);
+                setOpenBackdrop(false);
             }).catch(() => {
-            setTimeout(() => {setOpenBackdrop(false)}, 500);
+            setOpenBackdrop(false);
         });
 
     }, [sortBy, selectedSubcategoryName, selectedCountryName, selectedManufacturerName, lowPrice, highPrice , categoryId, perPage, currentPage]);

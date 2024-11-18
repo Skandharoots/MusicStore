@@ -104,7 +104,7 @@ function UpdateOrder() {
                     'Content-Type': 'application/json'
                 }
             }).then(() => {
-                setTimeout(() => {setOpenBackdrop(false)}, 500);
+                setOpenBackdrop(false);
                 toast.success("Order status updated!", {
                     position: "bottom-center",
                     autoClose: 3000,
@@ -118,7 +118,7 @@ function UpdateOrder() {
                 });
                 navigate("/admin/order");
             }).catch(error => {
-                setTimeout(() => {setOpenBackdrop(false);}, 500);
+                setOpenBackdrop(false);
                 toast.error(error.response.data.message, {
                     position: "bottom-center",
                     autoClose: 3000,
@@ -132,7 +132,7 @@ function UpdateOrder() {
                 })
             })
         }).catch(() => {
-            setTimeout(() => {setOpenBackdrop(false);}, 500);
+            setOpenBackdrop(false);
             toast.error('Cannot fetch token', {
                 position: "bottom-center",
                 autoClose: 3000,

@@ -4,7 +4,8 @@ import {Bounce, toast} from "react-toastify";
 import '../style/BasketItem.scss';
 import Tooltip from "@mui/material/Tooltip";
 import {
-    Button,
+    Backdrop,
+    Button, CircularProgress,
     Dialog, DialogActions,
     DialogContent,
     DialogContentText,
@@ -24,6 +25,7 @@ function BasketItem(props) {
     const [maxQuantity, setMaxQuantity] = useState(0);
     const [selectedQuantity, setSelectedQuantity] = useState(1);
     const [open, setOpen] = useState(false);
+    const [openBackdrop, setOpenBackdrop] = useState(false);
 
     useEffect(() => {
             axios.get(`api/products/items/get/${props.item.productSkuId}`)
@@ -109,6 +111,7 @@ function BasketItem(props) {
 
     const deleteCartItem = (event) => {
         event.preventDefault();
+        setOpenBackdrop(true);
         setOpen(false);
         if (LocalStorageHelper.IsUserLogged() === true) {
             axios.get('api/users/csrf/token', {})
@@ -119,6 +122,7 @@ function BasketItem(props) {
                             'X-XSRF-TOKEN': response.data.token,
                         }
                     }).then(() => {
+                            setOpenBackdrop(false);
                             toast.info("Basket item deleted successfully.", {
                                 position: "bottom-center",
                                 autoClose: 3000,
@@ -132,6 +136,7 @@ function BasketItem(props) {
                             });
                         props.onDelete(props.item.id);
                         }).catch((error) => {
+                            setOpenBackdrop(false);
                             toast.error(error.response.data.message, {
                                 position: "bottom-center",
                                 autoClose: 3000,
@@ -227,6 +232,12 @@ function BasketItem(props) {
 
     return (
         <div className="basket-item">
+            <Backdrop
+                sx={(theme) => ({color: '#fff', zIndex: theme.zIndex.drawer + 1})}
+                open={openBackdrop}
+            >
+                <CircularProgress color="inherit"/>
+            </Backdrop>
             <div className="product-img"
                  style={{
                      width: '100px', maxHeight: '85px', aspectRatio: "16 / 9",

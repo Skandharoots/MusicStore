@@ -84,7 +84,7 @@ function UpdateCategory() {
                             'Authorization': 'Bearer ' + LocalStorageHelper.getJwtToken(),
                         }
                     }).then(() => {
-                        setTimeout(() => {setOpenBackdrop(false)}, 500);
+                        setOpenBackdrop(false);
                         toast.success("Category updated!", {
                             position: "bottom-center",
                             autoClose: 5000,
@@ -99,7 +99,7 @@ function UpdateCategory() {
                         navigate('/admin/category');
 
                 }).catch((error) => {
-                    setTimeout(() => {setOpenBackdrop(false)}, 500);
+                    setOpenBackdrop(false);
                     toast.error(error.response.data.message, {
                         position: "bottom-center",
                         autoClose: 3000,

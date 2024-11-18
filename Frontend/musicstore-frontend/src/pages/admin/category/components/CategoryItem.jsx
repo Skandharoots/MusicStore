@@ -43,7 +43,7 @@ function CategoryItem(props) {
                         'X-XSRF-TOKEN': response.data.token,
                     }
                 }).then(() => {
-                    setTimeout(() => {setOpenBackdrop(false)}, 500);
+                    setOpenBackdrop(false);
                     toast.success("Category deleted!", {
                         position: "bottom-center",
                         autoClose: 5000,
@@ -57,7 +57,7 @@ function CategoryItem(props) {
                     });
                     props.onDelete(props.id);
                 }).catch((error) => {
-                    setTimeout(() => {setOpenBackdrop(false)}, 500);
+                    setOpenBackdrop(false);
                     toast.error(error.response.data.message, {
                         position: "bottom-center",
                         autoClose: 3000,
@@ -71,7 +71,7 @@ function CategoryItem(props) {
                     });
                 })
             }).catch(() => {
-            setTimeout(() => {setOpenBackdrop(false)}, 500);
+            setOpenBackdrop(false);
             toast.error("Cannot fetch token", {
                 position: "bottom-center",
                 autoClose: 3000,

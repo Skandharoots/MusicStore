@@ -85,7 +85,7 @@ function UpdateCountry() {
                             'Authorization': 'Bearer ' + LocalStorageHelper.getJwtToken(),
                         }
                     }).then(() => {
-                    setTimeout(() => {setOpenBackdrop(false)}, 500);
+                    setOpenBackdrop(false);
                     toast.success("Country updated!", {
                         position: "bottom-center",
                         autoClose: 5000,
@@ -113,7 +113,7 @@ function UpdateCountry() {
                     });
                 })
             }).catch(() => {
-            setTimeout(() => {setOpenBackdrop(false)}, 500);
+            setOpenBackdrop(false);
             toast.error("Cannot fetch token", {
                 position: "bottom-center",
                 autoClose: 3000,

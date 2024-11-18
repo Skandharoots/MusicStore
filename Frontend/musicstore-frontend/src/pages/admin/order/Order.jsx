@@ -27,7 +27,7 @@ function Order() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        document.title = 'Product management';
+        document.title = 'Orders management';
     }, []);
 
     useEffect(() => {
@@ -53,9 +53,9 @@ function Order() {
                 }).then(res => {
                         setOrders(res.data.content);
                         setTotalPages(res.data.totalPages);
-                        setTimeout(() => {setOpenBackdrop(false)}, 500);
+                        setOpenBackdrop(false);
                     }).catch(() => {
-                    setTimeout(() => {setOpenBackdrop(false)}, 500);
+                    setOpenBackdrop(false);
                     toast.error('We could not load orders.', {
                         position: "bottom-center",
                         autoClose: 3000,
@@ -98,7 +98,7 @@ function Order() {
                     const order = [res.data];
                     setOrders(order);
                     setHideClearButton(false);
-                    setTimeout(() => {setOpenBackdrop(false)}, 500);
+                    setOpenBackdrop(false);
                     toast.success("Order found.", {
                         position: "bottom-center",
                         autoClose: 3000,
@@ -111,7 +111,7 @@ function Order() {
                         transition: Bounce,
                     });
                 }).catch(() => {
-                    setTimeout(() => {setOpenBackdrop(false)}, 500);
+                    setOpenBackdrop(false);
                     toast.error("Order not found.", {
                         position: "bottom-center",
                         autoClose: 3000,
@@ -125,7 +125,7 @@ function Order() {
                     });
             })
         }).catch(() => {
-            setTimeout(() => {setOpenBackdrop(false)}, 500);
+            setOpenBackdrop(false);
             toast.error('Cannot fetch token', {
                 position: "bottom-center",
                 autoClose: 3000,

@@ -30,7 +30,7 @@ function Login() {
 
         let isValid = true;
 
-        if (!email || !/(?![^"]+.*[^"]+\\.\\.)[a-zA-Z0-9 !#"$%&'*+-/=?^_`{|}~]*[a-zA-Z0-9"]+@[a-zA-Z0-9.-]+$/s.test(email)) {
+        if (!email || !/^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i.test(email)) {
             setEmailError(true);
             setEmailErrorMessage('Please enter a valid email address.');
             isValid = false;

@@ -10,6 +10,10 @@ function SignupConfirm() {
     const [countDown, setCountDown] = useState(10);
     const [hideSuccess, setHideSuccess] = useState(true);
     const [hideError, setHideError] = useState(true);
+    const [showLoginButton, setShowLoginButton] = useState(false);
+    const [showRegisterButton, setShowRegisterButton] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
+    const [hideCountdown, setHideCountdown] = useState(true);
     const token = useParams();
     const navigate = useNavigate();
 
@@ -28,13 +32,48 @@ function SignupConfirm() {
         return () => clearInterval(interval)
     };
 
+    const showButton = () => {
+        if (showRegisterButton) {
+            return (
+                <Button color="inherit" size="small" onClick={() => {
+                    navigate('/signup')
+                }}>
+                    Register
+                </Button>
+            )
+        } else if (showLoginButton) {
+            return (
+                <Button color="inherit" size="small" onClick={() => {
+                    navigate('/login')
+                }}>
+                    Login
+                </Button>
+            )
+        } else {
+            return (
+                <Button color="inherit" size="small" onClick={() => {
+                    navigate('/login')
+                }}>
+                    Login
+                </Button>
+            )
+        }
+    }
+
     useEffect(() => {
         axios.get(`api/users/register/confirm?token=${token.token}`, {})
         .then(() => {
             setHideSuccess(false);
+            setHideCountdown(false);
             counter();
-        }).catch(() => {
+        }).catch((error) => {
             setHideError(false);
+            setErrorMessage(error.response.data.message);
+            if (error.response.data.message === 'Email already confirmed') {
+                setShowLoginButton(true);
+            } else if (error.response.data.message === 'Confirmation token expired') {
+                setShowLoginButton(true);
+            }
         })
     }, [])
 
@@ -64,15 +103,13 @@ function SignupConfirm() {
                         sx={{margin: '1rem auto'}}
                         hidden={hideError}
                         action={
-                            <Button color="inherit" size="small" onClick={() => {navigate('/signup')}}>
-                                Register
-                            </Button>
+                            showButton()
                         }
                     >
-                        Something went wrong...
+                        Something went wrong. {errorMessage}
                     </Alert>
                 }
-                <Typography variant={"body1"} color="black">
+                <Typography hidden={hideCountdown} variant={"body1"} color="black">
                     We&apos;ll redirect you to the login page in - {countDown}
                 </Typography>
             </div>

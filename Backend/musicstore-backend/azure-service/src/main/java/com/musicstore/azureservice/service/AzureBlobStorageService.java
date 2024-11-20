@@ -3,6 +3,7 @@ package com.musicstore.azureservice.service;
 import com.azure.core.http.rest.PagedIterable;
 import com.azure.storage.blob.BlobClient;
 import com.azure.storage.blob.BlobContainerClient;
+import com.azure.storage.blob.BlobServiceClient;
 import com.azure.storage.blob.models.BlobItem;
 import com.azure.storage.blob.models.BlobStorageException;
 import com.musicstore.azureservice.config.AzureBlobStorageConfiguration;
@@ -23,6 +24,8 @@ import org.springframework.web.server.ResponseStatusException;
 public class AzureBlobStorageService implements IAzureBlobStorage {
 
     private final BlobContainerClient blobContainerClient;
+
+    private final BlobServiceClient blobServiceClient;
 
     private final AzureBlobStorageConfiguration azureBlobStorageConfiguration;
 
@@ -133,6 +136,30 @@ public class AzureBlobStorageService implements IAzureBlobStorage {
         } catch (Exception e) {
             log.error("Blob storage exception - " + e.getMessage());
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
+        }
+    }
+
+    @Override
+    public void createContainer(String name) throws Exception {
+        try {
+            blobServiceClient.createBlobContainer(name);
+            log.info("Container Created");
+        } catch (BlobStorageException e) {
+            throw new Exception(e.getServiceMessage());
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+    }
+
+    @Override
+    public void deleteContainer(String name) throws Exception {
+        try {
+            blobServiceClient.deleteBlobContainer(name);
+            log.info("Container Deleted");
+        } catch (BlobStorageException e) {
+            throw new Exception(e.getServiceMessage());
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
         }
     }
 

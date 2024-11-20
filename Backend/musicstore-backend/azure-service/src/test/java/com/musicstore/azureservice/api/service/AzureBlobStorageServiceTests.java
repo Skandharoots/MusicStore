@@ -3,6 +3,8 @@ package com.musicstore.azureservice.api.service;
 import com.azure.storage.blob.BlobServiceClient;
 import com.musicstore.azureservice.service.AzureBlobStorageService;
 import org.assertj.core.api.Assertions;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +35,16 @@ public class AzureBlobStorageServiceTests {
             "VCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI" +
             "6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.S" +
             "flKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
+
+    @Before
+    public void setUp() throws Exception {
+        azureBlobStorageService.createContainer("test");
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        azureBlobStorageService.deleteContainer("test");
+    }
 
     @Test
     public void writeFileGetFileAndDeleteFile() throws ResponseStatusException {

@@ -18,4 +18,8 @@ public interface IAzureBlobStorage {
 
     String delete(String token, String path) throws ResponseStatusException;
 
+    void createContainer(String name) throws Exception;
+
+    void deleteContainer(String name) throws Exception;
+
 }

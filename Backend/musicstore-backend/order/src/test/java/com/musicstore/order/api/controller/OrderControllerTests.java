@@ -174,6 +174,34 @@ public class OrderControllerTests {
     }
 
     @Test
+    public void createOrderBadRequestTest() throws Exception {
+
+        OrderRequest badOrderRequest = new OrderRequest();
+        badOrderRequest.setName("");
+        badOrderRequest.setCity("Te@#$@%#^%#$&%^&$#!@st");
+        badOrderRequest.setCountry("Test");
+        badOrderRequest.setCountry("Test");
+        badOrderRequest.setEmail("te..st@test.com");
+        badOrderRequest.setPhone("+48 739 847 394");
+        badOrderRequest.setStreetAddress("Test");
+        badOrderRequest.setSurname("Test");
+        badOrderRequest.setUserIdentifier(userId);
+        badOrderRequest.setZipCode("83-234");
+        badOrderRequest.setOrderTotalPrice(BigDecimal.valueOf(3672.00));
+        badOrderRequest.setItems(null);
+
+        ResultActions resultActions = mockMvc.perform(post("/api/order/create")
+                .header("Authorization", token)
+                .cookie(new Cookie("XSRF-TOKEN", csrfToken.getToken()))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(badOrderRequest))
+        );
+
+        resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest());
+
+    }
+
+    @Test
     public void getAllOrdersForUserTest() throws Exception {
 
         List<Order> ordersList = new ArrayList<>();
@@ -246,5 +274,22 @@ public class OrderControllerTests {
 
         resultActions.andExpect(MockMvcResultMatchers.status().isOk());
         resultActions.andExpect(MockMvcResultMatchers.content().string("Order status updated"));
+    }
+
+    @Test
+    public void updateOrderDetailsBadRequestTest() throws Exception {
+
+        OrderUpdateRequest orderUpdateRequest = new OrderUpdateRequest();
+        orderUpdateRequest.setStatus(null);
+        orderUpdateRequest.setItemsToCancel(null);
+
+        ResultActions resultActions  = mockMvc.perform(put("/api/order/update/{order-id}", order.getOrderIdentifier())
+                .header("Authorization", token)
+                .cookie(new Cookie("XSRF-TOKEN", csrfToken.getToken()))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(orderUpdateRequest))
+        );
+
+        resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 }

@@ -48,7 +48,7 @@ public class CategoryControllerTests {
     public void addCategoryTest() throws Exception {
 
         CategoryRequest categoryRequest = new CategoryRequest();
-        categoryRequest.setCategoryName("test");
+        categoryRequest.setCategoryName("Test");
 
         ResultActions resultActions = mockMvc.perform(post("/api/products/categories/create")
                 .header("authorization", token)
@@ -57,6 +57,21 @@ public class CategoryControllerTests {
         );
 
         resultActions.andExpect(MockMvcResultMatchers.status().isCreated());
+    }
+
+    @Test
+    public void addCategoryBadRequestTest() throws Exception {
+
+        CategoryRequest categoryRequest = new CategoryRequest();
+        categoryRequest.setCategoryName("");
+
+        ResultActions resultActions = mockMvc.perform(post("/api/products/categories/create")
+                .header("authorization", token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(categoryRequest))
+        );
+
+        resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 
     @Test
@@ -84,7 +99,7 @@ public class CategoryControllerTests {
     public void updateCategoryTest() throws Exception {
 
         CategoryRequest categoryRequest = new CategoryRequest();
-        categoryRequest.setCategoryName("test");
+        categoryRequest.setCategoryName("Test");
 
         ResultActions resultActions = mockMvc.perform(put("/api/products/categories/update/{categoryId}", 1)
                 .header("authorization", token)
@@ -93,6 +108,22 @@ public class CategoryControllerTests {
         );
 
         resultActions.andExpect(MockMvcResultMatchers.status().isOk());
+
+    }
+
+    @Test
+    public void updateCategoryBadRequestTest() throws Exception {
+
+        CategoryRequest categoryRequest = new CategoryRequest();
+        categoryRequest.setCategoryName("");
+
+        ResultActions resultActions = mockMvc.perform(put("/api/products/categories/update/{categoryId}", 1)
+                .header("authorization", token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(categoryRequest))
+        );
+
+        resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest());
 
     }
 

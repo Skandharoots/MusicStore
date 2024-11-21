@@ -6,14 +6,20 @@ import com.musicstore.products.dto.OrderRequest;
 import com.musicstore.products.dto.ProductRequest;
 import com.musicstore.products.model.Product;
 import com.musicstore.products.service.ProductService;
+import jakarta.validation.Valid;
 import jakarta.ws.rs.core.HttpHeaders;
 import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,7 +42,7 @@ public class ProductsController {
     @ResponseStatus(HttpStatus.CREATED)
     public UUID createProducts(
             @RequestHeader(HttpHeaders.AUTHORIZATION) String token,
-            @RequestBody ProductRequest product
+            @Valid @RequestBody ProductRequest product
     ) {
         return productService.createProducts(token, product);
     }
@@ -122,7 +128,7 @@ public class ProductsController {
     public ResponseEntity<String> updateProduct(
             @RequestHeader(HttpHeaders.AUTHORIZATION) String token,
             @PathVariable(name = "productSkuId") UUID id,
-            @RequestBody ProductRequest product
+            @Valid @RequestBody ProductRequest product
     ) {
         return productService.updateProduct(token, id, product);
     }
@@ -133,6 +139,19 @@ public class ProductsController {
             @PathVariable(name = "productSkuId") UUID id
     ) {
         return productService.deleteProduct(token, id);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public Map<String, String> handleValidationExceptions(
+            MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+        return errors;
     }
     
 

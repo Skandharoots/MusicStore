@@ -38,22 +38,6 @@ public class CartService {
 
     public String addCart(CartRequest cartRequest) {
 
-        if (
-                cartRequest.getUserUuid() == null
-                || cartRequest.getUserUuid().toString().isEmpty()
-                || cartRequest.getQuantity() == null
-                        || cartRequest.getQuantity() <= 0
-                || cartRequest.getProductSkuId() == null
-                        || cartRequest.getProductSkuId().toString().isEmpty()
-                || cartRequest.getProductName() == null
-                        || cartRequest.getProductName().isEmpty()
-                || cartRequest.getProductPrice() == null
-                        || cartRequest.getProductPrice().toString().isEmpty()) {
-            log.error("Cart creation bad request.");
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "Cart request cannot have empty data");
-        }
-
         Optional<Cart> foundCart = cartRepository
                 .findCartByUserUuidAndProductSkuId(
                         cartRequest.getUserUuid(),

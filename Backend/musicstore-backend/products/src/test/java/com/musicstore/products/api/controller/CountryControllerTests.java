@@ -67,6 +67,21 @@ public class CountryControllerTests {
     }
 
     @Test
+    public void createCountryBadRequestTest() throws Exception {
+
+        CountryRequest countryRequest = new CountryRequest();
+        countryRequest.setName("");
+
+        ResultActions resultActions = mockMvc.perform(post("/api/products/countries/create")
+                .header("authorization", token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(countryRequest))
+        );
+
+        resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+
+    @Test
     public void getAllCountriesTest() throws Exception {
 
         Country country = new Country("ASDsda");
@@ -129,6 +144,23 @@ public class CountryControllerTests {
 
         resultActions.andExpect(MockMvcResultMatchers.status().isOk());
         resultActions.andExpect(MockMvcResultMatchers.content().string("Country updated"));
+
+    }
+
+    @Test
+    public void updateCountryBadRequestTest() throws Exception {
+
+        CountryRequest countryRequest = new CountryRequest();
+        countryRequest.setName("");
+
+        ResultActions resultActions = mockMvc.perform(put("/api/products/countries/update/{countryId}", 1L, 1L)
+                .header("authorization", token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(countryRequest))
+        );
+
+        resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest());
+
 
     }
 

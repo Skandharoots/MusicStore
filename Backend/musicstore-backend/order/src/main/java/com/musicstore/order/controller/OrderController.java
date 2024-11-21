@@ -4,13 +4,19 @@ import com.musicstore.order.dto.OrderRequest;
 import com.musicstore.order.dto.OrderUpdateRequest;
 import com.musicstore.order.model.Order;
 import com.musicstore.order.service.OrderService;
+import jakarta.validation.Valid;
 import jakarta.ws.rs.core.HttpHeaders;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -31,7 +37,7 @@ public class OrderController {
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
     public String createOrder(
-            @RequestBody OrderRequest orderRequest,
+            @Valid @RequestBody OrderRequest orderRequest,
             @CookieValue("XSRF-TOKEN") String csrfToken,
             @RequestHeader(HttpHeaders.AUTHORIZATION) String jwtToken
     ) {
@@ -67,9 +73,22 @@ public class OrderController {
             @PathVariable(name = "order-id") UUID orderId,
             @RequestHeader(HttpHeaders.AUTHORIZATION) String token,
             @CookieValue("XSRF-TOKEN") String csrfToken,
-            @RequestBody OrderUpdateRequest request
+            @Valid @RequestBody OrderUpdateRequest request
     ) {
         return orderService.updateOrderStatus(orderId, token, csrfToken, request);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public Map<String, String> handleValidationExceptions(
+            MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+        return errors;
     }
 
 

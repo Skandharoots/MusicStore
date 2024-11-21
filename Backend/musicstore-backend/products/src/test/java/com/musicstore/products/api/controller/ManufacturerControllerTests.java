@@ -65,6 +65,23 @@ public class ManufacturerControllerTests {
     }
 
     @Test
+    public void createManufacturerBadRequestTest() throws Exception {
+
+        ManufacturerRequest manufacturerRequest = new ManufacturerRequest();
+        manufacturerRequest.setName("");
+
+
+        ResultActions resultActions = mockMvc.perform(post("/api/products/manufacturers/create")
+                .header("Authorization", token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(manufacturerRequest))
+        );
+
+        resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest());
+
+    }
+
+    @Test
     public void getAllManufacturersTest() throws Exception {
 
         Manufacturer manufacturer = new Manufacturer();
@@ -129,6 +146,21 @@ public class ManufacturerControllerTests {
         );
         resultActions.andExpect(MockMvcResultMatchers.status().isOk());
         resultActions.andExpect(MockMvcResultMatchers.content().string("Manufacturer updated"));
+
+    }
+
+    @Test
+    public void updateManufacturerBadRequestTest() throws Exception {
+
+        ManufacturerRequest manufacturerRequest = new ManufacturerRequest();
+        manufacturerRequest.setName("");
+
+        ResultActions resultActions = mockMvc.perform(put("/api/products/manufacturers/update/{id}", 1L)
+                .header("Authorization", token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(manufacturerRequest))
+        );
+        resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest());
 
     }
 

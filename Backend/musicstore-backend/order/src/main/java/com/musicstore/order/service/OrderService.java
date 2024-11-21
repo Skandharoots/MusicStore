@@ -11,13 +11,11 @@ import com.musicstore.order.model.OrderLineItems;
 import com.musicstore.order.model.OrderStatus;
 import com.musicstore.order.repository.OrderRepository;
 import com.musicstore.order.security.config.VariablesConfiguration;
+import jakarta.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
-import java.util.regex.Pattern;
-
-import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -42,74 +40,8 @@ public class OrderService {
 
     private final VariablesConfiguration variablesConfiguration;
 
-    public synchronized String createOrder(OrderRequest request, String csrfToken, String jwtToken) {
-
-        if (request.getCity() == null || request.getCity().isEmpty()
-                || request.getCountry() == null || request.getCountry().isEmpty()
-                || request.getName() == null || request.getName().isEmpty()
-                || request.getPhone() == null || request.getPhone().isEmpty()
-                || request.getEmail() == null || request.getEmail().isEmpty()
-                || request.getOrderTotalPrice() == null || request.getSurname() == null
-                || request.getSurname().isEmpty() || request.getStreetAddress() == null
-                || request.getStreetAddress().isEmpty() || request.getUserIdentifier() == null
-                || request.getZipCode() == null || request.getZipCode().isEmpty()
-                || request.getItems().isEmpty()
-        ) {
-            log.error("Bad order creation request, empty request fields.");
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "Invalid order request, empty request fields.");
-        }
-
-        Pattern cityAndCountryAndNameAndSurnameAndStreetaddressPattern =
-                Pattern.compile("^(?=.{1,50}$)[A-Za-z0-9żźćńółęąśŻŹĆĄŚĘŁÓŃ]+"
-                + "(?:[-'_./ \\s][A-Za-z0-9żźćńółęąśŻŹĆĄŚĘŁÓŃ]+)*$");
-
-        if (!cityAndCountryAndNameAndSurnameAndStreetaddressPattern.matcher(request.getCity()).matches()
-            || !cityAndCountryAndNameAndSurnameAndStreetaddressPattern.matcher(request.getCountry()).matches()
-                || !cityAndCountryAndNameAndSurnameAndStreetaddressPattern.matcher(request.getStreetAddress()).matches()
-                || !cityAndCountryAndNameAndSurnameAndStreetaddressPattern.matcher(request.getName()).matches()
-                || !cityAndCountryAndNameAndSurnameAndStreetaddressPattern.matcher(request.getSurname()).matches()
-        ) {
-            log.error("Bad order creation request, invalid request city, "
-                    + "country, name, surname, or streetaddress fields.");
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "Bad order creation request, invalid request city, country, "
-                            + "name, surname, or streetaddress fields. "
-                            + "Those fields can contain letters, numbers "
-                            + "and special characters - \"-'_/ and .\".");
-        }
-
-        Pattern emailPattern = Pattern.compile("^(?![^\"]+.*[^\"]+\\.\\.)"
-                        + "[a-zA-Z0-9 !#\"$%&'*+-/=?^_`{|}~]*"
-                        + "[a-zA-Z0-9\"]+@[a-zA-Z0-9.-]+$",
-                Pattern.CASE_INSENSITIVE);
-
-        if (!emailPattern.matcher(request.getEmail()).matches()) {
-            log.error("Bad order creation request, invalid request email, email address is invalid.");
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "Bad order creation request, invalid request, email address is invalid.");
-        }
-
-        Pattern zipCodePattern = Pattern
-                .compile("(?i)^[a-z0-9][a-z0-9\\- ]{0,10}[a-z0-9]$");
-
-        if (!zipCodePattern.matcher(request.getZipCode()).matches()) {
-            log.error("Bad order creation request, invalid request zipCode, zip code is invalid.");
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "Bad order creation request, invalid request, zip code is invalid.");
-        }
-
-        Pattern phonePattern = Pattern
-                .compile("^[+]?[ (]?[0-9]{1,3}[) ]?[-\\s.]?[0-9]{3}[-\\s.]?[0-9 -]{1,7}$");
-
-        if (!phonePattern.matcher(request.getPhone()).matches()) {
-            log.error("Bad order creation request, invalid request phone, phone number is invalid.");
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "Bad order creation request, invalid request, phone number is invalid. "
-                    + "Phone number must be in a format +(432) 456 545 222, where \"()\" are optional"
-                    + "It can also be only numbers like 5555555 or 003823984523"
-                    + "It can contain spaces and dashes \"-\"");
-        }
+    @Transactional
+    public String createOrder(OrderRequest request, String csrfToken, String jwtToken) {
 
         if (!jwtToken.startsWith("Bearer ")) {
             log.error("No admin authority for token - " + jwtToken);
@@ -218,15 +150,6 @@ public class OrderService {
             log.error("No admin authority for token - " + token);
             throw new ResponseStatusException(HttpStatus.FORBIDDEN,
                     "No admin authority");
-        }
-
-        if (request.getStatus() == null
-                || request.getItemsToCancel() == null
-                || request.getItemsToCancel().isEmpty()
-        ) {
-            log.error("Bad order status update request");
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "Invalid status");
         }
 
         Order order = orderRepository

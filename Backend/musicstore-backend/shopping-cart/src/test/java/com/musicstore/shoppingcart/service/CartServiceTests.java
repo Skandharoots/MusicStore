@@ -63,21 +63,6 @@ public class CartServiceTests {
     }
 
     @Test
-    public void addCartBadRequestTest() {
-
-        CartRequest cartRequest = CartRequest.builder()
-                .userUuid(null)
-                .productSkuId(null)
-                .productPrice(null)
-                .productName("Stratocaster Player MX Modern C")
-                .quantity(2)
-                .build();
-
-        Assertions.assertThatThrownBy(() -> cartService.addCart(cartRequest));
-
-    }
-
-    @Test
     public void addCartThatExistsTest() {
 
         UUID userUuid = UUID.randomUUID();

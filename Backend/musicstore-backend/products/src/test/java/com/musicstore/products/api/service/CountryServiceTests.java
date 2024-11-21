@@ -85,35 +85,6 @@ public class CountryServiceTests {
     }
 
     @Test
-    public void addCountryExceptionEmptyNameTest() {
-
-        CountryRequest countryRequest = new CountryRequest();
-
-        when(webClientBuilder.build()).thenReturn(webClient);
-        when(webClient.get()).thenReturn(requestHeadersUriSpec);
-        when(requestHeadersUriSpec.uri(variablesConfiguration.getAdminUrl() + token.substring(7))).thenReturn(requestHeadersSpec);
-        when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
-        when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
-
-        Assertions.assertThatThrownBy(() -> countryService.createCountry(token, countryRequest));
-    }
-
-    @Test
-    public void addCountryExceptionWrongNameFormatTest() {
-        CountryRequest countryRequest = CountryRequest.builder()
-                .name(" #$%^$%^Aasdads 2323")
-                .build();
-
-        when(webClientBuilder.build()).thenReturn(webClient);
-        when(webClient.get()).thenReturn(requestHeadersUriSpec);
-        when(requestHeadersUriSpec.uri(variablesConfiguration.getAdminUrl() + token.substring(7))).thenReturn(requestHeadersSpec);
-        when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
-        when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
-
-        Assertions.assertThatThrownBy(() -> countryService.createCountry(token, countryRequest));
-    }
-
-    @Test
     public void addCountryExceptionInvalidTokenTest() {
 
         CountryRequest countryRequest = new CountryRequest();
@@ -206,38 +177,6 @@ public class CountryServiceTests {
         Assertions.assertThat(response).isNotNull();
         Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         Assertions.assertThat(response.getBody()).isEqualTo("Country updated");
-
-    }
-
-    @Test
-    public void updateCountryExceptionEmptyNameTest() {
-
-        CountryRequest countryRequest = new CountryRequest();
-
-        when(webClientBuilder.build()).thenReturn(webClient);
-        when(webClient.get()).thenReturn(requestHeadersUriSpec);
-        when(requestHeadersUriSpec.uri(variablesConfiguration.getAdminUrl() + token.substring(7))).thenReturn(requestHeadersSpec);
-        when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
-        when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
-
-        Assertions.assertThatThrownBy(() -> countryService.updateCountry(token, 1L, countryRequest));
-
-    }
-
-    @Test
-    public void updateCountryExceptionWrongNameFormatTest() {
-
-        CountryRequest countryRequest = CountryRequest.builder()
-                .name(" #$%^$%^Aasdads 2323")
-                .build();
-
-        when(webClientBuilder.build()).thenReturn(webClient);
-        when(webClient.get()).thenReturn(requestHeadersUriSpec);
-        when(requestHeadersUriSpec.uri(variablesConfiguration.getAdminUrl() + token.substring(7))).thenReturn(requestHeadersSpec);
-        when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
-        when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
-
-        Assertions.assertThatThrownBy(() -> countryService.updateCountry(token, 1L, countryRequest));
 
     }
 

@@ -52,7 +52,7 @@ public class SubcategoryControllerTests {
 
         SubcategoryRequest subcategoryRequest = new SubcategoryRequest();
         subcategoryRequest.setCategoryId(1L);
-        subcategoryRequest.setName("test");
+        subcategoryRequest.setName("Test");
 
         when(subcategoryService.createSubcategories(token, subcategoryRequest)).thenReturn("Subcategory created");
 
@@ -64,6 +64,22 @@ public class SubcategoryControllerTests {
 
         resultActions.andExpect(MockMvcResultMatchers.status().isCreated());
         resultActions.andExpect(MockMvcResultMatchers.content().string("Subcategory created"));
+    }
+
+    @Test
+    public void createSubcategoryBadRequestTest() throws Exception {
+
+        SubcategoryRequest subcategoryRequest = new SubcategoryRequest();
+        subcategoryRequest.setCategoryId(null);
+        subcategoryRequest.setName("");
+
+        ResultActions resultActions = mockMvc.perform(post("/api/products/subcategories/create")
+                .header("Authorization", token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(subcategoryRequest))
+        );
+
+        resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 
     @Test
@@ -137,7 +153,7 @@ public class SubcategoryControllerTests {
     public void updateSubcategoryTest() throws Exception {
 
         SubcategoryUpdateRequest subcategoryRequest = new SubcategoryUpdateRequest();
-        subcategoryRequest.setName("test");
+        subcategoryRequest.setName("Test");
 
         when(subcategoryService.updateSubcategory(token, 1L, subcategoryRequest)).thenReturn(ResponseEntity.ok("Subcategory updated"));
 
@@ -149,6 +165,23 @@ public class SubcategoryControllerTests {
 
         resultActions.andExpect(MockMvcResultMatchers.status().isOk());
         resultActions.andExpect(MockMvcResultMatchers.content().string("Subcategory updated"));
+
+    }
+
+    @Test
+    public void updateSubcategoryBadRequestTest() throws Exception {
+
+        SubcategoryUpdateRequest subcategoryRequest = new SubcategoryUpdateRequest();
+        subcategoryRequest.setName("");
+
+
+        ResultActions resultActions = mockMvc.perform(put("/api/products/subcategories/update/{subcategoryId}", 1L)
+                .header("Authorization", token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(subcategoryRequest))
+        );
+
+        resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest());
 
     }
 

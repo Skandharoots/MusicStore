@@ -33,18 +33,6 @@ public class CategoryService {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No admin authority");
         }
 
-        if (category.getCategoryName() == null || category.getCategoryName().isEmpty()) {
-            log.error("Bad request for category creation.");
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Category name cannot be empty");
-        }
-
-        Pattern namePattern = Pattern.compile("^[A-Z][A-Za-z ']{1,49}$");
-
-        if (!namePattern.matcher(category.getCategoryName()).matches()) {
-            log.error("Bad category name format.");
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Bad category name format");
-        }
-
         Category categoryEntity = new Category();
         categoryEntity.setName(category.getCategoryName());
 
@@ -71,18 +59,6 @@ public class CategoryService {
         if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
             log.error("No admin authority for token - " + token);
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No admin authority");
-        }
-
-        if (category.getCategoryName() == null || category.getCategoryName().isEmpty()) {
-            log.error("Bad request for category update.");
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Category name cannot be empty");
-        }
-
-        Pattern namePattern = Pattern.compile("^[A-Z][A-Za-z ']{1,49}$");
-
-        if (!namePattern.matcher(category.getCategoryName()).matches()) {
-            log.error("Bad category name format.");
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Bad category name format");
         }
 
         Category categoryToUpdate = categoryRepository

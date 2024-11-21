@@ -7,7 +7,6 @@ import com.musicstore.products.repository.SubcategoryRepository;
 import com.musicstore.products.security.config.VariablesConfiguration;
 import jakarta.transaction.Transactional;
 import java.util.List;
-import java.util.regex.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -36,21 +35,6 @@ public class SubcategoryService {
         if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
             log.error("No admin authority for token - " + token);
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No admin authority");
-        }
-
-        if (subcategory.getName() == null
-                || subcategory.getName().isEmpty()
-                || subcategory.getCategoryId() == null
-                || subcategory.getCategoryId().toString().isEmpty()) {
-            log.error("Bad subcategory creation request.");
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Subcategory name or category id cannot be empty");
-        }
-
-        Pattern namePattern = Pattern.compile("^[A-Z][A-Za-z ']{1,49}$");
-
-        if (!namePattern.matcher(subcategory.getName()).matches()) {
-            log.error("Bad subcategory name format");
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Bad subcategory name format");
         }
 
         Subcategory newSubcategory = new Subcategory();
@@ -91,20 +75,6 @@ public class SubcategoryService {
         if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
             log.error("No admin authority for token - " + token);
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No admin authority");
-        }
-
-        if (subcategory.getName() == null
-                || subcategory.getName().isEmpty()
-        ) {
-            log.error("Bad subcategory update request.");
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Subcategory name cannot be empty");
-        }
-
-        Pattern namePattern = Pattern.compile("^[A-Z][A-Za-z ']{1,49}$");
-
-        if (!namePattern.matcher(subcategory.getName()).matches()) {
-            log.error("Bad subcategory name format");
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Bad subcategory name format");
         }
 
         Subcategory subcategoryToUpdate = subcategoryRepository

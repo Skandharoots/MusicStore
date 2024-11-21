@@ -65,51 +65,6 @@ public class RegisterServiceTests {
     }
 
     @Test
-    public void registerUserExceptionBadEmailTest() {
-        RegisterRequest registerRequest = new RegisterRequest(
-                "Marek",
-                "Kopania",
-                "mar..ek@gmail.com",
-                "Tes7p$s"
-        );
-        Assertions.assertThatThrownBy(() -> registerService.register(registerRequest)).isNotNull();
-    }
-
-    @Test
-    public void registerUserExceptionBadPasswordTest() {
-        RegisterRequest registerRequest = new RegisterRequest(
-                "Marek",
-                "Kopania",
-                "marek@gmail.com",
-                "test"
-        );
-        Assertions.assertThatThrownBy(() -> registerService.register(registerRequest)).isNotNull();
-    }
-
-    @Test
-    public void registerUserExceptionEmptyFirstOrLastNameEmptyTest() {
-        RegisterRequest registerRequest = new RegisterRequest(
-                "",
-                "",
-                "marek@gmail.com",
-                "Tes7p$s"
-        );
-        Assertions.assertThatThrownBy(() -> registerService.register(registerRequest)).isNotNull();
-
-    }
-
-    @Test
-    public void registerUserExceptionEmptyLastOrFirstNameInvalidFormatTest() {
-        RegisterRequest registerRequest = new RegisterRequest(
-                "%JDS@#%(*@#",
-                "#$*%(ASD@#923",
-                "marek@gmail.com",
-                "Tes7p$s"
-        );
-        Assertions.assertThatThrownBy(() -> registerService.register(registerRequest)).isNotNull();
-    }
-
-    @Test
     public void confirmTokenTest() {
         String tokenUUID = UUID.randomUUID().toString();
 

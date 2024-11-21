@@ -127,6 +127,29 @@ public class ProductControllerTests {
     }
 
     @Test
+    public void createProductBadRequestTest() throws Exception {
+
+        ProductRequest productRequest = new ProductRequest();
+        productRequest.setProductName("");
+        productRequest.setDescription("");
+        productRequest.setPrice(BigDecimal.valueOf(299.99));
+        productRequest.setQuantity(1);
+        productRequest.setCategoryId(1L);
+        productRequest.setSubcategoryId(1L);
+        productRequest.setCountryId(1L);
+        productRequest.setManufacturerId(1L);
+
+        ResultActions resultActions = mockMvc.perform(post("/api/products/items/create")
+                .header("Authorization", token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(productRequest))
+        );
+
+        resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest());
+
+    }
+
+    @Test
     public void getAllProductsTest() throws Exception {
 
         Pageable pageable = PageRequest.of(0, 10, Sort.by("dateAdded").descending());
@@ -291,6 +314,30 @@ public class ProductControllerTests {
 
         resultActions.andExpect(MockMvcResultMatchers.status().isOk());
         resultActions.andExpect(MockMvcResultMatchers.content().string("Product updated"));
+    }
+
+    @Test
+    public void updateProductBadRequestTest() throws Exception {
+
+        ProductRequest productRequest = new ProductRequest();
+        productRequest.setProductName("");
+        productRequest.setDescription("");
+        productRequest.setPrice(null);
+        productRequest.setQuantity(1);
+        productRequest.setCategoryId(1L);
+        productRequest.setSubcategoryId(1L);
+        productRequest.setCountryId(1L);
+        productRequest.setManufacturerId(1L);
+
+        UUID productSkuId = UUID.randomUUID();
+
+        ResultActions resultActions = mockMvc.perform(put("/api/products/items/update/{id}", productSkuId)
+                .header("Authorization", token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(productRequest))
+        );
+
+        resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 
     @Test

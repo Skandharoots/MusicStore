@@ -7,13 +7,19 @@ import com.musicstore.users.dto.UserInformationResponse;
 import com.musicstore.users.service.LoginService;
 import com.musicstore.users.service.RegisterService;
 import com.musicstore.users.service.UserService;
+import jakarta.validation.Valid;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.web.csrf.CsrfToken;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
 
 @RestController
 @RequestMapping("/api/users")
@@ -35,7 +42,7 @@ public class RegisterController {
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public String register(@RequestBody RegisterRequest request) {
+    public String register(@Valid @RequestBody RegisterRequest request) {
         return registerService.register(request);
     }
 
@@ -75,8 +82,9 @@ public class RegisterController {
     @PutMapping("/update/{uuid}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
-    public ResponseEntity<LoginResponse> updateUser(@PathVariable("uuid") UUID uuid,
-                                                    @RequestBody RegisterRequest request) {
+    public ResponseEntity<LoginResponse> updateUser(
+            @PathVariable("uuid") UUID uuid,
+            @Valid @RequestBody RegisterRequest request) {
         return ResponseEntity.ok(userService.updateUser(uuid, request));
     }
 
@@ -92,5 +100,18 @@ public class RegisterController {
     public CsrfToken getCsrfToken(CsrfToken token) {
 
         return token;
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public Map<String, String> handleValidationExceptions(
+            MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+        return errors;
     }
 }

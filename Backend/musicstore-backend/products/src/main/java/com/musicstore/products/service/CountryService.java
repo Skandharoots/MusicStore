@@ -33,18 +33,6 @@ public class CountryService {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No admin authority");
         }
 
-        if (country.getName() == null || country.getName().isEmpty()) {
-            log.error("Bad request for country creation.");
-            throw new IllegalArgumentException("Country name cannot be empty");
-        }
-
-        Pattern namePattern = Pattern.compile("^[A-Z][A-Za-z ']{1,49}$");
-
-        if (!namePattern.matcher(country.getName()).matches()) {
-            log.error("Bad request for country creation. Wrong name format.");
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wrong name format");
-        }
-
         Country newCountry = new Country(country.getName());
 
         countryRepository.save(newCountry);
@@ -75,18 +63,6 @@ public class CountryService {
         if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
             log.error("No admin authority for token - " + token);
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No admin authority");
-        }
-
-        if (country.getName() == null || country.getName().isEmpty()) {
-            log.error("Bad request for country update.");
-            throw new IllegalArgumentException("Country name cannot be empty");
-        }
-
-        Pattern namePattern = Pattern.compile("^[A-Z][A-Za-z ']{1,49}$");
-
-        if (!namePattern.matcher(country.getName()).matches()) {
-            log.error("Bad request for country update. Wrong name format.");
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wrong name format");
         }
 
         Country countryToUpdate = countryRepository

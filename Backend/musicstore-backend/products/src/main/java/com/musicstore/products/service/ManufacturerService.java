@@ -33,18 +33,6 @@ public class ManufacturerService {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No admin authority");
         }
 
-        if (manufacturer.getName() == null || manufacturer.getName().isEmpty()) {
-            log.error("Bad request for manufacturer creation.");
-            throw new IllegalArgumentException("Manufacturer name cannot be empty");
-        }
-
-        Pattern namePattern = Pattern.compile("^[A-Z][A-Za-z ']{1,49}$");
-
-        if (!namePattern.matcher(manufacturer.getName()).matches()) {
-            log.error("Bad request for manufacturer creation. Wrong name format.");
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wrong name format.");
-        }
-
         Manufacturer newManufacturer = new Manufacturer(manufacturer.getName());
 
 
@@ -76,18 +64,6 @@ public class ManufacturerService {
         if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
             log.error("No admin authority for token - " + token);
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No admin authority");
-        }
-
-        if (manufacturer.getName() == null || manufacturer.getName().isEmpty()) {
-            log.error("Bad request for manufacturer update.");
-            throw new IllegalArgumentException("Manufacturer name cannot be empty");
-        }
-
-        Pattern namePattern = Pattern.compile("^[A-Z][A-Za-z ']{1,49}$");
-
-        if (!namePattern.matcher(manufacturer.getName()).matches()) {
-            log.error("Bad request for manufacturer creation. Wrong name format.");
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wrong name format.");
         }
 
         Manufacturer manufacurerToUpdate = manufacturerRepository

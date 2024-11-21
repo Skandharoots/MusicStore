@@ -67,7 +67,7 @@ public class RegistryControllerTests {
                 .firstName("Marek")
                 .lastName("Kopania")
                 .email("test@test.com")
-                .password("testpass")
+                .password("Very$tron9pass")
                 .build();
 
         ResultActions resultActions = mockMvc.perform(post("/api/users/register")
@@ -76,6 +76,24 @@ public class RegistryControllerTests {
         );
         resultActions
                 .andExpect(MockMvcResultMatchers.status().isCreated());
+    }
+
+    @Test
+    public void registerBadRequestTest() throws Exception {
+
+        RegisterRequest registerRequest = RegisterRequest.builder()
+                .firstName("Mare$%&^%^&*@#$!$:][k")
+                .lastName("Kopania")
+                .email("tes..t@test.com")
+                .password("pass")
+                .build();
+
+        ResultActions resultActions = mockMvc.perform(post("/api/users/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(registerRequest))
+        );
+        resultActions
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 
     @Test
@@ -182,7 +200,7 @@ public class RegistryControllerTests {
                 .firstName("Marek")
                 .lastName("Kopania")
                 .email("test@test.com")
-                .password("testpass")
+                .password("Very$tron9pass")
                 .build();
 
         LoginResponse loginResponse = LoginResponse.builder()
@@ -207,6 +225,26 @@ public class RegistryControllerTests {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.uuid").value(uuid.toString()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.role").value(UserRole.USER.toString()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.token").value("test"));
+    }
+
+    @Test
+    public void userInformationUpdateBadRequestTest() throws Exception {
+        UUID uuid = UUID.randomUUID();
+
+        RegisterRequest registerRequest = RegisterRequest.builder()
+                .firstName("Mare$%&^%^&*@#$!$:][k")
+                .lastName("Kopania")
+                .email("tes..t@test.com")
+                .password("pass")
+                .build();
+
+        ResultActions resultActions = mockMvc.perform(put("/api/users/update/{uuid}", uuid)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(registerRequest))
+        );
+
+        resultActions
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 
     @Test

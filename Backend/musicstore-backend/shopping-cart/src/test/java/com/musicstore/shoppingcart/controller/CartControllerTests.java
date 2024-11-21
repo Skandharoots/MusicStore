@@ -68,6 +68,30 @@ public class CartControllerTests {
     }
 
     @Test
+    public void createCartBadRequestTest() throws Exception {
+
+        UUID userUuid = UUID.randomUUID();
+        UUID productSkuId = UUID.randomUUID();
+        BigDecimal productPrice = BigDecimal.valueOf(269.99);
+
+        CartRequest cartRequest = CartRequest.builder()
+                .userUuid(userUuid)
+                .productSkuId(null)
+                .productPrice(productPrice)
+                .productName("Stratocaster Player MX Modern C")
+                .quantity(2)
+                .build();
+
+        ResultActions resultActions = mockMvc.perform(post("/api/cart/create")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(cartRequest))
+        );
+        resultActions.andExpect(
+                MockMvcResultMatchers.status().isBadRequest()
+        );
+    }
+
+    @Test
     public void getAllCartsByUserUuidTest() throws Exception {
 
         UUID userUuid = UUID.randomUUID();
@@ -128,6 +152,28 @@ public class CartControllerTests {
         resultActions
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType("text/plain;charset=UTF-8"));
+
+    }
+
+    @Test
+    public void updateCartBadRequestTest() throws Exception {
+        Long id = 1L;
+
+        CartUpdateRequest cartUpdateRequest =
+                CartUpdateRequest.builder()
+                        .quantity(null)
+                        .build();
+
+        when(cartService.updateCart(id, cartUpdateRequest)).thenReturn("Cart item updated successfully");
+
+        ResultActions resultActions = mockMvc.perform(put("/api/cart/update/{id}", id)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(cartUpdateRequest)
+                )
+        );
+
+        resultActions
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
 
     }
 

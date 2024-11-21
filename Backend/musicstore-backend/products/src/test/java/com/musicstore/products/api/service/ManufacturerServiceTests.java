@@ -101,36 +101,6 @@ public class ManufacturerServiceTests {
     }
 
     @Test
-    public void addManufacturerExceptionEmptyNameTest() {
-
-        ManufacturerRequest manufacturerRequest = new ManufacturerRequest();
-
-        when(webClientBuilder.build()).thenReturn(webClient);
-        when(webClient.get()).thenReturn(requestHeadersUriSpec);
-        when(requestHeadersUriSpec.uri(variablesConfiguration.getAdminUrl() + token.substring(7))).thenReturn(requestHeadersSpec);
-        when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
-        when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
-
-        Assertions.assertThatThrownBy(() -> manufacturerService.createManufacturers(token, manufacturerRequest));
-    }
-
-    @Test
-    public void addManufacturerExceptionWronNameFormatTest() {
-
-        ManufacturerRequest manufacturerRequest = ManufacturerRequest.builder()
-                .name(" #$%^$%^Aasdads 2323")
-                .build();
-
-        when(webClientBuilder.build()).thenReturn(webClient);
-        when(webClient.get()).thenReturn(requestHeadersUriSpec);
-        when(requestHeadersUriSpec.uri(variablesConfiguration.getAdminUrl() + token.substring(7))).thenReturn(requestHeadersSpec);
-        when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
-        when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
-
-        Assertions.assertThatThrownBy(() -> manufacturerService.createManufacturers(token, manufacturerRequest));
-    }
-
-    @Test
     public void addManufacturerExceptionFaultyTokenTest() {
         Assertions.assertThatThrownBy(() -> manufacturerService.createManufacturers(token.substring(7), new ManufacturerRequest("Fender")));
     }
@@ -204,39 +174,6 @@ public class ManufacturerServiceTests {
         Assertions.assertThat(response).isNotNull();
         Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         Assertions.assertThat(response.getBody()).isEqualTo("Manufacturer updated");
-
-    }
-
-    @Test
-    public void updateManufacturerExceptionEmptyNameTest() {
-
-        ManufacturerRequest manufacturerRequest = new ManufacturerRequest();
-
-        when(webClientBuilder.build()).thenReturn(webClient);
-        when(webClient.get()).thenReturn(requestHeadersUriSpec);
-        when(requestHeadersUriSpec.uri(variablesConfiguration.getAdminUrl() + token.substring(7))).thenReturn(requestHeadersSpec);
-        when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
-        when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
-
-        Assertions.assertThatThrownBy(() -> manufacturerService.updateManufacturer(token, 1L, manufacturerRequest));
-
-    }
-
-    @Test
-    public void updateManufacturerExceptionWrongNameFormatTest() {
-
-        ManufacturerRequest manufacturerRequest = ManufacturerRequest.builder()
-                .name(" #$%^$%^Aasdads 2323")
-                .build();
-
-        when(webClientBuilder.build()).thenReturn(webClient);
-        when(webClient.get()).thenReturn(requestHeadersUriSpec);
-        when(requestHeadersUriSpec.uri(variablesConfiguration.getAdminUrl() + token.substring(7))).thenReturn(requestHeadersSpec);
-        when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
-        when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
-
-        Assertions.assertThatThrownBy(() -> manufacturerService.updateManufacturer(token, 1L, manufacturerRequest));
-
 
     }
 

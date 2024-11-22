@@ -57,7 +57,7 @@ function BasketItem(props) {
                                         }).then(() => {})
                                             .catch(() => {})
                                     } else {
-                                        toast.warning('Please remove unavailable items from the basket.', {
+                                        toast.warning('Please remove unavailable items from the basket. They will be automatically removed from order.', {
                                             position: "bottom-center",
                                             autoClose: 3000,
                                             hideProgressBar: false,

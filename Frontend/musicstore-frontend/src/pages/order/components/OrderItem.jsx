@@ -9,14 +9,10 @@ import {
     Select
 } from "@mui/material";
 import LocalStorageHelper from "../../../helpers/LocalStorageHelper.jsx";
-import {useNavigate} from "react-router-dom";
-
 
 function OrderItem(props) {
 
     const [img, setImg] = useState(null);
-
-    const navigate = useNavigate();
 
     useEffect(() => {
         axios.get(`api/products/items/get/${props.item.productSkuId}`)
@@ -31,7 +27,17 @@ function OrderItem(props) {
                                     'X-XSRF-TOKEN': res.data.token,
                                 }
                             }).then(() => {
-                                navigate('/basket');
+                                toast.warning('Unavailable products have been removed.', {
+                                    position: "bottom-center",
+                                    autoClose: 3000,
+                                    hideProgressBar: false,
+                                    closeOnClick: true,
+                                    pauseOnHover: true,
+                                    draggable: false,
+                                    progress: undefined,
+                                    theme: "colored",
+                                    transition: Bounce,
+                                })
                             }).catch(() => {})
                         }).catch(() => {
                             toast.error('Cannot fetch token', {

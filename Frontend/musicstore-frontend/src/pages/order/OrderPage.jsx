@@ -61,9 +61,13 @@ function OrderPage() {
     }, []);
 
     const removeById = (idToDelete) => {
+        let item = basketItems.filter(obj => {
+            return obj.id === idToDelete;
+        });
         setBasketItems(currentItems => currentItems.filter(
             ({id}) => id !== idToDelete)
         );
+        setTotalItems(totalItems => totalItems - item[0].quantity);
     };
 
     const validateInputs = () => {
@@ -255,50 +259,50 @@ function OrderPage() {
     }
 
     useEffect(() => {
-                setOpenBackdrop(true);
-                axios.get(`api/cart/get/${LocalStorageHelper.GetActiveUser()}`, {
-                    headers: {
-                        'Authorization': 'Bearer ' + LocalStorageHelper.getJwtToken(),
-                    }
-                }).then(response => {
-                    setBasketItems(response.data);
-                    let items = 0;
-                    let totalCostOfItems = 0;
-                    [...response.data].map((item) => {
-                        items += item.quantity;
-                        totalCostOfItems += item.quantity * item.productPrice;
-                    })
-                    setTotalItems(items);
-                    setTotalCost(totalCostOfItems);
-                    setOpenBackdrop(false);
-                    if (items <= 0) {
-                        toast.info('No items in order. Find inspiration at our home page', {
-                            position: "bottom-center",
-                            autoClose: 3000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: false,
-                            progress: undefined,
-                            theme: "colored",
-                            transition: Bounce,
-                        })
-                        navigate('/');
-                    }
-                }).catch(error => {
-                    setOpenBackdrop(false);
-                    toast.error(error.response.data.message, {
-                        position: "bottom-center",
-                        autoClose: 3000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: false,
-                        progress: undefined,
-                        theme: "colored",
-                        transition: Bounce,
-                    });
+        setOpenBackdrop(true);
+        axios.get(`api/cart/get/${LocalStorageHelper.GetActiveUser()}`, {
+            headers: {
+                'Authorization': 'Bearer ' + LocalStorageHelper.getJwtToken(),
+            }
+        }).then(response => {
+            setBasketItems(response.data);
+            let items = 0;
+            let totalCostOfItems = 0;
+            [...response.data].map((item) => {
+                items += item.quantity;
+                totalCostOfItems += item.quantity * item.productPrice;
+            })
+            setTotalItems(items);
+            setTotalCost(totalCostOfItems);
+            setOpenBackdrop(false);
+            if (items <= 0) {
+                toast.info('No items in order. Find inspiration at our home page', {
+                    position: "bottom-center",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: false,
+                    progress: undefined,
+                    theme: "colored",
+                    transition: Bounce,
                 })
+                navigate('/');
+            }
+        }).catch(error => {
+            setOpenBackdrop(false);
+            toast.error(error.response.data.message, {
+                position: "bottom-center",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: false,
+                progress: undefined,
+                theme: "colored",
+                transition: Bounce,
+            });
+        })
 
     }, [])
 
@@ -317,141 +321,23 @@ function OrderPage() {
                     fontWeight: 'normal'
                 }}>({totalItems} items)</span></p>
             </div>
-            <div className="wrapper">
-                <div className="order-form">
-                    <div className="personal-info">
-                        <Typography
-                            component="h1"
-                            variant="h5"
-                            sx={{
-                                width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)', color: 'black'
-                                , margin: '0 auto 5% auto'
-                            }}
-                        >
-                            Personal Information
-                        </Typography>
-                        <Box
-                        >
-                            <TextField
-                                size={"small"}
-                                error={nameError}
-                                helperText={nameErrorMsg}
-                                id="name"
-                                type="search"
-                                name="name"
-                                placeholder="First name"
-                                autoComplete="name"
-                                required
-                                fullWidth
-                                variant="outlined"
-                                color={nameError ? 'error' : 'primary'}
-                                label="First name"
-                                value={name}
-                                onChange={e => setName(e.target.value)}
-                                sx={{
-                                    width: '70%',
-                                    margin: '0 auto 5% auto',
-                                    "& label.Mui-focused": {
-                                        color: 'rgb(39, 99, 24)'
-                                    },
-                                    "& .MuiOutlinedInput-root": {
-                                        "&.Mui-focused fieldset": {
-                                            borderColor: 'rgb(39, 99, 24)'
-                                        }
-                                    }
-                                }}
-                            />
-                            <TextField
-                                size={"small"}
-                                error={surnameError}
-                                helperText={surnameErrorMsg}
-                                id="surname"
-                                type="search"
-                                name="surname"
-                                placeholder="Surname"
-                                autoComplete="surname"
-                                required
-                                fullWidth
-                                variant="outlined"
-                                color={surnameError ? 'error' : 'primary'}
-                                label="Surname"
-                                value={surname}
-                                onChange={e => setSurname(e.target.value)}
-                                sx={{
-                                    width: '70%',
-                                    margin: '0 auto 5% auto',
-                                    "& label.Mui-focused": {
-                                        color: 'rgb(39, 99, 24)'
-                                    },
-                                    "& .MuiOutlinedInput-root": {
-                                        "&.Mui-focused fieldset": {
-                                            borderColor: 'rgb(39, 99, 24)'
-                                        }
-                                    }
-                                }}
-                            />
-                            <TextField
-                                size={"small"}
-                                error={emailError}
-                                helperText={emailErrorMsg}
-                                id="email"
-                                type="email"
-                                name="email"
-                                placeholder="your@email.com"
-                                autoComplete="email"
-                                required
-                                fullWidth
-                                variant="outlined"
-                                color={emailError ? 'error' : 'primary'}
-                                label="Email"
-                                value={email}
-                                onChange={e => setEmail(e.target.value)}
-                                sx={{
-                                    width: '70%',
-                                    margin: '0 auto 5% auto',
-                                    "& label.Mui-focused": {
-                                        color: 'rgb(39, 99, 24)'
-                                    },
-                                    "& .MuiOutlinedInput-root": {
-                                        "&.Mui-focused fieldset": {
-                                            borderColor: 'rgb(39, 99, 24)'
-                                        }
-                                    }
-                                }}
-                            />
-                            <TextField
-                                size={"small"}
-                                error={phoneError}
-                                helperText={phoneErrorMsg}
-                                id="phone"
-                                type="tel"
-                                name="phone"
-                                placeholder="+48 567 234 902"
-                                autoComplete="phone"
-                                required
-                                fullWidth
-                                variant="outlined"
-                                color={phoneError ? 'error' : 'primary'}
-                                label="Phone number"
-                                value={phone}
-                                onChange={e => setPhone(e.target.value)}
-                                sx={{
-                                    width: '70%',
-                                    margin: '0 auto 5% auto',
-                                    "& label.Mui-focused": {
-                                        color: 'rgb(39, 99, 24)'
-                                    },
-                                    "& .MuiOutlinedInput-root": {
-                                        "&.Mui-focused fieldset": {
-                                            borderColor: 'rgb(39, 99, 24)'
-                                        }
-                                    }
-                                }}
-                            />
-                        </Box>
-                    </div>
-                    <div className="delivery-info">
-                        <Box>
+            {totalItems === 0 &&
+                <div className="wrapper">
+                    <Button
+                        variant="contained"
+                        onClick={() => {navigate('/')}}
+                        sx={{
+                            width: '300px',
+                            backgroundColor: 'rgb(39, 99, 24)',
+                            "&:hover": {backgroundColor: 'rgb(49,140,23)'}
+                        }}
+                        >Home</Button>
+                </div>
+            }
+            {totalItems > 0 &&
+                <div className="wrapper">
+                    <div className="order-form">
+                        <div className="personal-info">
                             <Typography
                                 component="h1"
                                 variant="h5"
@@ -460,154 +346,288 @@ function OrderPage() {
                                     , margin: '0 auto 5% auto'
                                 }}
                             >
-                                Delivery information
+                                Personal Information
                             </Typography>
-                            <TextField
-                                size={"small"}
-                                error={countryError}
-                                helperText={countryErrorMsg}
-                                id="country"
-                                type="search"
-                                name="email"
-                                placeholder="Country"
-                                autoComplete="country"
-                                required
+                            <Box
+                            >
+                                <TextField
+                                    size={"small"}
+                                    error={nameError}
+                                    helperText={nameErrorMsg}
+                                    id="name"
+                                    type="search"
+                                    name="name"
+                                    placeholder="First name"
+                                    autoComplete="name"
+                                    required
+                                    fullWidth
+                                    variant="outlined"
+                                    color={nameError ? 'error' : 'primary'}
+                                    label="First name"
+                                    value={name}
+                                    onChange={e => setName(e.target.value)}
+                                    sx={{
+                                        width: '70%',
+                                        margin: '0 auto 5% auto',
+                                        "& label.Mui-focused": {
+                                            color: 'rgb(39, 99, 24)'
+                                        },
+                                        "& .MuiOutlinedInput-root": {
+                                            "&.Mui-focused fieldset": {
+                                                borderColor: 'rgb(39, 99, 24)'
+                                            }
+                                        }
+                                    }}
+                                />
+                                <TextField
+                                    size={"small"}
+                                    error={surnameError}
+                                    helperText={surnameErrorMsg}
+                                    id="surname"
+                                    type="search"
+                                    name="surname"
+                                    placeholder="Surname"
+                                    autoComplete="surname"
+                                    required
+                                    fullWidth
+                                    variant="outlined"
+                                    color={surnameError ? 'error' : 'primary'}
+                                    label="Surname"
+                                    value={surname}
+                                    onChange={e => setSurname(e.target.value)}
+                                    sx={{
+                                        width: '70%',
+                                        margin: '0 auto 5% auto',
+                                        "& label.Mui-focused": {
+                                            color: 'rgb(39, 99, 24)'
+                                        },
+                                        "& .MuiOutlinedInput-root": {
+                                            "&.Mui-focused fieldset": {
+                                                borderColor: 'rgb(39, 99, 24)'
+                                            }
+                                        }
+                                    }}
+                                />
+                                <TextField
+                                    size={"small"}
+                                    error={emailError}
+                                    helperText={emailErrorMsg}
+                                    id="email"
+                                    type="email"
+                                    name="email"
+                                    placeholder="your@email.com"
+                                    autoComplete="email"
+                                    required
+                                    fullWidth
+                                    variant="outlined"
+                                    color={emailError ? 'error' : 'primary'}
+                                    label="Email"
+                                    value={email}
+                                    onChange={e => setEmail(e.target.value)}
+                                    sx={{
+                                        width: '70%',
+                                        margin: '0 auto 5% auto',
+                                        "& label.Mui-focused": {
+                                            color: 'rgb(39, 99, 24)'
+                                        },
+                                        "& .MuiOutlinedInput-root": {
+                                            "&.Mui-focused fieldset": {
+                                                borderColor: 'rgb(39, 99, 24)'
+                                            }
+                                        }
+                                    }}
+                                />
+                                <TextField
+                                    size={"small"}
+                                    error={phoneError}
+                                    helperText={phoneErrorMsg}
+                                    id="phone"
+                                    type="tel"
+                                    name="phone"
+                                    placeholder="+48 567 234 902"
+                                    autoComplete="phone"
+                                    required
+                                    fullWidth
+                                    variant="outlined"
+                                    color={phoneError ? 'error' : 'primary'}
+                                    label="Phone number"
+                                    value={phone}
+                                    onChange={e => setPhone(e.target.value)}
+                                    sx={{
+                                        width: '70%',
+                                        margin: '0 auto 5% auto',
+                                        "& label.Mui-focused": {
+                                            color: 'rgb(39, 99, 24)'
+                                        },
+                                        "& .MuiOutlinedInput-root": {
+                                            "&.Mui-focused fieldset": {
+                                                borderColor: 'rgb(39, 99, 24)'
+                                            }
+                                        }
+                                    }}
+                                />
+                            </Box>
+                        </div>
+                        <div className="delivery-info">
+                            <Box>
+                                <Typography
+                                    component="h1"
+                                    variant="h5"
+                                    sx={{
+                                        width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)', color: 'black'
+                                        , margin: '0 auto 5% auto'
+                                    }}
+                                >
+                                    Delivery information
+                                </Typography>
+                                <TextField
+                                    size={"small"}
+                                    error={countryError}
+                                    helperText={countryErrorMsg}
+                                    id="country"
+                                    type="search"
+                                    name="email"
+                                    placeholder="Country"
+                                    autoComplete="country"
+                                    required
+                                    fullWidth
+                                    variant="outlined"
+                                    color={countryError ? 'error' : 'primary'}
+                                    label="Country"
+                                    value={country}
+                                    onChange={e => setCountry(e.target.value)}
+                                    sx={{
+                                        width: '70%',
+                                        margin: '0 auto 5% auto',
+                                        "& label.Mui-focused": {
+                                            color: 'rgb(39, 99, 24)'
+                                        },
+                                        "& .MuiOutlinedInput-root": {
+                                            "&.Mui-focused fieldset": {
+                                                borderColor: 'rgb(39, 99, 24)'
+                                            }
+                                        }
+                                    }}
+                                />
+                                <TextField
+                                    size={"small"}
+                                    error={cityError}
+                                    helperText={cityErrorMsg}
+                                    id="city"
+                                    type="search"
+                                    name="city"
+                                    placeholder="Surname"
+                                    autoComplete="city"
+                                    required
+                                    fullWidth
+                                    variant="outlined"
+                                    color={cityError ? 'error' : 'primary'}
+                                    label="City"
+                                    value={city}
+                                    onChange={e => setCity(e.target.value)}
+                                    sx={{
+                                        width: '70%',
+                                        margin: '0 auto 5% auto',
+                                        "& label.Mui-focused": {
+                                            color: 'rgb(39, 99, 24)'
+                                        },
+                                        "& .MuiOutlinedInput-root": {
+                                            "&.Mui-focused fieldset": {
+                                                borderColor: 'rgb(39, 99, 24)'
+                                            }
+                                        }
+                                    }}
+                                />
+                                <TextField
+                                    size={"small"}
+                                    error={streetAddressError}
+                                    helperText={streetAddressErrorMsg}
+                                    id="streetAddress"
+                                    type="search"
+                                    name="streetAddress"
+                                    placeholder="Street Address"
+                                    autoComplete="streetAddress"
+                                    required
+                                    fullWidth
+                                    variant="outlined"
+                                    color={streetAddressError ? 'error' : 'primary'}
+                                    label="Street address"
+                                    value={streetAddress}
+                                    onChange={e => setStreetAddress(e.target.value)}
+                                    sx={{
+                                        width: '70%',
+                                        margin: '0 auto 5% auto',
+                                        "& label.Mui-focused": {
+                                            color: 'rgb(39, 99, 24)'
+                                        },
+                                        "& .MuiOutlinedInput-root": {
+                                            "&.Mui-focused fieldset": {
+                                                borderColor: 'rgb(39, 99, 24)'
+                                            }
+                                        }
+                                    }}
+                                />
+                                <TextField
+                                    size={"small"}
+                                    error={zipCodeError}
+                                    helperText={zipCodeErrorMsg}
+                                    id="zipCode"
+                                    type="search"
+                                    name="name"
+                                    placeholder="Zip code"
+                                    autoComplete="zipCode"
+                                    required
+                                    fullWidth
+                                    variant="outlined"
+                                    color={zipCodeError ? 'error' : 'primary'}
+                                    label="Zip-code"
+                                    pattern={"(?i)^[a-z0-9][a-z0-9\\- ]{0,10}[a-z0-9]$"}
+                                    value={zipCode}
+                                    onChange={e => setZipCode(e.target.value)}
+                                    sx={{
+                                        width: '70%',
+                                        margin: '0 auto 5% auto',
+                                        "& label.Mui-focused": {
+                                            color: 'rgb(39, 99, 24)'
+                                        },
+                                        "& .MuiOutlinedInput-root": {
+                                            "&.Mui-focused fieldset": {
+                                                borderColor: 'rgb(39, 99, 24)'
+                                            }
+                                        }
+                                    }}
+                                />
+                            </Box>
+                        </div>
+                        <div className="submit-order">
+                            <Button
+                                className="add-btn"
+                                type="button"
                                 fullWidth
-                                variant="outlined"
-                                color={countryError ? 'error' : 'primary'}
-                                label="Country"
-                                value={country}
-                                onChange={e => setCountry(e.target.value)}
+                                variant="contained"
+                                endIcon={<CreditCard/>}
+                                onClick={submitOrder}
                                 sx={{
                                     width: '70%',
-                                    margin: '0 auto 5% auto',
-                                    "& label.Mui-focused": {
-                                        color: 'rgb(39, 99, 24)'
-                                    },
-                                    "& .MuiOutlinedInput-root": {
-                                        "&.Mui-focused fieldset": {
-                                            borderColor: 'rgb(39, 99, 24)'
-                                        }
-                                    }
+                                    backgroundColor: 'rgb(39, 99, 24)',
+                                    "&:hover": {backgroundColor: 'rgb(49,140,23)'}
                                 }}
-                            />
-                            <TextField
-                                size={"small"}
-                                error={cityError}
-                                helperText={cityErrorMsg}
-                                id="city"
-                                type="search"
-                                name="city"
-                                placeholder="Surname"
-                                autoComplete="city"
-                                required
-                                fullWidth
-                                variant="outlined"
-                                color={cityError ? 'error' : 'primary'}
-                                label="City"
-                                value={city}
-                                onChange={e => setCity(e.target.value)}
-                                sx={{
-                                    width: '70%',
-                                    margin: '0 auto 5% auto',
-                                    "& label.Mui-focused": {
-                                        color: 'rgb(39, 99, 24)'
-                                    },
-                                    "& .MuiOutlinedInput-root": {
-                                        "&.Mui-focused fieldset": {
-                                            borderColor: 'rgb(39, 99, 24)'
-                                        }
-                                    }
-                                }}
-                            />
-                            <TextField
-                                size={"small"}
-                                error={streetAddressError}
-                                helperText={streetAddressErrorMsg}
-                                id="streetAddress"
-                                type="search"
-                                name="streetAddress"
-                                placeholder="Street Address"
-                                autoComplete="streetAddress"
-                                required
-                                fullWidth
-                                variant="outlined"
-                                color={streetAddressError ? 'error' : 'primary'}
-                                label="Street address"
-                                value={streetAddress}
-                                onChange={e => setStreetAddress(e.target.value)}
-                                sx={{
-                                    width: '70%',
-                                    margin: '0 auto 5% auto',
-                                    "& label.Mui-focused": {
-                                        color: 'rgb(39, 99, 24)'
-                                    },
-                                    "& .MuiOutlinedInput-root": {
-                                        "&.Mui-focused fieldset": {
-                                            borderColor: 'rgb(39, 99, 24)'
-                                        }
-                                    }
-                                }}
-                            />
-                            <TextField
-                                size={"small"}
-                                error={zipCodeError}
-                                helperText={zipCodeErrorMsg}
-                                id="zipCode"
-                                type="search"
-                                name="name"
-                                placeholder="Zip code"
-                                autoComplete="zipCode"
-                                required
-                                fullWidth
-                                variant="outlined"
-                                color={zipCodeError ? 'error' : 'primary'}
-                                label="Zip-code"
-                                pattern={"(?i)^[a-z0-9][a-z0-9\\- ]{0,10}[a-z0-9]$"}
-                                value={zipCode}
-                                onChange={e => setZipCode(e.target.value)}
-                                sx={{
-                                    width: '70%',
-                                    margin: '0 auto 5% auto',
-                                    "& label.Mui-focused": {
-                                        color: 'rgb(39, 99, 24)'
-                                    },
-                                    "& .MuiOutlinedInput-root": {
-                                        "&.Mui-focused fieldset": {
-                                            borderColor: 'rgb(39, 99, 24)'
-                                        }
-                                    }
-                                }}
-                            />
-                        </Box>
-                    </div>
-                    <div className="submit-order">
-                        <Button
-                            className="add-btn"
-                            type="button"
-                            fullWidth
-                            variant="contained"
-                            endIcon={<CreditCard />}
-                            onClick={submitOrder}
-                            sx={{
-                                width: '70%',
-                                backgroundColor: 'rgb(39, 99, 24)',
-                                "&:hover": {backgroundColor: 'rgb(49,140,23)'}
-                            }}
-                        >
-                            Place Order
-                        </Button>
-                    </div>
+                            >
+                                Place Order
+                            </Button>
+                        </div>
 
+                    </div>
+                    <div className="order-items">
+                        {
+                            [...basketItems].map((item, index) => (
+                                <OrderItem key={index} item={item} onDelete={removeById} {...item} />
+                            ))
+                        }
+                    </div>
                 </div>
-                <div className="order-items">
-                    {
-                        [...basketItems].map((item, index) => (
-                            <OrderItem key={index} item={item} onDelete={removeById} {...item} />
-                        ))
-                    }
-                </div>
-            </div>
+            }
+
 
         </div>
     )

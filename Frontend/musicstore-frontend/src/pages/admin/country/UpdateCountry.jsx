@@ -3,7 +3,7 @@ import TextField from "@mui/material/TextField";
 // eslint-disable-next-line no-unused-vars
 import React, {useEffect, useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
-import {Bounce, toast} from "react-toastify";
+import {Slide, toast} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import axios from "axios";
 import LocalStorageHelper from "../../../helpers/LocalStorageHelper.jsx";
@@ -44,8 +44,8 @@ function UpdateCountry() {
                 pauseOnHover: true,
                 draggable: false,
                 progress: undefined,
-                theme: "colored",
-                transition: Bounce,
+                theme: "light",
+                transition: Slide,
             });
         })
     }, [id.id])
@@ -94,8 +94,8 @@ function UpdateCountry() {
                         pauseOnHover: true,
                         draggable: false,
                         progress: undefined,
-                        theme: "colored",
-                        transition: Bounce,
+                        theme: "light",
+                        transition: Slide,
                     });
                     navigate('/admin/country');
 
@@ -108,8 +108,8 @@ function UpdateCountry() {
                         pauseOnHover: true,
                         draggable: false,
                         progress: undefined,
-                        theme: "colored",
-                        transition: Bounce,
+                        theme: "light",
+                        transition: Slide,
                     });
                 })
             }).catch(() => {
@@ -122,8 +122,8 @@ function UpdateCountry() {
                 pauseOnHover: true,
                 draggable: false,
                 progress: undefined,
-                theme: "colored",
-                transition: Bounce,
+                theme: "light",
+                transition: Slide,
             });
         });
 

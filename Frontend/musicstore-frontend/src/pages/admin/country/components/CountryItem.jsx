@@ -11,7 +11,7 @@ import {
 import {Link} from "react-router-dom";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import {Bounce, toast} from "react-toastify";
+import {Slide, toast} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 import LocalStorageHelper from "../../../../helpers/LocalStorageHelper.jsx";
@@ -52,8 +52,8 @@ function CountryItem(props) {
                         pauseOnHover: true,
                         draggable: false,
                         progress: undefined,
-                        theme: "colored",
-                        transition: Bounce,
+                        theme: "light",
+                        transition: Slide,
                     });
                     props.onDelete(props.id);
                 }).catch((error) => {
@@ -66,8 +66,8 @@ function CountryItem(props) {
                         pauseOnHover: true,
                         draggable: false,
                         progress: undefined,
-                        theme: "colored",
-                        transition: Bounce,
+                        theme: "light",
+                        transition: Slide,
                     });
                 })
             }).catch(() => {
@@ -80,8 +80,8 @@ function CountryItem(props) {
                 pauseOnHover: true,
                 draggable: false,
                 progress: undefined,
-                theme: "colored",
-                transition: Bounce,
+                theme: "light",
+                transition: Slide,
             });
         });
     }

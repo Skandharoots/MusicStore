@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import ShareIcon from '@mui/icons-material/Share';
 import axios from "axios";
-import {Bounce, toast, ToastContainer} from "react-toastify";
+import {Slide, toast, ToastContainer} from "react-toastify";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import LocalStorageHelper from "../../helpers/LocalStorageHelper.jsx";
 
@@ -125,8 +125,8 @@ function ProductDetailsPage() {
                                     pauseOnHover: true,
                                     draggable: false,
                                     progress: undefined,
-                                    theme: "colored",
-                                    transition: Bounce,
+                                    theme: "light",
+                                    transition: Slide,
                                 });
                             });
                         }).catch(() => {
@@ -138,8 +138,8 @@ function ProductDetailsPage() {
                             pauseOnHover: true,
                             draggable: false,
                             progress: undefined,
-                            theme: "colored",
-                            transition: Bounce,
+                            theme: "light",
+                            transition: Slide,
                         });
                     });
                 } else {
@@ -168,8 +168,8 @@ function ProductDetailsPage() {
                                     pauseOnHover: true,
                                     draggable: false,
                                     progress: undefined,
-                                    theme: "colored",
-                                    transition: Bounce,
+                                    theme: "light",
+                                    transition: Slide,
                                 });
                             });
                         }).catch(() => {
@@ -181,8 +181,8 @@ function ProductDetailsPage() {
                             pauseOnHover: true,
                             draggable: false,
                             progress: undefined,
-                            theme: "colored",
-                            transition: Bounce,
+                            theme: "light",
+                            transition: Slide,
                         });
                     });
                 }
@@ -195,8 +195,8 @@ function ProductDetailsPage() {
                     pauseOnHover: true,
                     draggable: false,
                     progress: undefined,
-                    theme: "colored",
-                    transition: Bounce,
+                    theme: "light",
+                    transition: Slide,
                 });
             });
         } else {
@@ -264,8 +264,8 @@ function ProductDetailsPage() {
                 pauseOnHover: true,
                 draggable: false,
                 progress: undefined,
-                theme: "colored",
-                transition: Bounce,
+                theme: "light",
+                transition: Slide,
             });
         });
 

@@ -1,7 +1,7 @@
 import React, {useEffect} from "react";
 import { useNavigate } from "react-router-dom";
 import './style/Login.scss';
-import {Bounce, toast} from 'react-toastify';
+import {Slide, toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import LocalStorageHelper from "../../helpers/LocalStorageHelper.jsx";
 import TextField from '@mui/material/TextField';
@@ -131,8 +131,8 @@ function Login() {
                                                     pauseOnHover: true,
                                                     draggable: false,
                                                     progress: undefined,
-                                                    theme: "colored",
-                                                    transition: Bounce,
+                                                    theme: "light",
+                                                    transition: Slide,
                                                 });
                                             });
                                         }).catch(() => {
@@ -144,8 +144,8 @@ function Login() {
                                             pauseOnHover: true,
                                             draggable: false,
                                             progress: undefined,
-                                            theme: "colored",
-                                            transition: Bounce,
+                                            theme: "light",
+                                            transition: Slide,
                                         });
                                     });
                                 });
@@ -172,8 +172,8 @@ function Login() {
                                                     pauseOnHover: true,
                                                     draggable: false,
                                                     progress: undefined,
-                                                    theme: "colored",
-                                                    transition: Bounce,
+                                                    theme: "light",
+                                                    transition: Slide,
                                                 });
                                             });
                                         }).catch(() => {
@@ -185,8 +185,8 @@ function Login() {
                                             pauseOnHover: true,
                                             draggable: false,
                                             progress: undefined,
-                                            theme: "colored",
-                                            transition: Bounce,
+                                            theme: "light",
+                                            transition: Slide,
                                         });
                                     });
                                 })
@@ -203,8 +203,8 @@ function Login() {
                         pauseOnHover: true,
                         draggable: false,
                         progress: undefined,
-                        theme: "colored",
-                        transition: Bounce,
+                        theme: "light",
+                        transition: Slide,
                     });
                     navigate("/");
 
@@ -218,8 +218,8 @@ function Login() {
                         pauseOnHover: true,
                         draggable: false,
                         progress: undefined,
-                        theme: "colored",
-                        transition: Bounce,
+                        theme: "light",
+                        transition: Slide,
                     });
                 })
             })
@@ -233,8 +233,8 @@ function Login() {
                     pauseOnHover: true,
                     draggable: false,
                     progress: undefined,
-                    theme: "colored",
-                    transition: Bounce,
+                    theme: "light",
+                    transition: Slide,
                 });
             });
 

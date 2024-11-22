@@ -7,7 +7,7 @@ import LocalStorageHelper from "../../../helpers/LocalStorageHelper.jsx";
 import CountryItem from "./components/CountryItem.jsx";
 import AddIcon from '@mui/icons-material/Add';
 import axios from "axios";
-import {Bounce, toast} from "react-toastify";
+import {Slide, toast} from "react-toastify";
 
 function Country() {
 
@@ -53,8 +53,8 @@ function Country() {
                 pauseOnHover: true,
                 draggable: false,
                 progress: undefined,
-                theme: "colored",
-                transition: Bounce,
+                theme: "light",
+                transition: Slide,
             });
         })
     }, [])

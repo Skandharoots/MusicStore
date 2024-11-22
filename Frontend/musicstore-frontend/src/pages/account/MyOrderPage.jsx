@@ -1,11 +1,10 @@
 import {useNavigate, useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import LocalStorageHelper from "../../helpers/LocalStorageHelper.jsx";
-import {Bounce, toast} from "react-toastify";
+import {Slide, toast} from "react-toastify";
 import axios from "axios";
 import {Backdrop, CircularProgress} from "@mui/material";
 import './style/MyOrderPage.scss';
-import OrderUserItem from "./components/OrderUserItem.jsx";
 import OrderProductItem from "./components/OrderProductItem.jsx";
 
 function MyOrderPage() {
@@ -69,8 +68,8 @@ function MyOrderPage() {
                     pauseOnHover: true,
                     draggable: false,
                     progress: undefined,
-                    theme: "colored",
-                    transition: Bounce,
+                    theme: "light",
+                    transition: Slide,
                 });
             })
 
@@ -83,8 +82,8 @@ function MyOrderPage() {
                 pauseOnHover: true,
                 draggable: false,
                 progress: undefined,
-                theme: "colored",
-                transition: Bounce,
+                theme: "light",
+                transition: Slide,
             })
         })
 

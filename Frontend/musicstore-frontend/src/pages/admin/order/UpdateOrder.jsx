@@ -2,7 +2,7 @@ import {useNavigate, useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import axios from "axios";
 import LocalStorageHelper from "../../../helpers/LocalStorageHelper.jsx";
-import {Bounce, toast} from "react-toastify";
+import {Slide, toast} from "react-toastify";
 import '../style/UpdateOrder.scss';
 import {
     Backdrop,
@@ -69,8 +69,8 @@ function UpdateOrder() {
                    pauseOnHover: true,
                    draggable: false,
                    progress: undefined,
-                   theme: "colored",
-                   transition: Bounce,
+                   theme: "light",
+                   transition: Slide,
                })
            })
         }).catch(() => {
@@ -82,8 +82,8 @@ function UpdateOrder() {
                 pauseOnHover: true,
                 draggable: false,
                 progress: undefined,
-                theme: "colored",
-                transition: Bounce,
+                theme: "light",
+                transition: Slide,
             })
         })
     }, [])
@@ -113,8 +113,8 @@ function UpdateOrder() {
                     pauseOnHover: true,
                     draggable: false,
                     progress: undefined,
-                    theme: "colored",
-                    transition: Bounce,
+                    theme: "light",
+                    transition: Slide,
                 });
                 navigate("/admin/order");
             }).catch(error => {
@@ -127,8 +127,8 @@ function UpdateOrder() {
                     pauseOnHover: true,
                     draggable: false,
                     progress: undefined,
-                    theme: "colored",
-                    transition: Bounce,
+                    theme: "light",
+                    transition: Slide,
                 })
             })
         }).catch(() => {
@@ -141,8 +141,8 @@ function UpdateOrder() {
                 pauseOnHover: true,
                 draggable: false,
                 progress: undefined,
-                theme: "colored",
-                transition: Bounce,
+                theme: "light",
+                transition: Slide,
             })
         })
     }

@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import axios from "axios";
-import {Bounce, toast} from "react-toastify";
+import {Slide, toast} from "react-toastify";
 import '../style/OrderItem.scss';
 import Tooltip from "@mui/material/Tooltip";
 import {
@@ -8,84 +8,43 @@ import {
     MenuItem,
     Select
 } from "@mui/material";
-import LocalStorageHelper from "../../../helpers/LocalStorageHelper.jsx";
 
 function OrderItem(props) {
 
     const [img, setImg] = useState(null);
 
     useEffect(() => {
-        axios.get(`api/products/items/get/${props.item.productSkuId}`)
-            .then(res => {
-                if (res.data.inStock < 1) {
-                    props.onDelete(props.item.id);
-                    axios.get('api/users/csrf/token', {})
-                        .then(res => {
-                            axios.delete(`api/cart/delete/${LocalStorageHelper.GetActiveUser()}/${props.item.productSkuId}`, {
-                                headers: {
-                                    'Authorization': 'Bearer ' + LocalStorageHelper.getJwtToken(),
-                                    'X-XSRF-TOKEN': res.data.token,
-                                }
-                            }).then(() => {
-                                toast.warning('Unavailable products have been removed.', {
-                                    position: "bottom-center",
-                                    autoClose: 3000,
-                                    hideProgressBar: false,
-                                    closeOnClick: true,
-                                    pauseOnHover: true,
-                                    draggable: false,
-                                    progress: undefined,
-                                    theme: "colored",
-                                    transition: Bounce,
-                                })
-                            }).catch(() => {})
-                        }).catch(() => {
-                            toast.error('Cannot fetch token', {
-                                position: "bottom-center",
-                                autoClose: 3000,
-                                hideProgressBar: false,
-                                closeOnClick: true,
-                                pauseOnHover: true,
-                                draggable: false,
-                                progress: undefined,
-                                theme: "colored",
-                                transition: Bounce,
-                            })
+        axios.get(`api/azure/list?path=${props.item.productSkuId}`, {})
+            .then((response) => {
+                axios.get(`api/azure/read?path=${response.data[0]}`, {responseType: 'blob'})
+                    .then(res => {
+                        var blob = new Blob([res.data], { type: "image/*" });
+                        setImg(URL.createObjectURL(blob));
+                    }).catch((error) => {
+                    toast.error(error.response.data.message, {
+                        position: "bottom-center",
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: false,
+                        progress: undefined,
+                        theme: "light",
+                        transition: Slide,
                     })
-                } else {
-                    axios.get(`api/azure/list?path=${props.item.productSkuId}`, {})
-                        .then((response) => {
-                            axios.get(`api/azure/read?path=${response.data[0]}`, {responseType: 'blob'})
-                                .then(res => {
-                                    var blob = new Blob([res.data], { type: "image/*" });
-                                    setImg(URL.createObjectURL(blob));
-                                }).catch((error) => {
-                                toast.error(error.response.data.message, {
-                                    position: "bottom-center",
-                                    autoClose: 3000,
-                                    hideProgressBar: false,
-                                    closeOnClick: true,
-                                    pauseOnHover: true,
-                                    draggable: false,
-                                    progress: undefined,
-                                    theme: "colored",
-                                    transition: Bounce,
-                                })
-                            })
-                        }).catch(error => {
-                        toast.error(error.response.data.message, {
-                            position: "bottom-center",
-                            autoClose: 3000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: false,
-                            progress: undefined,
-                            theme: "colored",
-                            transition: Bounce,
-                        })
-                    })
-                }
+                })
+            }).catch(error => {
+            toast.error(error.response.data.message, {
+                position: "bottom-center",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: false,
+                progress: undefined,
+                theme: "light",
+                transition: Slide,
+            })
             }).catch(() => {})
 
     }, []);

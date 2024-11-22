@@ -14,7 +14,7 @@ import {
     DialogTitle
 } from "@mui/material";
 import {CreditCard, DeleteOutlineOutlined, ShoppingBasket} from "@mui/icons-material";
-import {Bounce, toast} from "react-toastify";
+import {Slide, toast} from "react-toastify";
 import {useNavigate} from "react-router-dom";
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -56,8 +56,8 @@ function Basket() {
                         pauseOnHover: true,
                         draggable: false,
                         progress: undefined,
-                        theme: "colored",
-                        transition: Bounce,
+                        theme: "light",
+                        transition: Slide,
                     })
                 });
         } else {
@@ -112,8 +112,8 @@ function Basket() {
                             pauseOnHover: true,
                             draggable: false,
                             progress: undefined,
-                            theme: "colored",
-                            transition: Bounce,
+                            theme: "light",
+                            transition: Slide,
                         });
                         setBasketItems([]);
                         setOpen(false);
@@ -128,8 +128,8 @@ function Basket() {
                             pauseOnHover: true,
                             draggable: false,
                             progress: undefined,
-                            theme: "colored",
-                            transition: Bounce,
+                            theme: "light",
+                            transition: Slide,
                         });
                     });
                 }).catch(() => {
@@ -141,8 +141,8 @@ function Basket() {
                     pauseOnHover: true,
                     draggable: false,
                     progress: undefined,
-                    theme: "colored",
-                    transition: Bounce,
+                    theme: "light",
+                    transition: Slide,
                 });
                     setOpen(false);
             });
@@ -157,8 +157,8 @@ function Basket() {
                 pauseOnHover: true,
                 draggable: false,
                 progress: undefined,
-                theme: "colored",
-                transition: Bounce,
+                theme: "light",
+                transition: Slide,
             });
         }
 
@@ -274,7 +274,7 @@ function Basket() {
                                 </div>
                                 {
                                     [...basketItems].map((item, index) => (
-                                        <BasketItem key={index} item={item} onDelete={removeById} {...item} />
+                                        <BasketItem key={index} id={item.id} item={item} onDelete={removeById} {...item} />
                                     ))
                                 }
                             </div>

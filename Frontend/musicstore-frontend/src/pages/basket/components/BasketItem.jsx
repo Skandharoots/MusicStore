@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import axios from "axios";
-import {Bounce, toast} from "react-toastify";
+import {Slide, toast} from "react-toastify";
 import '../style/BasketItem.scss';
 import Tooltip from "@mui/material/Tooltip";
 import {
@@ -17,6 +17,7 @@ import {
 import LocalStorageHelper from "../../../helpers/LocalStorageHelper.jsx";
 import { DeleteOutlineOutlined } from "@mui/icons-material";
 import 'react-toastify/dist/ReactToastify.css';
+import {useNavigate} from "react-router-dom";
 
 
 function BasketItem(props) {
@@ -26,38 +27,54 @@ function BasketItem(props) {
     const [selectedQuantity, setSelectedQuantity] = useState(1);
     const [open, setOpen] = useState(false);
     const [openBackdrop, setOpenBackdrop] = useState(false);
-    const [boxShadow, setBoxShadow] = useState(null);
-    const [opacity, setOpacity] = useState('1');
+
+    const navigate = useNavigate();
 
     useEffect(() => {
-            axios.get(`api/products/items/get/${props.item.productSkuId}`)
-                .then(res => {
-                    setMaxQuantity(res.data.inStock);
-                    if (props.item.quantity > res.data.inStock) {
-                        const newQuantity = res.data.inStock;
-                        setSelectedQuantity(newQuantity);
-                        if (newQuantity < 1) {
-                            setBoxShadow('0 5px 15px rgba(159, 20, 20, 0.6)');
-                            setOpacity('0.3');
-                        } else {
-                            setBoxShadow('0 5px 15px rgba(0, 0, 0, 0.1)');
-                        }
-                        if (LocalStorageHelper.IsUserLogged()) {
-                            axios.get('api/users/csrf/token')
-                                .then(res => {
-                                    if (newQuantity > 0) {
-                                        axios.put(`api/cart/update/${props.item.id}`, {
-                                            quantity: newQuantity,
-                                        }, {
-                                            headers: {
-                                                'Authorization': 'Bearer ' + LocalStorageHelper.getJwtToken(),
-                                                'X-XSRF-TOKEN': res.data.token,
-                                                'Content-Type': 'application/json',
-                                            }
-                                        }).then(() => {})
-                                            .catch(() => {})
-                                    } else {
-                                        toast.warning('Please remove unavailable items from the basket. They will be automatically removed from order.', {
+        axios.get(`api/products/items/get/${props.item.productSkuId}`)
+            .then(res => {
+                setMaxQuantity(res.data.inStock);
+                if (props.item.quantity > res.data.inStock) {
+                    const newQuantity = res.data.inStock;
+                    setSelectedQuantity(newQuantity);
+                    if (LocalStorageHelper.IsUserLogged()) {
+                        axios.get('api/users/csrf/token')
+                            .then(res => {
+                                if (newQuantity > 0) {
+                                    axios.put(`api/cart/update/${props.item.id}`, {
+                                        quantity: newQuantity,
+                                    }, {
+                                        headers: {
+                                            'Authorization': 'Bearer ' + LocalStorageHelper.getJwtToken(),
+                                            'X-XSRF-TOKEN': res.data.token,
+                                            'Content-Type': 'application/json',
+                                        }
+                                    }).then(() => {})
+                                        .catch(() => {})
+                                } else {
+                                    axios.get('api/users/csrf/token', {})
+                                        .then(res => {
+                                            axios.delete(`api/cart/delete/${LocalStorageHelper.GetActiveUser()}/${props.item.productSkuId}`, {
+                                                headers: {
+                                                    'Authorization': 'Bearer ' + LocalStorageHelper.getJwtToken(),
+                                                    'X-XSRF-TOKEN': res.data.token,
+                                                }
+                                            }).then(() => {
+                                                toast.warning('We have removed an unavailable product ' + props.item.productName + ' from the basket.', {
+                                                    position: "bottom-center",
+                                                    autoClose: 3000,
+                                                    hideProgressBar: false,
+                                                    closeOnClick: true,
+                                                    pauseOnHover: true,
+                                                    draggable: false,
+                                                    progress: undefined,
+                                                    theme: "light",
+                                                    transition: Slide,
+                                                })
+                                                props.onDelete(props.id);
+                                            }).catch(() => {})
+                                        }).catch(() => {
+                                        toast.error('Cannot fetch token', {
                                             position: "bottom-center",
                                             autoClose: 3000,
                                             hideProgressBar: false,
@@ -65,12 +82,12 @@ function BasketItem(props) {
                                             pauseOnHover: true,
                                             draggable: false,
                                             progress: undefined,
-                                            theme: "colored",
-                                            transition: Bounce,
+                                            theme: "light",
+                                            transition: Slide,
                                         })
-                                    }
-
-                                }).catch(() => {
+                                    })
+                                }
+                            }).catch(() => {
                                 toast.error('Cannot fetch token', {
                                     position: "bottom-center",
                                     autoClose: 3000,
@@ -79,56 +96,29 @@ function BasketItem(props) {
                                     pauseOnHover: true,
                                     draggable: false,
                                     progress: undefined,
-                                    theme: "colored",
-                                    transition: Bounce,
+                                    theme: "light",
+                                    transition: Slide,
                                 });
                             })
-                        }
-                    } else {
-                        setSelectedQuantity(props.item.quantity);
-                        if (props.item.quantity < 1) {
-                            setBoxShadow('0 5px 15px rgba(159, 20, 20, 0.3)');
-                            setOpacity('0.3');
-                        } else {
-                            setBoxShadow('0 5px 15px rgba(0, 0, 0, 0.1)');
-                        }
                     }
-                }).catch(() => {});
-
-            axios.get(`api/azure/list?path=${props.item.productSkuId}`, {})
-                .then((response) => {
-                    axios.get(`api/azure/read?path=${response.data[0]}`, {responseType: 'blob'})
-                        .then(res => {
-                            let blob = new Blob([res.data], { type: "image/*" });
-                            setImg(URL.createObjectURL(blob));
-                        }).catch((error) => {
-                        toast.error(error.response.data.message, {
-                            position: "bottom-center",
-                            autoClose: 3000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: false,
-                            progress: undefined,
-                            theme: "colored",
-                            transition: Bounce,
+                } else {
+                    setSelectedQuantity(props.item.quantity);
+                }
+                axios.get(`api/azure/list?path=${props.item.productSkuId}`, {})
+                    .then((response) => {
+                        axios.get(`api/azure/read?path=${response.data[0]}`, {responseType: 'blob'})
+                            .then(res => {
+                                let blob = new Blob([res.data], { type: "image/*" });
+                                setImg(URL.createObjectURL(blob));
+                            }).catch(() => {
+                            //
                         })
-                    })
-                }).catch(error => {
-                toast.error(error.response.data.message, {
-                    position: "bottom-center",
-                    autoClose: 3000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: false,
-                    progress: undefined,
-                    theme: "colored",
-                    transition: Bounce,
+                    }).catch(() => {
+                    //
                 })
-            })
+            }).catch(() => {});
 
-    }, [])
+    }, [props.item])
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -151,20 +141,20 @@ function BasketItem(props) {
                             'X-XSRF-TOKEN': response.data.token,
                         }
                     }).then(() => {
-                            setOpenBackdrop(false);
-                            toast.info("Basket item deleted successfully.", {
-                                position: "bottom-center",
-                                autoClose: 3000,
-                                hideProgressBar: false,
-                                closeOnClick: true,
-                                pauseOnHover: true,
-                                draggable: false,
-                                progress: undefined,
-                                theme: "colored",
-                                transition: Bounce,
-                            });
-                        props.onDelete(props.item.id);
-                        }).catch((error) => {
+                        setOpenBackdrop(false);
+                        toast.info("Basket item deleted successfully.", {
+                            position: "bottom-center",
+                            autoClose: 3000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: false,
+                            progress: undefined,
+                            theme: "light",
+                            transition: Slide,
+                        });
+                        props.onDelete(props.id);
+                    }).catch((error) => {
                             setOpenBackdrop(false);
                             toast.error(error.response.data.message, {
                                 position: "bottom-center",
@@ -174,8 +164,8 @@ function BasketItem(props) {
                                 pauseOnHover: true,
                                 draggable: false,
                                 progress: undefined,
-                                theme: "colored",
-                                transition: Bounce,
+                                theme: "light",
+                                transition: Slide,
                             })
                     })
                 })
@@ -199,10 +189,10 @@ function BasketItem(props) {
                     pauseOnHover: true,
                     draggable: false,
                     progress: undefined,
-                    theme: "colored",
-                    transition: Bounce,
+                    theme: "light",
+                    transition: Slide,
                 });
-                props.onDelete(props.item.id);
+                props.onDelete(props.id);
             }
         }
     }
@@ -240,8 +230,8 @@ function BasketItem(props) {
                         pauseOnHover: true,
                         draggable: false,
                         progress: undefined,
-                        theme: "colored",
-                        transition: Bounce,
+                        theme: "light",
+                        transition: Slide,
                     })
                 });
         }).catch(() => {
@@ -253,14 +243,14 @@ function BasketItem(props) {
                 pauseOnHover: true,
                 draggable: false,
                 progress: undefined,
-                theme: "colored",
-                transition: Bounce,
+                theme: "light",
+                transition: Slide,
             })
         })
     }
 
     return (
-        <div className="basket-item" style={{boxShadow: boxShadow, opacity: opacity}}>
+        <div className="basket-item">
             <Backdrop
                 sx={(theme) => ({color: '#fff', zIndex: theme.zIndex.drawer + 1})}
                 open={openBackdrop}
@@ -293,7 +283,7 @@ function BasketItem(props) {
                 </div>
             </div>
                 <Tooltip title={`${props.item.productName}`}>
-                    <div className="product-name">
+                    <div className="product-name"  onClick={() => {navigate(`/product/${props.item.productSkuId}/${props.item.productName}`)}}>
                         <p style={{margin: '0', fontSize: '18px'}}>{props.item.productName}</p>
                     </div>
                 </Tooltip>

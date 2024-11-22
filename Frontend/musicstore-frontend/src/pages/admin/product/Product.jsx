@@ -7,7 +7,7 @@ import LocalStorageHelper from "../../../helpers/LocalStorageHelper.jsx";
 import ProductItem from "./components/ProductItem.jsx";
 import AddIcon from '@mui/icons-material/Add';
 import axios from "axios";
-import {Bounce, toast} from "react-toastify";
+import {Slide, toast} from "react-toastify";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
@@ -51,7 +51,6 @@ function Product() {
             ({id}) => id !== idToDelete)
         );
         if (totalElements - 1 <= 0) {
-            console.log(totalElements);
             setCurrentPage(currentPage - 1);
         }
     };
@@ -80,8 +79,8 @@ function Product() {
                 pauseOnHover: true,
                 draggable: false,
                 progress: undefined,
-                theme: "colored",
-                transition: Bounce,
+                theme: "light",
+                transition: Slide,
             });
         })
     }, [currentPage, restoreDefaults]);
@@ -103,8 +102,8 @@ function Product() {
                 pauseOnHover: true,
                 draggable: false,
                 progress: undefined,
-                theme: "colored",
-                transition: Bounce,
+                theme: "light",
+                transition: Slide,
             });
         }).catch(() => {
             setOpenBackdrop(false);
@@ -116,8 +115,8 @@ function Product() {
                 pauseOnHover: true,
                 draggable: false,
                 progress: undefined,
-                theme: "colored",
-                transition: Bounce,
+                theme: "light",
+                transition: Slide,
             });
         })
     }

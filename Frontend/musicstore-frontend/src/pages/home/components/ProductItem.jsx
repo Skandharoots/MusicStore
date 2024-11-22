@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import axios from "axios";
-import {Bounce, toast} from "react-toastify";
+import {Slide, toast} from "react-toastify";
 import Grid from "@mui/material/Grid2";
 import '../style/ProductItem.scss';
 import {useNavigate} from "react-router-dom";
@@ -61,8 +61,8 @@ function ProductItem(props) {
                                     pauseOnHover: true,
                                     draggable: false,
                                     progress: undefined,
-                                    theme: "colored",
-                                    transition: Bounce,
+                                    theme: "light",
+                                    transition: Slide,
                                 });
                             });
                         }).catch(() => {
@@ -74,8 +74,8 @@ function ProductItem(props) {
                             pauseOnHover: true,
                             draggable: false,
                             progress: undefined,
-                            theme: "colored",
-                            transition: Bounce,
+                            theme: "light",
+                            transition: Slide,
                         });
                     });
                 } else {
@@ -104,8 +104,8 @@ function ProductItem(props) {
                                     pauseOnHover: true,
                                     draggable: false,
                                     progress: undefined,
-                                    theme: "colored",
-                                    transition: Bounce,
+                                    theme: "light",
+                                    transition: Slide,
                                 });
                             });
                         }).catch(() => {
@@ -117,8 +117,8 @@ function ProductItem(props) {
                             pauseOnHover: true,
                             draggable: false,
                             progress: undefined,
-                            theme: "colored",
-                            transition: Bounce,
+                            theme: "light",
+                            transition: Slide,
                         });
                     });
                 }
@@ -131,8 +131,8 @@ function ProductItem(props) {
                     pauseOnHover: true,
                     draggable: false,
                     progress: undefined,
-                    theme: "colored",
-                    transition: Bounce,
+                    theme: "light",
+                    transition: Slide,
                 });
             });
 
@@ -205,8 +205,8 @@ function ProductItem(props) {
                         pauseOnHover: true,
                         draggable: false,
                         progress: undefined,
-                        theme: "colored",
-                        transition: Bounce,
+                        theme: "light",
+                        transition: Slide,
                     })
                 })
             }).catch(error => {
@@ -218,11 +218,11 @@ function ProductItem(props) {
                 pauseOnHover: true,
                 draggable: false,
                 progress: undefined,
-                theme: "colored",
-                transition: Bounce,
+                theme: "light",
+                transition: Slide,
             })
         })
-    }, [])
+    }, [props])
 
     useEffect(() => {
         if (props.item.inStock === 0) {
@@ -231,7 +231,7 @@ function ProductItem(props) {
         } else {
             setOpacity(1);
         }
-    }, [])
+    }, [props])
 
     return (
         <Grid

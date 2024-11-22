@@ -2,7 +2,7 @@ import './style/OrderPage.scss';
 import {useEffect, useState} from "react";
 import axios from "axios";
 import LocalStorageHelper from "../../helpers/LocalStorageHelper.jsx";
-import {Bounce, toast} from "react-toastify";
+import {Slide, toast} from "react-toastify";
 import OrderItem from "./components/OrderItem.jsx";
 import {
     Backdrop,
@@ -59,16 +59,6 @@ function OrderPage() {
             navigate('/login');
         }
     }, []);
-
-    const removeById = (idToDelete) => {
-        let item = basketItems.filter(obj => {
-            return obj.id === idToDelete;
-        });
-        setBasketItems(currentItems => currentItems.filter(
-            ({id}) => id !== idToDelete)
-        );
-        setTotalItems(totalItems => totalItems - item[0].quantity);
-    };
 
     const validateInputs = () => {
 
@@ -208,8 +198,8 @@ function OrderPage() {
                             pauseOnHover: true,
                             draggable: false,
                             progress: undefined,
-                            theme: "colored",
-                            transition: Bounce,
+                            theme: "light",
+                            transition: Slide,
                         });
                     })
                 })
@@ -222,8 +212,8 @@ function OrderPage() {
                     pauseOnHover: true,
                     draggable: false,
                     progress: undefined,
-                    theme: "colored",
-                    transition: Bounce,
+                    theme: "light",
+                    transition: Slide,
                 });
                 navigate('/myorders');
             }).catch(error => {
@@ -236,8 +226,8 @@ function OrderPage() {
                     pauseOnHover: true,
                     draggable: false,
                     progress: undefined,
-                    theme: "colored",
-                    transition: Bounce,
+                    theme: "light",
+                    transition: Slide,
                 });
                 navigate('/basket');
             });
@@ -251,8 +241,8 @@ function OrderPage() {
                 pauseOnHover: true,
                 draggable: false,
                 progress: undefined,
-                theme: "colored",
-                transition: Bounce,
+                theme: "light",
+                transition: Slide,
             });
         });
 
@@ -284,8 +274,8 @@ function OrderPage() {
                     pauseOnHover: true,
                     draggable: false,
                     progress: undefined,
-                    theme: "colored",
-                    transition: Bounce,
+                    theme: "light",
+                    transition: Slide,
                 })
                 navigate('/');
             }
@@ -299,8 +289,8 @@ function OrderPage() {
                 pauseOnHover: true,
                 draggable: false,
                 progress: undefined,
-                theme: "colored",
-                transition: Bounce,
+                theme: "light",
+                transition: Slide,
             });
         })
 
@@ -621,7 +611,7 @@ function OrderPage() {
                     <div className="order-items">
                         {
                             [...basketItems].map((item, index) => (
-                                <OrderItem key={index} item={item} onDelete={removeById} {...item} />
+                                <OrderItem key={index} item={item} />
                             ))
                         }
                     </div>

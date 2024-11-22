@@ -16,7 +16,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 import Grid from "@mui/material/Grid2";
 import React, {useEffect, useState} from "react";
-import {Bounce, toast} from "react-toastify";
+import {Slide, toast} from "react-toastify";
 import Tooltip from "@mui/material/Tooltip";
 
 function ProductItem(props) {
@@ -51,8 +51,8 @@ function ProductItem(props) {
                             pauseOnHover: true,
                             draggable: false,
                             progress: undefined,
-                            theme: "colored",
-                            transition: Bounce,
+                            theme: "light",
+                            transition: Slide,
                         })
                     })
                 }).catch(error => {
@@ -64,8 +64,8 @@ function ProductItem(props) {
                     pauseOnHover: true,
                     draggable: false,
                     progress: undefined,
-                    theme: "colored",
-                    transition: Bounce,
+                    theme: "light",
+                    transition: Slide,
                 })
             })
     }, [])
@@ -91,8 +91,8 @@ function ProductItem(props) {
                         pauseOnHover: true,
                         draggable: false,
                         progress: undefined,
-                        theme: "colored",
-                        transition: Bounce,
+                        theme: "light",
+                        transition: Slide,
                     });
                     props.onDelete(props.id);
                 }).catch((error) => {
@@ -105,8 +105,8 @@ function ProductItem(props) {
                         pauseOnHover: true,
                         draggable: false,
                         progress: undefined,
-                        theme: "colored",
-                        transition: Bounce,
+                        theme: "light",
+                        transition: Slide,
                     });
                 })
             }).catch(() => {
@@ -119,8 +119,8 @@ function ProductItem(props) {
                     pauseOnHover: true,
                     draggable: false,
                     progress: undefined,
-                    theme: "colored",
-                    transition: Bounce,
+                    theme: "light",
+                    transition: Slide,
                 });
         });
 
@@ -141,8 +141,8 @@ function ProductItem(props) {
                                 pauseOnHover: true,
                                 draggable: false,
                                 progress: undefined,
-                                theme: "colored",
-                                transition: Bounce,
+                                theme: "light",
+                                transition: Slide,
                             })
                         }).catch(error => {
                             toast.error(error.response.data.message, {
@@ -153,8 +153,8 @@ function ProductItem(props) {
                                 pauseOnHover: true,
                                 draggable: false,
                                 progress: undefined,
-                                theme: "colored",
-                                transition: Bounce,
+                                theme: "light",
+                                transition: Slide,
                             })
                         })
 

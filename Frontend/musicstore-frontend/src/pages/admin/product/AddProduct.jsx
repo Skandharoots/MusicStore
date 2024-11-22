@@ -16,7 +16,7 @@ import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined
 import axios from "axios";
 import '../style/AddProduct.scss';
 import LocalStorageHelper from "../../../helpers/LocalStorageHelper.jsx";
-import {Bounce, toast} from "react-toastify";
+import {Slide, toast} from "react-toastify";
 import {ImageSlider} from "./components/ImageSlider.jsx";
 
 function AddProduct() {
@@ -80,8 +80,8 @@ function AddProduct() {
                 pauseOnHover: true,
                 draggable: false,
                 progress: undefined,
-                theme: "colored",
-                transition: Bounce,
+                theme: "light",
+                transition: Slide,
             });
         })
     }, [])
@@ -100,8 +100,8 @@ function AddProduct() {
                     pauseOnHover: true,
                     draggable: false,
                     progress: undefined,
-                    theme: "colored",
-                    transition: Bounce,
+                    theme: "light",
+                    transition: Slide,
                 });
             });
         }
@@ -120,8 +120,8 @@ function AddProduct() {
                 pauseOnHover: true,
                 draggable: false,
                 progress: undefined,
-                theme: "colored",
-                transition: Bounce,
+                theme: "light",
+                transition: Slide,
             });
         })
     }, [])
@@ -139,8 +139,8 @@ function AddProduct() {
                 pauseOnHover: true,
                 draggable: false,
                 progress: undefined,
-                theme: "colored",
-                transition: Bounce,
+                theme: "light",
+                transition: Slide,
             });
         })
     }, [])
@@ -184,8 +184,8 @@ function AddProduct() {
                     pauseOnHover: true,
                     draggable: false,
                     progress: undefined,
-                    theme: "colored",
-                    transition: Bounce,
+                    theme: "light",
+                    transition: Slide,
                 })
             }
         }
@@ -303,8 +303,8 @@ function AddProduct() {
                 pauseOnHover: true,
                 draggable: false,
                 progress: undefined,
-                theme: "colored",
-                transition: Bounce,
+                theme: "light",
+                transition: Slide,
             });
             isValid = false;
         }
@@ -362,8 +362,8 @@ function AddProduct() {
                                             pauseOnHover: true,
                                             draggable: false,
                                             progress: undefined,
-                                            theme: "colored",
-                                            transition: Bounce,
+                                            theme: "light",
+                                            transition: Slide,
                                         });
                                     }).catch(error => {
                                         toast.error(error.response.data.message, {
@@ -374,8 +374,8 @@ function AddProduct() {
                                             pauseOnHover: true,
                                             draggable: false,
                                             progress: undefined,
-                                            theme: "colored",
-                                            transition: Bounce,
+                                            theme: "light",
+                                            transition: Slide,
                                         })
                                     })
                                 })
@@ -388,8 +388,8 @@ function AddProduct() {
                                     pauseOnHover: true,
                                     draggable: false,
                                     progress: undefined,
-                                    theme: "colored",
-                                    transition: Bounce,
+                                    theme: "light",
+                                    transition: Slide,
                                 });
                                 setTimeout(() => {navigate('/admin/product')}, 3000);
                             }).catch(() => {
@@ -401,8 +401,8 @@ function AddProduct() {
                                     pauseOnHover: true,
                                     draggable: false,
                                     progress: undefined,
-                                    theme: "colored",
-                                    transition: Bounce,
+                                    theme: "light",
+                                    transition: Slide,
                                 })
                         })
                 }).catch((error) => {
@@ -415,8 +415,8 @@ function AddProduct() {
                         pauseOnHover: true,
                         draggable: false,
                         progress: undefined,
-                        theme: "colored",
-                        transition: Bounce,
+                        theme: "light",
+                        transition: Slide,
                     });
                 })
             }).catch(() => {
@@ -428,8 +428,8 @@ function AddProduct() {
                 pauseOnHover: true,
                 draggable: false,
                 progress: undefined,
-                theme: "colored",
-                transition: Bounce,
+                theme: "light",
+                transition: Slide,
             });
         });
     }

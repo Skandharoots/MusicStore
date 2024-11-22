@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import axios from "axios";
-import {Bounce, toast} from "react-toastify";
+import {Slide, toast} from "react-toastify";
 import Tooltip from "@mui/material/Tooltip";
 import '../style/OrderProductItem.scss';
 
@@ -26,8 +26,8 @@ function OrderProductItem(props) {
                         pauseOnHover: true,
                         draggable: false,
                         progress: undefined,
-                        theme: "colored",
-                        transition: Bounce,
+                        theme: "light",
+                        transition: Slide,
                     })
                 })
             }).catch(error => {
@@ -39,8 +39,8 @@ function OrderProductItem(props) {
                 pauseOnHover: true,
                 draggable: false,
                 progress: undefined,
-                theme: "colored",
-                transition: Bounce,
+                theme: "light",
+                transition: Slide,
             })
         });
 

@@ -15,7 +15,7 @@ import {useEffect, useState} from "react";
 import axios from "axios";
 import '../style/AddSubcategory.scss';
 import LocalStorageHelper from "../../../helpers/LocalStorageHelper.jsx";
-import {Bounce, toast} from "react-toastify";
+import {Slide, toast} from "react-toastify";
 
 
 function AddSubcategory() {
@@ -52,8 +52,8 @@ function AddSubcategory() {
                 pauseOnHover: true,
                 draggable: false,
                 progress: undefined,
-                theme: "colored",
-                transition: Bounce,
+                theme: "light",
+                transition: Slide,
             });
         })
     }, [])
@@ -109,8 +109,8 @@ function AddSubcategory() {
                         pauseOnHover: true,
                         draggable: false,
                         progress: undefined,
-                        theme: "colored",
-                        transition: Bounce,
+                        theme: "light",
+                        transition: Slide,
                     });
                     navigate('/admin/subcategory');
                 }).catch((error) => {
@@ -123,8 +123,8 @@ function AddSubcategory() {
                         pauseOnHover: true,
                         draggable: false,
                         progress: undefined,
-                        theme: "colored",
-                        transition: Bounce,
+                        theme: "light",
+                        transition: Slide,
                     });
                 })
             }).catch(() => {
@@ -136,8 +136,8 @@ function AddSubcategory() {
                 pauseOnHover: true,
                 draggable: false,
                 progress: undefined,
-                theme: "colored",
-                transition: Bounce,
+                theme: "light",
+                transition: Slide,
             });
         });
     }

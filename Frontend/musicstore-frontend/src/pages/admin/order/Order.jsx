@@ -3,7 +3,7 @@ import {useEffect, useState} from "react";
 import LocalStorageHelper from "../../../helpers/LocalStorageHelper.jsx";
 import {useNavigate} from "react-router-dom";
 import axios from "axios";
-import {Bounce, toast} from "react-toastify";
+import {Slide, toast} from "react-toastify";
 import {Backdrop, Button, CircularProgress} from "@mui/material";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import {RestoreRounded} from "@mui/icons-material";
@@ -64,8 +64,8 @@ function Order() {
                         pauseOnHover: true,
                         draggable: false,
                         progress: undefined,
-                        theme: "colored",
-                        transition: Bounce,
+                        theme: "light",
+                        transition: Slide,
                     });
                 });
             }).catch(() => {
@@ -77,8 +77,8 @@ function Order() {
                 pauseOnHover: true,
                 draggable: false,
                 progress: undefined,
-                theme: "colored",
-                transition: Bounce,
+                theme: "light",
+                transition: Slide,
             })
         })
     }, [restoreDefaults]);
@@ -107,8 +107,8 @@ function Order() {
                         pauseOnHover: true,
                         draggable: false,
                         progress: undefined,
-                        theme: "colored",
-                        transition: Bounce,
+                        theme: "light",
+                        transition: Slide,
                     });
                 }).catch(() => {
                     setOpenBackdrop(false);
@@ -120,8 +120,8 @@ function Order() {
                         pauseOnHover: true,
                         draggable: false,
                         progress: undefined,
-                        theme: "colored",
-                        transition: Bounce,
+                        theme: "light",
+                        transition: Slide,
                     });
             })
         }).catch(() => {
@@ -134,8 +134,8 @@ function Order() {
                 pauseOnHover: true,
                 draggable: false,
                 progress: undefined,
-                theme: "colored",
-                transition: Bounce,
+                theme: "light",
+                transition: Slide,
             })
         })
     }

@@ -60,6 +60,12 @@ function OrderPage() {
         }
     }, []);
 
+    const removeById = (idToDelete) => {
+        setBasketItems(currentItems => currentItems.filter(
+            ({id}) => id !== idToDelete)
+        );
+    };
+
     const validateInputs = () => {
 
         let isValid = true;
@@ -140,7 +146,7 @@ function OrderPage() {
 
     }
 
-    const submitProduct = (event) => {
+    const submitOrder = (event) => {
         event.preventDefault();
         if (validateInputs() === false) {
             return;
@@ -188,8 +194,7 @@ function OrderPage() {
                         }
                     }).then(() => {
                         setOpenBackdrop(false);
-                    })
-                    .catch(() => {
+                    }).catch(() => {
                         setOpenBackdrop(false);
                         toast.error('Could not clear basket', {
                             position: "bottom-center",
@@ -230,6 +235,7 @@ function OrderPage() {
                     theme: "colored",
                     transition: Bounce,
                 });
+                navigate('/basket');
             });
         }).catch(() => {
             setOpenBackdrop(false);
@@ -582,7 +588,7 @@ function OrderPage() {
                             fullWidth
                             variant="contained"
                             endIcon={<CreditCard />}
-                            onClick={submitProduct}
+                            onClick={submitOrder}
                             sx={{
                                 width: '70%',
                                 backgroundColor: 'rgb(39, 99, 24)',
@@ -597,7 +603,7 @@ function OrderPage() {
                 <div className="order-items">
                     {
                         [...basketItems].map((item, index) => (
-                            <OrderItem key={index} item={item}/>
+                            <OrderItem key={index} item={item} onDelete={removeById} {...item} />
                         ))
                     }
                 </div>

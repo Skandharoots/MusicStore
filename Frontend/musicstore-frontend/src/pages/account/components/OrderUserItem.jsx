@@ -138,31 +138,38 @@ function OrderUserItem(props) {
             }}>
                 {
                     [...images].map((image, index) => (
-                        <div
-                            className="order-item-img"
-                            key={index}
-                            style={{
-                                maxHeight: '70px', aspectRatio: "10 / 6",
-                                display: 'flex', justifyContent: 'center', alignItems: 'center',
-                                backgroundSize: 'cover',
-                            }}
-                        >
-                            <img alt={'Order item photo'} src={image}
-                                 style={{
-                                     objectFit: 'cover',
-                                     maxWidth: '100%',
-                                     maxHeight: '100%',
-                                     display: 'block',
-                                     flexShrink: '0',
-                                     flexGrow: '0',
-                                 }}
-                            />
+                        <div key={index*5} style={{
+                            height: "70px",
+                            display: "flex",
+                            overflow: "hidden",
+                        }}>
+                            <div
+                                className="order-item-img"
+                                key={index}
+                                style={{
+                                    maxHeight: '70px', aspectRatio: "10 / 6",
+                                    display: 'flex', justifyContent: 'center', alignItems: 'center',
+                                    backgroundSize: 'cover', flexShrink: '0',
+                                    flexGrow: '0',
+                                }}
+                            >
+                                <img alt={'Order item photo'} src={image}
+                                     style={{
+                                         objectFit: 'cover',
+                                         maxWidth: '100%',
+                                         maxHeight: '100%',
+                                         display: 'block',
+                                         flexShrink: '0',
+                                         flexGrow: '0',
+                                     }}
+                                />
+                            </div>
                         </div>
-                    ))
+                            ))
+                            }
+                        </div>
+                    </Grid>
+                    )
                 }
-            </div>
-        </Grid>
-)
-}
 
-export default OrderUserItem;
+                export default OrderUserItem;

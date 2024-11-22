@@ -185,123 +185,135 @@ function ProductItem(props) {
               key={props.item.id}
         >
             <Backdrop
-                sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
+                sx={(theme) => ({color: '#fff', zIndex: theme.zIndex.drawer + 1})}
                 open={openBackdrop}
             >
-                <CircularProgress color="inherit" />
+                <CircularProgress color="inherit"/>
             </Backdrop>
-            <div className="product-img"
-                    style={{width: '100%', maxHeight: '150px', aspectRatio: "10 / 6",
-                    display: 'flex', justifyContent: 'center', alignItems: 'center',
-                    backgroundSize: 'cover',}}
-            >
-
-
-                <img alt={`${props.item.productName} photo`} src={img}
-                        style={{
-                            objectFit: 'cover',
-                            maxWidth: '100%',
-                            maxHeight: '100%',
-                            display: 'block',
-                            flexShrink: '0',
-                            flexGrow: '0',
-                        }}
-                />
-            </div>
-            <div className="product-metrics"
-                 style={{
-                     width: '90%', display: 'block',
-                     padding: '2%'
-                 }}>
-                <p style={{margin: '0', overflow: 'hidden', textWrap: 'nowrap'}}><b>Id: </b>{props.item.id}</p>
-                <p style={{margin: '0', overflow: 'hidden'}}><b>Sku Id: </b>{props.item.productSkuId}</p>
-                <Tooltip title={props.item.productName}>
-                <p style={{margin: '0', overflow: 'hidden', textWrap: 'nowrap'}}><b>Name: </b>{props.item.productName}</p>
-                </Tooltip>
-                <p style={{margin: '0', overflow: 'hidden', textWrap: 'nowrap'}}><b>Price: </b>{props.item.productPrice}$</p>
-                <p style={{margin: '0', overflow: 'hidden', textWrap: 'nowrap'}}><b>In stock: </b>{props.item.inStock}</p>
-            </div>
-            <div className="product-buttons"
-                 style={{
-                     width: '100%',
-                     display: 'flex',
-                     flexDirection: 'row',
-                     justifyContent: 'space-between',
-                     alignItems: 'flex-start',
-                     padding: '0 2%',
-                     boxSizing: 'border-box',
-                 }}
-            >
-                <Button
-                    component={Link}
-                    to={"/admin/product/update/" + props.item.productSkuId}
-                    variant="contained"
-                    size="small"
-                    type="button"
-                    fullWidth
-                    sx={{
-                        width: 'fit-content',
-                        margin: '4px 0',
-                        backgroundColor: 'rgb(255, 189, 3)',
-                        "&:hover": {backgroundColor: 'rgb(255,211,51)'}
-                    }}
+            <div style={{
+                width: "100%",
+                height: "150px",
+                display: "flex",
+                overflow: "hidden",
+            }}>
+                <div className="product-img"
+                     style={{
+                         width: '100%', maxHeight: '100%', aspectRatio: "10 / 6",
+                         display: 'flex', justifyContent: 'center', alignItems: 'center',
+                         backgroundSize: 'cover', flexShrink: '0', flexGrow: '0',
+                     }}
                 >
-                    <EditIcon fontSize="small" />
-                </Button>
-                <React.Fragment>
+
+
+                    <img alt={`${props.item.productName} photo`} src={img}
+                         style={{
+                             objectFit: 'cover',
+                             maxWidth: '100%',
+                             maxHeight: '100%',
+                             display: 'block',
+                             flexShrink: '0',
+                             flexGrow: '0',
+                         }}
+                    />
+                </div>
+            </div>
+                <div className="product-metrics"
+                     style={{
+                         width: '90%', display: 'block',
+                         padding: '2%'
+                     }}>
+                    <p style={{margin: '0', overflow: 'hidden', textWrap: 'nowrap'}}><b>Id: </b>{props.item.id}</p>
+                    <p style={{margin: '0', overflow: 'hidden'}}><b>Sku Id: </b>{props.item.productSkuId}</p>
+                    <Tooltip title={props.item.productName}>
+                        <p style={{margin: '0', overflow: 'hidden', textWrap: 'nowrap'}}>
+                            <b>Name: </b>{props.item.productName}</p>
+                    </Tooltip>
+                    <p style={{margin: '0', overflow: 'hidden', textWrap: 'nowrap'}}>
+                        <b>Price: </b>{props.item.productPrice}$</p>
+                    <p style={{margin: '0', overflow: 'hidden', textWrap: 'nowrap'}}><b>In
+                        stock: </b>{props.item.inStock}</p>
+                </div>
+                <div className="product-buttons"
+                     style={{
+                         width: '100%',
+                         display: 'flex',
+                         flexDirection: 'row',
+                         justifyContent: 'space-between',
+                         alignItems: 'flex-start',
+                         padding: '0 2%',
+                         boxSizing: 'border-box',
+                     }}
+                >
                     <Button
+                        component={Link}
+                        to={"/admin/product/update/" + props.item.productSkuId}
                         variant="contained"
                         size="small"
                         type="button"
-                        onClick={handleClickOpen}
                         fullWidth
                         sx={{
                             width: 'fit-content',
                             margin: '4px 0',
-                            backgroundColor: 'rgb(159,20,20)',
-                            "&:hover": {backgroundColor: 'rgb(193,56,56)'},
-                            "&:focus": {outline: 'none !important'},
+                            backgroundColor: 'rgb(255, 189, 3)',
+                            "&:hover": {backgroundColor: 'rgb(255,211,51)'}
                         }}
                     >
-                        <DeleteIcon fontSize="small" />
+                        <EditIcon fontSize="small"/>
                     </Button>
-                    <Dialog
-                        open={open}
-                        onClose={handleClose}
-                    >
-                        <DialogTitle>Delete product</DialogTitle>
-                        <DialogContent>
-                            <DialogContentText>
-                                Do you want to delete {props.item.productName} product?
-                            </DialogContentText>
-                        </DialogContent>
-                        <DialogActions>
-                            <Button
-                                variant="contained"
-                                onClick={handleClose}
-                                sx={{
-                                    backgroundColor: 'rgb(11,108,128)',
-                                    "&:hover": {backgroundColor: 'rgb(16,147,177)'},
-                                }}
-                            >
-                                Cancel
-                            </Button>
-                            <Button
-                                variant="contained"
-                                onClick={deleteProduct}
-                                sx={{
-                                    backgroundColor: 'rgb(159,20,20)',
-                                    "&:hover": {backgroundColor: 'rgb(193,56,56)'},
-                                }}
-                            >
-                                Delete
-                            </Button>
-                        </DialogActions>
-                    </Dialog>
-                </React.Fragment>
-            </div>
+                    <React.Fragment>
+                        <Button
+                            variant="contained"
+                            size="small"
+                            type="button"
+                            onClick={handleClickOpen}
+                            fullWidth
+                            sx={{
+                                width: 'fit-content',
+                                margin: '4px 0',
+                                backgroundColor: 'rgb(159,20,20)',
+                                "&:hover": {backgroundColor: 'rgb(193,56,56)'},
+                                "&:focus": {outline: 'none !important'},
+                            }}
+                        >
+                            <DeleteIcon fontSize="small"/>
+                        </Button>
+                        <Dialog
+                            open={open}
+                            onClose={handleClose}
+                        >
+                            <DialogTitle>Delete product</DialogTitle>
+                            <DialogContent>
+                                <DialogContentText>
+                                    Do you want to delete {props.item.productName} product?
+                                </DialogContentText>
+                            </DialogContent>
+                            <DialogActions>
+                                <Button
+                                    variant="contained"
+                                    onClick={handleClose}
+                                    sx={{
+                                        backgroundColor: 'rgb(11,108,128)',
+                                        "&:hover": {backgroundColor: 'rgb(16,147,177)'},
+                                    }}
+                                >
+                                    Cancel
+                                </Button>
+                                <Button
+                                    variant="contained"
+                                    onClick={deleteProduct}
+                                    sx={{
+                                        backgroundColor: 'rgb(159,20,20)',
+                                        "&:hover": {backgroundColor: 'rgb(193,56,56)'},
+                                    }}
+                                >
+                                    Delete
+                                </Button>
+                            </DialogActions>
+                        </Dialog>
+                    </React.Fragment>
+                </div>
         </Grid>
-    )
+)
 
 }
 

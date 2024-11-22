@@ -26,6 +26,8 @@ function BasketItem(props) {
     const [selectedQuantity, setSelectedQuantity] = useState(1);
     const [open, setOpen] = useState(false);
     const [openBackdrop, setOpenBackdrop] = useState(false);
+    const [boxShadow, setBoxShadow] = useState(null);
+    const [opacity, setOpacity] = useState('1');
 
     useEffect(() => {
             axios.get(`api/products/items/get/${props.item.productSkuId}`)
@@ -34,19 +36,40 @@ function BasketItem(props) {
                     if (props.item.quantity > res.data.inStock) {
                         const newQuantity = res.data.inStock;
                         setSelectedQuantity(newQuantity);
+                        if (newQuantity < 1) {
+                            setBoxShadow('0 5px 15px rgba(159, 20, 20, 0.6)');
+                            setOpacity('0.3');
+                        } else {
+                            setBoxShadow('0 5px 15px rgba(0, 0, 0, 0.1)');
+                        }
                         if (LocalStorageHelper.IsUserLogged()) {
                             axios.get('api/users/csrf/token')
                                 .then(res => {
-                                    axios.put(`api/cart/update/${props.item.id}`, {
-                                        quantity: newQuantity,
-                                    }, {
-                                        headers: {
-                                            'Authorization': 'Bearer ' + LocalStorageHelper.getJwtToken(),
-                                            'X-XSRF-TOKEN': res.data.token,
-                                            'Content-Type': 'application/json',
-                                        }
-                                    }).then(() => {})
-                                        .catch(() => {})
+                                    if (newQuantity > 0) {
+                                        axios.put(`api/cart/update/${props.item.id}`, {
+                                            quantity: newQuantity,
+                                        }, {
+                                            headers: {
+                                                'Authorization': 'Bearer ' + LocalStorageHelper.getJwtToken(),
+                                                'X-XSRF-TOKEN': res.data.token,
+                                                'Content-Type': 'application/json',
+                                            }
+                                        }).then(() => {})
+                                            .catch(() => {})
+                                    } else {
+                                        toast.warning('Please remove unavailable items from the basket.', {
+                                            position: "bottom-center",
+                                            autoClose: 3000,
+                                            hideProgressBar: false,
+                                            closeOnClick: true,
+                                            pauseOnHover: true,
+                                            draggable: false,
+                                            progress: undefined,
+                                            theme: "colored",
+                                            transition: Bounce,
+                                        })
+                                    }
+
                                 }).catch(() => {
                                 toast.error('Cannot fetch token', {
                                     position: "bottom-center",
@@ -63,6 +86,12 @@ function BasketItem(props) {
                         }
                     } else {
                         setSelectedQuantity(props.item.quantity);
+                        if (props.item.quantity < 1) {
+                            setBoxShadow('0 5px 15px rgba(159, 20, 20, 0.3)');
+                            setOpacity('0.3');
+                        } else {
+                            setBoxShadow('0 5px 15px rgba(0, 0, 0, 0.1)');
+                        }
                     }
                 }).catch(() => {});
 
@@ -231,135 +260,142 @@ function BasketItem(props) {
     }
 
     return (
-        <div className="basket-item">
+        <div className="basket-item" style={{boxShadow: boxShadow, opacity: opacity}}>
             <Backdrop
                 sx={(theme) => ({color: '#fff', zIndex: theme.zIndex.drawer + 1})}
                 open={openBackdrop}
             >
                 <CircularProgress color="inherit"/>
             </Backdrop>
-            <div className="product-img"
-                 style={{
-                     width: '100px', maxHeight: '85px', aspectRatio: "16 / 9",
-                     display: 'flex', justifyContent: 'center', alignItems: 'center',
-                     backgroundSize: 'cover',
-                 }}
-            >
-                <img alt={`enter prod name here!!! photo`} src={img}
+            <div style={{
+                width: "100px",
+                height: "85px",
+                display: "flex",
+                overflow: "hidden",
+            }}>
+                <div className="product-img"
                      style={{
-                         objectFit: 'cover',
-                         maxWidth: '100%',
-                         maxHeight: '100%',
-                         display: 'block',
-                         flexShrink: '0',
-                         flexGrow: '0',
+                         width: '100px', maxHeight: '100%', aspectRatio: "16 / 9",
+                         display: 'flex', justifyContent: 'center', alignItems: 'center',
+                         backgroundSize: 'cover', flexShrink: '0', flexGrow: '0',
                      }}
-                />
-            </div>
-            <Tooltip title={`${props.item.productName}`}>
-            <div className="product-name">
-                <p style={{margin: '0', fontSize: '18px'}}>{props.item.productName}</p>
-            </div>
-            </Tooltip>
-            <div className="product-quantity">
-                <p style={{margin: '0 8px 0 0', fontSize: '14px'}}>{props.item.productPrice}$</p>
-                <FormControl
-                    size="small"
-                    autoFocus
-                    sx={{
-                        m: 1,
-                        margin: '0 0',
-                        width: 'fit-content',
-                        height: 'fit-content',
-                        "& label.Mui-focused": {
-                            color: 'rgb(39, 99, 24)'
-                        },
-                        "& .MuiOutlinedInput-root": {
-                            "&.Mui-focused fieldset": {
-                                borderColor: 'rgb(39, 99, 24)'
-                            }
-                        }
-                    }}
                 >
-                    <Select
-                        id="quantity-select"
-                        disabled={maxQuantity === 0}
-                        value={selectedQuantity}
-                        onChange={handleQuantityChange}
-                        variant={"outlined"}
+                    <img alt={`enter prod name here!!! photo`} src={img}
+                         style={{
+                             objectFit: 'cover',
+                             maxWidth: '100%',
+                             maxHeight: '100%',
+                             display: 'block',
+                             flexShrink: '0',
+                             flexGrow: '0',
+                         }}
+                    />
+                </div>
+            </div>
+                <Tooltip title={`${props.item.productName}`}>
+                    <div className="product-name">
+                        <p style={{margin: '0', fontSize: '18px'}}>{props.item.productName}</p>
+                    </div>
+                </Tooltip>
+                <div className="product-quantity">
+                    <p style={{margin: '0 8px 0 0', fontSize: '14px'}}>{props.item.productPrice}$</p>
+                    <FormControl
+                        size="small"
+                        autoFocus
                         sx={{
-                            height: '40px',
-
+                            m: 1,
+                            margin: '0 0',
+                            width: 'fit-content',
+                            height: 'fit-content',
+                            "& label.Mui-focused": {
+                                color: 'rgb(39, 99, 24)'
+                            },
+                            "& .MuiOutlinedInput-root": {
+                                "&.Mui-focused fieldset": {
+                                    borderColor: 'rgb(39, 99, 24)'
+                                }
+                            }
                         }}
                     >
-                        <MenuItem key={1} value={1}>1</MenuItem>
-                        {renderQuantityItems()}
-                    </Select>
-                </FormControl>
-                <React.Fragment>
-                    <Tooltip title={'Delete item'}>
-                        <Button
-                            variant="text"
-                            onClick={handleClickOpen}
+                        <Select
+                            id="quantity-select"
+                            disabled={maxQuantity === 0}
+                            value={selectedQuantity}
+                            onChange={handleQuantityChange}
+                            variant={"outlined"}
                             sx={{
-                                width: '30px',
-                                height: '30px',
-                                margin: '0 0 0 8px',
-                                minWidth: '0',
-                                fontSize: '8px',
-                                color: 'black',
-                                "&:hover": {
-                                    backgroundColor: 'rgba(0, 0, 0, 0.1)',
-                                    color: 'rgb(193,56,56)',
-                                },
-                                "&:focus": {
-                                    outline: 'none !important',
-                                }
+                                height: '40px',
+
                             }}
                         >
-                            <DeleteOutlineOutlined
-                                size="small"
-                            />
-                        </Button>
-                    </Tooltip>
-                    <Dialog
-                        open={open}
-                        onClose={handleClose}
-                    >
-                        <DialogTitle>Delete item from basket</DialogTitle>
-                        <DialogContent>
-                            <DialogContentText>
-                                Do you want to delete {props.item.productName} from basket?
-                            </DialogContentText>
-                        </DialogContent>
-                        <DialogActions>
+                            <MenuItem key={1} value={1}>1</MenuItem>
+                            {renderQuantityItems()}
+                        </Select>
+                    </FormControl>
+                    <React.Fragment>
+                        <Tooltip title={'Delete item'}>
                             <Button
-                                variant="contained"
-                                onClick={handleClose}
+                                variant="text"
+                                onClick={handleClickOpen}
                                 sx={{
-                                    backgroundColor: 'rgb(11,108,128)',
-                                    "&:hover": {backgroundColor: 'rgb(16,147,177)'},
+                                    width: '30px',
+                                    height: '30px',
+                                    margin: '0 0 0 8px',
+                                    minWidth: '0',
+                                    fontSize: '8px',
+                                    color: 'black',
+                                    "&:hover": {
+                                        backgroundColor: 'rgba(0, 0, 0, 0.1)',
+                                        color: 'rgb(193,56,56)',
+                                    },
+                                    "&:focus": {
+                                        outline: 'none !important',
+                                    }
                                 }}
                             >
-                                Cancel
+                                <DeleteOutlineOutlined
+                                    size="small"
+                                />
                             </Button>
-                            <Button
-                                variant="contained"
-                                onClick={deleteCartItem}
-                                sx={{
-                                    backgroundColor: 'rgb(159,20,20)',
-                                    "&:hover": {backgroundColor: 'rgb(193,56,56)'},
-                                }}
-                            >
-                                Delete
-                            </Button>
-                        </DialogActions>
-                    </Dialog>
-                </React.Fragment>
+                        </Tooltip>
+                        <Dialog
+                            open={open}
+                            onClose={handleClose}
+                        >
+                            <DialogTitle>Delete item from basket</DialogTitle>
+                            <DialogContent>
+                                <DialogContentText>
+                                    Do you want to delete {props.item.productName} from basket?
+                                </DialogContentText>
+                            </DialogContent>
+                            <DialogActions>
+                                <Button
+                                    variant="contained"
+                                    onClick={handleClose}
+                                    sx={{
+                                        backgroundColor: 'rgb(11,108,128)',
+                                        "&:hover": {backgroundColor: 'rgb(16,147,177)'},
+                                    }}
+                                >
+                                    Cancel
+                                </Button>
+                                <Button
+                                    variant="contained"
+                                    onClick={deleteCartItem}
+                                    sx={{
+                                        backgroundColor: 'rgb(159,20,20)',
+                                        "&:hover": {backgroundColor: 'rgb(193,56,56)'},
+                                    }}
+                                >
+                                    Delete
+                                </Button>
+                            </DialogActions>
+                        </Dialog>
+                    </React.Fragment>
+                </div>
+
             </div>
+            )
+            }
 
-        </div>
-    )
-}
-
-export default BasketItem
+            export default BasketItem

@@ -75,7 +75,7 @@ public class OrderService {
         if (!itemsNotAvailable.isEmpty()) {
             log.error("Not all items are available for order - " + request);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "Not all items are available. Items not available - " + itemsNotAvailable);
+                    "We could not complete your order. Not all items are available.");
         }
 
         Order order = new Order(

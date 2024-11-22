@@ -152,7 +152,7 @@ public class ProductService {
                 Product product = productRepository.findByProductSkuId(
                         orderLineItemsDTO.getProductSkuId())
                         .orElseThrow(
-                                    () -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Product not found")
+                                    () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found")
                         );
                 OrderAvailabilityListItem orderAvailabilityListItem;
                 if (product.getInStock() - orderLineItemsDTO.getQuantity() >= 0) {
@@ -197,7 +197,7 @@ public class ProductService {
                     Product product = productRepository.findByProductSkuId(
                                     orderLineItemsDto.getProductSkuId())
                             .orElseThrow(
-                                    () -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                                    () -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                                             "Product not found")
                             );
                     product.setInStock(product.getInStock() + orderLineItemsDto.getQuantity());

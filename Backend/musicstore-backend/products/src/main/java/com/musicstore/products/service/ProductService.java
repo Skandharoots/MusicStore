@@ -140,6 +140,7 @@ public class ProductService {
         );
     }
 
+    @Transactional
     public ResponseEntity<OrderAvailabilityResponse> verifyAvailabilityOfOrderProducts(OrderRequest orderRequest) {
 
         OrderAvailabilityResponse orderAvailabilityResponse = new OrderAvailabilityResponse();

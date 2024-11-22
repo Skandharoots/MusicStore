@@ -3,11 +3,12 @@ import axios from "axios";
 import {Slide, toast} from "react-toastify";
 import Tooltip from "@mui/material/Tooltip";
 import '../style/OrderProductItem.scss';
+import {useNavigate} from "react-router-dom";
 
 
 function OrderProductItem(props) {
     const [img, setImg] = useState(null);
-
+    const navigate = useNavigate();
 
     useEffect(() => {
 
@@ -77,7 +78,7 @@ function OrderProductItem(props) {
 
             }}>
                 <Tooltip title={`${props.item.productName}`}>
-                    <div className="item-name">
+                    <div className="item-name" onClick={() => {navigate(`/product/${props.item.productSkuId}/${props.item.productName}`)}}>
                         <p style={{margin: '0', fontSize: '16px', overflow: 'hidden'}}>{props.item.productName}</p>
                     </div>
                 </Tooltip>

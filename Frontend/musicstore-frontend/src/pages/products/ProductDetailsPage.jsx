@@ -17,6 +17,7 @@ import axios from "axios";
 import {Slide, toast, ToastContainer} from "react-toastify";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import LocalStorageHelper from "../../helpers/LocalStorageHelper.jsx";
+import parse from "html-react-parser";
 
 
 function ProductDetailsPage() {
@@ -305,8 +306,9 @@ function ProductDetailsPage() {
                         fontSize: '30px',
                         display: 'flex',
                         flexDirection: 'column',
-                        justifyContent: 'space-between',
+                        justifyContent: 'center',
                         alignItems: 'center',
+                        textAlign: 'center',
                     }}>
                         <b>Sorry, we didn&apos;t find <br/> what you&apos;re looking for...</b>
                         <Button
@@ -566,12 +568,13 @@ function ProductDetailsPage() {
                         </div>
                     </div>
                 </div>
-                <div className="product-description" dangerouslySetInnerHTML={{__html: productDescription}} style={{
+                <div className="product-description"  style={{
             width: '100%',
             height: 'fit-content',
 
             boxSizing: 'border-box',
         }}>
+                    {parse(productDescription)}
         </div>
         </>
     )

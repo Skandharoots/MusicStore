@@ -45,7 +45,6 @@ function MyOrderPage() {
             })
                 .then((response) => {
                     setOrder(response.data);
-                    console.log(JSON.stringify(response.data));
                     setOrderItems(response.data.orderItems);
                     setName(response.data.name);
                     setSurname(response.data.surname);
@@ -158,8 +157,24 @@ function MyOrderPage() {
                     borderRadius: '1em',
                     padding: '16px',
                     boxSizing: 'border-box',
+                    borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
                 }}>
                     {parseStatus(status)}
+                </div>
+                <div style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    width: '100%',
+                    height: 'fit-content',
+                    justifyContent: 'flex-start',
+                    alignItems: 'flex-start',
+                    borderRadius: '1em',
+                    padding: '16px',
+                    boxSizing: 'border-box',
+                    borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
+                    marginBottom: '16px',
+                }}>
+                    <p style={{margin: '0', fontSize: '22px', fontWeight: 'bold'}}>Order nr: <span style={{margin: '0', fontSize: '22px', fontWeight: 'normal'}}>{order.orderIdentifier}</span></p>
                 </div>
                 <div className="my-order-left">
                     <div className="order-details-header">

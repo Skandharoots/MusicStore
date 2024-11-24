@@ -6,8 +6,6 @@ import com.musicstore.users.model.UserRole;
 import com.musicstore.users.model.Users;
 import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

@@ -6,7 +6,6 @@ import com.musicstore.products.repository.CategoryRepository;
 import com.musicstore.products.security.config.VariablesConfiguration;
 import jakarta.transaction.Transactional;
 import java.util.List;
-import java.util.regex.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

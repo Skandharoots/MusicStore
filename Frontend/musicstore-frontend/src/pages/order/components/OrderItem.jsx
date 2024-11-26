@@ -8,6 +8,7 @@ import {
     MenuItem,
     Select
 } from "@mui/material";
+import noImage from '../../../../public/no-image.svg';
 
 function OrderItem(props) {
 
@@ -65,7 +66,7 @@ function OrderItem(props) {
                          backgroundSize: 'cover',
                      }}
                 >
-                    <img alt={`enter prod name here!!! photo`} src={img}
+                    <img alt={noImage} src={img}
                          style={{
                              objectFit: 'cover',
                              maxWidth: '100%',

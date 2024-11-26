@@ -18,6 +18,8 @@ import Grid from "@mui/material/Grid2";
 import React, {useEffect, useState} from "react";
 import {Slide, toast} from "react-toastify";
 import Tooltip from "@mui/material/Tooltip";
+import noImage from '../../../../../public/no-image.svg';
+
 
 function ProductItem(props) {
 
@@ -205,7 +207,7 @@ function ProductItem(props) {
                 >
 
 
-                    <img alt={`${props.item.productName} photo`} src={img}
+                    <img alt={noImage} src={img}
                          style={{
                              objectFit: 'cover',
                              maxWidth: '100%',

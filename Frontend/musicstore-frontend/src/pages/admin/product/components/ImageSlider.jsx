@@ -6,6 +6,8 @@ import CircleIcon from '@mui/icons-material/Circle';
 import DeleteIcon from '@mui/icons-material/Delete';
 import "../../style/ImageSlider.scss";
 import Tooltip from '@mui/material/Tooltip';
+import noImage from '../../../../../public/no-image.svg';
+
 
 export function ImageSlider({ imageBinaries, onDelete }) {
     const [imageIndex, setImageIndex] = useState(0)
@@ -60,7 +62,7 @@ export function ImageSlider({ imageBinaries, onDelete }) {
                         <img
                             key={index * 10}
                             src={url}
-                            alt={url.name}
+                            alt={noImage}
                             className="img-slider-img"
                             style={{}}
                         />

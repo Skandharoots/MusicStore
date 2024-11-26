@@ -4,6 +4,7 @@ import Grid from "@mui/material/Grid2";
 import axios from "axios";
 import { format } from "date-fns";
 import {useNavigate} from "react-router-dom";
+import noImage from '../../../../public/no-image.svg'
 
 
 function OrderUserItem(props) {
@@ -153,7 +154,7 @@ function OrderUserItem(props) {
                                     flexGrow: '0',
                                 }}
                             >
-                                <img alt={'Order item photo'} src={image}
+                                <img alt={noImage} src={image}
                                      style={{
                                          objectFit: 'cover',
                                          maxWidth: '100%',

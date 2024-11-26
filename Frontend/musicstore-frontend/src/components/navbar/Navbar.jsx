@@ -50,7 +50,7 @@ function Navbar() {
         <header>
             <div className={"top-container"}>
                 <NavLink to="/">
-                    <img alt={""} className="logo" src={logo}/>
+                    <img alt={"Fancy Strings Logo"} className="logo" src={logo}/>
                 </NavLink>
                 <div className={"search-container"}>
                     <form className={"search-form"}>

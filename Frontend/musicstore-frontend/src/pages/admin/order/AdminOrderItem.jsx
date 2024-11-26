@@ -6,6 +6,7 @@ import Tooltip from "@mui/material/Tooltip";
 import {Link} from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
 import {Button} from "@mui/material";
+import noImage from '../../../../public/no-image.svg';
 
 
 function AdminOrderItem(props) {
@@ -189,7 +190,7 @@ function AdminOrderItem(props) {
                                 flexGrow: '0',
                             }}
                         >
-                            <img alt={'Order item photo'} src={image}
+                            <img alt={noImage} src={image}
                                  style={{
                                      objectFit: 'cover',
                                      maxWidth: '100%',

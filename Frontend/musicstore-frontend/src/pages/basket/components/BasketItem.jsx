@@ -18,6 +18,7 @@ import LocalStorageHelper from "../../../helpers/LocalStorageHelper.jsx";
 import { DeleteOutlineOutlined } from "@mui/icons-material";
 import 'react-toastify/dist/ReactToastify.css';
 import {useNavigate} from "react-router-dom";
+import noImage from '../../../../public/no-image.svg';
 
 
 function BasketItem(props) {
@@ -270,7 +271,7 @@ function BasketItem(props) {
                          backgroundSize: 'cover', flexShrink: '0', flexGrow: '0',
                      }}
                 >
-                    <img alt={`enter prod name here!!! photo`} src={img}
+                    <img alt={noImage} src={img}
                          style={{
                              objectFit: 'cover',
                              maxWidth: '100%',

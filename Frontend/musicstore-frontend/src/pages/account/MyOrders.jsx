@@ -81,7 +81,7 @@ function MyOrders() {
                 transition: Slide,
             })
         })
-    }, [])
+    }, [currentPage]);
 
     const changePage = (event, value) => {
         setCurrentPage(value);

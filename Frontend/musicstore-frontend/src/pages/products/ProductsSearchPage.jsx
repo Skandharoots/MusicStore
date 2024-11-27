@@ -37,7 +37,7 @@ function ProductsSearchPage() {
                 setOpenBackdrop(false);
         });
 
-    }, []);
+    }, [currentPage]);
 
     const changePage = (event, value) => {
         setCurrentPage(value);

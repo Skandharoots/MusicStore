@@ -81,7 +81,7 @@ function Order() {
                 transition: Slide,
             })
         })
-    }, [restoreDefaults]);
+    }, [restoreDefaults, currentPage]);
 
     const onSubmitSearch = () => {
         let searchId = search.trim();

@@ -4,7 +4,6 @@ import {Slide, toast} from "react-toastify";
 import Tooltip from "@mui/material/Tooltip";
 import '../style/OrderProductItem.scss';
 import {useNavigate} from "react-router-dom";
-import noImage from '../../../../public/no-image.svg';
 
 
 function OrderProductItem(props) {
@@ -57,7 +56,7 @@ function OrderProductItem(props) {
                      backgroundSize: 'cover',
                  }}
             >
-                <img alt={noImage} src={img}
+                <img alt={'No product photo'} src={img}
                      style={{
                          objectFit: 'cover',
                          maxWidth: '100%',

@@ -4,7 +4,6 @@ import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutl
 import LensOutlinedIcon from '@mui/icons-material/LensOutlined';
 import CircleIcon from '@mui/icons-material/Circle';
 import "../style/ImageSlider.scss";
-import noImage from '../../../../public/no-image.svg';
 
 export function Gallery({ imageBinaries }) {
     const [imageIndex, setImageIndex] = useState(0)
@@ -50,7 +49,7 @@ export function Gallery({ imageBinaries }) {
                         <img
                             key={index}
                             src={url}
-                            alt={noImage}
+                            alt={'No product photo'}
                             className="img-slider-img"
                             style={{}}
                         />

@@ -9,7 +9,6 @@ import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogT
 import AddShoppingCartOutlinedIcon from '@mui/icons-material/AddShoppingCartOutlined';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import LocalStorageHelper from "../../../helpers/LocalStorageHelper.jsx";
-import noImage from '../../../../public/no-image.svg';
 
 function ProductItem(props) {
     const [img, setImg] = useState(null);
@@ -273,7 +272,7 @@ function ProductItem(props) {
                          flexShrink: '0', flexGrow: '0', backgroundSize: 'cover',
                      }}
                 >
-                    <img alt={noImage} src={img}
+                    <img alt={`${props.item.productName} photo`} src={img}
                          style={{
                              objectFit: 'cover',
                              maxWidth: '100%',

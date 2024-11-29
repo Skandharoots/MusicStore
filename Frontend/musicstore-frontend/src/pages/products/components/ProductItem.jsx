@@ -272,7 +272,7 @@ function ProductItem(props) {
                          flexShrink: '0', flexGrow: '0', backgroundSize: 'cover',
                      }}
                 >
-                    <img alt={`${props.item.productName} photo`} src={img}
+                    <img alt={'No product photo'} src={img}
                          style={{
                              objectFit: 'cover',
                              maxWidth: '100%',

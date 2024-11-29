@@ -85,6 +85,7 @@ function UpdateCategory() {
                         }
                     }).then(() => {
                         setOpenBackdrop(false);
+                        window.dispatchEvent(new Event("category"));
                         toast.success("Category updated!", {
                             position: "bottom-center",
                             autoClose: 5000,

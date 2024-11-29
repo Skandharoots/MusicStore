@@ -342,19 +342,53 @@ function AddProduct() {
                         axios.get('api/users/csrf/token', {})
                             .then((response) => {
                                 const photos = [...productGalleryPhoto];
+                                const promises = [];
                                 photos.map((photo, index) => {
                                     const formData = new FormData();
                                     formData.append('file', photo);
                                     formData.append('path', pathMain);
                                     formData.append('fileName', index);
-                                    axios.post('api/azure/upload', formData, {
-                                        headers: {
-                                            'Authorization': 'Bearer ' + LocalStorageHelper.getJwtToken(),
-                                            'X-XSRF-TOKEN': response.data.token,
-                                            'Content-Type': 'multipart/form-data',
-                                        }
-                                    }).then(() => {
-                                        toast.success('New product photo added!', {
+                                    promises.push(
+                                        axios.post('api/azure/upload', formData, {
+                                            headers: {
+                                                'Authorization': 'Bearer ' + LocalStorageHelper.getJwtToken(),
+                                                'X-XSRF-TOKEN': response.data.token,
+                                                'Content-Type': 'multipart/form-data',
+                                            }
+                                        })
+                                    );
+                                });
+                                Promise.all(promises.map(p => p.catch(e => e)))
+                                    .then(results => {
+                                        results.forEach((result) => {
+                                            if (result.status === 201) {
+                                                toast.success('New product photo added!', {
+                                                    position: "bottom-center",
+                                                    autoClose: 3000,
+                                                    hideProgressBar: false,
+                                                    closeOnClick: true,
+                                                    pauseOnHover: true,
+                                                    draggable: false,
+                                                    progress: undefined,
+                                                    theme: "light",
+                                                    transition: Slide,
+                                                });
+                                            } else {
+                                                toast.error('Failed to add product photo!', {
+                                                    position: "bottom-center",
+                                                    autoClose: 3000,
+                                                    hideProgressBar: false,
+                                                    closeOnClick: true,
+                                                    pauseOnHover: true,
+                                                    draggable: false,
+                                                    progress: undefined,
+                                                    theme: "light",
+                                                    transition: Slide,
+                                                })
+                                            }
+                                        });
+                                        setOpenBackdrop(false);
+                                        toast.success('New product added!', {
                                             position: "bottom-center",
                                             autoClose: 3000,
                                             hideProgressBar: false,
@@ -365,33 +399,10 @@ function AddProduct() {
                                             theme: "light",
                                             transition: Slide,
                                         });
+                                        navigate('/admin/product');
                                     }).catch(error => {
-                                        toast.error(error.response.data.message, {
-                                            position: "bottom-center",
-                                            autoClose: 3000,
-                                            hideProgressBar: false,
-                                            closeOnClick: true,
-                                            pauseOnHover: true,
-                                            draggable: false,
-                                            progress: undefined,
-                                            theme: "light",
-                                            transition: Slide,
-                                        })
-                                    })
-                                })
-                                setOpenBackdrop(false);
-                                toast.success('New product added!', {
-                                    position: "bottom-center",
-                                    autoClose: 3000,
-                                    hideProgressBar: false,
-                                    closeOnClick: true,
-                                    pauseOnHover: true,
-                                    draggable: false,
-                                    progress: undefined,
-                                    theme: "light",
-                                    transition: Slide,
+                                    //
                                 });
-                                setTimeout(() => {navigate('/admin/product')}, 3000);
                             }).catch(() => {
                                 toast.error('Cannot fetch token', {
                                     position: "bottom-center",

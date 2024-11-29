@@ -65,6 +65,7 @@ function AddCategory() {
                         }
                     }).then(() => {
                         setOpenBackdrop(false);
+                        window.dispatchEvent(new Event("category"));
                         toast.success('Category Added', {
                             position: "bottom-center",
                             autoClose: 5000,

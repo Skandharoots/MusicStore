@@ -44,6 +44,7 @@ function CategoryItem(props) {
                     }
                 }).then(() => {
                     setOpenBackdrop(false);
+                    window.dispatchEvent(new Event("category"));
                     toast.success("Category deleted!", {
                         position: "bottom-center",
                         autoClose: 5000,

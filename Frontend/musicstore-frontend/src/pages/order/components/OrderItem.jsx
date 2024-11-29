@@ -12,8 +12,10 @@ import {
 function OrderItem(props) {
 
     const [img, setImg] = useState(null);
+    const [boxShadow, setBoxShadow] = useState('0 5px 15px rgba(0, 0, 0, 0.1)');
 
     useEffect(() => {
+
         axios.get(`api/azure/list?path=${props.item.productSkuId}`, {})
             .then((response) => {
                 axios.get(`api/azure/read?path=${response.data[0]}`, {responseType: 'blob'})
@@ -47,11 +49,34 @@ function OrderItem(props) {
             })
             }).catch(() => {})
 
-    }, []);
+    }, [props.item.productSkuId]);
+
+    useEffect(() => {
+        axios.get(`api/products/items/get/${props.item.productSkuId}`)
+            .then(res => {
+                if (res.data.inStock === 0) {
+                    toast.warning(`Product ${props.item.productName} is out of stock.`, {
+                        position: "bottom-center",
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: false,
+                        progress: undefined,
+                        theme: "light",
+                        transition: Slide,
+                    });
+                    props.onOutOfStock();
+                    setBoxShadow('0 5px 15px rgba(159, 20, 20, 0.3)');
+                }
+            }).catch(() => {
+            //
+        });
+    }, [props.item.productSkuId])
 
 
     return (
-        <div className="order-item">
+        <div className="order-item" style={{boxShadow: boxShadow}}>
             <div style={{
                 width: "100px",
                 height: "85px",

@@ -30,6 +30,13 @@ function Navbar() {
         setUserName(LocalStorageHelper.getUserName());
     })
 
+    window.addEventListener('category', () => {
+        axios.get('api/products/categories/get')
+            .then(res => {
+                setCategories(res.data);
+            }).catch(() => {})
+    })
+
     useEffect(() => {
         axios.get('api/products/categories/get')
             .then(res => {

@@ -1,5 +1,5 @@
 import './style/OrderPage.scss';
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import axios from "axios";
 import LocalStorageHelper from "../../helpers/LocalStorageHelper.jsx";
 import {Slide, toast} from "react-toastify";
@@ -13,6 +13,7 @@ import {
 import {useNavigate} from "react-router-dom";
 import TextField from "@mui/material/TextField";
 import {CreditCard} from "@mui/icons-material";
+import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 
 
 function OrderPage() {
@@ -20,6 +21,7 @@ function OrderPage() {
     const [basketItems, setBasketItems] = useState([]);
     const [totalItems, setTotalItems] = useState(0);
     const [openBackdrop, setOpenBackdrop] = useState(false);
+    const [showUnavailableItemsDiv, setShowUnavailableItemsDiv] = useState(false);
 
     const [name, setName] = useState('');
     const [surname, setSurname] = useState('');
@@ -59,6 +61,10 @@ function OrderPage() {
             navigate('/login');
         }
     }, []);
+
+    const onUnavailable = () => {
+        setShowUnavailableItemsDiv(true);
+    }
 
     const validateInputs = () => {
 
@@ -327,291 +333,316 @@ function OrderPage() {
             {totalItems > 0 &&
                 <div className="wrapper">
                     <div className="order-form">
-                        <div className="personal-info">
-                            <Typography
-                                component="h1"
-                                variant="h5"
-                                sx={{
-                                    width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)', color: 'black'
-                                    , margin: '0 auto 5% auto'
-                                }}
-                            >
-                                Personal Information
-                            </Typography>
-                            <Box
-                            >
-                                <TextField
-                                    size={"small"}
-                                    error={nameError}
-                                    helperText={nameErrorMsg}
-                                    id="name"
-                                    type="search"
-                                    name="name"
-                                    placeholder="First name"
-                                    autoComplete="name"
-                                    required
-                                    fullWidth
-                                    variant="outlined"
-                                    color={nameError ? 'error' : 'primary'}
-                                    label="First name"
-                                    value={name}
-                                    onChange={e => setName(e.target.value)}
-                                    sx={{
-                                        width: '70%',
-                                        margin: '0 auto 5% auto',
-                                        "& label.Mui-focused": {
-                                            color: 'rgb(39, 99, 24)'
-                                        },
-                                        "& .MuiOutlinedInput-root": {
-                                            "&.Mui-focused fieldset": {
-                                                borderColor: 'rgb(39, 99, 24)'
-                                            }
-                                        }
-                                    }}
-                                />
-                                <TextField
-                                    size={"small"}
-                                    error={surnameError}
-                                    helperText={surnameErrorMsg}
-                                    id="surname"
-                                    type="search"
-                                    name="surname"
-                                    placeholder="Surname"
-                                    autoComplete="surname"
-                                    required
-                                    fullWidth
-                                    variant="outlined"
-                                    color={surnameError ? 'error' : 'primary'}
-                                    label="Surname"
-                                    value={surname}
-                                    onChange={e => setSurname(e.target.value)}
-                                    sx={{
-                                        width: '70%',
-                                        margin: '0 auto 5% auto',
-                                        "& label.Mui-focused": {
-                                            color: 'rgb(39, 99, 24)'
-                                        },
-                                        "& .MuiOutlinedInput-root": {
-                                            "&.Mui-focused fieldset": {
-                                                borderColor: 'rgb(39, 99, 24)'
-                                            }
-                                        }
-                                    }}
-                                />
-                                <TextField
-                                    size={"small"}
-                                    error={emailError}
-                                    helperText={emailErrorMsg}
-                                    id="email"
-                                    type="email"
-                                    name="email"
-                                    placeholder="your@email.com"
-                                    autoComplete="email"
-                                    required
-                                    fullWidth
-                                    variant="outlined"
-                                    color={emailError ? 'error' : 'primary'}
-                                    label="Email"
-                                    value={email}
-                                    onChange={e => setEmail(e.target.value)}
-                                    sx={{
-                                        width: '70%',
-                                        margin: '0 auto 5% auto',
-                                        "& label.Mui-focused": {
-                                            color: 'rgb(39, 99, 24)'
-                                        },
-                                        "& .MuiOutlinedInput-root": {
-                                            "&.Mui-focused fieldset": {
-                                                borderColor: 'rgb(39, 99, 24)'
-                                            }
-                                        }
-                                    }}
-                                />
-                                <TextField
-                                    size={"small"}
-                                    error={phoneError}
-                                    helperText={phoneErrorMsg}
-                                    id="phone"
-                                    type="tel"
-                                    name="phone"
-                                    placeholder="+48 567 234 902"
-                                    autoComplete="phone"
-                                    required
-                                    fullWidth
-                                    variant="outlined"
-                                    color={phoneError ? 'error' : 'primary'}
-                                    label="Phone number"
-                                    value={phone}
-                                    onChange={e => setPhone(e.target.value)}
-                                    sx={{
-                                        width: '70%',
-                                        margin: '0 auto 5% auto',
-                                        "& label.Mui-focused": {
-                                            color: 'rgb(39, 99, 24)'
-                                        },
-                                        "& .MuiOutlinedInput-root": {
-                                            "&.Mui-focused fieldset": {
-                                                borderColor: 'rgb(39, 99, 24)'
-                                            }
-                                        }
-                                    }}
-                                />
-                            </Box>
-                        </div>
-                        <div className="delivery-info">
-                            <Box>
-                                <Typography
-                                    component="h1"
-                                    variant="h5"
-                                    sx={{
-                                        width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)', color: 'black'
-                                        , margin: '0 auto 5% auto'
-                                    }}
-                                >
-                                    Delivery information
-                                </Typography>
-                                <TextField
-                                    size={"small"}
-                                    error={countryError}
-                                    helperText={countryErrorMsg}
-                                    id="country"
-                                    type="search"
-                                    name="email"
-                                    placeholder="Country"
-                                    autoComplete="country"
-                                    required
-                                    fullWidth
-                                    variant="outlined"
-                                    color={countryError ? 'error' : 'primary'}
-                                    label="Country"
-                                    value={country}
-                                    onChange={e => setCountry(e.target.value)}
-                                    sx={{
-                                        width: '70%',
-                                        margin: '0 auto 5% auto',
-                                        "& label.Mui-focused": {
-                                            color: 'rgb(39, 99, 24)'
-                                        },
-                                        "& .MuiOutlinedInput-root": {
-                                            "&.Mui-focused fieldset": {
-                                                borderColor: 'rgb(39, 99, 24)'
-                                            }
-                                        }
-                                    }}
-                                />
-                                <TextField
-                                    size={"small"}
-                                    error={cityError}
-                                    helperText={cityErrorMsg}
-                                    id="city"
-                                    type="search"
-                                    name="city"
-                                    placeholder="Surname"
-                                    autoComplete="city"
-                                    required
-                                    fullWidth
-                                    variant="outlined"
-                                    color={cityError ? 'error' : 'primary'}
-                                    label="City"
-                                    value={city}
-                                    onChange={e => setCity(e.target.value)}
-                                    sx={{
-                                        width: '70%',
-                                        margin: '0 auto 5% auto',
-                                        "& label.Mui-focused": {
-                                            color: 'rgb(39, 99, 24)'
-                                        },
-                                        "& .MuiOutlinedInput-root": {
-                                            "&.Mui-focused fieldset": {
-                                                borderColor: 'rgb(39, 99, 24)'
-                                            }
-                                        }
-                                    }}
-                                />
-                                <TextField
-                                    size={"small"}
-                                    error={streetAddressError}
-                                    helperText={streetAddressErrorMsg}
-                                    id="streetAddress"
-                                    type="search"
-                                    name="streetAddress"
-                                    placeholder="Street Address"
-                                    autoComplete="streetAddress"
-                                    required
-                                    fullWidth
-                                    variant="outlined"
-                                    color={streetAddressError ? 'error' : 'primary'}
-                                    label="Street address"
-                                    value={streetAddress}
-                                    onChange={e => setStreetAddress(e.target.value)}
-                                    sx={{
-                                        width: '70%',
-                                        margin: '0 auto 5% auto',
-                                        "& label.Mui-focused": {
-                                            color: 'rgb(39, 99, 24)'
-                                        },
-                                        "& .MuiOutlinedInput-root": {
-                                            "&.Mui-focused fieldset": {
-                                                borderColor: 'rgb(39, 99, 24)'
-                                            }
-                                        }
-                                    }}
-                                />
-                                <TextField
-                                    size={"small"}
-                                    error={zipCodeError}
-                                    helperText={zipCodeErrorMsg}
-                                    id="zipCode"
-                                    type="search"
-                                    name="name"
-                                    placeholder="Zip code"
-                                    autoComplete="zipCode"
-                                    required
-                                    fullWidth
-                                    variant="outlined"
-                                    color={zipCodeError ? 'error' : 'primary'}
-                                    label="Zip-code"
-                                    pattern={"(?i)^[a-z0-9][a-z0-9\\- ]{0,10}[a-z0-9]$"}
-                                    value={zipCode}
-                                    onChange={e => setZipCode(e.target.value)}
-                                    sx={{
-                                        width: '70%',
-                                        margin: '0 auto 5% auto',
-                                        "& label.Mui-focused": {
-                                            color: 'rgb(39, 99, 24)'
-                                        },
-                                        "& .MuiOutlinedInput-root": {
-                                            "&.Mui-focused fieldset": {
-                                                borderColor: 'rgb(39, 99, 24)'
-                                            }
-                                        }
-                                    }}
-                                />
-                            </Box>
-                        </div>
-                        <div className="submit-order">
-                            <Button
-                                className="add-btn"
-                                type="button"
-                                fullWidth
-                                variant="contained"
-                                endIcon={<CreditCard/>}
-                                onClick={submitOrder}
-                                sx={{
-                                    width: '70%',
-                                    backgroundColor: 'rgb(39, 99, 24)',
-                                    "&:hover": {backgroundColor: 'rgb(49,140,23)'}
-                                }}
-                            >
-                                Place Order
-                            </Button>
-                        </div>
+                        {showUnavailableItemsDiv === false && (
+                            <>
+                                <div className="personal-info">
+                                    <Typography
+                                        component="h1"
+                                        variant="h5"
+                                        sx={{
+                                            width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)', color: 'black'
+                                            , margin: '0 auto 5% auto'
+                                        }}
+                                    >
+                                        Personal Information
+                                    </Typography>
+                                    <Box
+                                    >
+                                        <TextField
+                                            size={"small"}
+                                            error={nameError}
+                                            helperText={nameErrorMsg}
+                                            id="name"
+                                            type="search"
+                                            name="name"
+                                            placeholder="First name"
+                                            autoComplete="name"
+                                            required
+                                            fullWidth
+                                            variant="outlined"
+                                            color={nameError ? 'error' : 'primary'}
+                                            label="First name"
+                                            value={name}
+                                            onChange={e => setName(e.target.value)}
+                                            sx={{
+                                                width: '70%',
+                                                margin: '0 auto 5% auto',
+                                                "& label.Mui-focused": {
+                                                    color: 'rgb(39, 99, 24)'
+                                                },
+                                                "& .MuiOutlinedInput-root": {
+                                                    "&.Mui-focused fieldset": {
+                                                        borderColor: 'rgb(39, 99, 24)'
+                                                    }
+                                                }
+                                            }}
+                                        />
+                                        <TextField
+                                            size={"small"}
+                                            error={surnameError}
+                                            helperText={surnameErrorMsg}
+                                            id="surname"
+                                            type="search"
+                                            name="surname"
+                                            placeholder="Surname"
+                                            autoComplete="surname"
+                                            required
+                                            fullWidth
+                                            variant="outlined"
+                                            color={surnameError ? 'error' : 'primary'}
+                                            label="Surname"
+                                            value={surname}
+                                            onChange={e => setSurname(e.target.value)}
+                                            sx={{
+                                                width: '70%',
+                                                margin: '0 auto 5% auto',
+                                                "& label.Mui-focused": {
+                                                    color: 'rgb(39, 99, 24)'
+                                                },
+                                                "& .MuiOutlinedInput-root": {
+                                                    "&.Mui-focused fieldset": {
+                                                        borderColor: 'rgb(39, 99, 24)'
+                                                    }
+                                                }
+                                            }}
+                                        />
+                                        <TextField
+                                            size={"small"}
+                                            error={emailError}
+                                            helperText={emailErrorMsg}
+                                            id="email"
+                                            type="email"
+                                            name="email"
+                                            placeholder="your@email.com"
+                                            autoComplete="email"
+                                            required
+                                            fullWidth
+                                            variant="outlined"
+                                            color={emailError ? 'error' : 'primary'}
+                                            label="Email"
+                                            value={email}
+                                            onChange={e => setEmail(e.target.value)}
+                                            sx={{
+                                                width: '70%',
+                                                margin: '0 auto 5% auto',
+                                                "& label.Mui-focused": {
+                                                    color: 'rgb(39, 99, 24)'
+                                                },
+                                                "& .MuiOutlinedInput-root": {
+                                                    "&.Mui-focused fieldset": {
+                                                        borderColor: 'rgb(39, 99, 24)'
+                                                    }
+                                                }
+                                            }}
+                                        />
+                                        <TextField
+                                            size={"small"}
+                                            error={phoneError}
+                                            helperText={phoneErrorMsg}
+                                            id="phone"
+                                            type="tel"
+                                            name="phone"
+                                            placeholder="+48 567 234 902"
+                                            autoComplete="phone"
+                                            required
+                                            fullWidth
+                                            variant="outlined"
+                                            color={phoneError ? 'error' : 'primary'}
+                                            label="Phone number"
+                                            value={phone}
+                                            onChange={e => setPhone(e.target.value)}
+                                            sx={{
+                                                width: '70%',
+                                                margin: '0 auto 5% auto',
+                                                "& label.Mui-focused": {
+                                                    color: 'rgb(39, 99, 24)'
+                                                },
+                                                "& .MuiOutlinedInput-root": {
+                                                    "&.Mui-focused fieldset": {
+                                                        borderColor: 'rgb(39, 99, 24)'
+                                                    }
+                                                }
+                                            }}
+                                        />
+                                    </Box>
+                                </div>
+                                <div className="delivery-info">
+                                    <Box>
+                                        <Typography
+                                            component="h1"
+                                            variant="h5"
+                                            sx={{
+                                                width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)', color: 'black'
+                                                , margin: '0 auto 5% auto'
+                                            }}
+                                        >
+                                            Delivery information
+                                        </Typography>
+                                        <TextField
+                                            size={"small"}
+                                            error={countryError}
+                                            helperText={countryErrorMsg}
+                                            id="country"
+                                            type="search"
+                                            name="email"
+                                            placeholder="Country"
+                                            autoComplete="country"
+                                            required
+                                            fullWidth
+                                            variant="outlined"
+                                            color={countryError ? 'error' : 'primary'}
+                                            label="Country"
+                                            value={country}
+                                            onChange={e => setCountry(e.target.value)}
+                                            sx={{
+                                                width: '70%',
+                                                margin: '0 auto 5% auto',
+                                                "& label.Mui-focused": {
+                                                    color: 'rgb(39, 99, 24)'
+                                                },
+                                                "& .MuiOutlinedInput-root": {
+                                                    "&.Mui-focused fieldset": {
+                                                        borderColor: 'rgb(39, 99, 24)'
+                                                    }
+                                                }
+                                            }}
+                                        />
+                                        <TextField
+                                            size={"small"}
+                                            error={cityError}
+                                            helperText={cityErrorMsg}
+                                            id="city"
+                                            type="search"
+                                            name="city"
+                                            placeholder="Surname"
+                                            autoComplete="city"
+                                            required
+                                            fullWidth
+                                            variant="outlined"
+                                            color={cityError ? 'error' : 'primary'}
+                                            label="City"
+                                            value={city}
+                                            onChange={e => setCity(e.target.value)}
+                                            sx={{
+                                                width: '70%',
+                                                margin: '0 auto 5% auto',
+                                                "& label.Mui-focused": {
+                                                    color: 'rgb(39, 99, 24)'
+                                                },
+                                                "& .MuiOutlinedInput-root": {
+                                                    "&.Mui-focused fieldset": {
+                                                        borderColor: 'rgb(39, 99, 24)'
+                                                    }
+                                                }
+                                            }}
+                                        />
+                                        <TextField
+                                            size={"small"}
+                                            error={streetAddressError}
+                                            helperText={streetAddressErrorMsg}
+                                            id="streetAddress"
+                                            type="search"
+                                            name="streetAddress"
+                                            placeholder="Street Address"
+                                            autoComplete="streetAddress"
+                                            required
+                                            fullWidth
+                                            variant="outlined"
+                                            color={streetAddressError ? 'error' : 'primary'}
+                                            label="Street address"
+                                            value={streetAddress}
+                                            onChange={e => setStreetAddress(e.target.value)}
+                                            sx={{
+                                                width: '70%',
+                                                margin: '0 auto 5% auto',
+                                                "& label.Mui-focused": {
+                                                    color: 'rgb(39, 99, 24)'
+                                                },
+                                                "& .MuiOutlinedInput-root": {
+                                                    "&.Mui-focused fieldset": {
+                                                        borderColor: 'rgb(39, 99, 24)'
+                                                    }
+                                                }
+                                            }}
+                                        />
+                                        <TextField
+                                            size={"small"}
+                                            error={zipCodeError}
+                                            helperText={zipCodeErrorMsg}
+                                            id="zipCode"
+                                            type="search"
+                                            name="name"
+                                            placeholder="Zip code"
+                                            autoComplete="zipCode"
+                                            required
+                                            fullWidth
+                                            variant="outlined"
+                                            color={zipCodeError ? 'error' : 'primary'}
+                                            label="Zip-code"
+                                            pattern={"(?i)^[a-z0-9][a-z0-9\\- ]{0,10}[a-z0-9]$"}
+                                            value={zipCode}
+                                            onChange={e => setZipCode(e.target.value)}
+                                            sx={{
+                                                width: '70%',
+                                                margin: '0 auto 5% auto',
+                                                "& label.Mui-focused": {
+                                                    color: 'rgb(39, 99, 24)'
+                                                },
+                                                "& .MuiOutlinedInput-root": {
+                                                    "&.Mui-focused fieldset": {
+                                                        borderColor: 'rgb(39, 99, 24)'
+                                                    }
+                                                }
+                                            }}
+                                        />
+                                    </Box>
+                                </div>
+                            </>
+                        )}
+                        {showUnavailableItemsDiv === false &&
+                            <div className="submit-order">
 
+                                    <Button
+                                        className="add-btn"
+                                        type="button"
+                                        fullWidth
+                                        variant="contained"
+                                        endIcon={<CreditCard/>}
+                                        onClick={submitOrder}
+                                        sx={{
+                                            width: '70%',
+                                            backgroundColor: 'rgb(39, 99, 24)',
+                                            "&:hover": {backgroundColor: 'rgb(49,140,23)'}
+                                        }}
+                                    >
+                                        Place Order
+                                    </Button>
+                            </div>
+                            }
+                            {showUnavailableItemsDiv === true &&
+                                <div className="personal-info">
+                                    <Button
+                                        className="add-btn"
+                                        type="button"
+                                        fullWidth
+                                        variant="contained"
+                                        endIcon={<ShoppingCartOutlinedIcon/>}
+                                        onClick={() => {navigate('/basket')}}
+                                        sx={{
+                                            width: '70%',
+                                            backgroundColor: 'rgb(39, 99, 24)',
+                                            "&:hover": {backgroundColor: 'rgb(49,140,23)'}
+                                        }}
+                                    >
+                                        Basket
+                                    </Button>
+                                </div>
+                            }
                     </div>
                     <div className="order-items">
                         {
                             [...basketItems].map((item, index) => (
-                                <OrderItem key={index} item={item} />
+                                <OrderItem key={index} item={item} onOutOfStock={onUnavailable} />
                             ))
                         }
                     </div>

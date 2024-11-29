@@ -99,6 +99,8 @@ function Order() {
                     setOrders(order);
                     setHideClearButton(false);
                     setOpenBackdrop(false);
+                    setTotalPages(1);
+                    setCurrentPage(1);
                     toast.success("Order found.", {
                         position: "bottom-center",
                         autoClose: 3000,

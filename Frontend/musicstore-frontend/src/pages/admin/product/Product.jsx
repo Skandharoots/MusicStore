@@ -94,6 +94,8 @@ function Product() {
             setProducts(products);
             setHideClearButton(false);
             setOpenBackdrop(false);
+            setTotalPages(1);
+            setCurrentPage(1);
             toast.success("Product found.", {
                 position: "bottom-center",
                 autoClose: 3000,

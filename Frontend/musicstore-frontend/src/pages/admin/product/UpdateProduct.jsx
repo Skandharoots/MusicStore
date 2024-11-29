@@ -832,7 +832,8 @@ function UpdateProduct() {
                         error={productPriceError}
                         helperText={productPriceErrorMsg}
                         id="productPrice"
-                        type="search"
+                        type="number"
+                        step="1.00"
                         name="productPrice"
                         placeholder="2699.99"
                         autoComplete="productPrice"
@@ -869,7 +870,7 @@ function UpdateProduct() {
                         error={productQuantityError}
                         helperText={productQuantityErrorMsg}
                         id="productQuantity"
-                        type="search"
+                        type="number"
                         name="productQuantity"
                         placeholder="1"
                         autoComplete="productQuantity"

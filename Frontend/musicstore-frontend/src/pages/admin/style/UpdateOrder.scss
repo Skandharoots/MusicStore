@@ -2,10 +2,14 @@
   height: fit-content;
   display: flex;
   flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
   min-height: 80dvh;
-  width: 780px;
+  width: 850px;
   border-left: 1px solid rgba(0, 0, 0, 0.1);
   background-color: white;
+  color: black;
 }
 
 .OrderUpdateForm {
@@ -19,4 +23,56 @@
   border-radius: 1em;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
   padding: 2%;
+
+  .update-order-left {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    box-sizing: border-box;
+    color: black;
+    width: 100%;
+    min-width: 340px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+
+    .order-personal-details {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: flex-start;
+      width: 47%;
+      height: fit-content;
+      padding: 16px;
+      border-radius: 1em;
+      margin-bottom: 16px;
+      box-sizing: border-box;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .order-delivery {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: flex-start;
+      width: 47%;
+      height: fit-content;
+      padding: 16px;
+      border-radius: 1em;
+      margin-bottom: 16px;
+      box-sizing: border-box;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  .update-order-right {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 340px;
+    padding: 0 0 0 0;
+
+  }
 }

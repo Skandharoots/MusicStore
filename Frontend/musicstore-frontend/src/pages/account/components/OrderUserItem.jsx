@@ -4,7 +4,6 @@ import Grid from "@mui/material/Grid2";
 import axios from "axios";
 import { format } from "date-fns";
 import {useNavigate} from "react-router-dom";
-import noImage from '../../../../public/no-image.svg'
 
 
 function OrderUserItem(props) {
@@ -19,7 +18,7 @@ function OrderUserItem(props) {
                 promises.push(axios.get(`api/azure/read?path=${item.productSkuId}/0`, {responseType: 'blob'}))
 
             })
-            Promise.all(promises).then(ordered_array => {
+            Promise.all(promises.map(p => p.catch(e => e))).then(ordered_array => {
                 ordered_array.forEach( result => {
                     let blob = new Blob([result.data], {type: "image/*"});
                     let imgUrl = URL.createObjectURL(blob);
@@ -154,7 +153,7 @@ function OrderUserItem(props) {
                                     flexGrow: '0',
                                 }}
                             >
-                                <img alt={noImage} src={image}
+                                <img alt={'No image'} src={image}
                                      style={{
                                          objectFit: 'cover',
                                          maxWidth: '100%',

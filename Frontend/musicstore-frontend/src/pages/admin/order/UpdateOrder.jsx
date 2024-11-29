@@ -15,14 +15,16 @@ import {
     Select,
     Typography
 } from "@mui/material";
-import TextField from "@mui/material/TextField";
 import EditIcon from "@mui/icons-material/Edit";
+import {format} from "date-fns";
+import AdminOrderProductItem from "./components/AdminOrderProductItem.jsx";
 
 function UpdateOrder() {
 
     const [order, setOrder] = useState({});
+    const [orderItems, setOrderItems] = useState([]);
     const [orderId, setOrderId] = useState('');
-    const [dateCreated, setDateCreated] = useState('');
+    const [dateCreated, setDateCreated] = useState(null);
     const [name, setName] = useState('');
     const [surname, setSurname] = useState('');
     const [email, setEmail] = useState('');
@@ -49,6 +51,7 @@ function UpdateOrder() {
                }
            }).then(res => {
                setOrder(res.data);
+               setOrderItems(res.data.orderItems);
                setOrderId(res.data.orderIdentifier);
                setDateCreated(res.data.dateCreated);
                setName(res.data.name);
@@ -57,7 +60,7 @@ function UpdateOrder() {
                setPhone(res.data.phone);
                setCountry(res.data.country);
                setStreetAddress(res.data.streetAddress);
-               setCity(res.data.state.city);
+               setCity(res.data.city);
                setZipCode(res.data.zipCode);
                setStatus(res.data.status);
            }).catch(err => {
@@ -165,273 +168,62 @@ function UpdateOrder() {
                 >
                     Update order
                 </Typography>
+                <div style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    width: '100%',
+                    height: 'fit-content',
+                    justifyContent: 'flex-start',
+                    alignItems: 'flex-start',
+                    borderRadius: '1em',
+                    padding: '16px',
+                    boxSizing: 'border-box',
+                    boxShadow: '0 5px 15px rgba(0, 0, 0, 0.1)',
+                    marginBottom: '16px',
+                    color: 'black',
+                }}>
+                    <p style={{margin: '0', fontSize: '14px', fontWeight: 'bold'}}>Order nr: <span
+                        style={{margin: '0', fontSize: '14px', fontWeight: 'normal'}}>{order.orderIdentifier}</span></p>
+                    <p style={{margin: '0', fontSize: '14px', fontWeight: 'bold'}}>Date of purchase: <span
+                        style={{
+                            margin: '0',
+                            fontSize: '14px',
+                            fontWeight: 'normal'
+                        }}>{format(dateCreated, "MMMM do, yyyy H:mma")}</span></p>
+                    <p style={{margin: '0', fontSize: '14px', fontWeight: 'bold'}}>Total order price: <span
+                        style={{fontWeight: 'normal'}}>{order.totalPrice}$</span></p>
+                </div>
+                <div className="update-order-left">
+                    <div className="order-personal-details">
+                        <p style={{margin: '0', fontSize: '14px'}}>{name} {surname}</p>
+                        <p style={{margin: '0', fontSize: '14px'}}>{email}</p>
+                        <p style={{margin: '0', fontSize: '14px'}}>{phone}</p>
+                    </div>
+                    <div className="order-delivery">
+                        <p style={{margin: '0', fontSize: '14px',}}>{country}</p>
+                        <p style={{margin: '0', fontSize: '14px',}}>{city}</p>
+                        <p style={{margin: '0', fontSize: '14px',}}>{streetAddress}</p>
+                        <p style={{margin: '0', fontSize: '14px',}}>{zipCode}</p>
+                    </div>
+                </div>
+                <div className="update-order-right">
+                    {
+                        [...orderItems].map(item => (
+                            <AdminOrderProductItem key={item.id} item={item}/>
+                        ))
+                    }
+                </div>
                 <Box
+                    style={{
+                        marginTop: '16px',
+                        width: '100%',
+                    }}
                 >
-                    <TextField
-                        size={"small"}
-                        disabled={true}
-                        id="orderId"
-                        type="search"
-                        name="orderId"
-                        placeholder="Order identifier"
-                        autoComplete="orderIdentifier"
-                        required
-                        fullWidth
-                        variant="outlined"
-                        label="Order id"
-                        value={orderId}
-                        sx={{
-                            width: '70%',
-                            margin: '0 auto 5% auto',
-                            "& label.Mui-focused": {
-                                color: 'rgb(39, 99, 24)'
-                            },
-                            "& .MuiOutlinedInput-root": {
-                                "&.Mui-focused fieldset": {
-                                    borderColor: 'rgb(39, 99, 24)'
-                                }
-                            }
-                        }}
-                    />
-                    <TextField
-                        size={"small"}
-                        disabled={true}
-                        id="dateCreated"
-                        type="search"
-                        name="dateCreated"
-                        placeholder="Order identifier"
-                        autoComplete="orderIdentifier"
-                        required
-                        fullWidth
-                        variant="outlined"
-                        label="Date created"
-                        value={dateCreated}
-                        sx={{
-                            width: '70%',
-                            margin: '0 auto 5% auto',
-                            "& label.Mui-focused": {
-                                color: 'rgb(39, 99, 24)'
-                            },
-                            "& .MuiOutlinedInput-root": {
-                                "&.Mui-focused fieldset": {
-                                    borderColor: 'rgb(39, 99, 24)'
-                                }
-                            }
-                        }}
-                    />
-                    <TextField
-                        size={"small"}
-                        disabled={true}
-                        id="name"
-                        type="search"
-                        name="name"
-                        placeholder="First name"
-                        autoComplete="name"
-                        required
-                        fullWidth
-                        variant="outlined"
-                        label="First name"
-                        value={name}
-                        sx={{
-                            width: '70%',
-                            margin: '0 auto 5% auto',
-                            "& label.Mui-focused": {
-                                color: 'rgb(39, 99, 24)'
-                            },
-                            "& .MuiOutlinedInput-root": {
-                                "&.Mui-focused fieldset": {
-                                    borderColor: 'rgb(39, 99, 24)'
-                                }
-                            }
-                        }}
-                    />
-                    <TextField
-                        size={"small"}
-                        disabled={true}
-                        id="surname"
-                        type="search"
-                        name="surname"
-                        placeholder="Surname"
-                        autoComplete="surname"
-                        required
-                        fullWidth
-                        variant="outlined"
-                        label="Surname"
-                        value={surname}
-                        sx={{
-                            width: '70%',
-                            margin: '0 auto 5% auto',
-                            "& label.Mui-focused": {
-                                color: 'rgb(39, 99, 24)'
-                            },
-                            "& .MuiOutlinedInput-root": {
-                                "&.Mui-focused fieldset": {
-                                    borderColor: 'rgb(39, 99, 24)'
-                                }
-                            }
-                        }}
-                    />
-                    <TextField
-                        size={"small"}
-                        disabled={true}
-                        id="email"
-                        type="search"
-                        name="email"
-                        placeholder="your@email.com"
-                        autoComplete="email"
-                        required
-                        fullWidth
-                        variant="outlined"
-                        label="Email"
-                        value={email}
-                        sx={{
-                            width: '70%',
-                            margin: '0 auto 5% auto',
-                            "& label.Mui-focused": {
-                                color: 'rgb(39, 99, 24)'
-                            },
-                            "& .MuiOutlinedInput-root": {
-                                "&.Mui-focused fieldset": {
-                                    borderColor: 'rgb(39, 99, 24)'
-                                }
-                            }
-                        }}
-                    />
-                    <TextField
-                        size={"small"}
-                        disabled={true}
-                        id="phone"
-                        type="tel"
-                        name="phone"
-                        placeholder="+48 567 234 902"
-                        autoComplete="phone"
-                        required
-                        fullWidth
-                        variant="outlined"
-                        label="Phone number"
-                        value={phone}
-                        sx={{
-                            width: '70%',
-                            margin: '0 auto 5% auto',
-                            "& label.Mui-focused": {
-                                color: 'rgb(39, 99, 24)'
-                            },
-                            "& .MuiOutlinedInput-root": {
-                                "&.Mui-focused fieldset": {
-                                    borderColor: 'rgb(39, 99, 24)'
-                                }
-                            }
-                        }}
-                    />
-                    <TextField
-                        size={"small"}
-                        disabled={true}
-                        id="country"
-                        type="search"
-                        name="country"
-                        placeholder="Country"
-                        autoComplete="country"
-                        required
-                        fullWidth
-                        variant="outlined"
-                        label="Country"
-                        value={country}
-                        sx={{
-                            width: '70%',
-                            margin: '0 auto 5% auto',
-                            "& label.Mui-focused": {
-                                color: 'rgb(39, 99, 24)'
-                            },
-                            "& .MuiOutlinedInput-root": {
-                                "&.Mui-focused fieldset": {
-                                    borderColor: 'rgb(39, 99, 24)'
-                                }
-                            }
-                        }}
-                    />
-                    <TextField
-                        size={"small"}
-                        disabled={true}
-                        id="city"
-                        type="search"
-                        name="city"
-                        placeholder="Surname"
-                        autoComplete="city"
-                        required
-                        fullWidth
-                        variant="outlined"
-                        label="City"
-                        value={city}
-                        sx={{
-                            width: '70%',
-                            margin: '0 auto 5% auto',
-                            "& label.Mui-focused": {
-                                color: 'rgb(39, 99, 24)'
-                            },
-                            "& .MuiOutlinedInput-root": {
-                                "&.Mui-focused fieldset": {
-                                    borderColor: 'rgb(39, 99, 24)'
-                                }
-                            }
-                        }}
-                    />
-                    <TextField
-                        size={"small"}
-                        disabled={true}
-                        id="streetAddress"
-                        type="search"
-                        name="streetAddress"
-                        placeholder="Street Address"
-                        autoComplete="streetAddress"
-                        required
-                        fullWidth
-                        variant="outlined"
-                        label="Street address"
-                        value={streetAddress}
-                        sx={{
-                            width: '70%',
-                            margin: '0 auto 5% auto',
-                            "& label.Mui-focused": {
-                                color: 'rgb(39, 99, 24)'
-                            },
-                            "& .MuiOutlinedInput-root": {
-                                "&.Mui-focused fieldset": {
-                                    borderColor: 'rgb(39, 99, 24)'
-                                }
-                            }
-                        }}
-                    />
-                    <TextField
-                        size={"small"}
-                        disabled={true}
-                        id="zipCode"
-                        type="search"
-                        name="name"
-                        placeholder="Zip code"
-                        autoComplete="zipCode"
-                        required
-                        fullWidth
-                        variant="outlined"
-                        label="Zip-code"
-                        value={zipCode}
-                        sx={{
-                            width: '70%',
-                            margin: '0 auto 5% auto',
-                            "& label.Mui-focused": {
-                                color: 'rgb(39, 99, 24)'
-                            },
-                            "& .MuiOutlinedInput-root": {
-                                "&.Mui-focused fieldset": {
-                                    borderColor: 'rgb(39, 99, 24)'
-                                }
-                            }
-                        }}
-                    />
                     <FormControl
                         size="small"
                         sx={{
                             m: 1,
-                            width: '70%',
+                            width: '100%',
                             margin: '0 auto 5% auto',
                             "& label.Mui-focused": {
                                 color: 'rgb(39, 99, 24)'
@@ -461,12 +253,12 @@ function UpdateOrder() {
                     <Button
                         className="add-btn"
                         type="button"
-                        endIcon={<EditIcon />}
+                        endIcon={<EditIcon/>}
                         fullWidth
                         variant="contained"
                         onClick={updateOrder}
                         sx={{
-                            width: '70%',
+                            width: '100%',
                             backgroundColor: 'rgb(39, 99, 24)',
                             "&:hover": {backgroundColor: 'rgb(49,140,23)'}
                         }}

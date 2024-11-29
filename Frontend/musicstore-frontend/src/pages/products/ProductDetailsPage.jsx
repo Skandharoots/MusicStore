@@ -61,7 +61,7 @@ function ProductDetailsPage() {
                 [...res.data].map((path) => {
                     promises.push(axios.get(`api/azure/read?path=${path}`, {responseType: 'blob'}))
                 })
-                Promise.all(promises).then(ordered_array => {
+                Promise.all(promises.map(p => p.catch(e => e))).then(ordered_array => {
                     ordered_array.forEach( result => {
                         let blob = new Blob([result.data], {type: "image/*"});
                         setImageGallery(old => [...old, blob]);

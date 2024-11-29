@@ -42,8 +42,7 @@ function MyOrderPage() {
                     'X-XSRF-TOKEN': res.data.token,
                     'Content-Type': 'application/json'
                 }
-            })
-                .then((response) => {
+            }).then((response) => {
                     setOrder(response.data);
                     setOrderItems(response.data.orderItems);
                     setName(response.data.name);
@@ -73,6 +72,7 @@ function MyOrderPage() {
             })
 
         }).catch(() => {
+            setOpenBackdrop(true);
             toast.error('Cannot fetch token', {
                 position: "bottom-center",
                 autoClose: 3000,
@@ -174,7 +174,8 @@ function MyOrderPage() {
                     borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
                     marginBottom: '16px',
                 }}>
-                    <p style={{margin: '0', fontSize: '22px', fontWeight: 'bold'}}>Order nr: <span style={{margin: '0', fontSize: '22px', fontWeight: 'normal'}}>{order.orderIdentifier}</span></p>
+                    <p style={{margin: '0', fontSize: '22px', fontWeight: 'bold'}}>Order nr: <span
+                        style={{margin: '0', fontSize: '22px', fontWeight: 'normal'}}>{order.orderIdentifier}</span></p>
                 </div>
                 <div className="my-order-left">
                     <div className="order-details-header">

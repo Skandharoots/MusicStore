@@ -767,21 +767,6 @@ function AddProduct() {
                             onChange={handleGallery}
                         />
                     </Button>
-                    { !hideDeleteGalBtn &&
-                    <Button variant="contained"
-                            fullWidth
-                            endIcon={<DeleteOutlineOutlinedIcon />}
-                            onClick={deleteGallery}
-                            sx={{
-                                width: '70%',
-                                marginBottom: '8px',
-                                backgroundColor: 'rgb(159,20,20)',
-                                "&:hover": {backgroundColor: 'rgb(193,56,56)'},
-                            }}
-                    >
-                        Delete Gallery Photos
-                    </Button>
-                    }
                     {!hideGallery &&
                         <div
                             style={{
@@ -792,6 +777,21 @@ function AddProduct() {
                             }}>
                             <ImageSlider imageBinaries={productGalleryPhoto} onDelete={delGalPhoto}/>
                         </div>
+                    }
+                    { !hideDeleteGalBtn &&
+                        <Button variant="contained"
+                                fullWidth
+                                endIcon={<DeleteOutlineOutlinedIcon />}
+                                onClick={deleteGallery}
+                                sx={{
+                                    width: '70%',
+                                    marginBottom: '8px',
+                                    backgroundColor: 'rgb(159,20,20)',
+                                    "&:hover": {backgroundColor: 'rgb(193,56,56)'},
+                                }}
+                        >
+                            Delete Gallery Photos
+                        </Button>
                     }
                     <Button
                         className="add-btn"

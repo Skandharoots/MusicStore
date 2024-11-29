@@ -924,6 +924,17 @@ function UpdateProduct() {
                             onChange={handleGallery}
                         />
                     </Button>
+                    {!hideGallery &&
+                        <div
+                            style={{
+                                maxWidth: "1200px",
+                                width: "70%",
+                                aspectRatio: "10 / 6",
+                                margin: "0 auto 32px auto",
+                            }}>
+                            <ImageSlider imageBinaries={productGalleryPhoto} onDelete={delGalPhoto}/>
+                        </div>
+                    }
                     { !hideDeleteGalBtn &&
                         <Button variant="contained"
                                 hidden={hideDeleteGalBtn}
@@ -939,17 +950,6 @@ function UpdateProduct() {
                         >
                             Delete Gallery Photos
                         </Button>
-                    }
-                    {!hideGallery &&
-                        <div
-                            style={{
-                                maxWidth: "1200px",
-                                width: "70%",
-                                aspectRatio: "10 / 6",
-                                margin: "0 auto 32px auto",
-                            }}>
-                            <ImageSlider imageBinaries={productGalleryPhoto} onDelete={delGalPhoto}/>
-                        </div>
                     }
                     <Button
                         className="add-btn"

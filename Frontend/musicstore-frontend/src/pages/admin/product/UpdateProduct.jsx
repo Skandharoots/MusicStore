@@ -458,7 +458,7 @@ function UpdateProduct() {
                                                     transition: Slide,
                                                 });
                                             } else {
-                                                toast.error('Failed to update product photo!', {
+                                                toast.error('Error ' + result.status + ': Failed to update product photo!', {
                                                     position: "bottom-center",
                                                     autoClose: 3000,
                                                     hideProgressBar: false,

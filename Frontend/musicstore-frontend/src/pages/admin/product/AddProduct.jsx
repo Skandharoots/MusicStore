@@ -374,7 +374,7 @@ function AddProduct() {
                                                     transition: Slide,
                                                 });
                                             } else {
-                                                toast.error('Failed to add product photo!', {
+                                                toast.error('Error ' + result.status + ': Failed to add product photo!', {
                                                     position: "bottom-center",
                                                     autoClose: 3000,
                                                     hideProgressBar: false,
@@ -400,7 +400,7 @@ function AddProduct() {
                                             transition: Slide,
                                         });
                                         navigate('/admin/product');
-                                    }).catch(error => {
+                                    }).catch(() => {
                                     //
                                 });
                             }).catch(() => {

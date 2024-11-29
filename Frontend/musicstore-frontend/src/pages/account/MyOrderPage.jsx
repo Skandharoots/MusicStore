@@ -192,7 +192,7 @@ function MyOrderPage() {
                                 margin: '0',
                                 fontSize: '18px',
                                 fontWeight: 'bold',
-                            }}>Date placed: <span
+                            }}>Date of purchase: <span
                                 style={{
                                     margin: '0',
                                     fontSize: '18px',

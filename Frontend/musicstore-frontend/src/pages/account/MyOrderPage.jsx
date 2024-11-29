@@ -6,11 +6,14 @@ import axios from "axios";
 import {Backdrop, CircularProgress} from "@mui/material";
 import './style/MyOrderPage.scss';
 import OrderProductItem from "./components/OrderProductItem.jsx";
+import { format } from "date-fns";
+
 
 function MyOrderPage() {
 
     const [order, setOrder] = useState({});
     const [orderItems, setOrderItems] = useState([]);
+    const [dateCreated, setDateCreated] = useState(null);
     const [name, setName] = useState('');
     const [surname, setSurname] = useState('');
     const [email, setEmail] = useState('');
@@ -22,6 +25,7 @@ function MyOrderPage() {
     const [totalPrice, setTotalPrice] = useState(0);
     const [status, setStatus] = useState('');
     const [openBackdrop, setOpenBackdrop] = useState(false);
+    const [showOrderDetails, setShowOrderDetails] = useState(false);
 
     const navigate = useNavigate();
     const orderId = useParams();
@@ -45,6 +49,7 @@ function MyOrderPage() {
             }).then((response) => {
                     setOrder(response.data);
                     setOrderItems(response.data.orderItems);
+                    setDateCreated(response.data.dateCreated);
                     setName(response.data.name);
                     setSurname(response.data.surname);
                     setEmail(response.data.email);
@@ -56,9 +61,10 @@ function MyOrderPage() {
                     setStatus(response.data.status);
                     setTotalPrice(response.data.totalPrice);
                     setOpenBackdrop(false);
-                }).catch((error) => {
+                    setShowOrderDetails(true);
+                }).catch(() => {
                 setOpenBackdrop(false);
-                toast.error(error.response.data.message, {
+                toast.error('Order not found', {
                     position: "bottom-center",
                     autoClose: 3000,
                     hideProgressBar: false,
@@ -146,67 +152,105 @@ function MyOrderPage() {
             >
                 <CircularProgress color="inherit"/>
             </Backdrop>
-            <div className="my-order-page-content">
-                <div style={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    width: '100%',
-                    height: 'fit-content',
-                    justifyContent: 'flex-start',
-                    alignItems: 'flex-start',
-                    borderRadius: '1em',
-                    padding: '16px',
-                    boxSizing: 'border-box',
-                    borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
-                }}>
-                    {parseStatus(status)}
-                </div>
-                <div style={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    width: '100%',
-                    height: 'fit-content',
-                    justifyContent: 'flex-start',
-                    alignItems: 'flex-start',
-                    borderRadius: '1em',
-                    padding: '16px',
-                    boxSizing: 'border-box',
-                    borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
-                    marginBottom: '16px',
-                }}>
-                    <p style={{margin: '0', fontSize: '22px', fontWeight: 'bold'}}>Order nr: <span
-                        style={{margin: '0', fontSize: '22px', fontWeight: 'normal'}}>{order.orderIdentifier}</span></p>
-                </div>
-                <div className="my-order-left">
-                    <div className="order-details-header">
-                        <p style={{margin: '0', fontSize: '18px', fontWeight: 'bold'}}>Order details:</p>
+            {showOrderDetails && (
+                <>
+                    <div className="my-order-page-content">
+                        <div style={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            width: '100%',
+                            height: 'fit-content',
+                            justifyContent: 'flex-start',
+                            alignItems: 'flex-start',
+                            borderRadius: '1em',
+                            padding: '16px',
+                            boxSizing: 'border-box',
+                            borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
+                        }}>
+                            {parseStatus(status)}
+                        </div>
+                        <div style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            width: '100%',
+                            height: 'fit-content',
+                            justifyContent: 'flex-start',
+                            alignItems: 'flex-start',
+                            borderRadius: '1em',
+                            padding: '16px',
+                            boxSizing: 'border-box',
+                            borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
+                            marginBottom: '16px',
+                        }}>
+                            <p style={{margin: '0', fontSize: '22px', fontWeight: 'bold'}}>Order nr: <span
+                                style={{
+                                    margin: '0',
+                                    fontSize: '22px',
+                                    fontWeight: 'normal'
+                                }}>{order.orderIdentifier}</span></p>
+                            <p style={{
+                                margin: '0',
+                                fontSize: '18px',
+                                fontWeight: 'bold',
+                            }}>Date placed: <span
+                                style={{
+                                    margin: '0',
+                                    fontSize: '18px',
+                                    fontWeight: 'normal'
+                                }}>{format(dateCreated, "MMMM do, yyyy H:mma")}</span></p>
+                        </div>
+                        <div className="my-order-left">
+                            <div className="order-details-header">
+                                <p style={{margin: '0', fontSize: '18px', fontWeight: 'bold'}}>Order details:</p>
+                            </div>
+                            <div className="order-personal-details">
+                                <p style={{margin: '0', fontSize: '14px'}}>{name} {surname}</p>
+                                <p style={{margin: '0', fontSize: '14px'}}>{email}</p>
+                                <p style={{margin: '0', fontSize: '14px'}}>{phone}</p>
+                            </div>
+                            <div className="order-delivery-header">
+                                <p style={{margin: '0', fontSize: '18px', fontWeight: 'bold'}}>Order delivery:</p>
+                            </div>
+                            <div className="order-delivery">
+                                <p style={{margin: '0', fontSize: '14px',}}>{country}</p>
+                                <p style={{margin: '0', fontSize: '14px',}}>{city}</p>
+                                <p style={{margin: '0', fontSize: '14px',}}>{street}</p>
+                                <p style={{margin: '0', fontSize: '14px',}}>{zipCode}</p>
+                            </div>
+                        </div>
+                        <div className="my-order-right">
+                            <p style={{margin: '0 0 16px 0', fontSize: '18px', fontWeight: 'bold'}}>Order items:</p>
+                            {
+                                [...orderItems].map(item => (
+                                    <OrderProductItem key={item.id} item={item}/>
+                                ))
+                            }
+                            <p style={{margin: '0', fontSize: '18px'}}>Total order price: <span
+                                style={{fontWeight: 'bold'}}>{totalPrice}$</span></p>
+                        </div>
                     </div>
-                    <div className="order-personal-details">
-                        <p style={{margin: '0', fontSize: '14px'}}>{name} {surname}</p>
-                        <p style={{margin: '0', fontSize: '14px'}}>{email}</p>
-                        <p style={{margin: '0', fontSize: '14px'}}>{phone}</p>
+                </>
+            )}
+            {!showOrderDetails && (
+                <>
+                    <div style={{
+                        width: '400px',
+                        display: 'flex',
+                        flexDirection: 'row',
+                        height: 'fit-content',
+                        padding: '16px',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        textAlign: 'center',
+                        borderRadius: '1em',
+                        boxShadow: '0 5px 15px rgba(0, 0, 0, 0.1)',
+                    }}>
+                        <p style={{margin: '0', fontSize: '20px', fontWeight: 'normal'}}>
+                            We have not found an order<br/>you are looking for.
+                        </p>
                     </div>
-                    <div className="order-delivery-header">
-                        <p style={{margin: '0', fontSize: '18px', fontWeight: 'bold'}}>Order delivery:</p>
-                    </div>
-                    <div className="order-delivery">
-                        <p style={{margin: '0', fontSize: '14px',}}>{country}</p>
-                        <p style={{margin: '0', fontSize: '14px',}}>{city}</p>
-                        <p style={{margin: '0', fontSize: '14px',}}>{street}</p>
-                        <p style={{margin: '0', fontSize: '14px',}}>{zipCode}</p>
-                    </div>
-                </div>
-                <div className="my-order-right">
-                    <p style={{margin: '0 0 16px 0', fontSize: '18px', fontWeight: 'bold'}}>Order items:</p>
-                    {
-                        [...orderItems].map(item => (
-                            <OrderProductItem key={item.id} item={item}/>
-                        ))
-                    }
-                    <p style={{margin: '0', fontSize: '18px'}}>Total order price: <span
-                        style={{fontWeight: 'bold'}}>{totalPrice}$</span></p>
-                </div>
-            </div>
+                </>
+            )}
 
 
         </div>

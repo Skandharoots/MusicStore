@@ -22,7 +22,6 @@ function ProductsSearchPage() {
 
     useEffect(() => {
         document.title = `Product search - ${searchPhrase.searchPhrase}`;
-        console.log(searchPhrase.searchPhrase);
     }, []);
 
     useEffect(() => {

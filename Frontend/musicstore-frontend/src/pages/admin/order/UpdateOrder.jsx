@@ -91,7 +91,6 @@ function UpdateOrder() {
     const updateOrder = (e) => {
         e.preventDefault();
         setOpenBackdrop(true);
-        console.log(JSON.stringify(order));
         axios.get('api/users/csrf/token')
         .then(res => {
             axios.put(`api/order/update/${orderId}`, {

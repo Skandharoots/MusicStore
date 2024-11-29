@@ -90,7 +90,7 @@ function OrderItem(props) {
                          backgroundSize: 'cover',
                      }}
                 >
-                    <img alt={'No product photo'} src={img}
+                    <img alt={'No image'} src={img}
                          style={{
                              objectFit: 'cover',
                              maxWidth: '100%',

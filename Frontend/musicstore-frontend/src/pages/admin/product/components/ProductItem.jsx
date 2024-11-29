@@ -205,7 +205,7 @@ function ProductItem(props) {
                 >
 
 
-                    <img alt={'No product photo'} src={img}
+                    <img alt={'No image'} src={img}
                          style={{
                              objectFit: 'cover',
                              maxWidth: '100%',

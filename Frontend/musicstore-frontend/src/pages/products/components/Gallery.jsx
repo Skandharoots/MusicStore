@@ -49,7 +49,7 @@ export function Gallery({ imageBinaries }) {
                         <img
                             key={index}
                             src={url}
-                            alt={'No product photo'}
+                            alt={'No image'}
                             className="img-slider-img"
                             style={{}}
                         />

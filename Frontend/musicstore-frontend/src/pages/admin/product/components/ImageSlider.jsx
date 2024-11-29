@@ -60,7 +60,7 @@ export function ImageSlider({ imageBinaries, onDelete }) {
                         <img
                             key={index * 10}
                             src={url}
-                            alt={'No product photo'}
+                            alt={'No image'}
                             className="img-slider-img"
                             style={{}}
                         />

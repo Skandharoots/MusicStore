@@ -51,7 +51,7 @@ public class AzureBlobStorageService implements IAzureBlobStorage {
             throw new ResponseStatusException(HttpStatusCode.valueOf(e.getStatusCode()), e.getServiceMessage());
         } catch (Exception e) {
             log.error("Blob storage exception - " + e.getMessage());
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
+            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, e.getMessage());
         }
     }
 
@@ -68,7 +68,7 @@ public class AzureBlobStorageService implements IAzureBlobStorage {
             throw new ResponseStatusException(HttpStatusCode.valueOf(e.getStatusCode()), e.getServiceMessage());
         } catch (Exception e) {
             log.error("Blob storage exception - " + e.getMessage());
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
+            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, e.getMessage());
         }
     }
 
@@ -86,7 +86,7 @@ public class AzureBlobStorageService implements IAzureBlobStorage {
             throw new ResponseStatusException(HttpStatusCode.valueOf(e.getStatusCode()), e.getServiceMessage());
         } catch (Exception e) {
             log.error("Blob storage exception - " + e.getMessage());
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
+            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, e.getMessage());
         }
     }
 
@@ -113,7 +113,7 @@ public class AzureBlobStorageService implements IAzureBlobStorage {
             throw new ResponseStatusException(HttpStatusCode.valueOf(e.getStatusCode()), e.getServiceMessage());
         } catch (Exception e) {
             log.error("Blob storage exception - " + e.getMessage());
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
+            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, e.getMessage());
         }
     }
 
@@ -136,7 +136,7 @@ public class AzureBlobStorageService implements IAzureBlobStorage {
             throw new ResponseStatusException(HttpStatusCode.valueOf(e.getStatusCode()), e.getServiceMessage());
         } catch (Exception e) {
             log.error("Blob storage exception - " + e.getMessage());
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
+            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, e.getMessage());
         }
     }
 

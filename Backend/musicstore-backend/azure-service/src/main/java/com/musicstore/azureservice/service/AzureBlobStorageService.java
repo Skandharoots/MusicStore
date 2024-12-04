@@ -13,6 +13,7 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -47,7 +48,7 @@ public class AzureBlobStorageService implements IAzureBlobStorage {
             return path + "/" + fileName;
         } catch (BlobStorageException e) {
             log.error("Blob storage exception - " + e.getMessage());
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getServiceMessage());
+            throw new ResponseStatusException(HttpStatusCode.valueOf(e.getStatusCode()), e.getServiceMessage());
         } catch (Exception e) {
             log.error("Blob storage exception - " + e.getMessage());
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
@@ -64,7 +65,7 @@ public class AzureBlobStorageService implements IAzureBlobStorage {
             return bytes;
         } catch (BlobStorageException e) {
             log.error("Blob storage exception - " + e.getMessage());
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getServiceMessage());
+            throw new ResponseStatusException(HttpStatusCode.valueOf(e.getStatusCode()), e.getServiceMessage());
         } catch (Exception e) {
             log.error("Blob storage exception - " + e.getMessage());
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
@@ -82,7 +83,7 @@ public class AzureBlobStorageService implements IAzureBlobStorage {
             return blobNamesList;
         } catch (BlobStorageException e) {
             log.error("Blob storage exception - " + e.getMessage());
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getServiceMessage());
+            throw new ResponseStatusException(HttpStatusCode.valueOf(e.getStatusCode()), e.getServiceMessage());
         } catch (Exception e) {
             log.error("Blob storage exception - " + e.getMessage());
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
@@ -109,7 +110,7 @@ public class AzureBlobStorageService implements IAzureBlobStorage {
 
         } catch (BlobStorageException e) {
             log.error("Blob storage exception - " + e.getMessage());
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getServiceMessage());
+            throw new ResponseStatusException(HttpStatusCode.valueOf(e.getStatusCode()), e.getServiceMessage());
         } catch (Exception e) {
             log.error("Blob storage exception - " + e.getMessage());
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
@@ -132,7 +133,7 @@ public class AzureBlobStorageService implements IAzureBlobStorage {
 
         } catch (BlobStorageException e) {
             log.error("Blob storage exception - " + e.getMessage());
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getServiceMessage());
+            throw new ResponseStatusException(HttpStatusCode.valueOf(e.getStatusCode()), e.getServiceMessage());
         } catch (Exception e) {
             log.error("Blob storage exception - " + e.getMessage());
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());

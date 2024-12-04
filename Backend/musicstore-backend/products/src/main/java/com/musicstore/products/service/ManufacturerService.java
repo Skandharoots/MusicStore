@@ -103,7 +103,7 @@ public class ManufacturerService {
 
         if (!token.startsWith("Bearer ")) {
             log.error("Invalid token - " + token);
-            throw new RuntimeException("Invalid token");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid token");
         }
 
         String jwtToken = token.substring("Bearer ".length());

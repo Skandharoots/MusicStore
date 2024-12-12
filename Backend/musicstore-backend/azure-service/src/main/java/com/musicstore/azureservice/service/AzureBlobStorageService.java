@@ -48,7 +48,8 @@ public class AzureBlobStorageService implements IAzureBlobStorage {
             return path + "/" + fileName;
         } catch (BlobStorageException e) {
             log.error("Blob storage exception - " + e.getMessage());
-            throw new ResponseStatusException(HttpStatusCode.valueOf(e.getStatusCode()), e.getServiceMessage());
+            throw new ResponseStatusException(HttpStatusCode.valueOf(e.getStatusCode()),
+                    e.getServiceMessage());
         } catch (Exception e) {
             log.error("Blob storage exception - " + e.getMessage());
             throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, e.getMessage());
@@ -65,7 +66,8 @@ public class AzureBlobStorageService implements IAzureBlobStorage {
             return bytes;
         } catch (BlobStorageException e) {
             log.error("Blob storage exception - " + e.getMessage());
-            throw new ResponseStatusException(HttpStatusCode.valueOf(e.getStatusCode()), e.getServiceMessage());
+            throw new ResponseStatusException(HttpStatusCode.valueOf(e.getStatusCode()),
+                    e.getServiceMessage());
         } catch (Exception e) {
             log.error("Blob storage exception - " + e.getMessage());
             throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, e.getMessage());
@@ -83,7 +85,8 @@ public class AzureBlobStorageService implements IAzureBlobStorage {
             return blobNamesList;
         } catch (BlobStorageException e) {
             log.error("Blob storage exception - " + e.getMessage());
-            throw new ResponseStatusException(HttpStatusCode.valueOf(e.getStatusCode()), e.getServiceMessage());
+            throw new ResponseStatusException(HttpStatusCode.valueOf(e.getStatusCode()),
+                    e.getServiceMessage());
         } catch (Exception e) {
             log.error("Blob storage exception - " + e.getMessage());
             throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, e.getMessage());
@@ -110,7 +113,8 @@ public class AzureBlobStorageService implements IAzureBlobStorage {
 
         } catch (BlobStorageException e) {
             log.error("Blob storage exception - " + e.getMessage());
-            throw new ResponseStatusException(HttpStatusCode.valueOf(e.getStatusCode()), e.getServiceMessage());
+            throw new ResponseStatusException(HttpStatusCode.valueOf(e.getStatusCode()),
+                    e.getServiceMessage());
         } catch (Exception e) {
             log.error("Blob storage exception - " + e.getMessage());
             throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, e.getMessage());
@@ -133,7 +137,8 @@ public class AzureBlobStorageService implements IAzureBlobStorage {
 
         } catch (BlobStorageException e) {
             log.error("Blob storage exception - " + e.getMessage());
-            throw new ResponseStatusException(HttpStatusCode.valueOf(e.getStatusCode()), e.getServiceMessage());
+            throw new ResponseStatusException(HttpStatusCode.valueOf(e.getStatusCode()),
+                    e.getServiceMessage());
         } catch (Exception e) {
             log.error("Blob storage exception - " + e.getMessage());
             throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, e.getMessage());

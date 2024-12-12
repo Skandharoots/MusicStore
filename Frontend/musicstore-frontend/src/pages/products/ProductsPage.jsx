@@ -58,6 +58,8 @@ function ProductsPage() {
         setSelectedCountryName('');
         setLowPrice(0);
         setHighPrice(100000);
+        setTotalPages(1);
+        setCurrentPage(1);
     }, [categoryId.categoryId]);
 
     useEffect(() => {

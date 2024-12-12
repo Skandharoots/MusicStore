@@ -56,6 +56,8 @@ function ProductsPage() {
         setSelectedManufacturerName('');
         setSelectedSubcategoryName('');
         setSelectedCountryName('');
+        setLowPrice(0);
+        setHighPrice(100000);
     }, [categoryId.categoryId]);
 
     useEffect(() => {

@@ -1,8 +1,9 @@
 import './style/Account.scss';
 import React, {useEffect, useState} from 'react';
 import {
+    Backdrop,
     Box,
-    Button,
+    Button, CircularProgress,
     Dialog,
     DialogActions,
     DialogContent,
@@ -27,6 +28,7 @@ function Account() {
     const [lastName, setLastName] = useState('');
     const [open, setOpen] = useState(false);
     const [confirmText, setConfirmText] = useState('');
+    const [openBackdrop, setOpenBackdrop] = useState(false);
 
     const [emailError, setEmailError] = React.useState(false);
     const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
@@ -52,6 +54,7 @@ function Account() {
     }, []);
 
     useEffect(() => {
+        setOpenBackdrop(true);
         axios.get('api/users/csrf/token')
         .then(res => {
             axios.post(`api/users/get/${LocalStorageHelper.GetActiveUser()}`, {}, {
@@ -64,7 +67,9 @@ function Account() {
                 setEmail(res.data.email);
                 setFirstName(res.data.firstName);
                 setLastName(res.data.lastName);
+                setOpenBackdrop(false);
             }).catch(() => {
+                setOpenBackdrop(false);
                 toast.error('User with given identifier not found', {
                     position: "bottom-center",
                     autoClose: 3000,
@@ -78,6 +83,7 @@ function Account() {
                 })
             })
         }).catch(() => {
+            setOpenBackdrop(false);
             toast.error('Cannot fetch token.',{
                 position: "bottom-center",
                 autoClose: 3000,
@@ -165,7 +171,7 @@ function Account() {
         if (validateInputs() === false) {
             return;
         }
-
+        setOpenBackdrop(true);
         axios.get('api/users/csrf/token', {})
         .then((response) => {
             axios.put(`api/users/update/${LocalStorageHelper.GetActiveUser()}`, {
@@ -180,6 +186,7 @@ function Account() {
                     'Content-Type': 'application/json',
                 }
             }).then(() => {
+                setOpenBackdrop(false);
                 toast.success("Account info updated", {
                     position: "bottom-center",
                     autoClose: 3000,
@@ -196,6 +203,7 @@ function Account() {
                 setTimeout(() => {navigate('/')}, 2000);
 
             }).catch((error) => {
+                setOpenBackdrop(false);
                 toast.error(error.response.data.message, {
                     position: "bottom-center",
                     autoClose: 3000,
@@ -209,6 +217,7 @@ function Account() {
                 });
             });
         }).catch(() => {
+            setOpenBackdrop(false);
             toast.error("Cannot fetch token", {
                 position: "bottom-center",
                 autoClose: 3000,
@@ -239,7 +248,7 @@ function Account() {
             });
             return;
         }
-
+        setOpenBackdrop(true);
         axios.get('api/users/csrf/token', {})
         .then((response) => {
             axios.delete(`api/users/delete/${LocalStorageHelper.GetActiveUser()}`, {
@@ -248,6 +257,7 @@ function Account() {
                     'X-XSRF-TOKEN': response.data.token,
                 }
             }).then(() => {
+                setOpenBackdrop(false);
                 toast.success("Account deleted!", {
                     position: "bottom-center",
                     autoClose: 3000,
@@ -262,6 +272,7 @@ function Account() {
                 LocalStorageHelper.LogoutUser();
                 setTimeout(() => {navigate('/');}, 3000);
             }).catch(() => {
+                setOpenBackdrop(false);
                 toast.error("Account deletion failed.", {
                     position: "bottom-center",
                     autoClose: 3000,
@@ -275,6 +286,7 @@ function Account() {
                 });
             });
         }).catch(() => {
+            setOpenBackdrop(false);
             toast.error("Cannot fetch token", {
                 position: "bottom-center",
                 autoClose: 3000,
@@ -291,6 +303,12 @@ function Account() {
 
     return (
         <div className="account">
+            <Backdrop
+                sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
+                open={openBackdrop}
+            >
+                <CircularProgress color="inherit" />
+            </Backdrop>
             <div className="page-info">
                 <h5>Account Settings</h5>
             </div>

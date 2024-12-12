@@ -1,5 +1,5 @@
 import '../style/Country.scss';
-import {Button} from "@mui/material";
+import {Backdrop, Button, CircularProgress} from "@mui/material";
 import Grid from '@mui/material/Grid2';
 import { useNavigate } from "react-router-dom";
 import {useEffect, useState} from "react";
@@ -12,6 +12,7 @@ import {Slide, toast} from "react-toastify";
 function Country() {
 
     const [countries, setCountries] = useState([]);
+    const [openBackdrop, setOpenBackdrop] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -41,26 +42,35 @@ function Country() {
     }, []);
 
     useEffect(() => {
+        setOpenBackdrop(true);
         axios.get('api/products/countries/get', {})
             .then(res => {
                 setCountries(res.data);
+                setOpenBackdrop(false);
             }).catch(error => {
-            toast.error(error.response.data.message, {
-                position: "bottom-center",
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: false,
-                progress: undefined,
-                theme: "light",
-                transition: Slide,
-            });
-        })
+                setOpenBackdrop(false);
+                toast.error(error.response.data.message, {
+                    position: "bottom-center",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: false,
+                    progress: undefined,
+                    theme: "light",
+                    transition: Slide,
+                });
+            })
     }, [])
 
     return (
         <div className="country">
+            <Backdrop
+                sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
+                open={openBackdrop}
+            >
+                <CircularProgress color="inherit" />
+            </Backdrop>
             <div className="page-title">
                 <h5>Countries</h5>
             </div>

@@ -1,5 +1,5 @@
 import {useParams} from "react-router-dom";
-import {useEffect, useState} from "react";
+import {useEffect, useMemo, useState} from "react";
 import axios from "axios";
 import './style/ProductsPage.scss';
 import {
@@ -46,11 +46,17 @@ function ProductsPage() {
 
     useEffect(() => {
         document.title = `${categoryId.name}`;
-    }, []);
+    }, [categoryId.name]);
 
     useEffect(() => {
         window.scrollTo(0, 0)
     }, [currentPage]);
+
+    useMemo(() => {
+        setSelectedManufacturerName('');
+        setSelectedSubcategoryName('');
+        setSelectedCountryName('');
+    }, [categoryId.categoryId]);
 
     useEffect(() => {
         axios.get(`api/products/items/get/max_price/${categoryId.categoryId}?country=${selectedCountryName}&manufacturer=${selectedManufacturerName}&subcategory=${selectedSubcategoryName}`)
@@ -58,28 +64,28 @@ function ProductsPage() {
                 setSliderValue([0, res.data]);
                 setSliderMaxValue(res.data);
             }).catch(() => {})
-    }, [selectedSubcategoryName, selectedCountryName, selectedManufacturerName])
+    }, [selectedSubcategoryName, selectedCountryName, selectedManufacturerName, categoryId.categoryId])
 
     useEffect(() => {
         axios.get(`api/products/subcategories/get/search/${categoryId.categoryId}?country=${selectedCountryName}&manufacturer=${selectedManufacturerName}`)
             .then((response) => {
                 setSubcategories(response.data);
             }).catch(() => {});
-    }, [selectedManufacturerName, selectedCountryName, categoryId]);
+    }, [selectedManufacturerName, selectedCountryName, categoryId.categoryId]);
 
     useEffect(() => {
         axios.get(`api/products/countries/get/search/${categoryId.categoryId}?subcategory=${selectedSubcategoryName}&manufacturer=${selectedManufacturerName}`)
             .then((response) => {
                 setCountries(response.data);
             }).catch(() => {});
-    }, [selectedSubcategoryName, selectedManufacturerName, categoryId]);
+    }, [selectedSubcategoryName, selectedManufacturerName, categoryId.categoryId]);
 
     useEffect(() => {
         axios.get(`api/products/manufacturers/get/search/${categoryId.categoryId}?country=${selectedCountryName}&subcategory=${selectedSubcategoryName}`)
             .then((response) => {
                 setManufacturers(response.data);
             }).catch(() => {});
-    }, [selectedSubcategoryName, selectedCountryName, categoryId]);
+    }, [selectedSubcategoryName, selectedCountryName, categoryId.categoryId]);
 
     useEffect(() => {
         setOpenBackdrop(true);
@@ -93,7 +99,7 @@ function ProductsPage() {
             setOpenBackdrop(false);
         });
 
-    }, [sortBy, selectedSubcategoryName, selectedCountryName, selectedManufacturerName, lowPrice, highPrice , categoryId, perPage, currentPage]);
+    }, [sortBy, selectedSubcategoryName, selectedCountryName, selectedManufacturerName, lowPrice, highPrice , categoryId.categoryId, perPage, currentPage]);
 
 
     const changePage = (event, value) => {

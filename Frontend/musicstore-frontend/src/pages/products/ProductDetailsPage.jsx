@@ -3,7 +3,8 @@ import React, {useEffect, useState} from "react";
 import './style/ProductsDetailsPage.scss';
 import {Gallery} from "./components/Gallery.jsx";
 import {
-    Button,
+    Backdrop,
+    Button, CircularProgress,
     Dialog, DialogActions,
     DialogContent,
     DialogContentText,
@@ -33,6 +34,7 @@ function ProductDetailsPage() {
     const [countryName, setCountryName] = useState('');
     const [showNotFoundPage, setShowNotFoundPage] = useState(false);
     const [open, setOpen] = useState(false);
+    const [openBackdrop, setOpenBackdrop] = useState(false);
 
     const navigate = useNavigate();
 
@@ -45,6 +47,7 @@ function ProductDetailsPage() {
     }, []);
 
     useEffect(() => {
+        setOpenBackdrop(true);
         axios.get(`api/products/items/get/${productId.productSkuId}`)
         .then(res => {
             setProductName(res.data.productName);
@@ -68,7 +71,9 @@ function ProductDetailsPage() {
                     } );
                 });
             }).catch(() => {})
+            setOpenBackdrop(false);
         }).catch(() => {
+            setOpenBackdrop(false);
             setShowNotFoundPage(true);
         });
     }, [productId.productSkuId]);
@@ -299,6 +304,12 @@ function ProductDetailsPage() {
 
     return (
         <div className="productDetails">
+            <Backdrop
+                sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
+                open={openBackdrop}
+            >
+                <CircularProgress color="inherit" />
+            </Backdrop>
             {showNotFoundPage && (
                 <>
                     <div className="not-found" style={{width:'fit-content',
@@ -350,6 +361,9 @@ function ProductDetailsPage() {
                                 width: "100%",
                                 height: "fit-content",
                                 display: "flex",
+                                flexDirection: "column",
+                                alignItems: "flex-start",
+                                justifyContent: "center",
                                 borderBottom: "1px solid rgba(0, 0, 0, 0.1)",
                             }}
                         >
@@ -360,6 +374,14 @@ function ProductDetailsPage() {
                                 fontStyle: 'italic',
                                 height: 'fit-content'
                             }}>{productName}</p>
+                            <p style={{
+                                margin: '0',
+                                fontSize: '8px',
+                                fontWeight: 'normal',
+                                fontStyle: 'normal',
+                                color: 'rgb(97,97,97)',
+                                height: 'fit-content'
+                                }}>Product id: {productId.productSkuId}</p>
                         </div>
                         <div style={{
                             width: '100%',

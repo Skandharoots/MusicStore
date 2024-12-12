@@ -514,7 +514,7 @@ function OrderPage() {
                                             id="city"
                                             type="search"
                                             name="city"
-                                            placeholder="Surname"
+                                            placeholder="City"
                                             autoComplete="city"
                                             required
                                             fullWidth

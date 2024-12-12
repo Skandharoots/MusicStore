@@ -39,7 +39,7 @@ function Home() {
                 <div className="top-banner-header">
                     <p style={{
                         margin: '0',
-                        fontSize: '40px',
+                        fontSize: '32px',
                         fontWeight: 'normal',
                         fontStyle: 'italic',
                     }}

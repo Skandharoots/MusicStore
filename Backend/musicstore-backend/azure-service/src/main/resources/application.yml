@@ -16,3 +16,10 @@ spring:
       max-request-size: 40MB
 my:
   admin_authorize_url: http://USERS/api/users/adminauthorize?token=
+server:
+  tomcat:
+    keep-alive-timeout: 5000
+    connection-timeout: 5000
+    max-swallow-size: 40MB
+    max-http-form-post-size: 40MB
+    background-processor-delay: 5000

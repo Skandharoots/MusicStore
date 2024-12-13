@@ -18,8 +18,12 @@ spec:
         - name: azure-service
           image: skandharoots/frontend:latest
           imagePullPolicy: Always
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
           ports:
-            - containerPort: 4000
+            - containerPort: 3000
 
 ---
 
@@ -33,5 +37,5 @@ spec:
   type: ClusterIP
   ports:
     - port: 80
-      targetPort: 4000
+      targetPort: 3000
       protocol: TCP

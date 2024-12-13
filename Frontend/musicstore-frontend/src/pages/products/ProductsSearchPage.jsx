@@ -52,7 +52,7 @@ function ProductsSearchPage() {
             </Backdrop>
             <div className="products-search-content">
                 <div className="content-search-header">
-                    <p style={{margin: '0', fontSize: '32px'}}>We have found {totalItems} products</p>
+                    <p style={{margin: '0', fontSize: '26px'}}>We have found {totalItems} products</p>
                 </div>
                 <Grid container
                       style={{

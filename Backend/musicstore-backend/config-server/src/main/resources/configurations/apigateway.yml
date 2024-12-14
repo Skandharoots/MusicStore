@@ -152,7 +152,11 @@ springdoc:
         name: Shopping Cart Service
       - url: /users-svc/v3/api-docs
         name: User Service
-
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
 
 
 

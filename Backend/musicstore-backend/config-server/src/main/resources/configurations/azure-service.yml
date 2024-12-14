@@ -22,3 +22,8 @@ springdoc:
   swagger-ui:
     enabled: true
     path: /azure-svc/swagger-ui.html
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

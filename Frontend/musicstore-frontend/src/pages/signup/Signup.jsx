@@ -151,6 +151,29 @@ function Signup() {
             >
                 <CircularProgress color="inherit"/>
             </Backdrop>
+            <Alert variant='filled'
+                   severity="success"
+                   icon={<CheckIcon fontSize='inherit' />}
+                   sx={{
+                       display: showSuccessMsg,
+                       width: '400px',
+                       margin: '32px auto 0 auto',
+                       padding: '0 2%',
+                   }}>
+                <AlertTitle>Success</AlertTitle>
+                Registration successful, please check your email to verify your account.
+            </Alert>
+            <Alert variant='filled'
+                   severity='error'
+                   onClose={() => setShowErrorMsg('none')}
+                   sx={{
+                       display: showErrorMsg,
+                       width: '400px',
+                       margin: '32px auto 0 auto',
+                       padding: '0 2%',
+                   }}>
+                <AlertTitle>Error, {registerErrorMsg}</AlertTitle>
+            </Alert>
             <div className="SignupForm">
                 <Typography
                     component="h1"
@@ -323,27 +346,6 @@ function Signup() {
                     </Button>
                 </Box>
             </div>
-            <Alert variant='filled'
-                   severity="success"
-                   icon={<CheckIcon fontSize='inherit' />}
-                   sx={{
-                       display: showSuccessMsg,
-                       width: 'fit-content',
-                       margin: '5% auto 0 auto',
-                   }}>
-                <AlertTitle>Success</AlertTitle>
-                Registration successful, please check your email to verify your account.
-            </Alert>
-            <Alert variant='filled'
-                   severity='error'
-                   onClose={() => setShowErrorMsg('none')}
-                   sx={{
-                       display: showErrorMsg,
-                       width: 'fit-content',
-                       margin: '5% auto 0 auto',
-                   }}>
-                <AlertTitle>Error, {registerErrorMsg}</AlertTitle>
-            </Alert>
         </div>
     )
 

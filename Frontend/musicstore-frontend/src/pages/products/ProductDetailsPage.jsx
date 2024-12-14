@@ -345,10 +345,11 @@ function ProductDetailsPage() {
             }
             {!showNotFoundPage && (
                 <>
-                    <div className="productDetails-header">
+                <div className="productDetails-header">
                     <div
                         style={{
                             maxWidth: "1200px",
+                            minWidth: "300px",
                             width: "45%",
                             aspectRatio: "10 / 6",
 
@@ -359,6 +360,7 @@ function ProductDetailsPage() {
                         <div
                             style={{
                                 width: "100%",
+                                minWidth: "300px",
                                 height: "fit-content",
                                 display: "flex",
                                 flexDirection: "column",
@@ -385,6 +387,7 @@ function ProductDetailsPage() {
                         </div>
                         <div style={{
                             width: '100%',
+                            minWidth: '300px',
                             height: 'fit-content',
                             display: 'flex',
                             flexDirection: 'row',

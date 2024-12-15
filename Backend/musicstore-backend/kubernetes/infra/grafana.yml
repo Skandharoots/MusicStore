@@ -94,11 +94,6 @@ data:
         access: proxy
         url: http://prometheus.default.svc.cluster.local:9090
         editable: false
-        jsonData:
-          httpMethod: POST
-          exemplarTraceIdDestinations:
-            - name: trace_id
-              datasourceUid: tempo
       - name: Loki
         type: loki
         uid: loki
@@ -110,9 +105,3 @@ data:
         version: 1
         editable: false
         apiVersion: 1
-        jsonData:
-          derivedFields:
-            -   datasourceUid: tempo
-                matcherRegex: \[.+,(.+?),
-                name: TraceID
-                url: $${__value.raw}

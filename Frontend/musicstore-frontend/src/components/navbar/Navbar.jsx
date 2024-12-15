@@ -84,7 +84,10 @@ function Navbar() {
                                 <Tooltip title={"My account"}>
                                     <NavLink to="/account">
                                         <div className={"welcome-text"}>
-                                            <p>
+                                            <p style={{
+                                                maxWidth: '50px',
+                                                overflow: 'hidden',
+                                            }}>
                                                 Hi,<br/>{userName}
                                             </p>
                                         </div>

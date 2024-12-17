@@ -34,7 +34,8 @@ public class JwtAuthFilter extends AbstractGatewayFilterFactory<JwtAuthFilter.Co
             if (routeValidator.isSecured.test(exchange.getRequest())) {
 
                 if (!exchange.getRequest().getHeaders().containsKey(HttpHeaders.AUTHORIZATION)) {
-                    log.error("Missing authorization priviledges for exchange - " + exchange.getRequest().getPath());
+                    log.error("Missing authorization priviledges for exchange - "
+                            + exchange.getRequest().getPath());
                     throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,
                             "Missing authorization priviledges");
                 }
@@ -43,7 +44,8 @@ public class JwtAuthFilter extends AbstractGatewayFilterFactory<JwtAuthFilter.Co
                         .getHeaders().get(HttpHeaders.AUTHORIZATION)).get(0);
 
                 if (!authorization.startsWith("Bearer ")) {
-                    log.error("Invalid authorization header for exchange - " + exchange.getRequest().getPath());
+                    log.error("Invalid authorization header for exchange - "
+                            + exchange.getRequest().getPath());
                     throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,
                             "Invalid authorization header");
                 } else {
@@ -60,7 +62,8 @@ public class JwtAuthFilter extends AbstractGatewayFilterFactory<JwtAuthFilter.Co
                             if (response) {
                                 return chain.filter(exchange);
                             } else {
-                                log.error("Unauthorized access for exchange - " + exchange.getRequest().getPath());
+                                log.error("Unauthorized access for exchange - "
+                                        + exchange.getRequest().getPath());
                                 return reactor.core.publisher.Mono.error(
                                         new ResponseStatusException(HttpStatus.UNAUTHORIZED,
                                                 "Unauthorized access")

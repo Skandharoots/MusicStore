@@ -44,7 +44,7 @@ public class AzureBlobStorageService implements IAzureBlobStorage {
         try {
             BlobClient blobClient = blobContainerClient.getBlobClient(path + "/" + fileName);
             blobClient.upload(file.getInputStream(), false);
-            log.info("File uploaded successfully - " + fileName);
+            log.info("File uploaded successfully - " + path + "/" + fileName);
             return path + "/" + fileName;
         } catch (BlobStorageException e) {
             log.error("Blob storage exception - " + e.getMessage());
@@ -108,7 +108,7 @@ public class AzureBlobStorageService implements IAzureBlobStorage {
             int index = path.lastIndexOf("/");
             client = blobContainerClient.getBlobClient(path.substring(0, index) + "/" + fileName);
             client.upload(file.getInputStream(), true);
-            log.info("File updated successfully - " + fileName);
+            log.info("File updated successfully - " + path.substring(0, index) + "/" +  fileName);
             return path.substring(0, index) + "/" + fileName;
 
         } catch (BlobStorageException e) {

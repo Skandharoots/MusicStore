@@ -250,8 +250,17 @@ function AddProduct() {
             setManufacturerErrorMsg('');
         }
 
+        if (productName.length < 1 || productName.length > 100) {
+            setProductNameError(true);
+            setProductNameErrorMsg('Product name must be from 1 to 100 characters long.');
+            isValid = false;
+        } else {
+            setProductNameError(false);
+            setProductNameErrorMsg('');
+        }
+
         if (!productName
-            || !/^[A-Za-z0-9][A-Za-z0-9&' :+=#?%()/"-]{1,49}$/i.test(productName)) {
+            || !/^[A-Za-z0-9][A-Za-z0-9&' :+=#?%()/"\-]{1,99}$/i.test(productName)) {
             setProductNameError(true);
             setProductNameErrorMsg('Please enter a valid product name. Permitted special characters: &\':+=#?()%/"-');
             isValid = false;

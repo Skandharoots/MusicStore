@@ -3,7 +3,7 @@ kind: ConfigMap
 metadata:
   name: discovery-cm
 data:
-  discovery_server_address: "http://discovery-0.discovery:8761/eureka"
+  discovery_server_address: "http://discovery-0.discovery:8761/eureka,http://discovery-1.discovery:8761/eureka"
   hostname: "${HOSTNAME}.discovery"
 
 ---
@@ -33,7 +33,7 @@ spec:
     matchLabels:
       app: discovery
   serviceName: discovery
-  replicas: 1
+  replicas: 2
   template:
     metadata:
       labels:
@@ -56,6 +56,10 @@ spec:
                 configMapKeyRef:
                   key: hostname
                   name: discovery-cm
+            - name: EUREKA_CLIENT_REGISTERWITHEUREKA
+              value: "true"
+            - name: EUREKA_CLIENT_FETCHREGISTRY
+              value: "true"
 
 ---
 apiVersion: v1
@@ -81,5 +85,5 @@ metadata:
 data:
   config_discovery_server_address: "http://discovery-0.discovery.default.svc.cluster.local:8761/eureka"
   config_hostname: "discovery-0"
-  config_discovery_server_uri_for_gateway: "http://discovery-0.discovery.default.svc.cluster.local:8761"
+  config_discovery_server_uri_for_gateway: "http://discovery-0.discovery.default.svc.cluster.local:8761,http://discovery-1.discovery.default.svc.cluster.local:8761"
 

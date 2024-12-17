@@ -18,7 +18,7 @@ eureka:
       "prometheus.port": "8080"
   client:
     service-url:
-      defaultZone: http://discovery-0.discovery.default.svc.cluster.local:8761/eureka
+      defaultZone: http://discovery-0.discovery.default.svc.cluster.local:8761/eureka,http://discovery-1.discovery.default.svc.cluster.local:8761/eureka
 spring:
   cloud:
     gateway:

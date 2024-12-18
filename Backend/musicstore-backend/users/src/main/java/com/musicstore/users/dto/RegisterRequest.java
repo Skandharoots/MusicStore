@@ -3,6 +3,7 @@ package com.musicstore.users.dto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,6 +20,7 @@ public class RegisterRequest {
     @Pattern(regexp = "^(?=.{1,50}$)[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ]+(?:[-'_.\\s][A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ]+)*$",
         message = "First name can contain lower and upper case letters, including polish, spaces and special"
                 + " characters: -'_.")
+    @Size(min = 1, max = 50, message = "First name must be from 1 to 50 characters long.")
     private String firstName;
 
     @NotNull(message = "Last name cannot be empty")
@@ -26,6 +28,7 @@ public class RegisterRequest {
     @Pattern(regexp = "^(?=.{1,50}$)[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ]+(?:[-'_.\\s][A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ]+)*$",
             message = "Last name can contain lower and upper case letters, including polish, spaces and special"
                     + " characters: -'_.")
+    @Size(min = 1, max = 50, message = "First name must be from 1 to 50 characters long.")
     private String lastName;
 
     @NotNull(message = "Email cannot be empty")
@@ -40,6 +43,7 @@ public class RegisterRequest {
         message = "Password must contain lower and upper case letters, "
                 + "at least one number, as well as one special character. "
                 + "Password must be at least 6 characters long.")
+    @Size(min = 6, max = 50, message = "Password must be from 6 to 50 characters long.")
     private String password;
 
 }

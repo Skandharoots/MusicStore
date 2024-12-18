@@ -17,9 +17,9 @@ public class SubcategoryUpdateRequest {
 
     @NotBlank(message = "Subcategory name is mandatory.")
     @NotNull(message = "Subcategory name is mandatory.")
-    @Pattern(regexp = "^[A-Z][A-Za-z ']{1,49}$",
+    @Pattern(regexp = "^[A-Z][A-Za-z '-]{1,49}$",
             message = "Subcategory name must start with a capital"
-                    + "letter and can contain spaces and and apostrophe.")
+                    + "letter and can contain spaces, - and an apostrophe.")
     @Size(min = 2, max = 50, message = "Subcategory name must be 1 to 50 characters long.")
     private String name;
 }

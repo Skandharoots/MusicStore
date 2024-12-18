@@ -22,7 +22,7 @@ public class ProductRequest {
     @Pattern(regexp = "^[A-Za-z0-9][A-Za-z0-9&' .,:+=#?()%/\"-]{1,99}$",
             message = "Product name can contain capital and lowercase letters, "
                     + "numbers, spaces and special characters  &'.,:+=#?()%/\"-")
-    @Size(min = 1, max = 100, message = "Product name must be 1 to 100 characters long.")
+    @Size(min = 2, max = 100, message = "Product name must be 2 to 100 characters long.")
     private String productName;
 
     @NotBlank(message = "Product description is mandatory.")

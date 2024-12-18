@@ -45,7 +45,8 @@ function Signup() {
         if (!firstName
             || !/^(?=.{1,50}$)[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ]+(?:[-'_.\s][A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ]+)*$/i.test(firstName)) {
             setFirstNameError(true);
-            setFirstNameErrorMessage('Please enter a valid first name.');
+            setFirstNameErrorMessage('Please enter a valid first name. Must be from 1 to 50 characters long. It can contain and must start with a capital letter,' +
+                ' it can contain lowercase letters, spaces and special characters -\'_.');
             isValid = false;
         } else {
             setFirstNameError(false);
@@ -55,7 +56,8 @@ function Signup() {
         if (!lastName
             || !/^(?=.{1,50}$)[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ]+(?:[-'_.\s][A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ]+)*$/i.test(lastName)) {
             setLastNameError(true);
-            setLastNameErrorMessage('Please enter a valid last name.');
+            setLastNameErrorMessage('Please enter a valid last name. Must be from 1 to 50 characters long. It can contain and must start with a capital letter,' +
+                ' it can contain lowercase letters, spaces and special characters -\'_.');
             isValid = false;
         } else {
             setLastNameError(false);
@@ -73,7 +75,7 @@ function Signup() {
 
         if (!password || password.length < 6 || password.length > 50) {
             setPasswordError(true);
-            setPasswordErrorMessage('Password must be at least 6 characters and max 50 long.');
+            setPasswordErrorMessage('Password must be at least 6 and at max 50 characters long.');
             isValid = false;
         } else if (!/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–\[{}\]:;',?/*~$^+=<>]).{6,50}$/.test(password)) {
             setPasswordError(true);

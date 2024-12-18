@@ -250,9 +250,9 @@ function AddProduct() {
             setManufacturerErrorMsg('');
         }
 
-        if (productName.length < 1 || productName.length > 100) {
+        if (productName.length < 2 || productName.length > 100) {
             setProductNameError(true);
-            setProductNameErrorMsg('Product name must be from 1 to 100 characters long.');
+            setProductNameErrorMsg('Product name must be from 2 to 100 characters long.');
             isValid = false;
         } else {
             setProductNameError(false);
@@ -262,7 +262,8 @@ function AddProduct() {
         if (!productName
             || !/^[A-Za-z0-9][A-Za-z0-9&' :+=#?%()/"\-]{1,99}$/i.test(productName)) {
             setProductNameError(true);
-            setProductNameErrorMsg('Please enter a valid product name. Permitted special characters: &\':+=#?()%/"-');
+            setProductNameErrorMsg('Please enter a valid product name. Can contain capital and ' +
+                'lowercase letters and numbers. Permitted special characters: &\':+=#?()%/"-');
             isValid = false;
         } else {
             setProductNameError(false);

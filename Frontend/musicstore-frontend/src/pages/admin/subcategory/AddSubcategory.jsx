@@ -67,9 +67,11 @@ function AddSubcategory() {
         let isValid = true;
 
         if (!subcategoryName
-            || !/^[A-Z][A-Za-z ']{1,49}/i.test(subcategoryName)) {
+            || !/^[A-Z][A-Za-z '\-]{1,49}/i.test(subcategoryName)) {
             setSubcategoryNameError(true);
-            setSubcategoryNameErrorMsg('Please enter a valid subcategory name.');
+            setSubcategoryNameErrorMsg('Please enter a valid subcategory name. Must be from 2 to 50 characters long.' +
+                ' Must start with a capital letter, can contain lowercase' +
+                ' letters, spaces and special characters \'-');
             isValid = false;
         } else {
             setSubcategoryNameError(false);

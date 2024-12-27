@@ -1,3 +1,9 @@
+@media screen and (max-width: 800px) {
+  .left-side {
+    display: none !important;
+  }
+}
+
 .left-side {
   display: flex;
   flex-direction: column;

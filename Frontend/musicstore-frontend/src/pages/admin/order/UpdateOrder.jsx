@@ -182,28 +182,28 @@ function UpdateOrder() {
                     marginBottom: '16px',
                     color: 'black',
                 }}>
-                    <p style={{margin: '0', fontSize: '14px', fontWeight: 'bold'}}>Order nr: <span
-                        style={{margin: '0', fontSize: '14px', fontWeight: 'normal'}}>{order.orderIdentifier}</span></p>
-                    <p style={{margin: '0', fontSize: '14px', fontWeight: 'bold'}}>Date of purchase: <span
+                    <p style={{margin: '0', fontSize: '14px', maxWidth: '100%', textWrap: 'wrap' , fontWeight: 'bold'}}>Order nr: <span
+                        style={{margin: '0', fontSize: '14px', maxWidth: '100%', textWrap: 'wrap' , fontWeight: 'normal'}}>{order.orderIdentifier}</span></p>
+                    <p style={{margin: '0', fontSize: '14px', maxWidth: '100%', textWrap: 'wrap' , fontWeight: 'bold'}}>Date of purchase: <span
                         style={{
                             margin: '0',
                             fontSize: '14px',
                             fontWeight: 'normal'
                         }}>{format(dateCreated, "MMMM do, yyyy")}</span></p>
-                    <p style={{margin: '0', fontSize: '14px', fontWeight: 'bold'}}>Total order price: <span
+                    <p style={{margin: '0', fontSize: '14px', maxWidth: '100%', textWrap: 'wrap' , fontWeight: 'bold'}}>Total order price: <span
                         style={{fontWeight: 'normal'}}>{order.totalPrice}$</span></p>
                 </div>
                 <div className="update-order-left">
                     <div className="order-personal-details">
-                        <p style={{margin: '0', fontSize: '14px'}}>{name} {surname}</p>
-                        <p style={{margin: '0', fontSize: '14px'}}>{email}</p>
-                        <p style={{margin: '0', fontSize: '14px'}}>{phone}</p>
+                        <p style={{margin: '0', maxWidth: '100%', wordBreak: 'break-all', fontSize: '14px', textWrap: 'wrap'}}>{name} {surname}</p>
+                        <p style={{margin: '0', maxWidth: '100%', wordBreak: 'break-all', fontSize: '14px', textWrap: 'wrap'}}>{email}</p>
+                        <p style={{margin: '0', maxWidth: '100%', wordBreak: 'break-all', fontSize: '14px', textWrap: 'wrap'}}>{phone}</p>
                     </div>
                     <div className="order-delivery">
-                        <p style={{margin: '0', fontSize: '14px',}}>{country}</p>
-                        <p style={{margin: '0', fontSize: '14px',}}>{city}</p>
-                        <p style={{margin: '0', fontSize: '14px',}}>{streetAddress}</p>
-                        <p style={{margin: '0', fontSize: '14px',}}>{zipCode}</p>
+                        <p style={{margin: '0', maxWidth: '100%', wordBreak: 'break-all', fontSize: '14px', textWrap: 'wrap'}}>{country}</p>
+                        <p style={{margin: '0', maxWidth: '100%', wordBreak: 'break-all', fontSize: '14px', textWrap: 'wrap'}}>{city}</p>
+                        <p style={{margin: '0', maxWidth: '100%', wordBreak: 'break-all', fontSize: '14px', textWrap: 'wrap'}}>{streetAddress}</p>
+                        <p style={{margin: '0', maxWidth: '100%', wordBreak: 'break-all', fontSize: '14px', textWrap: 'wrap'}}>{zipCode}</p>
                     </div>
                 </div>
                 <div className="update-order-right">

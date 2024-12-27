@@ -1,9 +1,7 @@
 .order-item {
-  width: 100%;
-  min-width: 300px;
   height: fit-content;
   min-height: 90px;
-  box-sizing: border-box;
+  min-width: 100px;
   padding: 2% 2%;
   display: flex;
   flex-wrap: wrap;

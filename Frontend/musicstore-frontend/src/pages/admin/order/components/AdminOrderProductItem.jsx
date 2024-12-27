@@ -46,10 +46,14 @@ function AdminOrderProductItem(props) {
     }, [props.item])
 
     return (
-        <div className="order-item">
+        <div className="order-item" style={{
+            width: "100%",
+            boxSizing: "border-box",
+            minWidth: '100px'
+        }}>
             <div className="item-img"
                  style={{
-                     width: '100px', maxHeight: '85px', aspectRatio: "16 / 9",
+                     maxWidth: '40%', maxHeight: '85px', aspectRatio: "16 / 9",
                      display: 'flex', justifyContent: 'center', alignItems: 'center',
                      backgroundSize: 'cover',
                  }}
@@ -69,7 +73,7 @@ function AdminOrderProductItem(props) {
                 display: 'flex',
                 flexWrap: 'wrap',
                 flexDirection: 'column',
-                width: '60%',
+                maxWidth: '60%',
                 height: '100%',
                 justifyContent: 'flex-start',
                 alignItems: 'flex-start',
@@ -77,12 +81,10 @@ function AdminOrderProductItem(props) {
 
             }}>
                 <Tooltip title={`${props.item.productName}`}>
-                    <div className="item-name">
-                        <p style={{margin: '0', fontSize: '16px', overflow: 'hidden', textWrap: 'nowrap'}}>{props.item.productName}</p>
-                    </div>
+                    <p style={{margin: '0', fontSize: '16px', maxWidth: '100%' , overflow: 'hidden', textWrap: 'nowrap'}}>{props.item.productName}</p>
                 </Tooltip>
-                <p style={{margin: '0 8px 0 0', fontSize: '14px'}}>Price: {props.item.unitPrice}$</p>
-                <p style={{margin: '0 8px 0 0', fontSize: '14px'}}>Quantity: {props.item.quantity}</p>
+                <p style={{margin: '0 8px 0 0', fontSize: '14px', maxWidth: '100%' , overflow: 'hidden', textWrap: 'nowrap'}}>Price: {props.item.unitPrice}$</p>
+                <p style={{margin: '0 8px 0 0', fontSize: '14px', maxWidth: '100%' , overflow: 'hidden', textWrap: 'nowrap'}}>Quantity: {props.item.quantity}</p>
             </div>
 
         </div>

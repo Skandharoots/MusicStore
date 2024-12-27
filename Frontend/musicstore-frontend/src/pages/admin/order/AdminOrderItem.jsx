@@ -97,7 +97,7 @@ function AdminOrderItem(props) {
                 height: 'fit-content',
                 alignItems: 'center',
                 justifyContent: 'flex-start',
-                minWidth: '300px',
+                minWidth: '200px',
                 padding: '4px',
                 color: 'black',
                 fontSize: '12px',
@@ -175,7 +175,7 @@ function AdminOrderItem(props) {
             {
                 [...images].map((image, index) => (
                     <div key={index * 5} style={{
-                        height: "70px",
+                        height: '70px',
                         display: "flex",
                         overflow: "hidden",
                     }}>

@@ -31,14 +31,14 @@ spec:
                   name: grafana-configmap
             - name: GF_SECURITY_ADMIN_USER
               valueFrom:
-                configMapKeyRef:
+                secretKeyRef:
                   key: GF_SECURITY_ADMIN_USER
-                  name: grafana-configmap
+                  name: grafana-secrets
             - name: GF_SECURITY_ADMIN_PASSWORD
               valueFrom:
-                configMapKeyRef:
+                secretKeyRef:
                   key: GF_SECURITY_ADMIN_PASSWORD
-                  name: grafana-configmap
+                  name: grafana-secrets
             - name: GF_USERS_ALLOW_SIGNUP
               valueFrom:
                 configMapKeyRef:
@@ -70,14 +70,24 @@ spec:
 ---
 
 apiVersion: v1
+data:
+  GF_SECURITY_ADMIN_USER: YWRtaW4=
+  GF_SECURITY_ADMIN_PASSWORD: YWRtaW4=
+kind: Secret
+metadata:
+  name: grafana-secrets
+
+---
+
+
+
+apiVersion: v1
 kind: ConfigMap
 metadata:
   name: grafana-configmap
 data:
   GF_AUTH_ANONYMOUS_ENABLED: "false"
   GF_AUTH_DISABLE_LOGIN_FORM: "false"
-  GF_SECURITY_ADMIN_USER: "admin"
-  GF_SECURITY_ADMIN_PASSWORD: "admin"
   GF_USERS_ALLOW_SIGNUP: "false"
   datasource.yml: |
     apiVersion: 1

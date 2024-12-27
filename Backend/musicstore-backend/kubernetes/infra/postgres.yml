@@ -4,8 +4,8 @@ metadata:
   name: postgres-secret
 data:
   POSTGRES_DB: cG9zdGdyZXM=
-  POSTGRES_USER: c2thbmRoYQ==
-  POSTGRES_PASSWORD: bGFwdW5pYTIxMjE=
+  POSTGRES_USER: YWRtaW4=
+  POSTGRES_PASSWORD: YWRtaW4=
 
 ---
 

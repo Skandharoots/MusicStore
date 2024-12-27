@@ -189,7 +189,7 @@ function UpdateOrder() {
                             margin: '0',
                             fontSize: '14px',
                             fontWeight: 'normal'
-                        }}>{format(dateCreated, "MMMM do, yyyy H:mma")}</span></p>
+                        }}>{format(dateCreated, "MMMM do, yyyy")}</span></p>
                     <p style={{margin: '0', fontSize: '14px', fontWeight: 'bold'}}>Total order price: <span
                         style={{fontWeight: 'normal'}}>{order.totalPrice}$</span></p>
                 </div>

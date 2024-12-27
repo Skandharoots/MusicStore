@@ -152,7 +152,7 @@ function AdminOrderItem(props) {
                     fontWeight: 'bold',
                     overflow: 'hidden',
                     textWrap: 'nowrap'
-                }}>{format(props.item.dateCreated, "MMMM do, yyyy H:mma")}</p>
+                }}>{format(props.item.dateCreated, "MMMM do, yyyy")}</p>
                 <p style={{
                     margin: '0',
                     fontSize: '12px',

@@ -197,7 +197,7 @@ function MyOrderPage() {
                                     margin: '0',
                                     fontSize: '18px',
                                     fontWeight: 'normal'
-                                }}>{format(dateCreated, "MMMM do, yyyy H:mma")}</span></p>
+                                }}>{format(dateCreated, "MMMM do, yyyy")}</span></p>
                         </div>
                         <div className="my-order-left">
                             <div className="order-details-header">

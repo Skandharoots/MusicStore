@@ -135,7 +135,7 @@ function Product() {
                 <h5>Products</h5>
             </div>
             <div className="actions">
-                <div style={{ display: 'inline-block' }}>
+                <div>
                     <Button
                         className="add-button"
                         variant="contained"

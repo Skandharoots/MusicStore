@@ -102,6 +102,7 @@ function MyOrders() {
                               boxSizing: 'border-box',
                               paddingLeft: '16px',
                               paddingBottom: '16px',
+                              paddingRight: '16px',
                               paddingTop: '16px',
                               borderBottom: '1px solid rgba(0, 0, 0, 0.1)'
                           }}

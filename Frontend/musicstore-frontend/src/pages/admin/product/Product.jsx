@@ -90,7 +90,8 @@ function Product() {
         })
     }, [currentPage, restoreDefaults]);
 
-    const onSubmitSearch = () => {
+    const onSubmitSearch = (e) => {
+        e.preventDefault();
         const searchId = search.trim();
         setOpenBackdrop(true);
         axios.get(`api/products/items/get/${searchId}`, {})
@@ -158,7 +159,7 @@ function Product() {
                     </Button>
                 </div>
 
-                    <form className={"search-prod"}>
+                    <form className={"search-prod"} onSubmit={onSubmitSearch}>
                         <input
                             type="text"
                             className="search-prod-input"
@@ -168,9 +169,9 @@ function Product() {
                             onChange={e => setSearch(e.target.value)}
                         />
                         <button
-                            type="button"
+                            type="submit"
                             className="search-prod-btn"
-                            onClick={onSubmitSearch}>
+                            >
                             <SearchOutlinedIcon fontSize="small" />
                         </button>
                     </form>

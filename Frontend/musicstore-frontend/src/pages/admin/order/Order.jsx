@@ -87,7 +87,8 @@ function Order() {
         })
     }, [restoreDefaults, currentPage]);
 
-    const onSubmitSearch = () => {
+    const onSubmitSearch = (e) => {
+        e.preventDefault();
         let searchId = search.trim();
         setOpenBackdrop(true);
         axios.get('api/users/csrf/token')
@@ -162,7 +163,7 @@ function Order() {
                 <h5>Manage Orders</h5>
             </div>
             <div className="actions">
-                <form className={"search-order"}>
+                <form className={"search-order"} onSubmit={onSubmitSearch}>
                     <input
                         type="text"
                         className="search-prod-input"
@@ -172,9 +173,9 @@ function Order() {
                         onChange={e => setSearch(e.target.value)}
                     />
                     <button
-                        type="button"
+                        type="submit"
                         className="search-order-btn"
-                        onClick={onSubmitSearch}>
+                        >
                         <SearchOutlinedIcon fontSize="small" />
                     </button>
                 </form>

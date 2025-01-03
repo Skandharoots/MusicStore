@@ -26,8 +26,13 @@ function ProductsSearchPage() {
 
     useEffect(() => {
         setOpenBackdrop(true);
-        axios.get(`api/products/items/get/search?searchPhrase=${searchPhrase.searchPhrase}&page=${currentPage - 1}&pageSize=${pageSize}`)
-            .then(res => {
+        axios.get(`api/products/items/get/search`, {
+            params: {
+                searchPhrase: searchPhrase.searchPhrase,
+                page: currentPage - 1,
+                pageSize: pageSize
+            }
+        }).then(res => {
                 setProducts(res.data.content);
                 setTotalPages(res.data.totalPages);
                 setTotalItems(res.data.totalElements);

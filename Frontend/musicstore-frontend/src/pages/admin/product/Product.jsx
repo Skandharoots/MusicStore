@@ -63,7 +63,12 @@ function Product() {
     useEffect(() => {
         setOpenBackdrop(true);
         setHideClearButton(true);
-        axios.get(`api/products/items/get?page=${currentPage - 1}&pageSize=${pageSize}`, {})
+        axios.get(`api/products/items/get`, {
+            params: {
+                page: currentPage - 1,
+                pageSize: pageSize,
+            }
+        })
             .then(res => {
                 setTotalPages(res.data.totalPages);
                 setTotalElements(res.data.numberOfElements);

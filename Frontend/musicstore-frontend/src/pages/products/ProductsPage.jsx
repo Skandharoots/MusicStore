@@ -63,30 +63,47 @@ function ProductsPage() {
     }, [categoryId.categoryId]);
 
     useEffect(() => {
-        axios.get(`api/products/items/get/max_price/${categoryId.categoryId}?country=${selectedCountryName}&manufacturer=${selectedManufacturerName}&subcategory=${selectedSubcategoryName}`)
-            .then(res => {
+        axios.get(`api/products/items/get/max_price/${categoryId.categoryId}`, {
+            params: {
+                country: selectedCountryName,
+                manufacturer: selectedManufacturerName,
+                subcategory: selectedSubcategoryName,
+            }
+        }).then(res => {
                 setSliderValue([0, res.data]);
                 setSliderMaxValue(res.data);
             }).catch(() => {})
     }, [selectedSubcategoryName, selectedCountryName, selectedManufacturerName, categoryId.categoryId])
 
     useEffect(() => {
-        axios.get(`api/products/subcategories/get/search/${categoryId.categoryId}?country=${selectedCountryName}&manufacturer=${selectedManufacturerName}`)
-            .then((response) => {
+        axios.get(`api/products/subcategories/get/search/${categoryId.categoryId}`, {
+            params: {
+                country: selectedCountryName,
+                manufacturer: selectedManufacturerName,
+            }
+        }).then((response) => {
                 setSubcategories(response.data);
             }).catch(() => {});
     }, [selectedManufacturerName, selectedCountryName, categoryId.categoryId]);
 
     useEffect(() => {
-        axios.get(`api/products/countries/get/search/${categoryId.categoryId}?subcategory=${selectedSubcategoryName}&manufacturer=${selectedManufacturerName}`)
-            .then((response) => {
+        axios.get(`api/products/countries/get/search/${categoryId.categoryId}`, {
+            params: {
+                subcategory: selectedSubcategoryName,
+                manufacturer: selectedManufacturerName,
+            }
+        }).then((response) => {
                 setCountries(response.data);
             }).catch(() => {});
     }, [selectedSubcategoryName, selectedManufacturerName, categoryId.categoryId]);
 
     useEffect(() => {
-        axios.get(`api/products/manufacturers/get/search/${categoryId.categoryId}?country=${selectedCountryName}&subcategory=${selectedSubcategoryName}`)
-            .then((response) => {
+        axios.get(`api/products/manufacturers/get/search/${categoryId.categoryId}`, {
+            params: {
+                country: selectedCountryName,
+                subcategory: selectedSubcategoryName,
+            }
+        }).then((response) => {
                 setManufacturers(response.data);
             }).catch(() => {});
     }, [selectedSubcategoryName, selectedCountryName, categoryId.categoryId]);
@@ -94,10 +111,24 @@ function ProductsPage() {
     useEffect(() => {
         setOpenBackdrop(true);
         let sorting = JSON.parse(sortBy);
-        axios.get(`api/products/items/get/values/${categoryId.categoryId}?country=${selectedCountryName}&manufacturer=${selectedManufacturerName}&subcategory=${selectedSubcategoryName}&lowPrice=${lowPrice}&highPrice=${highPrice}&sortBy=${sorting.sortBy}&sortDir=${sorting.direction}&page=${currentPage - 1}&pageSize=${perPage}`)
-            .then(res => {
+        axios.get(`api/products/items/get/values/${categoryId.categoryId}`, {
+            params: {
+                country: selectedCountryName,
+                manufacturer: selectedManufacturerName,
+                subcategory: selectedSubcategoryName,
+                lowPrice: lowPrice,
+                highPrice: highPrice,
+                sortBy: sorting.sortBy,
+                sortDir: sorting.direction,
+                page: currentPage - 1,
+                pageSize: perPage,
+            }
+        }).then(res => {
                 setProducts(res.data.content);
                 setTotalPages(res.data.totalPages);
+                if (res.data.totalPages < currentPage) {
+                    setCurrentPage(1);
+                }
                 setOpenBackdrop(false);
             }).catch(() => {
             setOpenBackdrop(false);

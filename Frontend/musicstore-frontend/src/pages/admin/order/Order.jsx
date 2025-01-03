@@ -44,11 +44,15 @@ function Order() {
         setOpenBackdrop(true);
         axios.get('api/users/csrf/token')
             .then(res => {
-                axios.post(`api/order/get/all?page=${currentPage - 1}&pageSize=${perPage}`, {}, {
+                axios.post(`api/order/get/all`, {}, {
                     headers: {
                         'Authorization': 'Bearer ' + LocalStorageHelper.getJwtToken(),
                         'X-XSRF-TOKEN': res.data.token,
                         'Content-Type': 'application/json'
+                    },
+                    params: {
+                        page: currentPage - 1,
+                        pageSize: perPage
                     }
                 }).then(res => {
                         setOrders(res.data.content);

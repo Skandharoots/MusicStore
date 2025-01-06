@@ -229,7 +229,7 @@ function ProductItem(props) {
                             <b>Name: </b>{props.item.productName}</p>
                     </Tooltip>
                     <p style={{margin: '0', overflow: 'hidden', textWrap: 'nowrap'}}>
-                        <b>Price: </b>{props.item.productPrice}$</p>
+                        <b>Price: </b>{props.item.productPrice.toFixed(2)}$</p>
                     <p style={{margin: '0', overflow: 'hidden', textWrap: 'nowrap'}}><b>In
                         stock: </b>{props.item.inStock}</p>
                 </div>

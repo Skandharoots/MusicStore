@@ -288,7 +288,7 @@ function BasketItem(props) {
                     </div>
                 </Tooltip>
                 <div className="product-quantity">
-                    <p style={{margin: '0 8px 0 0', fontSize: '14px'}}>{props.item.productPrice}$</p>
+                    <p style={{margin: '0 8px 0 0', fontSize: '14px'}}>{props.item.productPrice.toFixed(2)}$</p>
                     <FormControl
                         size="small"
                         autoFocus

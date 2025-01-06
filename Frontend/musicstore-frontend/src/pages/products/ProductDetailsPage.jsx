@@ -440,7 +440,7 @@ function ProductDetailsPage() {
                                     alignItems: 'flex-end',
                                     borderBottom: '1px solid rgba(0, 0, 0, 0.1)'
                                 }}>
-                                    <p style={{margin: '0', fontSize: '24px', fontWeight: 'bold'}}>{productPrice}$</p>
+                                    <p style={{margin: '0', fontSize: '24px', fontWeight: 'bold'}}>{parseFloat(productPrice).toFixed(2)}$</p>
                                     {
                                         inStockBanner
                                     }

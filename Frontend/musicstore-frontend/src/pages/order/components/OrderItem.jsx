@@ -8,11 +8,13 @@ import {
     MenuItem,
     Select
 } from "@mui/material";
+import {useNavigate} from "react-router-dom";
 
 function OrderItem(props) {
 
     const [img, setImg] = useState(null);
     const [boxShadow, setBoxShadow] = useState('0 5px 15px rgba(0, 0, 0, 0.1)');
+    const navigate = useNavigate();
 
     useEffect(() => {
 
@@ -103,13 +105,13 @@ function OrderItem(props) {
                 </div>
             </div>
                 <Tooltip title={`${props.item.productName}`}>
-                    <div className="product-name">
+                    <div className="product-name" onClick={() => {navigate(`/product/${props.item.productSkuId}/${props.item.productName}`)}}>
                         <p style={{margin: '0', fontSize: '18px'}}>{props.item.productName}</p>
                     </div>
                 </Tooltip>
                 <div className="product-quantity">
                     <div style={{width: '120px'}}>
-                        <p style={{margin: '0 8px 0 0', fontSize: '14px'}}>{props.item.productPrice}$</p>
+                        <p style={{margin: '0 8px 0 0', fontSize: '14px'}}>{props.item.productPrice.toFixed(2)}$</p>
                     </div>
                     <FormControl
                         size="small"

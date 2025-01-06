@@ -328,7 +328,7 @@ function ProductItem(props) {
                         fontWeight: 'bold',
                         overflow: 'hidden',
                         textWrap: 'nowrap'
-                    }}>{props.item.productPrice}$</p>
+                    }}>{props.item.productPrice.toFixed(2)}$</p>
                     <React.Fragment>
                         <Tooltip title={"Add to basket"}>
                             <Button

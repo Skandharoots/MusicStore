@@ -76,6 +76,7 @@ function Basket() {
             }
             setTotalItems(items);
             setTotalCost(total);
+            items < 1 ? setShowBasketEmpty(true) : setShowBasketItems(true);
             setOpenBackdrop(false);
         }
     }, [LocalStorageHelper.getBasketItems()]);
@@ -158,6 +159,8 @@ function Basket() {
         } else {
             localStorage.removeItem("basket");
             setBasketItems([]);
+            setShowBasketEmpty(true);
+            setShowBasketItems(false);
             toast.info("Basket cleared successfully.", {
                 position: "bottom-center",
                 autoClose: 3000,

@@ -19,6 +19,7 @@ function MyOrders() {
     const [currentPage, setCurrentPage] = useState(1);
     const [openBackdrop, setOpenBackdrop] = useState(false);
     const [showNoOrdersInformation, setShowNoOrdersInformation] = useState(false);
+    const [showOrders, setShowOrders] = useState(false);
 
     const navigate = useNavigate();
 
@@ -50,12 +51,15 @@ function MyOrders() {
                     page: currentPage - 1,
                     pageSize: perPage,
                 }
-            })
-                .then(res => {
+            }).then(res => {
                     setOrders(res.data.content);
                     setTotalPages(res.data.totalPages);
                     if (res.data.totalPages < 1) {
                         setShowNoOrdersInformation(true);
+                        setShowOrders(false);
+                    } else {
+                        setShowNoOrdersInformation(false);
+                        setShowOrders(true);
                     }
                     setOpenBackdrop(false);
                 }).catch(() => {
@@ -99,7 +103,7 @@ function MyOrders() {
             >
                 <CircularProgress color="inherit" />
             </Backdrop>
-            {!showNoOrdersInformation && (
+            {showOrders && (
                 <>
                     <Grid container
                           style={{

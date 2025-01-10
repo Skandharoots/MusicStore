@@ -272,7 +272,7 @@ function OrderPage() {
             setTotalCost(totalCostOfItems);
             setOpenBackdrop(false);
             if (items <= 0) {
-                toast.info('No items in order. Find inspiration at our home page', {
+                toast.info('No items for order. Find inspiration at our home page', {
                     position: "bottom-center",
                     autoClose: 3000,
                     hideProgressBar: false,
@@ -317,19 +317,6 @@ function OrderPage() {
                     fontWeight: 'normal'
                 }}>({totalItems} items)</span></p>
             </div>
-            {totalItems === 0 &&
-                <div className="wrapper">
-                    <Button
-                        variant="contained"
-                        onClick={() => {navigate('/')}}
-                        sx={{
-                            width: '300px',
-                            backgroundColor: 'rgb(39, 99, 24)',
-                            "&:hover": {backgroundColor: 'rgb(49,140,23)'}
-                        }}
-                        >Home</Button>
-                </div>
-            }
             {totalItems > 0 &&
                 <div className="wrapper">
                     <div className="order-form">

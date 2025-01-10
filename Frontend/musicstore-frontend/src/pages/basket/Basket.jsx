@@ -25,6 +25,8 @@ function Basket() {
     const [totalItems, setTotalItems] = useState(0);
     const [open, setOpen] = useState(false);
     const [openBackdrop, setOpenBackdrop] = useState(false);
+    const [showBasketItems, setShowBasketItems] = useState(false);
+    const [showBasketEmpty, setShowBasketEmpty] = useState(false);
 
     const navigate = useNavigate();
 
@@ -45,6 +47,7 @@ function Basket() {
                     })
                     setTotalItems(items);
                     setTotalCost(total);
+                    items < 1 ? setShowBasketEmpty(true) : setShowBasketItems(true);
                     setOpenBackdrop(false);
                 }).catch(() => {
                     setOpenBackdrop(false);
@@ -89,6 +92,10 @@ function Basket() {
         setBasketItems(currentItems => currentItems.filter(
             ({id}) => id !== idToDelete)
         );
+        if (basketItems.length === 1) {
+            setShowBasketEmpty(true);
+            setShowBasketItems(false);
+        }
     };
 
     const clearCart = (event) => {
@@ -104,6 +111,8 @@ function Basket() {
                         }
                     }).then(() => {
                         setOpenBackdrop(false);
+                        setShowBasketEmpty(true);
+                        setShowBasketItems(false);
                         toast.info("Basket cleared successfully.", {
                             position: "bottom-center",
                             autoClose: 3000,
@@ -172,7 +181,7 @@ function Basket() {
             >
                 <CircularProgress color="inherit"/>
             </Backdrop>
-            {basketItems.length <= 0 && (
+            {showBasketEmpty && (
                 <>
                     <div className="basket-empty">
                         <div style={{
@@ -200,7 +209,7 @@ function Basket() {
                 </>
             )
             }
-            {basketItems.length > 0 && (
+            {showBasketItems && (
                 <>
                     <div className="basket-container">
                         <div className="basket-main">

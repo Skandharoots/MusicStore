@@ -32,6 +32,7 @@ function ProductDetailsPage() {
     const [manufacturerName, setManufacturerName] = useState('');
     const [subcategoryName, setSubcategoryName] = useState('');
     const [countryName, setCountryName] = useState('');
+    const [showFoundPage, setShowFoundPage] = useState(false);
     const [showNotFoundPage, setShowNotFoundPage] = useState(false);
     const [open, setOpen] = useState(false);
     const [openBackdrop, setOpenBackdrop] = useState(false);
@@ -72,8 +73,11 @@ function ProductDetailsPage() {
                 });
             }).catch(() => {})
             setOpenBackdrop(false);
+            setShowFoundPage(true);
+            setShowNotFoundPage(false);
         }).catch(() => {
             setOpenBackdrop(false);
+            setShowFoundPage(false);
             setShowNotFoundPage(true);
         });
     }, [productId.productSkuId]);
@@ -343,7 +347,7 @@ function ProductDetailsPage() {
                 </>
             )
             }
-            {!showNotFoundPage && (
+            {showFoundPage && (
                 <>
                 <div className="productDetails-header">
                     <div

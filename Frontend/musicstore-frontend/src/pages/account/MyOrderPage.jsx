@@ -25,6 +25,7 @@ function MyOrderPage() {
     const [totalPrice, setTotalPrice] = useState(0);
     const [status, setStatus] = useState('');
     const [openBackdrop, setOpenBackdrop] = useState(false);
+    const [showNotFound, setShowNotFound] = useState(false);
     const [showOrderDetails, setShowOrderDetails] = useState(false);
 
     const navigate = useNavigate();
@@ -62,8 +63,11 @@ function MyOrderPage() {
                     setTotalPrice(response.data.totalPrice);
                     setOpenBackdrop(false);
                     setShowOrderDetails(true);
+                    setShowNotFound(false);
                 }).catch(() => {
                 setOpenBackdrop(false);
+                setShowOrderDetails(false);
+                setShowNotFound(true);
                 toast.error('Order not found', {
                     position: "bottom-center",
                     autoClose: 3000,
@@ -231,7 +235,7 @@ function MyOrderPage() {
                     </div>
                 </>
             )}
-            {!showOrderDetails && (
+            {showNotFound && (
                 <>
                     <div style={{
                         width: '400px',

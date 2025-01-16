@@ -222,7 +222,7 @@ function UpdateProduct() {
             let sizeCheck = true;
             const files = [...event.target.files];
             files.forEach(file => {
-                if (file.size > 40 * 1000 * 1024) {
+                if (file.size > 6 * 1000 * 1024) {
                     sizeCheck = false;
                 }
             })
@@ -232,7 +232,7 @@ function UpdateProduct() {
                 setHideDeleteGalBtn(false);
                 setWasGalleryUpdated(true);
             } else {
-                toast.error('Photo file size cannot exceed 40MB', {
+                toast.error('Photo file size cannot exceed 6MB', {
                     position: "bottom-center",
                     autoClose: 3000,
                     hideProgressBar: false,
@@ -363,7 +363,7 @@ function UpdateProduct() {
         }
 
         if (productGalleryPhoto.length <= 0) {
-            toast.warning('Gallery photos not selected!', {
+            toast.error('Gallery photos not selected!', {
                 position: "bottom-center",
                 autoClose: 3000,
                 hideProgressBar: false,

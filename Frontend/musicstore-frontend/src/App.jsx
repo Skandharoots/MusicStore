@@ -41,9 +41,9 @@ import UpdateOrder from "./pages/admin/order/UpdateOrder.jsx";
 import MyOrderPage from "./pages/account/MyOrderPage.jsx";
 import ProductsSearchPage from "./pages/products/ProductsSearchPage.jsx";
 
-axios.defaults.baseURL = "http://localhost:8222/";
+axios.defaults.baseURL = "https://fancystrings.xyz/gateway";
 axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
-axios.defaults.headers["Access-Control-Allow-Origin"] = "http://localhost:4000";
+axios.defaults.headers["Access-Control-Allow-Origin"] = "https://fancystrings.xyz";
 axios.defaults.withCredentials = true;
 
 const Dashboard = () => {

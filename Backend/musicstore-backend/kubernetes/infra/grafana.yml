@@ -14,11 +14,17 @@ spec:
     spec:
       containers:
         - name: grafana
-          image: grafana/grafana:10.1.0
+          image: grafana/grafana:10.4.14
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 3000
           env:
+            - name: GF_SERVER_DOMAIN
+              value: fancystrings.xyz
+            - name: GF_SERVER_SERVE_FROM_SUB_PATH
+              value: "false"
+            - name: GF_SERVER_ROOT_URL
+              value: https://fancystrings.xyz/grafana
             - name: GF_AUTH_ANONYMOUS_ENABLED
               valueFrom:
                 configMapKeyRef:
@@ -31,14 +37,14 @@ spec:
                   name: grafana-configmap
             - name: GF_SECURITY_ADMIN_USER
               valueFrom:
-                secretKeyRef:
+                configMapKeyRef:
                   key: GF_SECURITY_ADMIN_USER
-                  name: grafana-secrets
+                  name: grafana-configmap
             - name: GF_SECURITY_ADMIN_PASSWORD
               valueFrom:
-                secretKeyRef:
+                configMapKeyRef:
                   key: GF_SECURITY_ADMIN_PASSWORD
-                  name: grafana-secrets
+                  name: grafana-configmap
             - name: GF_USERS_ALLOW_SIGNUP
               valueFrom:
                 configMapKeyRef:
@@ -59,23 +65,13 @@ kind: Service
 metadata:
   name: grafana
 spec:
-  type: NodePort
+  type: ClusterIP
   selector:
     app: grafana
   ports:
     - protocol: TCP
       port: 3000
       targetPort: 3000
-
----
-
-apiVersion: v1
-data:
-  GF_SECURITY_ADMIN_USER: YWRtaW4=
-  GF_SECURITY_ADMIN_PASSWORD: YWRtaW4=
-kind: Secret
-metadata:
-  name: grafana-secrets
 
 ---
 
@@ -89,6 +85,8 @@ data:
   GF_AUTH_ANONYMOUS_ENABLED: "false"
   GF_AUTH_DISABLE_LOGIN_FORM: "false"
   GF_USERS_ALLOW_SIGNUP: "false"
+  GF_SECURITY_ADMIN_USER: "skandharoots"
+  GF_SECURITY_ADMIN_PASSWORD: "i4mf33liN9s4f3"
   datasource.yml: |
     apiVersion: 1
 

@@ -22,7 +22,7 @@ spring:
       globalcors:
         corsConfigurations:
           '[/**]':
-            allowedOrigins: "http://localhost:4000"
+            allowedOrigins: "https://fancystrings.xyz"
             allowedMethods: "*"
             allowedHeaders: "*"
       discovery:
@@ -37,7 +37,7 @@ spring:
             - JwtAuthFilter
           metadata:
             cors:
-              allowedOrigins: "http://localhost:4000"
+              allowedOrigins: "https://fancystrings.xyz"
               allowedMethods:
                 - GET
                 - POST
@@ -55,7 +55,7 @@ spring:
             - JwtAuthFilter
           metadata:
             cors:
-              allowedOrigins: "http://localhost:4000"
+              allowedOrigins: "https://fancystrings.xyz"
               allowedMethods:
                 - GET
                 - POST
@@ -73,7 +73,7 @@ spring:
             - JwtAuthFilter
           metadata:
             cors:
-              allowedOrigins: "http://localhost:4000"
+              allowedOrigins: "https://fancystrings.xyz"
               allowedMethods:
                 - GET
                 - POST
@@ -91,7 +91,7 @@ spring:
             - JwtAuthFilter
           metadata:
             cors:
-              allowedOrigins: "http://localhost:4000"
+              allowedOrigins: "https://fancystrings.xyz"
               allowedMethods:
                 - GET
                 - POST
@@ -109,7 +109,7 @@ spring:
             - JwtAuthFilter
           metadata:
             cors:
-              allowedOrigins: "http://localhost:4000"
+              allowedOrigins: "https://fancystrings.xyz"
               allowedMethods:
                 - GET
                 - POST

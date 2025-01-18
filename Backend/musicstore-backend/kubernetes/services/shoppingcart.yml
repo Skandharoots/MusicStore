@@ -47,11 +47,7 @@ spec:
                   key: LOKI_URL
                   name: loki-cfg
       initContainers:
-        #Wait for api-gateway to show up
-        - name: wait-for-mysql
-          image: busybox
-          command: [ "sh", "-c", "until nc -zv mysql.default.svc.cluster.local 3306 > /dev/null; do echo Waiting for master.; sleep 2; done;" ]
-          # Wait for discovery to show up
+        # Wait for discovery to show up
         - name: wait-for-discovery
           image: busybox
           command: [ "sh", "-c", "until nc -zv discovery-0.discovery.default.svc.cluster.local 8761 > /dev/null; do echo Waiting for master.; sleep 2; done;" ]

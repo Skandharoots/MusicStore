@@ -1,105 +1,10 @@
 apiVersion: v1
 kind: Secret
 metadata:
-  name: postgres-secret
-data:
-  POSTGRES_DB: cG9zdGdyZXM=
-  POSTGRES_USER: YWRtaW4=
-  POSTGRES_PASSWORD: YWRtaW4=
-
----
-
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: postgres-volume
-  labels:
-    type: local
-    app: postgres
-spec:
-  storageClassName: manual
-  capacity:
-    storage: 1Gi
-  accessModes:
-    - ReadWriteMany
-  hostPath:
-    path: /data/postgresql
-
----
-
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: postgres-volume-claim
-  labels:
-    app: postgres
-spec:
-  storageClassName: manual
-  accessModes:
-    - ReadWriteMany
-  resources:
-    requests:
-      storage: 1Gi
-
----
-
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: postgres
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: postgres
-  template:
-    metadata:
-      labels:
-        app: postgres
-    spec:
-      containers:
-        - name: postgres
-          image: postgres:17.0
-          imagePullPolicy: IfNotPresent
-          ports:
-            - containerPort: 5432
-          envFrom:
-            - secretRef:
-                name: postgres-secret
-          volumeMounts:
-            - mountPath: /var/lib/postgresql/data
-              name: postgresdata
-      volumes:
-        - name: postgresdata
-          persistentVolumeClaim:
-            claimName: postgres-volume-claim
-
----
-
-apiVersion: v1
-kind: Service
-metadata:
-  name: postgres
-  labels:
-    app: postgres
-spec:
-  type: NodePort
-  ports:
-    - port: 5432
-      protocol: TCP
-      targetPort: 5432
-  selector:
-    app: postgres
-
----
-
-apiVersion: v1
-kind: Secret
-metadata:
   name: postgres-secret-cred
 data:
-  postgres_username: c2thbmRoYQ==
-  postgres_password: bGFwdW5pYTIxMjE=
+  postgres_username: c2thbmRoYXJvb3Rz
+  postgres_password: aTRtZjMzbGlOOXM0ZjM=
 
 ---
 
@@ -108,5 +13,5 @@ kind: ConfigMap
 metadata:
   name: postgres-config
 data:
-  pg_url: "jdbc:postgresql://postgres.default.svc.cluster.local:5432/postgres"
+  pg_url: "jdbc:postgresql://musicstorepostgresql.postgres.database.azure.com/postgres"
 

@@ -47,10 +47,6 @@ spec:
                   key: LOKI_URL
                   name: loki-cfg
       initContainers:
-          #Wait for postgres to show up
-        - name: wait-for-postgres
-          image: busybox
-          command: [ "sh", "-c", "until nc -zv postgres.default.svc.cluster.local 5432 > /dev/null; do echo Waiting for master.; sleep 2; done;" ]
           # Wait for discovery to show up
         - name: wait-for-discovery
           image: busybox

@@ -37,11 +37,7 @@ spec:
                   key: LOKI_URL
                   name: loki-cfg
       initContainers:
-        #Wait for api-gateway to show up
-        - name: wait-for-mysql
-          image: busybox
-          command: [ "sh", "-c", "until nc -zv azurite.default.svc.cluster.local 10000 > /dev/null; do echo Waiting for master.; sleep 2; done;" ]
-        # Wait for discovery to show up
+          # Wait for discovery to show up
         - name: wait-for-discovery
           image: busybox
           command: [ "sh", "-c", "until nc -zv discovery-0.discovery.default.svc.cluster.local 8761 > /dev/null; do echo Waiting for master.; sleep 2; done;" ]
@@ -64,4 +60,16 @@ spec:
     - port: 80
       targetPort: 0
       protocol: TCP
+
+---
+
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: azurite-cfg
+data:
+  azr_con_str: "DefaultEndpointsProtocol=https;AccountName=musicstoreproductsblob;AccountKey=8DQIKrOuI0EEBUzT2SR7m2JZBDbZvuYY7hqx/zVR7FCi66ApBA7CpuqRPM4aMciJAvXYralj3pPA+ASt2d7gfQ==;EndpointSuffix=core.windows.net"
+
+
 

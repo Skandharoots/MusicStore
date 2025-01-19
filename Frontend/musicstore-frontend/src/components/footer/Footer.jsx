@@ -8,7 +8,7 @@ function Footer() {
                   <h5>About us</h5>
                   <p>
                       We are a project dedicated to bachelor&apos;s<br/>
-                      degree thesi focused on microservices web<br/>
+                      degree thesis focused on microservices web<br/>
                       applications.
                   </p>
               </div>

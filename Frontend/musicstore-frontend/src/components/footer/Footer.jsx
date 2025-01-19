@@ -7,9 +7,9 @@ function Footer() {
               <div className="left-container">
                   <h5>About us</h5>
                   <p>
-                      We are a project dedicated to bachelor&apos;s<br/>
-                      degree thesis, focused on microservices web<br/>
-                      appications.
+                      We are a project dedicated to the bachelor&apos;s<br/>
+                      degree thesis focused on microservices web<br/>
+                      applications.
                   </p>
               </div>
               <div className="right-container">

@@ -39,7 +39,7 @@ metadata:
 spec:
   ingressClassName: webapprouting.kubernetes.azure.com
   rules:
-    - host: fancystrings.xyz
+    - host: api.fancystrings.xyz
       http:
         paths:
           - backend:
@@ -51,7 +51,7 @@ spec:
             pathType: Prefix
   tls:
     - hosts:
-        - fancystrings.xyz
+        - api.fancystrings.xyz
       secretName: keyvault-store-aks
 
 ---

@@ -41,7 +41,7 @@ import UpdateOrder from "./pages/admin/order/UpdateOrder.jsx";
 import MyOrderPage from "./pages/account/MyOrderPage.jsx";
 import ProductsSearchPage from "./pages/products/ProductsSearchPage.jsx";
 
-axios.defaults.baseURL = "https://fancystrings.xyz/gateway";
+axios.defaults.baseURL = "https://api.fancystrings.xyz";
 axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
 axios.defaults.headers["Access-Control-Allow-Origin"] = "https://fancystrings.xyz";
 axios.defaults.withCredentials = true;

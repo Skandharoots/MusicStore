@@ -15,7 +15,7 @@ spec:
         app: frontend
     spec:
       containers:
-        - name: azure-service
+        - name: frontend
           image: skandharoots/frontend:latest
           imagePullPolicy: Always
           resources:

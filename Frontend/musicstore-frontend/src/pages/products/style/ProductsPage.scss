@@ -1,3 +1,9 @@
+@media screen and (max-width: 800px) {
+  .products-page-ribbon {
+    display: none !important;
+  }
+}
+
 .products-page {
   display: flex;
   width: 100%;
@@ -17,6 +23,7 @@
     justify-content: flex-start;
     align-items: flex-end;
     width: 240px;
+    min-width: 240px;
     overflow: hidden;
     margin: 0 0;
     padding: 0;

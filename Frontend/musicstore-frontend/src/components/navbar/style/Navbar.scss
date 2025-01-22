@@ -84,7 +84,8 @@ input[type="text"]:focus {
 .user-info-container {
   display: flex;
   width: fit-content;
-  height: 50px;
+  min-height: 50px;
+  height: fit-content;
   padding: 0 0;
   align-items: center;
   justify-content: center;
@@ -92,6 +93,7 @@ input[type="text"]:focus {
 
 .user-info-container ul {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: center;
   margin: 0;

@@ -85,7 +85,7 @@ function OrderUserItem(props) {
                 display: 'flex',
                 flexDirection: 'row',
                 height: 'fit-content',
-                minWidth: '400px',
+                minWidth: '100px',
                 alignItems: 'center',
                 justifyContent: 'flex-start',
                 padding: '4px',

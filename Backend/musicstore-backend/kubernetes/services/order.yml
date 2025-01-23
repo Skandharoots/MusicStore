@@ -81,6 +81,6 @@ spec:
   type: ClusterIP
   ports:
     - port: 80
-      targetPort: 0
+      targetPort: 8030
       protocol: TCP
 

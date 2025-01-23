@@ -20,6 +20,17 @@ spec:
           image: skandharoots/config-server:latest
           ports:
             - containerPort: 8889
+          readinessProbe:
+            tcpSocket:
+              port: 8889
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              port: 8889
+              path: /actuator/health
+            initialDelaySeconds: 15
+            periodSeconds: 10
           env:
             - name: EUREKA_INSTANCE_HOSTNAME
               valueFrom:

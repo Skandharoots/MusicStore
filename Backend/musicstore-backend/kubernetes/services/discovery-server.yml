@@ -29,6 +29,7 @@ kind: StatefulSet
 metadata:
   name: discovery
 spec:
+  podManagementPolicy: Parallel
   selector:
     matchLabels:
       app: discovery
@@ -45,6 +46,17 @@ spec:
           image: skandharoots/discovery-server:latest
           ports:
             - containerPort: 8761
+          readinessProbe:
+            tcpSocket:
+              port: 8761
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              port: 8761
+              path: /actuator/health
+            initialDelaySeconds: 15
+            periodSeconds: 10
           env:
             - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
               valueFrom:

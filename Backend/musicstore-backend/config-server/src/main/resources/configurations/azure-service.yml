@@ -6,7 +6,7 @@ eureka:
     service-url:
       defaultZone: http://localhost:8761/eureka
 server:
-  port: 0
+  port: 8020
   error:
     include-message: always
 logging:

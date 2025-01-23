@@ -18,6 +18,19 @@ spec:
         - name: users
           image: skandharoots/users:latest
           imagePullPolicy: Always
+          ports:
+            - containerPort: 8060
+          readinessProbe:
+            tcpSocket:
+              port: 8060
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              port: 8060
+              path: /actuator/health
+            initialDelaySeconds: 15
+            periodSeconds: 10
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: kubernetes

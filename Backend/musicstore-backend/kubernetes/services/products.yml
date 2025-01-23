@@ -18,6 +18,8 @@ spec:
         - name: products
           image: skandharoots/products:latest
           imagePullPolicy: Always
+          ports:
+            - containerPort: 8040
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: kubernetes
@@ -72,6 +74,6 @@ spec:
   type: ClusterIP
   ports:
     - port: 80
-      targetPort: 0
+      targetPort: 8040
       protocol: TCP
 

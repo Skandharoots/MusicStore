@@ -18,6 +18,8 @@ spec:
         - name: azure-service
           image: skandharoots/azure-service:latest
           imagePullPolicy: Always
+          ports:
+            - containerPort: 8020
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: kubernetes
@@ -37,7 +39,7 @@ spec:
                   key: LOKI_URL
                   name: loki-cfg
       initContainers:
-        #Wait for api-gateway to show up
+        #Wait for azurite to show up
         - name: wait-for-mysql
           image: busybox
           command: [ "sh", "-c", "until nc -zv azurite.default.svc.cluster.local 10000 > /dev/null; do echo Waiting for master.; sleep 2; done;" ]
@@ -62,6 +64,6 @@ spec:
   type: ClusterIP
   ports:
     - port: 80
-      targetPort: 0
+      targetPort: 8020
       protocol: TCP
 

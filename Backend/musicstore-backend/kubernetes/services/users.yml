@@ -5,7 +5,7 @@ metadata:
   labels:
     app: users
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: users
@@ -18,6 +18,8 @@ spec:
         - name: users
           image: skandharoots/users:latest
           imagePullPolicy: Always
+          ports:
+            - containerPort: 8060
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: kubernetes
@@ -72,6 +74,6 @@ spec:
   type: ClusterIP
   ports:
     - port: 80
-      targetPort: 0
+      targetPort: 8060
       protocol: TCP
 

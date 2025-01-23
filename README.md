@@ -34,6 +34,11 @@ Next, connect to the PostgreSQL database.\
 Run the command `SELECT * FROM users` to check your record 'id'\
 Finally run this command `UPDATE users SET user_role='ADMIN' WHERE id=<your_id>`
 
+# Important requirements for testing the backend microservices
+You are required to have the Azurite docker container running during the testing.
+The tests written for the azure-service microservice are integration tests
+and they require a connection to blob storage provided by Azurite.
+
 ## Kubernetes setup
 
 The container images required to run kubernetes cluster are already in the Docker Hub\

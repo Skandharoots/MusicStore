@@ -52,7 +52,7 @@ spec:
             periodSeconds: 10
           livenessProbe:
             httpGet:
-              port: 8030
+              port: 8761
               path: /actuator/health
             initialDelaySeconds: 15
             periodSeconds: 10

@@ -20,6 +20,17 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 8020
+          readinessProbe:
+            tcpSocket:
+              port: 8020
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              port: 8020
+              path: /actuator/health
+            initialDelaySeconds: 15
+            periodSeconds: 10
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: kubernetes

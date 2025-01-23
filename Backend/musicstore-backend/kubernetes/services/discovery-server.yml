@@ -29,6 +29,7 @@ kind: StatefulSet
 metadata:
   name: discovery
 spec:
+  podManagementPolicy: Parallel
   selector:
     matchLabels:
       app: discovery

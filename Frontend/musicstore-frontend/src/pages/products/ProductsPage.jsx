@@ -470,14 +470,14 @@ function ProductsPage() {
             </div>
             <div className="products-page-content">
                 <div className="content-controls">
-                    <div style={{width: 100}}>
+                    <div style={{maxWidth: 100}}>
 
                     </div>
                     <FormControl
                         size="small"
                         sx={{
                             m: 1,
-                            minWidth: 200,
+                            maxWidth: 200,
                             "& label.Mui-focused": {
                                 color: 'rgb(39, 99, 24)'
                             },
@@ -508,7 +508,7 @@ function ProductsPage() {
                         size="small"
                         sx={{
                             m: 1,
-                            width: 100,
+                            maxWidth: 100,
                             "& label.Mui-focused": {
                                 color: 'rgb(39, 99, 24)'
                             },

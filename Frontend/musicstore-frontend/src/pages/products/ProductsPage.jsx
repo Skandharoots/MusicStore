@@ -508,6 +508,7 @@ function ProductsPage() {
                         size="small"
                         sx={{
                             m: 1,
+                            width: 100,
                             maxWidth: 100,
                             "& label.Mui-focused": {
                                 color: 'rgb(39, 99, 24)'

@@ -56,6 +56,21 @@ It is advised to forward postgresql to port 5432:5432.
 This way you will be able to connect to the database and give yourself admin permissions,
 according to the steps described in 'Additional setup of databases' section.
 
+### Accessing the applications
+
+To access the GUI (frontend) open the following URL in the browser: http://localhost:4000 \
+
+To access the API Gateway admin endpoints open the following URLs in the browser
+1. http://localhost:8222/eureka/web - for Eureka server
+2. http://localhost:8222/swagger-ui.html - for OpenAPI documentation
+
+To access Grafana open the following URL in the browser: http://localhost:3000
+
+Default login credentials are \
+
+Username: admin \
+Password: admin
+
 ## Useful additional software
 Kube Forwarder - available for download at https://kube-forwarder.pixelpoint.io/ \
 Microsoft Azure Explorer - available for download at https://azure.microsoft.com/en-us/products/storage/storage-explorer

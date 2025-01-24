@@ -130,6 +130,10 @@ Then from the backend project root run the following command: \
 Frontend:
 
 To build frontend application you need to be in the musicstore-frontend folder. \
+In the file vite.config.js change these variables: 
+1. port: 80
+2. hmr: { port: 80 }
+
 Then run the following commands: \
 `docker build -t <your-docker-username>/frontend .` \
 `docker push <your-docker-username>/frontend:latest`

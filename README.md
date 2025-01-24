@@ -116,6 +116,29 @@ Default login credentials are
 Username: admin \
 Password: admin
 
+## Building the projects container images
+
+You will need to be logged into Docker.
+
+Backend:
+
+To build the backend project you will need to edit the main pom.xml file in the musicstore-backend folder. \
+Change the jib maven plugin <image></image> tag to contain your docker username. \
+Then from the backend project root run the following command: \
+`mvn clean compile jib:build`
+
+Frontend:
+
+To build frontend application you need to be in the musicstore-frontend folder. \
+Then run the following commands: \
+`docker build -t <your-docker-username>/frontend .` \
+`docker push <your-docker-username>/frontend:latest`
+
+Then you will need to change kubernetes yaml files located in \
+<project_root>/Backend/musicstore-backend/kubernetes/services \
+and change the image locations for your Docker Hub user repositories 
+
+
 ## Useful additional software
 Kube Forwarder - available for download at https://kube-forwarder.pixelpoint.io/ \
 Microsoft Azure Explorer - available for download at https://azure.microsoft.com/en-us/products/storage/storage-explorer

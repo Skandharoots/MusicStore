@@ -4,6 +4,10 @@ Repository for Music Store application in Spring and React
 ## Creator
 Marek Kopania
 
+## Requirements
+You need Java 17 JDK to run the backend applications
+You need Node to run the frontend application
+
 ## Local setup
 To run the project locally you will need to setup three docker containers, to which the backend services will connect.
 First run these commands to create PostgreSQL database
@@ -18,6 +22,47 @@ Thirdly run these commands to create Azurite Blob Storage Emulator
 1. `docker pull mcr.microsoft.com/azure-storage/azurite`
 2. `docker run -p 10000:10000 mcr.microsoft.com/azure-storage/azurite azurite-blob --blobHost 0.0.0.0`
 
+## Important requirements for testing the backend microservices
+You are required to have the Azurite docker container running during the testing.
+The tests written for the azure-service microservice are integration tests
+and they require a connection to blob storage provided by Azurite.
+
+## Installing and running tests
+
+In order to install the backend project, or generate Maven site it is required that the Azurite Docker container is running. \
+To install the entire backend project or generate sites you need to be in the folder <project_root>/Backend/musicstore-backend \
+From there you can run this command to generate maven sites: `mvn clean verify site site:stage`. It will run the tests as well. \
+To access the layered report you need to open the index.html file inside the directory '<project_root>/Backend/musicstore-backend/target/staging' 
+
+To install the frontend project navigate to '<project_root>/Frontend/musicstore-frontend/' \
+Next run the following command `npm install` \
+To run the application run the following command `npm run dev` 
+
+## Changing local properties of backend applications
+The backend applications' properties files are located in the config-server resources folder. \
+To change the previously set database connections or any other settings edit the 'yml' files for the default spring profile.
+
+## Credentials for databases
+### Local
+
+Mysql: \
+    Username: root \
+    Password: lapunia2121 
+    
+PostgreSQL: \
+    Username: postgres \
+    Password: lapunia2121
+    
+### Kubernetes
+
+Mysql: \
+    Username: root \
+    Password: admin
+    
+PostgreSQL: \
+    Username: admin \
+    Password: admin
+
 ## Additional setup of databases
 1. Connect to MySQL database - Username: root; Password: lapunia2121
 2. Run the following commands to create databases:
@@ -29,15 +74,10 @@ Thirdly run these commands to create Azurite Blob Storage Emulator
 ## Gaining admin account
 
 To gain admin priviledges in the application you need to act as a DBA.\
-First you can register in the application and enable you account via the activation email.\
+First you can register an account through the application GUI and enable you account via the activation email.\
 Next, connect to the PostgreSQL database.\
 Run the command `SELECT * FROM users` to check your record 'id'\
 Finally run this command `UPDATE users SET user_role='ADMIN' WHERE id=<your_id>`
-
-# Important requirements for testing the backend microservices
-You are required to have the Azurite docker container running during the testing.
-The tests written for the azure-service microservice are integration tests
-and they require a connection to blob storage provided by Azurite.
 
 ## Kubernetes setup
 
@@ -63,7 +103,7 @@ according to the steps described in 'Additional setup of databases' section.
 
 ### Accessing the applications
 
-To access the GUI (frontend) open the following URL in the browser: http://localhost:4000 \
+To access the GUI (frontend) open the following URL in the browser: http://localhost:4000 
 
 To access the API Gateway admin endpoints open the following URLs in the browser
 1. http://localhost:8222/eureka/web - for Eureka server
@@ -71,7 +111,7 @@ To access the API Gateway admin endpoints open the following URLs in the browser
 
 To access Grafana open the following URL in the browser: http://localhost:3000
 
-Default login credentials are \
+Default login credentials are 
 
 Username: admin \
 Password: admin

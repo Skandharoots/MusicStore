@@ -123,7 +123,7 @@ You will need to be logged into Docker.
 Backend:
 
 To build the backend project you will need to edit the main pom.xml file in the musicstore-backend folder. \
-Change the jib maven plugin <image></image> tag to contain your docker username. \
+Change the jib maven plugin <image></image> tag to contain your Docker username. \
 Then from the backend project root run the following command: \
 `mvn clean compile jib:build`
 

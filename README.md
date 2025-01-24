@@ -5,7 +5,7 @@ Repository for Music Store application in Spring and React
 Marek Kopania
 
 ## Requirements
-You need Java 17 JDK to run the backend applications
+You need Java 17 JDK and Maven to run the backend applications \
 You need Node to run the frontend application
 
 ## Local setup

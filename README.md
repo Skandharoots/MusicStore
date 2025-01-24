@@ -99,7 +99,7 @@ The following port forwarding rules are mandatory
 
 It is advised to forward postgresql to port 5432:5432.
 This way you will be able to connect to the database and give yourself admin permissions,
-according to the steps described in 'Additional setup of databases' section.
+according to the steps described in 'Gaining admin account' section.
 
 ### Accessing the applications
 

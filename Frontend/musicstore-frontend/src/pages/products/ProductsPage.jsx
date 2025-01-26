@@ -470,7 +470,7 @@ function ProductsPage() {
             </div>
             <div className="products-page-content">
                 <div className="content-controls">
-                    <div style={{maxWidth: 100}}>
+                    <div style={{width: '15%'}}>
 
                     </div>
                     <FormControl

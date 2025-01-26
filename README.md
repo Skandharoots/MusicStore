@@ -5,7 +5,7 @@ Repository for Music Store application in Spring and React
 Marek Kopania
 
 ## Requirements
-You need Java 17 JDK to run the backend applications
+You need Java 17 JDK and Maven to run the backend applications \
 You need Node to run the frontend application
 
 ## Local setup
@@ -99,7 +99,7 @@ The following port forwarding rules are mandatory
 
 It is advised to forward postgresql to port 5432:5432.
 This way you will be able to connect to the database and give yourself admin permissions,
-according to the steps described in 'Additional setup of databases' section.
+according to the steps described in 'Gaining admin account' section.
 
 ### Accessing the applications
 
@@ -123,13 +123,17 @@ You will need to be logged into Docker.
 Backend:
 
 To build the backend project you will need to edit the main pom.xml file in the musicstore-backend folder. \
-Change the jib maven plugin <image></image> tag to contain your docker username. \
+Change the jib maven plugin <image></image> tag to contain your Docker username. \
 Then from the backend project root run the following command: \
 `mvn clean compile jib:build`
 
 Frontend:
 
 To build frontend application you need to be in the musicstore-frontend folder. \
+In the file vite.config.js change these variables: 
+1. port: 80
+2. hmr: { port: 80 }
+
 Then run the following commands: \
 `docker build -t <your-docker-username>/frontend .` \
 `docker push <your-docker-username>/frontend:latest`

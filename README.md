@@ -65,7 +65,7 @@ PostgreSQL: \
 
 ## Additional setup of databases
 
-This is only required for running applicaiton locally
+This is only required for running application locally
 
 1. Connect to MySQL database - Username: root; Password: lapunia2121
 2. Run the following commands to create databases:

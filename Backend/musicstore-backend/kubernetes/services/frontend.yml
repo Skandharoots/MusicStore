@@ -32,7 +32,7 @@ spec:
           livenessProbe:
             tcpSocket:
               port: 3000
-            initialDelaySeconds: 15
+            initialDelaySeconds: 25
             periodSeconds: 10
 
 ---

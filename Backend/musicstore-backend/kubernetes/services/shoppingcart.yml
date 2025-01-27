@@ -29,7 +29,7 @@ spec:
             httpGet:
               port: 8050
               path: /actuator/health
-            initialDelaySeconds: 15
+            initialDelaySeconds: 40
             periodSeconds: 10
           env:
             - name: SPRING_PROFILES_ACTIVE

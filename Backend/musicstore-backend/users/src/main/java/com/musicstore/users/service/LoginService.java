@@ -10,7 +10,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
-
 @Service
 @AllArgsConstructor
 @Slf4j
@@ -25,9 +24,7 @@ public class LoginService {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),
-                        request.getPassword()
-                )
-        );
+                        request.getPassword()));
         var user = (Users) userService.loadUserByUsername(request.getEmail());
         var userDetails = userService.loadUserByUsername(request.getEmail());
         log.info("Login successfull for user: " + user.getUsername());
@@ -37,6 +34,7 @@ public class LoginService {
                 .uuid(user.getUuid())
                 .role(user.getUserRole())
                 .token(jwtService.generateToken(userDetails))
+                .refreshToken(jwtService.generateRefreshToken(userDetails))
                 .build();
 
     }

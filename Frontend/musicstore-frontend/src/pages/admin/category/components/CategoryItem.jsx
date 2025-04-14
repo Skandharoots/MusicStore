@@ -35,6 +35,7 @@ function CategoryItem(props) {
     const deleteCategory = (event) => {
         event.preventDefault();
         setOpenBackdrop(true);
+        LocalStorageHelper.CommitRefresh();
         axios.get('api/users/csrf/token', {})
             .then((response) => {
                 axios.delete(`api/products/categories/delete/${props.id}`, {

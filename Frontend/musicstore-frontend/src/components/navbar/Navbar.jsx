@@ -73,7 +73,7 @@ function Navbar() {
                             type="submit"
                             className="search-btn"
                             onClick={onSubmitSearch}>
-                            <SearchOutlinedIcon fontSize={"small"}/>
+                            <SearchOutlinedIcon fontSize={"small"} sx={{color: "white"}}/>
                         </button>
                     </form>
                 </div>

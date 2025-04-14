@@ -35,6 +35,7 @@ function SubcategoryItem(props) {
     const deleteSubcategory = (event) => {
         event.preventDefault();
         setOpenBackdrop(true);
+        LocalStorageHelper.CommitRefresh();
         axios.get('api/users/csrf/token', {})
             .then((response) => {
                 axios.delete(`api/products/subcategories/delete/${props.subcategory.id}`, {

@@ -13,6 +13,12 @@ public class VariablesConfiguration {
     @Value("${my.account_confirm_url}")
     private String accountConfirmUrl;
 
+    @Value("${my.expires}")
+    private Long jwtExpiration;
+
+    @Value("${my.refresh-token.expires}")
+    private Long refreshTokenExpiration;
+
     @Bean
     public String getJwtSecret() {
         return jwtSecret;
@@ -21,5 +27,15 @@ public class VariablesConfiguration {
     @Bean
     public String getAccountConfirmUrl() {
         return accountConfirmUrl;
+    }
+
+    @Bean
+    public Long getExpiration() {
+        return jwtExpiration;
+    }
+
+    @Bean
+    public Long getRefreshExpiration() {
+        return refreshTokenExpiration;
     }
 }

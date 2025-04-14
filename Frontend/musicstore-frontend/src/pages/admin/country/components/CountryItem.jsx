@@ -35,6 +35,7 @@ function CountryItem(props) {
     const deleteCountry = (event) => {
         event.preventDefault();
         setOpenBackdrop(true);
+        LocalStorageHelper.CommitRefresh();
         axios.get('api/users/csrf/token', {})
             .then((response) => {
                 axios.delete(`api/products/countries/delete/${props.id}`, {

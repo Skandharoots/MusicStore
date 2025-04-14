@@ -385,6 +385,7 @@ function UpdateProduct() {
         if (validateInputs() === false) {
             return;
         }
+        LocalStorageHelper.CommitRefresh();
         if (wasGalleryUpdated) {
             [...imagesPaths].map((path) => {
                 axios.get('api/users/csrf/token', {})

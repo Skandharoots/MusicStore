@@ -10,7 +10,6 @@ import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -32,11 +31,23 @@ public class JwtService {
 
     private String createToken(Map<String, Object> claims, UserDetails userDetails) {
 
+        return buildJwtToken(claims, userDetails, variablesConfiguration.getExpiration());
+    }
+
+    public String generateRefreshToken(
+            UserDetails userDetails) {
+        return buildJwtToken(new HashMap<>(), userDetails, variablesConfiguration.getRefreshExpiration());
+    }
+
+    private String buildJwtToken(
+            Map<String, Object> claims,
+            UserDetails userDetails,
+            Long expiration) {
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + TimeUnit.HOURS.toMillis(30)))
+                .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(getSignKey(), SignatureAlgorithm.HS256).compact();
     }
 
@@ -66,7 +77,7 @@ public class JwtService {
         return username.equals(user.getUsername()) && !isTokenExpired(token);
 
     }
-    
+
     private Boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }

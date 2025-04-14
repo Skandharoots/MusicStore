@@ -35,6 +35,7 @@ function ManufacturerItem(props) {
     const deleteManufacturer = (event) => {
         event.preventDefault();
         setOpenBackdrop(true);
+        LocalStorageHelper.CommitRefresh();
         axios.get('api/users/csrf/token', {})
             .then((response) => {
                 axios.delete(`api/products/manufacturers/delete/${props.id}`, {

@@ -31,6 +31,7 @@ function BasketItem(props) {
     const navigate = useNavigate();
 
     useEffect(() => {
+        LocalStorageHelper.CommitRefresh();
         axios.get(`api/products/items/get/${props.item.productSkuId}`)
             .then(res => {
                 setMaxQuantity(res.data.inStock);
@@ -133,6 +134,7 @@ function BasketItem(props) {
         setOpenBackdrop(true);
         setOpen(false);
         if (LocalStorageHelper.IsUserLogged() === true) {
+            LocalStorageHelper.CommitRefresh();
             axios.get('api/users/csrf/token', {})
                 .then((response) => {
                     axios.delete(`api/cart/delete/${LocalStorageHelper.GetActiveUser()}/${props.item.productSkuId}`, {
@@ -210,6 +212,7 @@ function BasketItem(props) {
     const handleQuantityChange = (event) => {
         event.preventDefault();
         setSelectedQuantity(event.target.value);
+        LocalStorageHelper.CommitRefresh();
         axios.get('api/users/csrf/token')
         .then(res => {
             axios.put(`api/cart/update/${props.item.id}`, {

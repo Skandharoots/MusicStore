@@ -75,7 +75,7 @@ function Login() {
                     }
                 ).then((response) => {
                     LocalStorageHelper.LoginUser(response.data.uuid, response.data.firstName,
-                        response.data.token, response.data.role);
+                        response.data.token, response.data.role, response.data.refreshToken);
                     window.dispatchEvent(new Event("storage"));
 
                     const basket = JSON.parse(localStorage.getItem("basket"));
@@ -336,7 +336,7 @@ function Login() {
                     >
                         Sign in
                     </Button>
-                    <Typography sx={{ textAlign: 'right', margin: '5% 0 0 0'  }}>
+                    <Typography sx={{ textAlign: 'center', margin: '5% 0 0 0'  }}>
                         Don&apos;t have an account?{' '}
                         <span>
                         <Link

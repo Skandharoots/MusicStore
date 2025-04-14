@@ -74,6 +74,7 @@ function ProductItem(props) {
     const deleteProduct = (event) => {
         event.preventDefault();
         setOpenBackdrop(true);
+        LocalStorageHelper.CommitRefresh();
         axios.get('api/users/csrf/token', {})
             .then((response) => {
                 axios.delete(`api/products/items/delete/${props.item.productSkuId}`, {

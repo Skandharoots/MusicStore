@@ -42,6 +42,7 @@ function Order() {
 
     useEffect(() => {
         setOpenBackdrop(true);
+        LocalStorageHelper.CommitRefresh();
         axios.get('api/users/csrf/token')
             .then(res => {
                 axios.post(`api/order/get/all`, {}, {
@@ -91,6 +92,7 @@ function Order() {
         e.preventDefault();
         let searchId = search.trim();
         setOpenBackdrop(true);
+        LocalStorageHelper.CommitRefresh();
         axios.get('api/users/csrf/token')
         .then(res => {
             axios.post(`api/order/get/${searchId}`, {}, {

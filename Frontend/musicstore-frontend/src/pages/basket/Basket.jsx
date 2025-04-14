@@ -32,6 +32,7 @@ function Basket() {
 
     useEffect(() => {
         setOpenBackdrop(true);
+        LocalStorageHelper.CommitRefresh();
         if (LocalStorageHelper.IsUserLogged() === true) {
             axios.get(`api/cart/get/${LocalStorageHelper.GetActiveUser()}`, {
                 headers: {
@@ -103,6 +104,7 @@ function Basket() {
         event.preventDefault();
         setOpenBackdrop(true);
         if (LocalStorageHelper.IsUserLogged()) {
+            LocalStorageHelper.CommitRefresh();
             axios.get('api/users/csrf/token', {})
                 .then(res => {
                     axios.delete(`api/cart/clear/${LocalStorageHelper.GetActiveUser()}`, {

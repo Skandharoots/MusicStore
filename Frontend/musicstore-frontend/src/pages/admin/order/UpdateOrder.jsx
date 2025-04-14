@@ -41,6 +41,7 @@ function UpdateOrder() {
     const navigate = useNavigate();
 
     useEffect(() => {
+        LocalStorageHelper.CommitRefresh();
         axios.get('api/users/csrf/token')
         .then(res => {
            axios.post(`api/order/get/${iden.orderIdentifier}`, {}, {
@@ -94,6 +95,7 @@ function UpdateOrder() {
     const updateOrder = (e) => {
         e.preventDefault();
         setOpenBackdrop(true);
+        LocalStorageHelper.CommitRefresh();
         axios.get('api/users/csrf/token')
         .then(res => {
             axios.put(`api/order/update/${orderId}`, {

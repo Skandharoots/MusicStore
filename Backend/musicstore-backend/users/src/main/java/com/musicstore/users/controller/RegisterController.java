@@ -1,5 +1,7 @@
 package com.musicstore.users.controller;
 
+import com.fasterxml.jackson.core.exc.StreamWriteException;
+import com.fasterxml.jackson.databind.DatabindException;
 import com.musicstore.users.dto.LoginRequest;
 import com.musicstore.users.dto.LoginResponse;
 import com.musicstore.users.dto.RegisterRequest;
@@ -7,7 +9,12 @@ import com.musicstore.users.dto.UserInformationResponse;
 import com.musicstore.users.service.LoginService;
 import com.musicstore.users.service.RegisterService;
 import com.musicstore.users.service.UserService;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -29,7 +36,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-
 
 @RestController
 @RequestMapping("/api/users")
@@ -61,8 +67,7 @@ public class RegisterController {
     @PostMapping("/get/{uuid}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<UserInformationResponse> getUserInformation(
-            @PathVariable(name = "uuid") UUID uuid
-    ) {
+            @PathVariable(name = "uuid") UUID uuid) {
         return ResponseEntity.ok(userService.getUserInfo(uuid));
     }
 
@@ -100,6 +105,13 @@ public class RegisterController {
     public CsrfToken getCsrfToken(CsrfToken token) {
 
         return token;
+    }
+
+    @PostMapping("/refresh-token")
+    public void generateRefreshToken(
+            HttpServletRequest request,
+            HttpServletResponse response) throws StreamWriteException, DatabindException, IOException {
+        userService.refresh(request, response);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)

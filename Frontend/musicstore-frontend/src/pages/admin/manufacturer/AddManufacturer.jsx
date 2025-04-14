@@ -50,7 +50,7 @@ function AddManufacturer() {
         if (validateInputs() === false) {
             return;
         }
-
+        LocalStorageHelper.CommitRefresh();
         axios.get('api/users/csrf/token', {})
             .then((response) => {
                 setManufacturerNameError(true);

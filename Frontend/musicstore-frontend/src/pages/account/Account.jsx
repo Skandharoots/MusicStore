@@ -55,6 +55,7 @@ function Account() {
 
     useEffect(() => {
         setOpenBackdrop(true);
+        LocalStorageHelper.CommitRefresh();
         axios.get('api/users/csrf/token')
         .then(res => {
             axios.post(`api/users/get/${LocalStorageHelper.GetActiveUser()}`, {}, {
@@ -172,6 +173,7 @@ function Account() {
             return;
         }
         setOpenBackdrop(true);
+        LocalStorageHelper.CommitRefresh();
         axios.get('api/users/csrf/token', {})
         .then((response) => {
             axios.put(`api/users/update/${LocalStorageHelper.GetActiveUser()}`, {
@@ -249,6 +251,7 @@ function Account() {
             return;
         }
         setOpenBackdrop(true);
+        LocalStorageHelper.CommitRefresh();
         axios.get('api/users/csrf/token', {})
         .then((response) => {
             axios.delete(`api/users/delete/${LocalStorageHelper.GetActiveUser()}`, {

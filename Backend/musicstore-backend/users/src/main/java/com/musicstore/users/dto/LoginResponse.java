@@ -18,5 +18,6 @@ public class LoginResponse {
     private final String lastName;
     private final UserRole role;
     private final String token;
+    private final String refreshToken;
 
 }

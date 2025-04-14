@@ -39,6 +39,7 @@ function MyOrders() {
 
     useEffect(() => {
         setOpenBackdrop(true);
+        LocalStorageHelper.CommitRefresh();
         axios.get('api/users/csrf/token')
         .then(res => {
             axios.post(`api/order/get/all/${LocalStorageHelper.GetActiveUser()}`, {}, {

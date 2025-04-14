@@ -71,7 +71,7 @@ function UpdateManufacturer() {
         if (validateInputs() === false) {
             return;
         }
-
+        LocalStorageHelper.CommitRefresh();
         axios.get('api/users/csrf/token', {})
             .then((response) => {
                 setOpenBackdrop(true);

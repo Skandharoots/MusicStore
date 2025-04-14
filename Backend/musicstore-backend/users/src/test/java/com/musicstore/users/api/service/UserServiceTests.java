@@ -1,5 +1,9 @@
 package com.musicstore.users.api.service;
 
+import com.fasterxml.jackson.core.exc.StreamWriteException;
+import com.fasterxml.jackson.databind.DatabindException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.musicstore.users.dto.AuthenticationResponse;
 import com.musicstore.users.dto.LoginResponse;
 import com.musicstore.users.dto.RegisterRequest;
 import com.musicstore.users.dto.UserInformationResponse;
@@ -12,6 +16,10 @@ import com.musicstore.users.security.config.VariablesConfiguration;
 import com.musicstore.users.service.ConfirmationTokenService;
 import com.musicstore.users.service.JwtService;
 import com.musicstore.users.service.UserService;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,13 +27,26 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -52,7 +73,13 @@ public class UserServiceTests {
     @Mock
     private JwtService jwtService;
 
+    @Mock
+    private HttpServletRequest request;
+
     private ConfirmationToken confirmationToken;
+
+    @Mock
+    private ObjectMapper objectMapper;
 
     @Test
     public void loadUserByUsernameExceptionTest() {
@@ -69,9 +96,9 @@ public class UserServiceTests {
                 "Kopania",
                 "test@test.com",
                 "testpasswd",
-                UserRole.USER
-        );
-        when(variablesConfiguration.getAccountConfirmUrl()).thenReturn("http://localhost:8222/api/v1/users/register/confirm?token=");
+                UserRole.USER);
+        when(variablesConfiguration.getAccountConfirmUrl())
+                .thenReturn("http://localhost:8222/api/v1/users/register/confirm?token=");
         when(userRepository.save(Mockito.any(Users.class))).thenReturn(user);
         String token = userService.signUpUser(user);
         Assertions.assertThat(token).isNotNull();
@@ -86,18 +113,17 @@ public class UserServiceTests {
                 "Kopania",
                 "test@test.com",
                 "testpasswd",
-                UserRole.USER
-        );
+                UserRole.USER);
 
         String tokenUUID = UUID.randomUUID().toString();
         confirmationToken = new ConfirmationToken(
                 tokenUUID,
                 LocalDateTime.now(),
                 LocalDateTime.now().plusMinutes(20),
-                user
-        );
+                user);
         when(userRepository.findByEmail("test@test.com")).thenReturn(Optional.of(user));
-        when(confirmationTokenService.getConfirmationTokenByUserUuid(user.getUuid())).thenReturn(Optional.of(confirmationToken));
+        when(confirmationTokenService.getConfirmationTokenByUserUuid(user.getUuid()))
+                .thenReturn(Optional.of(confirmationToken));
         Assertions.assertThat(userService.signUpUser(user)).isEqualTo(confirmationToken.getToken());
     }
 
@@ -109,8 +135,7 @@ public class UserServiceTests {
                 "Kopania",
                 "test@test.com",
                 "testpasswd",
-                UserRole.USER
-        );
+                UserRole.USER);
         user.setEnabled(true);
         when(userRepository.findByEmail("test@test.com")).thenReturn(Optional.of(user));
         Assertions.assertThatThrownBy(() -> userService.signUpUser(user)).isNotNull();
@@ -125,8 +150,7 @@ public class UserServiceTests {
                 "Kopania",
                 "test@test.com",
                 "testpasswd",
-                UserRole.USER
-        );
+                UserRole.USER);
 
         when(userRepository.findByEmail("test@test.com")).thenReturn(Optional.of(user));
         when(confirmationTokenService.getConfirmationTokenByUserUuid(user.getUuid())).thenReturn(Optional.empty());
@@ -188,15 +212,13 @@ public class UserServiceTests {
                 "Kopania",
                 "test@test.com",
                 "testpasswd",
-                UserRole.USER
-        );
+                UserRole.USER);
         Optional<Users> userOptional = Optional.of(user);
         RegisterRequest registerRequest = new RegisterRequest(
                 "Marek",
                 "Kopania",
                 "test@test.com",
-                "testpasswd"
-        );
+                "testpasswd");
 
         when(userRepository.findByUuid(user.getUuid())).thenReturn(userOptional);
         when(userRepository.findByEmail(user.getEmail())).thenReturn(userOptional);
@@ -212,8 +234,7 @@ public class UserServiceTests {
                 "Kopania",
                 "test@test.com",
                 "testpasswd",
-                UserRole.USER
-        );
+                UserRole.USER);
 
         when(userRepository.findByUuid(user.getUuid())).thenReturn(Optional.empty());
         Assertions.assertThatThrownBy(() -> userService.updateUser(user.getUuid(), null)).isNotNull();
@@ -226,8 +247,7 @@ public class UserServiceTests {
                 "Kopania",
                 "test@test.com",
                 "testpasswd",
-                UserRole.USER
-        );
+                UserRole.USER);
         Optional<Users> userOptional = Optional.of(user);
 
         when(userRepository.findByUuid(user.getUuid())).thenReturn(userOptional);
@@ -243,11 +263,80 @@ public class UserServiceTests {
                 "Kopania",
                 "test@test.com",
                 "testpasswd",
-                UserRole.USER
-        );
+                UserRole.USER);
 
         when(userRepository.findByUuid(user.getUuid())).thenReturn(Optional.empty());
         Assertions.assertThatThrownBy(() -> userService.deleteUser(user.getUuid())).isNotNull();
+    }
+
+    @Test
+    public void refreshTest() throws StreamWriteException, DatabindException, IOException {
+
+        String token = "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiJ9.GE2q1gX6T-mcjf0xmIlGru1gzu-PQF1leFK4U3Kphj8ZLpQG3Rn8qyLLO38ilyvP2u03Ft7bEBAJqRS-86WXCg";
+        String jwtToken = token.substring(7);
+
+        MockHttpServletResponse response = new MockHttpServletResponse();
+
+        Users user = new Users(
+                "Marek",
+                "Kopania",
+                "mardok1825@gmail.com",
+                "test",
+                UserRole.USER);
+
+        AuthenticationResponse authResp = new AuthenticationResponse(jwtToken, jwtToken);
+
+        when(request.getHeader(HttpHeaders.AUTHORIZATION)).thenReturn(token);
+        when(jwtService.getUsername(jwtToken)).thenReturn(user.getUsername());
+        when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+        when(jwtService.validateToken(jwtToken, (UserDetails) user)).thenReturn(true);
+        when(jwtService.generateToken((UserDetails) user)).thenReturn(jwtToken);
+
+        response.setStatus(200);
+        response.getWriter().write(authResp.toString());
+        response.getWriter().flush();
+
+        userService.refresh(request, response);
+        assertNotNull(userService);
+
+    }
+
+    @Test
+    public void refreshAuthorizationNullTest() throws StreamWriteException, DatabindException, IOException {
+
+        when(request.getHeader(HttpHeaders.AUTHORIZATION)).thenReturn(null);
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        response.setStatus(400);
+
+        Assertions.assertThatThrownBy(() -> userService.refresh(request, response));
+
+    }
+
+    @Test
+    public void refreshUserNotFoundExceptionTest() throws StreamWriteException, DatabindException, IOException {
+
+        String token = "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiJ9.GE2q1gX6T-mcjf0xmIlGru1gzu-PQF1leFK4U3Kphj8ZLpQG3Rn8qyLLO38ilyvP2u03Ft7bEBAJqRS-86WXCg";
+        String jwtToken = token.substring(7);
+
+        MockHttpServletResponse response = new MockHttpServletResponse();
+
+        Users user = new Users(
+                "Marek",
+                "Kopania",
+                "mardok1825@gmail.com",
+                "test",
+                UserRole.USER);
+
+        AuthenticationResponse authResp = new AuthenticationResponse(jwtToken, jwtToken);
+
+        when(request.getHeader(HttpHeaders.AUTHORIZATION)).thenReturn(token);
+        when(jwtService.getUsername(jwtToken)).thenReturn(user.getUsername());
+        when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.empty());
+
+        response.setStatus(403);
+
+        Assertions.assertThatThrownBy(() -> userService.refresh(request, response));
+
     }
 
 }

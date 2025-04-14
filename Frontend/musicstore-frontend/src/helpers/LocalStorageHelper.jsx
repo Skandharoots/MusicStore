@@ -67,9 +67,30 @@ class LocalStorageHelper {
                     localStorage.setItem('refresh', r.data.refreshToken);
                     localStorage.setItem('authValidUntil', Date.now() + (60 * 1000));
                 })).catch((e) => {
+                    toast.error(e.response.data.message, {
+                        position: "bottom-center",
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: false,
+                        progress: undefined,
+                        theme: "light",
+                        transition: Slide,
+                    });
                 })
             }).catch(() => {
-                
+                toast.error('Cannot fetch token', {
+                            position: "bottom-center",
+                            autoClose: 3000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: false,
+                            progress: undefined,
+                            theme: "light",
+                            transition: Slide,
+                        });
             })
     }
 

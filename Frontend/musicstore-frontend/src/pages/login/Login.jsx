@@ -336,7 +336,7 @@ function Login() {
                     >
                         Sign in
                     </Button>
-                    <Typography sx={{ textAlign: 'center', margin: '5% 0 0 0'  }}>
+                    <Typography sx={{ textAlign: 'center', margin: '5% 0 0 0', color: 'black'  }}>
                         Don&apos;t have an account?{' '}
                         <span>
                         <Link

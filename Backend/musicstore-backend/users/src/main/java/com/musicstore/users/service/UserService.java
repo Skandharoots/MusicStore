@@ -197,7 +197,7 @@ public class UserService implements UserDetailsService {
                         refreshToken = request.getHeader(HttpHeaders.AUTHORIZATION).substring(7);
                         username = jwtService.getUsername(refreshToken);
                 } else {
-                        return;
+                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid authorization header");
                 }
 
                 if (username != null) {

@@ -2,6 +2,7 @@ package com.musicstore.users.api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.musicstore.users.controller.RegisterController;
+import com.musicstore.users.dto.AuthenticationResponse;
 import com.musicstore.users.dto.LoginRequest;
 import com.musicstore.users.dto.LoginResponse;
 import com.musicstore.users.dto.RegisterRequest;
@@ -9,6 +10,9 @@ import com.musicstore.users.dto.UserInformationResponse;
 import com.musicstore.users.model.UserRole;
 import com.musicstore.users.service.*;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
 import org.junit.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
@@ -17,15 +21,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.security.web.csrf.CsrfToken;
+import org.springframework.security.web.csrf.DefaultCsrfToken;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import java.util.UUID;
+
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-
 
 @WebMvcTest(controllers = RegisterController.class)
 @AutoConfigureMockMvc(addFilters = false)
@@ -33,229 +42,249 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @RunWith(SpringRunner.class)
 public class RegistryControllerTests {
 
-    @Autowired
-    private MockMvc mockMvc;
+        @Autowired
+        private MockMvc mockMvc;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+        @Autowired
+        private ObjectMapper objectMapper;
 
-    @MockBean
-    private RegisterService registerService;
+        @MockBean
+        private RegisterService registerService;
 
-    @MockBean
-    private LoginService loginService;
+        @MockBean
+        private LoginService loginService;
 
-    @MockBean
-    private UserService userService;
+        @MockBean
+        private UserService userService;
 
-    @MockBean
-    private JwtService jwtService;
+        @MockBean
+        private JwtService jwtService;
 
-    @MockBean
-    private ConfirmationTokenService confirmationTokenService;
+        @MockBean
+        private ConfirmationTokenService confirmationTokenService;
 
-    @Test
-    public void getCsrfToken() throws Exception {
-        mockMvc.perform(get("/api/users/csrf/token"))
-                .andExpect(MockMvcResultMatchers.status().isOk());
-    }
+        private CsrfToken csrfToken;
 
-    @Test
-    public void registerTest() throws Exception {
+        @Test
+        public void getCsrfToken() throws Exception {
+                mockMvc.perform(get("/api/users/csrf/token"))
+                                .andExpect(MockMvcResultMatchers.status().isOk());
+        }
 
-        RegisterRequest registerRequest = RegisterRequest.builder()
-                .firstName("Marek")
-                .lastName("Kopania")
-                .email("test@test.com")
-                .password("Very$tron9pass")
-                .build();
+        @Test
+        public void registerTest() throws Exception {
 
-        ResultActions resultActions = mockMvc.perform(post("/api/users/register")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(registerRequest))
-        );
-        resultActions
-                .andExpect(MockMvcResultMatchers.status().isCreated());
-    }
+                RegisterRequest registerRequest = RegisterRequest.builder()
+                                .firstName("Marek")
+                                .lastName("Kopania")
+                                .email("test@test.com")
+                                .password("Very$tron9pass")
+                                .build();
 
-    @Test
-    public void registerBadRequestTest() throws Exception {
+                ResultActions resultActions = mockMvc.perform(post("/api/users/register")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(registerRequest)));
+                resultActions
+                                .andExpect(MockMvcResultMatchers.status().isCreated());
+        }
 
-        RegisterRequest registerRequest = RegisterRequest.builder()
-                .firstName("Mare$%&^%^&*@#$!$:][k")
-                .lastName("Kopania")
-                .email("tes..t@test.com")
-                .password("pass")
-                .build();
+        @Test
+        public void registerBadRequestTest() throws Exception {
 
-        ResultActions resultActions = mockMvc.perform(post("/api/users/register")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(registerRequest))
-        );
-        resultActions
-                .andExpect(MockMvcResultMatchers.status().isBadRequest());
-    }
+                RegisterRequest registerRequest = RegisterRequest.builder()
+                                .firstName("Mare$%&^%^&*@#$!$:][k")
+                                .lastName("Kopania")
+                                .email("tes..t@test.com")
+                                .password("pass")
+                                .build();
 
-    @Test
-    public void loginTest() throws Exception {
+                ResultActions resultActions = mockMvc.perform(post("/api/users/register")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(registerRequest)));
+                resultActions
+                                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+        }
 
-        LoginRequest loginRequest = LoginRequest.builder()
-                .email("test@test.com")
-                .password("testpass")
-                .build();
+        @Test
+        public void loginTest() throws Exception {
 
-        LoginResponse loginResponse = LoginResponse.builder()
-                .firstName("Marek")
-                .lastName("Kopania")
-                .uuid(UUID.randomUUID())
-                .role(UserRole.USER)
-                .token("test")
-                .build();
+                LoginRequest loginRequest = LoginRequest.builder()
+                                .email("test@test.com")
+                                .password("testpass")
+                                .build();
 
-        when(loginService.loginUser(loginRequest)).thenReturn(loginResponse);
+                LoginResponse loginResponse = LoginResponse.builder()
+                                .firstName("Marek")
+                                .lastName("Kopania")
+                                .uuid(UUID.randomUUID())
+                                .role(UserRole.USER)
+                                .token("test")
+                                .build();
 
-        ResultActions resultActions = mockMvc.perform(post("/api/users/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(loginRequest))
-        );
+                when(loginService.loginUser(loginRequest)).thenReturn(loginResponse);
 
-        resultActions
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value("Marek"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.lastName").value("Kopania"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.uuid").value(loginResponse.getUuid().toString()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.role").value(UserRole.USER.toString()));
+                ResultActions resultActions = mockMvc.perform(post("/api/users/login")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(loginRequest)));
 
-    }
+                resultActions
+                                .andExpect(MockMvcResultMatchers.status().isOk())
+                                .andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value("Marek"))
+                                .andExpect(MockMvcResultMatchers.jsonPath("$.lastName").value("Kopania"))
+                                .andExpect(MockMvcResultMatchers.jsonPath("$.uuid")
+                                                .value(loginResponse.getUuid().toString()))
+                                .andExpect(MockMvcResultMatchers.jsonPath("$.role").value(UserRole.USER.toString()));
 
-    @Test
-    public void registerConfirmationTokenTest() throws Exception {
+        }
 
-        String token = UUID.randomUUID().toString();
+        @Test
+        public void registerConfirmationTokenTest() throws Exception {
 
-        when(registerService.confirmToken(token)).thenReturn(token);
+                String token = UUID.randomUUID().toString();
 
-        ResultActions resultActions = mockMvc.perform(get("/api/users/register/confirm")
-                .param("token", token));
+                when(registerService.confirmToken(token)).thenReturn(token);
 
-        resultActions
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string(token));
-    }
+                ResultActions resultActions = mockMvc.perform(get("/api/users/register/confirm")
+                                .param("token", token));
 
-    @Test
-    public void getUserInformationTest() throws Exception {
-        UUID uuid = UUID.randomUUID();
-        UserInformationResponse info = UserInformationResponse
-                .builder()
-                .firstName("Marek")
-                .lastName("Kopania")
-                .email("test@test.com")
-                .build();
+                resultActions
+                                .andExpect(MockMvcResultMatchers.status().isOk())
+                                .andExpect(MockMvcResultMatchers.content().string(token));
+        }
 
-        when(userService.getUserInfo(uuid)).thenReturn(info);
+        @Test
+        public void getUserInformationTest() throws Exception {
+                UUID uuid = UUID.randomUUID();
+                UserInformationResponse info = UserInformationResponse
+                                .builder()
+                                .firstName("Marek")
+                                .lastName("Kopania")
+                                .email("test@test.com")
+                                .build();
 
-        ResultActions resultActions = mockMvc.perform(post("/api/users/get/{uuid}", uuid)
-        .contentType(MediaType.APPLICATION_JSON));
+                when(userService.getUserInfo(uuid)).thenReturn(info);
 
-        resultActions.andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value("Marek"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.lastName").value("Kopania"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.email").value("test@test.com"));
-    }
+                ResultActions resultActions = mockMvc.perform(post("/api/users/get/{uuid}", uuid)
+                                .contentType(MediaType.APPLICATION_JSON));
 
-    @Test
-    public void validateTokenTest() throws Exception {
-        String token = UUID.randomUUID().toString();
-        when(loginService.validateLoginRequest(token)).thenReturn(true);
+                resultActions.andExpect(MockMvcResultMatchers.status().isOk())
+                                .andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value("Marek"))
+                                .andExpect(MockMvcResultMatchers.jsonPath("$.lastName").value("Kopania"))
+                                .andExpect(MockMvcResultMatchers.jsonPath("$.email").value("test@test.com"));
+        }
 
-        ResultActions resultActions = mockMvc.perform(get("/api/users/validate")
-        .param("token", token));
+        @Test
+        public void validateTokenTest() throws Exception {
+                String token = UUID.randomUUID().toString();
+                when(loginService.validateLoginRequest(token)).thenReturn(true);
 
-        resultActions
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.content().string("true"));
-    }
+                ResultActions resultActions = mockMvc.perform(get("/api/users/validate")
+                                .param("token", token));
 
-    @Test
-    public void adminAuthorizationTest() throws Exception {
-        String token = UUID.randomUUID().toString();
-        when(loginService.adminAuthorize(token)).thenReturn(true);
+                resultActions
+                                .andExpect(MockMvcResultMatchers.status().isOk())
+                                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+                                .andExpect(MockMvcResultMatchers.content().string("true"));
+        }
 
-        ResultActions resultActions = mockMvc.perform(get("/api/users/adminauthorize")
-        .param("token", token));
+        @Test
+        public void refreshTokenTest() throws Exception {
 
-        resultActions
-                .andExpect(MockMvcResultMatchers.status().isAccepted())
-                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.content().string("true"));
-    }
+                String token = UUID.randomUUID().toString();
+                String csrf = UUID.randomUUID().toString();
+                csrfToken = new DefaultCsrfToken("X-XSRF-TOKEN", "_csrf", csrf);
 
-    @Test
-    public void userInformationUpdateTest() throws Exception {
-        UUID uuid = UUID.randomUUID();
+                AuthenticationResponse authResp = AuthenticationResponse
+                                .builder()
+                                .token(token)
+                                .refreshToken(token)
+                                .build();
 
-        RegisterRequest registerRequest = RegisterRequest.builder()
-                .firstName("Marek")
-                .lastName("Kopania")
-                .email("test@test.com")
-                .password("Very$tron9pass")
-                .build();
+                ResultActions resultActions = mockMvc.perform(post("/api/users/refresh-token")
+                                .header(HttpHeaders.AUTHORIZATION, token)
+                                .cookie(new Cookie("XSRF-TOKEN", csrfToken.getToken()))
+                                .contentType(MediaType.APPLICATION_JSON));
 
-        LoginResponse loginResponse = LoginResponse.builder()
-                .firstName("Marek")
-                .lastName("Kopania")
-                .uuid(uuid)
-                .role(UserRole.USER)
-                .token("test")
-                .build();
+                resultActions.andExpect(MockMvcResultMatchers.status().isOk());
 
-        when(userService.updateUser(uuid, registerRequest)).thenReturn(loginResponse);
+        }
 
-        ResultActions resultActions = mockMvc.perform(put("/api/users/update/{uuid}", uuid)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(registerRequest))
-        );
+        @Test
+        public void adminAuthorizationTest() throws Exception {
+                String token = UUID.randomUUID().toString();
+                when(loginService.adminAuthorize(token)).thenReturn(true);
 
-        resultActions
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value("Marek"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.lastName").value("Kopania"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.uuid").value(uuid.toString()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.role").value(UserRole.USER.toString()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.token").value("test"));
-    }
+                ResultActions resultActions = mockMvc.perform(get("/api/users/adminauthorize")
+                                .param("token", token));
 
-    @Test
-    public void userInformationUpdateBadRequestTest() throws Exception {
-        UUID uuid = UUID.randomUUID();
+                resultActions
+                                .andExpect(MockMvcResultMatchers.status().isAccepted())
+                                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+                                .andExpect(MockMvcResultMatchers.content().string("true"));
+        }
 
-        RegisterRequest registerRequest = RegisterRequest.builder()
-                .firstName("Mare$%&^%^&*@#$!$:][k")
-                .lastName("Kopania")
-                .email("tes..t@test.com")
-                .password("pass")
-                .build();
+        @Test
+        public void userInformationUpdateTest() throws Exception {
+                UUID uuid = UUID.randomUUID();
 
-        ResultActions resultActions = mockMvc.perform(put("/api/users/update/{uuid}", uuid)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(registerRequest))
-        );
+                RegisterRequest registerRequest = RegisterRequest.builder()
+                                .firstName("Marek")
+                                .lastName("Kopania")
+                                .email("test@test.com")
+                                .password("Very$tron9pass")
+                                .build();
 
-        resultActions
-                .andExpect(MockMvcResultMatchers.status().isBadRequest());
-    }
+                LoginResponse loginResponse = LoginResponse.builder()
+                                .firstName("Marek")
+                                .lastName("Kopania")
+                                .uuid(uuid)
+                                .role(UserRole.USER)
+                                .token("test")
+                                .build();
 
-    @Test
-    public void deleteUserTest() throws Exception {
-        UUID uuid = UUID.randomUUID();
+                when(userService.updateUser(uuid, registerRequest)).thenReturn(loginResponse);
 
-        when(userService.deleteUser(uuid)).thenReturn(String.valueOf(String.class));
+                ResultActions resultActions = mockMvc.perform(put("/api/users/update/{uuid}", uuid)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(registerRequest)));
 
-        ResultActions resultActions = mockMvc.perform(delete("/api/users/delete/{uuid}", uuid));
-        resultActions
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().contentType("text/plain;charset=UTF-8"));
-    }
+                resultActions
+                                .andExpect(MockMvcResultMatchers.status().isOk())
+                                .andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value("Marek"))
+                                .andExpect(MockMvcResultMatchers.jsonPath("$.lastName").value("Kopania"))
+                                .andExpect(MockMvcResultMatchers.jsonPath("$.uuid").value(uuid.toString()))
+                                .andExpect(MockMvcResultMatchers.jsonPath("$.role").value(UserRole.USER.toString()))
+                                .andExpect(MockMvcResultMatchers.jsonPath("$.token").value("test"));
+        }
+
+        @Test
+        public void userInformationUpdateBadRequestTest() throws Exception {
+                UUID uuid = UUID.randomUUID();
+
+                RegisterRequest registerRequest = RegisterRequest.builder()
+                                .firstName("Mare$%&^%^&*@#$!$:][k")
+                                .lastName("Kopania")
+                                .email("tes..t@test.com")
+                                .password("pass")
+                                .build();
+
+                ResultActions resultActions = mockMvc.perform(put("/api/users/update/{uuid}", uuid)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(registerRequest)));
+
+                resultActions
+                                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+        }
+
+        @Test
+        public void deleteUserTest() throws Exception {
+                UUID uuid = UUID.randomUUID();
+
+                when(userService.deleteUser(uuid)).thenReturn(String.valueOf(String.class));
+
+                ResultActions resultActions = mockMvc.perform(delete("/api/users/delete/{uuid}", uuid));
+                resultActions
+                                .andExpect(MockMvcResultMatchers.status().isOk())
+                                .andExpect(MockMvcResultMatchers.content().contentType("text/plain;charset=UTF-8"));
+        }
 }

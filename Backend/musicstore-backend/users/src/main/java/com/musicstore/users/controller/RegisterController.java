@@ -9,11 +9,9 @@ import com.musicstore.users.dto.UserInformationResponse;
 import com.musicstore.users.service.LoginService;
 import com.musicstore.users.service.RegisterService;
 import com.musicstore.users.service.UserService;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;

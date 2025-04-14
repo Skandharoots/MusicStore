@@ -12,27 +12,21 @@ import com.musicstore.users.model.ConfirmationToken;
 import com.musicstore.users.model.Users;
 import com.musicstore.users.repository.UserRepository;
 import com.musicstore.users.security.config.VariablesConfiguration;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
-
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -430,9 +424,12 @@ public class UserService implements UserDetailsService {
                                 + "                                                            <center dir=\"false\" style=\"color:#ffffff;font-family:Arial, sans-serif;font-size:23px\">\n"
                                 + "                                                    <![endif]--><a href=\"" + link
                                 + "\" target=\"_blank\" style=\"background-color:#276318;border-bottom:0px solid transparent;"
-                                + "border-left:0px solid transparent;border-radius:4px;border-right:0px solid transparent;border-top:0px solid transparent;color:#ffffff;display:block;font-family:Arial, "
-                                + "'Helvetica Neue', Helvetica, sans-serif;font-size:23px;font-weight:400;mso-border-alt:none;padding-bottom:5px;padding-top:5px;text-align:center;text-decoration:none;width:100%;"
-                                + "word-break:keep-all;\"><span style=\"word-break: break-word; padding-left: 20px; padding-right: 20px; font-size: 23px; display: inline-block; letter-spacing: normal;\">"
+                                + "border-left:0px solid transparent;border-radius:4px;border-right:0px solid transparent;"
+                                + "border-top:0px solid transparent;color:#ffffff;display:block;font-family:Arial, "
+                                + "'Helvetica Neue', Helvetica, sans-serif;font-size:23px;font-weight:400;mso-border-alt:none;"
+                                + "padding-bottom:5px;padding-top:5px;text-align:center;text-decoration:none;width:100%;"
+                                + "word-break:keep-all;\"><span style=\"word-break: break-word; padding-left: 20px; padding-right: 20px; font-size: "
+                                + "23px; display: inline-block; letter-spacing: normal;\">"
                                 + "<span style=\"word-break: break-word; line-height: 46px;\">Activate</span></span></a><!--[if mso]></center></v:textbox></v:roundrect><![endif]--></div>\n"
                                 + "                                            </td>\n"
                                 + "                                        </tr>\n"

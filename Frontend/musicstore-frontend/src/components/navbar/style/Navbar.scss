@@ -7,12 +7,13 @@ header {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
+  justify-content:space-around;
   height: fit-content;
   min-height: 10dvh;
   background: white;
   padding: 0 10%;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
 }
 
 .top-container a {

@@ -1,6 +1,5 @@
-package com.musicstore.azureservice.api.service;
+package com.musicstore.azureinvoice.api.service;
 
-import com.musicstore.azureservice.service.AzureBlobStorageService;
 import org.assertj.core.api.Assertions;
 import org.junit.After;
 import org.junit.Before;
@@ -18,6 +17,8 @@ import java.util.List;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 
+import com.musicstore.azureinvoice.service.AzureBlobStorageService;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWireMock(port = 0)
@@ -29,6 +30,10 @@ public class AzureBlobStorageServiceTests {
     private String path = "/tests";
 
     private String filename = "test.txt";
+
+    private String fullFilePath = path + "/" + filename;
+
+    private MultipartFile multipartFile = new MockMultipartFile("file", "test.txt", "text/plain", "Hello World".getBytes());
 
     private String token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpX" +
             "VCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI" +
@@ -185,7 +190,5 @@ public class AzureBlobStorageServiceTests {
         Assertions.assertThatThrownBy(() -> azureBlobStorageService.delete(token, path + "/" + filename));
 
     }
-
-
 
 }

@@ -41,6 +41,7 @@
         <module>config-server</module>
         <module>azure-service</module>
         <module>apigateway</module>
+        <module>azure-invoice</module>
     </modules>
 
     <properties>

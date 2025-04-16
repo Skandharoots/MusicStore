@@ -1,4 +1,4 @@
-package com.musicstore.azureservice.service;
+package com.musicstore.azureinvoice.service;
 
 import com.azure.core.http.rest.PagedIterable;
 import com.azure.storage.blob.BlobClient;
@@ -6,7 +6,7 @@ import com.azure.storage.blob.BlobContainerClient;
 import com.azure.storage.blob.BlobServiceClient;
 import com.azure.storage.blob.models.BlobItem;
 import com.azure.storage.blob.models.BlobStorageException;
-import com.musicstore.azureservice.config.AzureBlobStorageConfiguration;
+import com.musicstore.azureinvoice.config.AzureBlobStorageConfiguration;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;

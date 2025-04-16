@@ -67,7 +67,7 @@ class LocalStorageHelper {
                     localStorage.setItem('refresh', r.data.refreshToken);
                     localStorage.setItem('authValidUntil', Date.now() + (60 * 1000));
                 })).catch((e) => {
-                    toast.error(e.response.data.message, {
+                    toast.error("Cannot refresh token - " + e.response.data.message, {
                         position: "bottom-center",
                         autoClose: 3000,
                         hideProgressBar: false,

@@ -1,0 +1,29 @@
+eureka:
+  instance:
+    prefer-ip-address: true
+    hostname: localhost
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+server:
+  port: 7090
+  error:
+    include-message: always
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
+    com.musicstore.azureservice.service: DEBUG
+springdoc:
+  api-docs:
+    enabled: true
+    path: /invoice-svc/v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /invoice-svc/swagger-ui.html
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

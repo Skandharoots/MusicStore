@@ -20,9 +20,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.security.web.csrf.DefaultCsrfToken;
 import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Mono;
 
+import java.io.FileNotFoundException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -485,6 +485,50 @@ public class OrderServiceTests {
         when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
 
         Assertions.assertThatThrownBy(() -> orderService.updateOrderStatus(order.getUserIdentifier(), token, csrfToken.getToken(), orderUpdateRequest));
+
+    }
+
+    @Test
+    public void generatePdfTest() throws FileNotFoundException {
+
+        UUID uuid = UUID.randomUUID();
+
+        when(webClientBuilder.build()).thenReturn(webClient);
+        when(webClient.get()).thenReturn(requestHeadersUriSpec);
+        when(requestHeadersUriSpec.uri(variablesConfiguration.getAdminVerificationUrl() + token.substring(7))).thenReturn(requestHeadersSpec);
+        when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+        when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
+
+        when(orderRepository.findByOrderIdentifier(uuid)).thenReturn(Optional.of(order));
+
+
+        Assertions.assertThat(orderService.generatePdfFileResponse(uuid, token)).isNotNull();
+        
+    }
+
+    @Test
+    public void generatePdfNoAdminAuthorityTest() {
+
+        UUID uuid = UUID.randomUUID();
+
+        when(webClientBuilder.build()).thenReturn(webClient);
+        when(webClient.get()).thenReturn(requestHeadersUriSpec);
+        when(requestHeadersUriSpec.uri(variablesConfiguration.getAdminVerificationUrl() + token.substring(7))).thenReturn(requestHeadersSpec);
+        when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+        when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(false));
+
+        Assertions.assertThatThrownBy(() -> orderService.generatePdfFileResponse(uuid, token));
+
+    }
+
+    @Test
+    public void generatePdfSource() {
+
+        UUID uuid2 = UUID.randomUUID();
+
+        when(orderRepository.findByOrderIdentifier(uuid2)).thenReturn(Optional.empty());
+
+        Assertions.assertThatThrownBy(() -> orderService.generatePdfSource(uuid2));
 
     }
 

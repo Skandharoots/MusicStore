@@ -51,6 +51,7 @@ public class WebAppConfig {
                         .requestMatchers(HttpMethod.POST, "/api/order/create").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/order/get/**").permitAll()
                         .requestMatchers(HttpMethod.PUT, "/api/order/update/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/order/invoice/pdf/**").permitAll()
                         .requestMatchers("/actuator/**").permitAll()
                         .requestMatchers("/order-svc/api-docs/**",
                                 "/order-svc/v3/api-docs/**").permitAll()

@@ -6,6 +6,7 @@ import com.musicstore.order.model.Order;
 import com.musicstore.order.service.OrderService;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.core.HttpHeaders;
+import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -39,16 +40,14 @@ public class OrderController {
     public String createOrder(
             @Valid @RequestBody OrderRequest orderRequest,
             @CookieValue("XSRF-TOKEN") String csrfToken,
-            @RequestHeader(HttpHeaders.AUTHORIZATION) String jwtToken
-    ) {
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String jwtToken) {
         return orderService.createOrder(orderRequest, csrfToken, jwtToken);
     }
 
     @PostMapping("/get/all")
     public ResponseEntity<Page<Order>> getAllOrders(
             @RequestParam(value = "page") Integer page,
-            @RequestParam(value = "pageSize") Integer pageSize
-    ) {
+            @RequestParam(value = "pageSize") Integer pageSize) {
         return orderService.getAllOrders(page, pageSize);
     }
 
@@ -56,15 +55,13 @@ public class OrderController {
     public ResponseEntity<Page<Order>> getAllOrdersForUser(
             @PathVariable(name = "user-id") UUID userId,
             @RequestParam(value = "page") Integer page,
-            @RequestParam(value = "pageSize") Integer pageSize
-    ) {
+            @RequestParam(value = "pageSize") Integer pageSize) {
         return orderService.getAllOrdersByUserId(userId, page, pageSize);
     }
 
     @PostMapping("/get/{order-id}")
     public ResponseEntity<Order> getOrderDetails(
-            @PathVariable(name = "order-id") UUID orderId
-    ) {
+            @PathVariable(name = "order-id") UUID orderId) {
         return orderService.getOrderDetails(orderId);
     }
 
@@ -73,9 +70,15 @@ public class OrderController {
             @PathVariable(name = "order-id") UUID orderId,
             @RequestHeader(HttpHeaders.AUTHORIZATION) String token,
             @CookieValue("XSRF-TOKEN") String csrfToken,
-            @Valid @RequestBody OrderUpdateRequest request
-    ) {
+            @Valid @RequestBody OrderUpdateRequest request) {
         return orderService.updateOrderStatus(orderId, token, csrfToken, request);
+    }
+
+    @PostMapping("/invoice/pdf/{uuid}")
+    public byte[] getInvoicePdf(
+            @PathVariable(name = "uuid") UUID uuid,
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String token) throws FileNotFoundException {
+        return orderService.generatePdfFileResponse(uuid, token);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -90,6 +93,5 @@ public class OrderController {
         });
         return errors;
     }
-
 
 }

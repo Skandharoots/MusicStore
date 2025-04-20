@@ -3,7 +3,7 @@ import {useEffect, useState} from "react";
 import LocalStorageHelper from "../../helpers/LocalStorageHelper.jsx";
 import {Slide, toast} from "react-toastify";
 import axios from "axios";
-import {Backdrop, Button, CircularProgress} from "@mui/material";
+import {Backdrop, Box, Button, CircularProgress} from "@mui/material";
 import './style/MyOrderPage.scss';
 import OrderProductItem from "./components/OrderProductItem.jsx";
 import { format } from "date-fns";
@@ -78,7 +78,7 @@ function MyOrderPage() {
                                 .then(res => {
                                     let blob = new Blob([res.data], {type: "application/pdf"});
                                     setPdfFile(blob);
-                                    setPdfFileName(String(fileName));
+                                    setPdfFileName(fileName);
                                     setShowDownloadInvoice(true);
                                     setOpenBackdrop(false);
                                 }).catch((e) => {
@@ -271,19 +271,39 @@ function MyOrderPage() {
                             <div className="my-order-invoice"
                             style={{
                                 display: 'flex',
-                            flexDirection: 'row',
-                            width: '100%',
-                            height: 'fit-content',
-                            justifyContent: 'flex-start',
-                            alignItems: 'flex-start',
-                            borderRadius: '1em',
-                            marginBottom: '16px',
-                            padding: '16px',
-                            boxSizing: 'border-box',
-                            borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
+                                flexDirection: 'row',
+                                width: '100%',
+                                height: 'fit-content',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                borderRadius: '1em',
+                                marginBottom: '16px',
+                                padding: '16px',
+                                boxSizing: 'border-box',
+                                borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
                             }}
                         >
-                            <Button
+                            <div style={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                width: '50%',
+                                height: 'fit-content',
+                                justifyContent: 'center',
+                                alignItems: 'flex-start',
+                            }}>
+                                <p style={{margin: '0', fontSize: '16px', fontWeight: 'bold'}}>Download your invoice PDF:</p>
+                                <p style={{margin: '0', fontSize: '12px', fontWeight: 'normal', maxWidth: '90%', textWrap: 'wrap'}}>{pdfFileName}</p>
+                            </div>
+                            <Box sx={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                width: '50%',
+                                height: 'fit-content',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                textAlign: 'center',
+                            }}>
+                                <Button
                                 className="download-btn"
                                 type="button"
                                 endIcon={<PictureAsPdfIcon />}
@@ -291,8 +311,8 @@ function MyOrderPage() {
                                 variant="outlined"
                                 onClick={downloadPdf}
                                 sx={{
-                                    maxWidth: '350px',
-                                    margin: '0 0 16px 0',
+                                    width: '90%',
+                                    margin: '0 0 0 0',
                                     "&:hover": {
                                         borderColor: 'rgb(49,140,23)',
                                         color: 'rgb(49,140,23)',
@@ -305,6 +325,7 @@ function MyOrderPage() {
                             >
                                 Download invoice
                             </Button>
+                            </Box>
                         </div>
 
                         }

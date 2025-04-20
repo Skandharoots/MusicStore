@@ -157,7 +157,7 @@ public class OrderService {
                                 "Order not found"));
 
         if (request.getStatus().equals(OrderStatus.CANCELED)
-                || request.getStatus().equals(OrderStatus.FAILED)) {
+                || request.getStatus().equals(OrderStatus.RETURNED)) {
             OrderCancelRequest orderCancelRequest = new OrderCancelRequest();
             orderCancelRequest.setItems(request.getItemsToCancel());
             Boolean response = webClient.build()
@@ -177,8 +177,9 @@ public class OrderService {
             }
 
         }
-
-        order.setStatus(request.getStatus());
+        List<OrderStatus> statuses = order.getStatus();
+        statuses.add(request.getStatus());
+        order.setStatus(statuses);
         orderRepository.save(order);
         log.info("Order updated - " + order.getOrderIdentifier());
         return ResponseEntity.ok("Order status updated successfully");

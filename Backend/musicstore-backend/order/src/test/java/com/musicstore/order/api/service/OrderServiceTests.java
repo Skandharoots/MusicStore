@@ -119,8 +119,11 @@ public class OrderServiceTests {
         List<OrderLineItemsDto> itemsDto = new ArrayList<>();
         itemsDto.add(orderLineItemsDTO);
 
+        List<OrderStatus> statuses = new ArrayList<>();
+        statuses.add(OrderStatus.RECEIVED);
+
         order = new Order();
-        order.setStatus(OrderStatus.IN_PROGRESS);
+        order.setStatus(statuses);
         order.setName("Grzegoż");
         order.setCity("Łęgockiążćźqweśłó");
         order.setCountry("Chrząszczyrzewoszyce");
@@ -354,7 +357,7 @@ public class OrderServiceTests {
         orderCancelRequest.setItems(itemsToCancel);
 
         OrderUpdateRequest orderUpdateRequest = new OrderUpdateRequest();
-        orderUpdateRequest.setStatus(OrderStatus.FAILED);
+        orderUpdateRequest.setStatus(OrderStatus.CANCELED);
         orderUpdateRequest.setItemsToCancel(itemsToCancel);
 
         when(webClientBuilder.build()).thenReturn(webClient);

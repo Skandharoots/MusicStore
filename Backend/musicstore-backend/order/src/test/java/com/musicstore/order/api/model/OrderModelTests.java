@@ -45,9 +45,12 @@ public class OrderModelTests {
         List<OrderLineItems> orderLineItemsList = new ArrayList<>();
         orderLineItemsList.add(orderLineItems);
 
+        List<OrderStatus> statuses = new ArrayList<>();
+        statuses.add(OrderStatus.RECEIVED);
+
         order = new Order();
         order.setId(1L);
-        order.setStatus(OrderStatus.IN_PROGRESS);
+        order.setStatus(statuses);
         order.setOrderIdentifier(orderId);
         order.setName("Test");
         order.setCity("Test");
@@ -62,7 +65,6 @@ public class OrderModelTests {
         order.setZipCode("83-234");
         order.setTotalPrice(BigDecimal.valueOf(3672.00));
         order.setOrderItems(orderLineItemsList);
-
 
     }
 
@@ -91,11 +93,10 @@ public class OrderModelTests {
                 "test",
                 "test",
                 BigDecimal.valueOf(100.00),
-                items
-        );
+                items);
 
         Assertions.assertThat(orderConstructor.getId()).isEqualTo(null);
-        Assertions.assertThat(orderConstructor.getStatus()).isEqualTo(OrderStatus.IN_PROGRESS);
+        Assertions.assertThat(orderConstructor.getStatus().get(0)).isEqualTo(OrderStatus.RECEIVED);
         Assertions.assertThat(orderConstructor.getOrderIdentifier()).isNotNull();
         Assertions.assertThat(orderConstructor.getName()).isEqualTo("test");
         Assertions.assertThat(orderConstructor.getCity()).isEqualTo("test");
@@ -114,14 +115,13 @@ public class OrderModelTests {
         Assertions.assertThat(orderConstructor.getOrderItems()).hasSize(1);
         Assertions.assertThat(orderConstructor.getOrderItems().get(0).getId()).isEqualTo(1L);
 
-
     }
 
     @Test
     public void orderSettersTest() {
 
         Assertions.assertThat(order.getId()).isEqualTo(1L);
-        Assertions.assertThat(order.getStatus()).isEqualTo(OrderStatus.IN_PROGRESS);
+        Assertions.assertThat(order.getStatus().get(0)).isEqualTo(OrderStatus.RECEIVED);
         Assertions.assertThat(order.getOrderIdentifier()).isEqualTo(orderId);
         Assertions.assertThat(order.getName()).isEqualTo("Test");
         Assertions.assertThat(order.getCity()).isEqualTo("Test");
@@ -139,8 +139,6 @@ public class OrderModelTests {
         Assertions.assertThat(order.getOrderItems()).isNotEmpty();
         Assertions.assertThat(order.getOrderItems()).hasSize(1);
         Assertions.assertThat(order.getOrderItems().get(0).getId()).isEqualTo(1L);
-
-
 
     }
 }

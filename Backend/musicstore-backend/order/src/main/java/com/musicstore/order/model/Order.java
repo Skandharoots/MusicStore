@@ -9,6 +9,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
@@ -52,7 +53,7 @@ public class Order {
 
     private BigDecimal totalPrice;
 
-    private OrderStatus status;
+    private List<OrderStatus> status;
 
     @OneToMany(cascade = CascadeType.ALL)
     private List<OrderLineItems> orderItems;
@@ -81,6 +82,8 @@ public class Order {
         this.zipCode = zipCode;
         this.totalPrice = totalPrice;
         this.orderItems = orderItems;
-        this.status = OrderStatus.IN_PROGRESS;
+        List<OrderStatus> statuses = new ArrayList<>();
+        statuses.add(OrderStatus.RECEIVED);
+        this.status = statuses;
     }
 }

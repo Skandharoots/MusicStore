@@ -2,9 +2,9 @@ package com.musicstore.order.model;
 
 public enum OrderStatus {
 
-    IN_PROGRESS,
+    RECEIVED,
     SENT,
     COMPLETED,
     CANCELED,
-    FAILED
+    RETURNED
 }

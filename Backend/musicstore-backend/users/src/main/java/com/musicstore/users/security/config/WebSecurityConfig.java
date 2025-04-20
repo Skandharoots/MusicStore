@@ -67,7 +67,7 @@ public class WebSecurityConfig {
                                                 .requestMatchers(HttpMethod.DELETE, "api/users/delete/**").permitAll()
                                                 .requestMatchers(HttpMethod.GET, "/api/users/adminauthorize")
                                                 .permitAll()
-                                                .requestMatchers(HttpMethod.POST, "/api/users/**")
+                                                .requestMatchers(HttpMethod.POST, "/api/users/refresh-token")
                                                 .permitAll()
                                                 .requestMatchers("/actuator/**").permitAll()
                                                 .requestMatchers("/users-svc/api-docs/**",

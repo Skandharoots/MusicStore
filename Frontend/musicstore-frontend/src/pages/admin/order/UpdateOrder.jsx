@@ -23,6 +23,9 @@ import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import DeleteIcon from '@mui/icons-material/Delete';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import TextField from "@mui/material/TextField";
+import Stepper from '@mui/material/Stepper';
+import Step from '@mui/material/Step';
+import StepLabel from '@mui/material/StepLabel';
 
 
 function UpdateOrder() {
@@ -39,7 +42,8 @@ function UpdateOrder() {
     const [streetAddress, setStreetAddress] = useState('');
     const [city, setCity] = useState('');
     const [zipCode, setZipCode] = useState('');
-    const [status, setStatus] = useState("IN_PROGRESS");
+    const [statusArr, setStatusArr] = useState([]);
+    const [status, setStatus] = useState('RECEIVED');
     const [openBackdrop, setOpenBackdrop] = useState(false);
     const [pdfFile, setPdfFile] = useState(null);
     const [pdfFileName, setPdfFileName] = useState('');
@@ -78,7 +82,8 @@ function UpdateOrder() {
                setStreetAddress(res.data.streetAddress);
                setCity(res.data.city);
                setZipCode(res.data.zipCode);
-               setStatus(res.data.status);
+               setStatus(res.data.status[res.data.status.length - 1]);
+               setStatusArr(res.data.status);
                axios.get(`api/invoice/list?path=${iden.orderIdentifier}`, {})
                     .then(res => {
                         if (res.data.length > 0) {
@@ -425,6 +430,175 @@ function UpdateOrder() {
         return width; 
     }
 
+    const steps1 = [
+        'Order received',
+        'Order sent',
+        'Order collected by buyer',
+    ];
+
+    const steps2 = [
+        'Order received',
+        'Order canceled'
+    ];
+
+    const steps3 = [
+        'Order received',
+        'Order sent',
+        'Order returned'
+    ]
+
+    function parseStatus(status) {
+
+        let lastStatus = status[status.length - 1];
+        let previous = '';
+        if (status.length > 1) {
+            previous = status[status.length - 2];
+        }
+        if (lastStatus === 'COMPLETED' || lastStatus === 'SENT' || lastStatus === 'RECEIVED') {
+            return (
+                <Box sx={{ width: '100%' }}>
+                  <Stepper activeStep={status.length} alternativeLabel>
+                    {steps1.map((label) => (
+                            <Step key={label}
+                                sx={{
+                                    '& .MuiStepLabel-root .Mui-completed': {
+                                    color: 'rgb(39, 99, 24)', // circle color (COMPLETED)
+                                    },
+                                    '& .MuiStepLabel-root .Mui-active': {
+                                    color: 'rgb(39, 99, 24)', // circle color (ACTIVE)
+                                    },
+                                }}
+                            >
+                                <StepLabel>{label}</StepLabel>
+                            </Step>
+                        ))}
+                  </Stepper>
+                </Box>
+              );
+        } else if (lastStatus === 'CANCELED') {
+            return (
+                <Box sx={{ width: '100%' }}>
+                  <Stepper activeStep={status.length} alternativeLabel>
+                    {steps2.map((label) => {
+                        if (label === 'Order canceled') {
+                            return (
+                                <Step key={label} 
+                                sx={{
+                                    '& .MuiStepLabel-root .Mui-completed': {
+                                    color: 'rgb(129, 36, 29)', // circle color (COMPLETED)
+                                    },
+                                    '& .MuiStepLabel-root .Mui-active': {
+                                    color: 'rgb(129, 36, 29)', // circle color (ACTIVE)
+                                    },
+                                }}
+                                >
+                                    <StepLabel>{label}</StepLabel>
+                                </Step>
+                            )
+                        } else {
+                            return (
+                                <Step key={label}
+                                    sx={{
+                                        '& .MuiStepLabel-root .Mui-completed': {
+                                        color: 'rgb(39, 99, 24)', // circle color (COMPLETED)
+                                        },
+                                        '& .MuiStepLabel-root .Mui-active': {
+                                        color: 'rgb(39, 99, 24)', // circle color (ACTIVE)
+                                        },
+                                    }}
+                                >
+                                    <StepLabel>{label}</StepLabel>
+                                </Step>
+                            )
+                        }
+                    })}
+                  </Stepper>
+                </Box>
+              );
+        } else if ((lastStatus === 'RETURNED' && previous === 'SENT')) {
+            return (
+                <Box sx={{ width: '100%' }}>
+                  <Stepper activeStep={status.length} alternativeLabel>
+                    {steps3.map((label) => {
+                        if (label === 'Order returned') {
+                            return (
+                                <Step key={label} 
+                                    sx={{
+                                        '& .MuiStepLabel-root .Mui-completed': {
+                                        color: 'rgb(172, 109, 20)', // circle color (COMPLETED)
+                                        },
+                                        '& .MuiStepLabel-root .Mui-active': {
+                                        color: 'rgb(172, 109, 20)', // circle color (ACTIVE)
+                                        },
+                                    }}
+                                >
+                                    <StepLabel>{label}</StepLabel>
+                                </Step>
+                            )
+                        } else {
+                            return (
+                                <Step key={label}
+                                    sx={{
+                                        '& .MuiStepLabel-root .Mui-completed': {
+                                        color: 'rgb(39, 99, 24)', // circle color (COMPLETED)
+                                        },
+                                        '& .MuiStepLabel-root .Mui-active': {
+                                        color: 'rgb(39, 99, 24)', // circle color (ACTIVE)
+                                        },
+                                    }}
+                                >
+                                    <StepLabel>{label}</StepLabel>
+                                </Step>
+                            )
+                        }
+                    })}
+                  </Stepper>
+                </Box>
+              );
+        } else if ((lastStatus === 'RETURNED' && previous === 'COMPLETED')) {
+            return (
+                <Box sx={{ width: '100%' }}>
+                  <Stepper activeStep={status.length} alternativeLabel>
+                    {steps3.map((label) => {
+                        if (label === 'Order returned') {
+                            return (
+                                <Step key={label} 
+                                    sx={{
+                                        '& .MuiStepLabel-root .Mui-completed': {
+                                        color: 'rgb(172, 109, 20)', // circle color (COMPLETED)
+                                        },
+                                        '& .MuiStepLabel-root .Mui-active': {
+                                        color: 'rgb(172, 109, 20)', // circle color (ACTIVE)
+                                        },
+                                    }}
+                                >
+                                    <StepLabel>{label}</StepLabel>
+                                </Step>
+                            )
+                        } else {
+                            return (
+                                <Step key={label}
+                                    sx={{
+                                        '& .MuiStepLabel-root .Mui-completed': {
+                                        color: 'rgb(39, 99, 24)', // circle color (COMPLETED)
+                                        },
+                                        '& .MuiStepLabel-root .Mui-active': {
+                                        color: 'rgb(39, 99, 24)', // circle color (ACTIVE)
+                                        },
+                                    }}
+                                >
+                                    <StepLabel>{label}</StepLabel>
+                                </Step>
+                            )
+                        }
+                    })}
+                  </Stepper>
+                </Box>
+              );
+        }
+
+    }
+
     return (
         <div className="OrderUpdate">
             <Backdrop
@@ -489,6 +663,20 @@ function UpdateOrder() {
                         ))
                     }
                 </div>
+                <div style={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            width: '100%',
+                            height: 'fit-content',
+                            justifyContent: 'flex-start',
+                            alignItems: 'flex-start',
+                            borderRadius: '1em',
+                            padding: '16px',
+                            boxSizing: 'border-box',
+                            borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
+                        }}>
+                            {parseStatus(statusArr)}
+                        </div>
                 <Box
                     style={{
                         marginTop: '16px',
@@ -519,11 +707,11 @@ function UpdateOrder() {
                             onChange={e => setStatus(e.target.value)}
                             variant={"outlined"}
                         >
-                            <MenuItem value={"IN_PROGRESS"}>Order received</MenuItem>
+                            <MenuItem value={"RECEIVED"}>Order received</MenuItem>
                             <MenuItem value={"SENT"}>Order sent</MenuItem>
                             <MenuItem value={"COMPLETED"}>Order completed</MenuItem>
                             <MenuItem value={"CANCELED"}>Order canceled</MenuItem>
-                            <MenuItem value={"FAILED"}>Order failed</MenuItem>
+                            <MenuItem value={"RETURNED"}>Order returned</MenuItem>
                         </Select>
                     </FormControl>
                     <Button

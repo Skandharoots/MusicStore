@@ -1,4 +1,5 @@
 import axios from 'axios';
+import {Slide, toast} from "react-toastify";
 class LocalStorageHelper {
 
     static IsUserLogged() {
@@ -63,34 +64,24 @@ class LocalStorageHelper {
                         'X-XSRF-TOKEN': r.data.token,
                     }
                 }).then((r => {
-                    localStorage.setItem('credentials', r.data.token);
-                    localStorage.setItem('refresh', r.data.refreshToken);
-                    localStorage.setItem('authValidUntil', Date.now() + (60 * 1000));
-                })).catch((e) => {
-                    toast.error("Cannot refresh token - " + e.response.data.message, {
-                        position: "bottom-center",
-                        autoClose: 3000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: false,
-                        progress: undefined,
-                        theme: "light",
-                        transition: Slide,
-                    });
+                        localStorage.setItem('credentials', r.data.token);
+                        localStorage.setItem('refresh', r.data.refreshToken);
+                        localStorage.setItem('authValidUntil', Date.now() + (24 * 60 * 60 * 1000));
+                    })).catch((e) => {
+                        //
                 })
             }).catch(() => {
                 toast.error('Cannot fetch token', {
-                            position: "bottom-center",
-                            autoClose: 3000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: false,
-                            progress: undefined,
-                            theme: "light",
-                            transition: Slide,
-                        });
+                    position: "bottom-center",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: false,
+                    progress: undefined,
+                    theme: "light",
+                    transition: Slide,
+                });
             })
     }
 

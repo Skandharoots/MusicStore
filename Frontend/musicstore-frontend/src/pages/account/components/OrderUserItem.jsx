@@ -30,7 +30,9 @@ function OrderUserItem(props) {
 
     const parseStatus = (status) => {
 
-        if (status === 'IN_PROGRESS') {
+        let lastStatus = status[status.length - 1]
+
+        if (lastStatus === 'RECEIVED') {
             return <p style={{
                 margin: '0',
                 fontSize: '18px',
@@ -39,7 +41,7 @@ function OrderUserItem(props) {
                 textWrap: 'nowrap',
                 color: 'black',
             }}>Received</p>
-        } else if (status === 'SENT') {
+        } else if (lastStatus === 'SENT') {
             return <p style={{
                 margin: '0',
                 fontSize: '18px',
@@ -48,7 +50,7 @@ function OrderUserItem(props) {
                 textWrap: 'nowrap',
                 color: 'rgb(20,120,143)'
             }}>Sent</p>
-        } else if (status === 'COMPLETED') {
+        } else if (lastStatus === 'COMPLETED') {
             return <p style={{
                 margin: '0',
                 fontSize: '18px',
@@ -57,7 +59,7 @@ function OrderUserItem(props) {
                 textWrap: 'nowrap',
                 color: 'rgb(39,99,24)'
             }}>Completed</p>
-        } else if (status === 'CANCELED') {
+        } else if (lastStatus === 'CANCELED') {
             return <p style={{
                 margin: '0',
                 fontSize: '18px',
@@ -66,7 +68,7 @@ function OrderUserItem(props) {
                 textWrap: 'nowrap',
                 color: 'rgb(218,113,24)'
             }}>Canceled</p>
-        } else if (status === 'FAILED') {
+        } else if (lastStatus === 'RETURNED') {
             return <p style={{
                 margin: '0',
                 fontSize: '18px',
@@ -74,7 +76,7 @@ function OrderUserItem(props) {
                 overflow: 'hidden',
                 textWrap: 'nowrap',
                 color: 'rgb(159,20,20)'
-            }}>Order failed</p>
+            }}>Order returned</p>
         }
     }
 

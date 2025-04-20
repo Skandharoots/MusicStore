@@ -106,8 +106,11 @@ public class OrderControllerTests {
         List<OrderLineItemsDto> itemsDto = new ArrayList<>();
         itemsDto.add(orderLineItemsDTO);
 
+        List<OrderStatus> statuses = new ArrayList<>();
+        statuses.add(OrderStatus.RECEIVED);
+
         order = new Order();
-        order.setStatus(OrderStatus.IN_PROGRESS);
+        order.setStatus(statuses);
         order.setName("Test");
         order.setCity("Test");
         order.setCountry("Test");

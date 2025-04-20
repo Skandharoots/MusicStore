@@ -8,6 +8,9 @@ import './style/MyOrderPage.scss';
 import OrderProductItem from "./components/OrderProductItem.jsx";
 import { format } from "date-fns";
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+import Stepper from '@mui/material/Stepper';
+import Step from '@mui/material/Step';
+import StepLabel from '@mui/material/StepLabel';
 
 
 function MyOrderPage() {
@@ -24,7 +27,7 @@ function MyOrderPage() {
     const [city, setCity] = useState('');
     const [zipCode, setZipCode] = useState('');
     const [totalPrice, setTotalPrice] = useState(0);
-    const [status, setStatus] = useState('');
+    const [status, setStatus] = useState([]);
     const [openBackdrop, setOpenBackdrop] = useState(false);
     const [showNotFound, setShowNotFound] = useState(false);
     const [showOrderDetails, setShowOrderDetails] = useState(false);
@@ -162,53 +165,173 @@ function MyOrderPage() {
 
     }
 
-    const parseStatus = (status) => {
-        if (status === 'IN_PROGRESS') {
-            return <p style={{
-                margin: '0',
-                fontSize: '30px',
-                fontWeight: 'bold',
-                overflow: 'hidden',
-                textWrap: 'nowrap',
-                color: 'black',
-            }}>Received</p>
-        } else if (status === 'SENT') {
-            return <p style={{
-                margin: '0',
-                fontSize: '30px',
-                fontWeight: 'bold',
-                overflow: 'hidden',
-                textWrap: 'nowrap',
-                color: 'rgb(20,120,143)'
-            }}>Sent</p>
-        } else if (status === 'COMPLETED') {
-            return <p style={{
-                margin: '0',
-                fontSize: '30px',
-                fontWeight: 'bold',
-                overflow: 'hidden',
-                textWrap: 'nowrap',
-                color: 'rgb(39,99,24)'
-            }}>Completed</p>
-        } else if (status === 'CANCELED') {
-            return <p style={{
-                margin: '0',
-                fontSize: '30px',
-                fontWeight: 'bold',
-                overflow: 'hidden',
-                textWrap: 'nowrap',
-                color: 'rgb(218,113,24)'
-            }}>Canceled</p>
-        } else if (status === 'FAILED') {
-            return <p style={{
-                margin: '0',
-                fontSize: '30px',
-                fontWeight: 'bold',
-                overflow: 'hidden',
-                textWrap: 'nowrap',
-                color: 'rgb(159,20,20)'
-            }}>Order failed</p>
+    const steps1 = [
+        'Order received',
+        'Order sent',
+        'Order collected by buyer',
+    ];
+
+    const steps2 = [
+        'Order received',
+        'Order canceled',
+    ];
+
+    const steps3 = [
+        'Order received',
+        'Order sent',
+        'Order returned',
+    ];
+
+    function parseStatus(status) {
+
+        let lastStatus = status[status.length - 1];
+        let previous = '';
+        if (status.length > 1) {
+            previous = status[status.length - 2];
         }
+        if (lastStatus === 'COMPLETED' || lastStatus === 'SENT' || lastStatus === 'RECEIVED') {
+            return (
+                <Box sx={{ width: '100%' }}>
+                  <Stepper activeStep={status.length} alternativeLabel>
+                    {steps1.map((label) => (
+                            <Step key={label}
+                                sx={{
+                                    '& .MuiStepLabel-root .Mui-completed': {
+                                    color: 'rgb(39, 99, 24)', // circle color (COMPLETED)
+                                    },
+                                    '& .MuiStepLabel-root .Mui-active': {
+                                    color: 'rgb(39, 99, 24)', // circle color (ACTIVE)
+                                    },
+                                }}
+                            >
+                                <StepLabel>{label}</StepLabel>
+                            </Step>
+                        ))}
+                  </Stepper>
+                </Box>
+              );
+        } else if (lastStatus === 'CANCELED') {
+            return (
+                <Box sx={{ width: '100%' }}>
+                  <Stepper activeStep={status.length} alternativeLabel>
+                    {steps2.map((label) => {
+                        if (label === 'Order canceled') {
+                            return (
+                                <Step key={label} 
+                                sx={{
+                                    '& .MuiStepLabel-root .Mui-completed': {
+                                    color: 'rgb(129, 36, 29)', // circle color (COMPLETED)
+                                    },
+                                    '& .MuiStepLabel-root .Mui-active': {
+                                    color: 'rgb(129, 36, 29)', // circle color (ACTIVE)
+                                    },
+                                }}
+                                >
+                                    <StepLabel>{label}</StepLabel>
+                                </Step>
+                            )
+                        } else {
+                            return (
+                                <Step key={label}
+                                    sx={{
+                                        '& .MuiStepLabel-root .Mui-completed': {
+                                        color: 'rgb(39, 99, 24)', // circle color (COMPLETED)
+                                        },
+                                        '& .MuiStepLabel-root .Mui-active': {
+                                        color: 'rgb(39, 99, 24)', // circle color (ACTIVE)
+                                        },
+                                    }}
+                                >
+                                    <StepLabel>{label}</StepLabel>
+                                </Step>
+                            )
+                        }
+                    })}
+                  </Stepper>
+                </Box>
+              );
+        } else if ((lastStatus === 'RETURNED' && previous === 'SENT')) {
+            return (
+                <Box sx={{ width: '100%' }}>
+                  <Stepper activeStep={status.length} alternativeLabel>
+                    {steps3.map((label) => {
+                        if (label === 'Order returned') {
+                            return (
+                                <Step key={label} 
+                                    sx={{
+                                        '& .MuiStepLabel-root .Mui-completed': {
+                                        color: 'rgb(172, 109, 20)', // circle color (COMPLETED)
+                                        },
+                                        '& .MuiStepLabel-root .Mui-active': {
+                                        color: 'rgb(172, 109, 20)', // circle color (ACTIVE)
+                                        },
+                                    }}
+                                >
+                                    <StepLabel>{label}</StepLabel>
+                                </Step>
+                            )
+                        } else {
+                            return (
+                                <Step key={label}
+                                    sx={{
+                                        '& .MuiStepLabel-root .Mui-completed': {
+                                        color: 'rgb(39, 99, 24)', // circle color (COMPLETED)
+                                        },
+                                        '& .MuiStepLabel-root .Mui-active': {
+                                        color: 'rgb(39, 99, 24)', // circle color (ACTIVE)
+                                        },
+                                    }}
+                                >
+                                    <StepLabel>{label}</StepLabel>
+                                </Step>
+                            )
+                        }
+                    })}
+                  </Stepper>
+                </Box>
+              );
+        } else if ((lastStatus === 'RETURNED' && previous === 'COMPLETED')) {
+            return (
+                <Box sx={{ width: '100%' }}>
+                  <Stepper activeStep={status.length} alternativeLabel>
+                    {steps3.map((label) => {
+                        if (label === 'Order returned') {
+                            return (
+                                <Step key={label} 
+                                    sx={{
+                                        '& .MuiStepLabel-root .Mui-completed': {
+                                        color: 'rgb(172, 109, 20)', // circle color (COMPLETED)
+                                        },
+                                        '& .MuiStepLabel-root .Mui-active': {
+                                        color: 'rgb(172, 109, 20)', // circle color (ACTIVE)
+                                        },
+                                    }}
+                                >
+                                    <StepLabel>{label}</StepLabel>
+                                </Step>
+                            )
+                        } else {
+                            return (
+                                <Step key={label}
+                                    sx={{
+                                        '& .MuiStepLabel-root .Mui-completed': {
+                                        color: 'rgb(39, 99, 24)', // circle color (COMPLETED)
+                                        },
+                                        '& .MuiStepLabel-root .Mui-active': {
+                                        color: 'rgb(39, 99, 24)', // circle color (ACTIVE)
+                                        },
+                                    }}
+                                >
+                                    <StepLabel>{label}</StepLabel>
+                                </Step>
+                            )
+                        }
+                    })}
+                  </Stepper>
+                </Box>
+              );
+        }
+
     }
 
 
@@ -266,6 +389,8 @@ function MyOrderPage() {
                                     fontSize: '16px',
                                     fontWeight: 'normal'
                                 }}>{format(dateCreated, "MMMM do, yyyy")}</span></p>
+                                <p style={{margin: '0', fontSize: '16px', fontWeight: 'bold'}}>Total order price: <span
+                                style={{fontWeight: 'bold', color: 'rgb(39, 99, 24)'}}>{totalPrice}$</span></p>
                         </div>
                         {showDownloadInvoice &&
                             <div className="my-order-invoice"
@@ -349,14 +474,12 @@ function MyOrderPage() {
                             </div>
                         </div>
                         <div className="my-order-right">
-                            <p style={{margin: '0 0 16px 0', fontSize: '18px', fontWeight: 'bold'}}>Order items:</p>
+                            <p style={{margin: '0 0 0 0', fontSize: '18px', fontWeight: 'bold'}}>Order items:</p>
                             {
                                 [...orderItems].map(item => (
                                     <OrderProductItem key={item.id} item={item}/>
                                 ))
                             }
-                            <p style={{margin: '0', fontSize: '18px'}}>Total order price: <span
-                                style={{fontWeight: 'bold'}}>{totalPrice}$</span></p>
                         </div>
                     </div>
                 </>

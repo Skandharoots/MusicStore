@@ -11,7 +11,6 @@ import {Button} from "@mui/material";
 function AdminOrderItem(props) {
 
     const [images, setImages] = useState([]);
-    const [disableEdition, setDisableEdition] = useState(false);
 
     useEffect(() => {
         if (props.item.orderItems !== null && props.item.orderItems !== undefined) {
@@ -30,17 +29,11 @@ function AdminOrderItem(props) {
         }
     }, []);
 
-    useEffect(() => {
-        if (props.item.status !== null && props.item.status !== undefined) {
-            if (props.item.status === 'CANCELED' || props.item.status === 'FAILED' || props.item.status === 'COMPLETED') {
-                setDisableEdition(true);
-            }
-        }
-    }, [props.item]);
-
     const parseStatus = (status) => {
 
-        if (status === 'IN_PROGRESS') {
+        let last = status[status.length - 1];
+
+        if (last === 'RECEIVED') {
             return <p style={{
                 margin: '0',
                 fontSize: '18px',
@@ -49,7 +42,7 @@ function AdminOrderItem(props) {
                 textWrap: 'nowrap',
                 color: 'black',
             }}>Received</p>
-        } else if (status === 'SENT') {
+        } else if (last === 'SENT') {
             return <p style={{
                 margin: '0',
                 fontSize: '18px',
@@ -58,7 +51,7 @@ function AdminOrderItem(props) {
                 textWrap: 'nowrap',
                 color: 'rgb(20,120,143)'
             }}>Sent</p>
-        } else if (status === 'COMPLETED') {
+        } else if (last === 'COMPLETED') {
             return <p style={{
                 margin: '0',
                 fontSize: '18px',
@@ -66,8 +59,8 @@ function AdminOrderItem(props) {
                 overflow: 'hidden',
                 textWrap: 'nowrap',
                 color: 'rgb(39,99,24)'
-            }}>Completed</p>
-        } else if (status === 'CANCELED') {
+            }}>Order completed</p>
+        } else if (last === 'CANCELED') {
             return <p style={{
                 margin: '0',
                 fontSize: '18px',
@@ -75,8 +68,8 @@ function AdminOrderItem(props) {
                 overflow: 'hidden',
                 textWrap: 'nowrap',
                 color: 'rgb(218,113,24)'
-            }}>Canceled</p>
-        } else if (status === 'FAILED') {
+            }}>Order canceled</p>
+        } else if (last === 'RETURNED') {
             return <p style={{
                 margin: '0',
                 fontSize: '18px',
@@ -84,7 +77,7 @@ function AdminOrderItem(props) {
                 overflow: 'hidden',
                 textWrap: 'nowrap',
                 color: 'rgb(159,20,20)'
-            }}>Order failed</p>
+            }}>Order returned</p>
         }
     }
 
@@ -115,7 +108,6 @@ function AdminOrderItem(props) {
                 <Button
                     component={Link}
                     to={"/admin/order/update/" + props.item.orderIdentifier}
-                    disabled={disableEdition}
                     variant="contained"
                     size="large"
                     type="button"

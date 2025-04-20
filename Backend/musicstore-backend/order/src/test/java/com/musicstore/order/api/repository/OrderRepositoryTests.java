@@ -58,8 +58,11 @@ public class OrderRepositoryTests {
         List<OrderLineItems> orderLineItemsList = new ArrayList<>();
         orderLineItemsList.add(orderLineItems);
 
+        List<OrderStatus> statuses = new ArrayList<>();
+        statuses.add(OrderStatus.RECEIVED);
+
         order = new Order();
-        order.setStatus(OrderStatus.IN_PROGRESS);
+        order.setStatus(statuses);
         order.setName("Test");
         order.setCity("Test");
         order.setCountry("Test");
@@ -82,7 +85,7 @@ public class OrderRepositoryTests {
         Order savedOrder = orderRepository.save(order);
 
         Assertions.assertThat(savedOrder.getId()).isEqualTo(order.getId());
-        Assertions.assertThat(savedOrder.getStatus()).isEqualTo(OrderStatus.IN_PROGRESS);
+        Assertions.assertThat(savedOrder.getStatus().get(0)).isEqualTo(OrderStatus.RECEIVED);
         Assertions.assertThat(savedOrder.getOrderIdentifier()).isEqualTo(order.getOrderIdentifier());
         Assertions.assertThat(savedOrder.getName()).isEqualTo("Test");
         Assertions.assertThat(savedOrder.getCity()).isEqualTo("Test");

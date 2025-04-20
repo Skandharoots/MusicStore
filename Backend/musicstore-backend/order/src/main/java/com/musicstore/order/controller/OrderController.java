@@ -6,7 +6,6 @@ import com.musicstore.order.model.Order;
 import com.musicstore.order.service.OrderService;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.core.HttpHeaders;
-import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -72,13 +71,6 @@ public class OrderController {
             @CookieValue("XSRF-TOKEN") String csrfToken,
             @Valid @RequestBody OrderUpdateRequest request) {
         return orderService.updateOrderStatus(orderId, token, csrfToken, request);
-    }
-
-    @PostMapping("/invoice/pdf/{uuid}")
-    public byte[] getInvoicePdf(
-            @PathVariable(name = "uuid") UUID uuid,
-            @RequestHeader(HttpHeaders.AUTHORIZATION) String token) throws FileNotFoundException {
-        return orderService.generatePdfFileResponse(uuid, token);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)

@@ -21,8 +21,6 @@ import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.security.web.csrf.DefaultCsrfToken;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
-
-import java.io.FileNotFoundException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -197,7 +195,8 @@ public class OrderServiceTests {
     @Test
     public void createOrderFailureBadJwtTokenTest() {
 
-        Assertions.assertThatThrownBy(() -> orderService.createOrder(orderRequest, csrfToken.getToken(), token.substring(7)));
+        Assertions.assertThatThrownBy(
+                () -> orderService.createOrder(orderRequest, csrfToken.getToken(), token.substring(7)));
 
     }
 
@@ -245,7 +244,6 @@ public class OrderServiceTests {
 
         Pageable pageable = PageRequest.of(0, 10, Sort.by("dateCreated").descending());
 
-
         Page<Order> orders = new PageImpl<>(ordersList, pageable, ordersList.size());
         when(orderRepository.findAllByUserIdentifier(order.getUserIdentifier(), pageable)).thenReturn(orders);
 
@@ -268,7 +266,6 @@ public class OrderServiceTests {
         ordersList.add(order);
 
         Pageable pageable = PageRequest.of(0, 10, Sort.by("dateCreated").descending());
-
 
         Page<Order> orders = new PageImpl<>(ordersList, pageable, ordersList.size());
         when(orderRepository.findAll(pageable)).thenReturn(orders);
@@ -319,7 +316,8 @@ public class OrderServiceTests {
 
         when(webClientBuilder.build()).thenReturn(webClient);
         when(webClient.get()).thenReturn(requestHeadersUriSpec);
-        when(requestHeadersUriSpec.uri(variablesConfiguration.getAdminVerificationUrl() + token.substring(7))).thenReturn(requestHeadersSpec);
+        when(requestHeadersUriSpec.uri(variablesConfiguration.getAdminVerificationUrl() + token.substring(7)))
+                .thenReturn(requestHeadersSpec);
         when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
         when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
 
@@ -338,7 +336,8 @@ public class OrderServiceTests {
 
         when(orderRepository.save(any())).thenReturn(order);
 
-        ResponseEntity<String> response = orderService.updateOrderStatus(order.getOrderIdentifier(), token, csrfToken.getToken(), orderUpdateRequest);
+        ResponseEntity<String> response = orderService.updateOrderStatus(order.getOrderIdentifier(), token,
+                csrfToken.getToken(), orderUpdateRequest);
         Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         Assertions.assertThat(response.getBody()).isNotNull();
         Assertions.assertThat(response.getBody()).isEqualTo("Order status updated successfully");
@@ -360,7 +359,8 @@ public class OrderServiceTests {
 
         when(webClientBuilder.build()).thenReturn(webClient);
         when(webClient.get()).thenReturn(requestHeadersUriSpec);
-        when(requestHeadersUriSpec.uri(variablesConfiguration.getAdminVerificationUrl() + token.substring(7))).thenReturn(requestHeadersSpec);
+        when(requestHeadersUriSpec.uri(variablesConfiguration.getAdminVerificationUrl() + token.substring(7)))
+                .thenReturn(requestHeadersSpec);
         when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
         when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
 
@@ -379,7 +379,8 @@ public class OrderServiceTests {
 
         when(orderRepository.save(any())).thenReturn(order);
 
-        ResponseEntity<String> response = orderService.updateOrderStatus(order.getOrderIdentifier(), token, csrfToken.getToken(), orderUpdateRequest);
+        ResponseEntity<String> response = orderService.updateOrderStatus(order.getOrderIdentifier(), token,
+                csrfToken.getToken(), orderUpdateRequest);
         Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         Assertions.assertThat(response.getBody()).isNotNull();
         Assertions.assertThat(response.getBody()).isEqualTo("Order status updated successfully");
@@ -400,7 +401,8 @@ public class OrderServiceTests {
 
         when(webClientBuilder.build()).thenReturn(webClient);
         when(webClient.get()).thenReturn(requestHeadersUriSpec);
-        when(requestHeadersUriSpec.uri(variablesConfiguration.getAdminVerificationUrl() + token.substring(7))).thenReturn(requestHeadersSpec);
+        when(requestHeadersUriSpec.uri(variablesConfiguration.getAdminVerificationUrl() + token.substring(7)))
+                .thenReturn(requestHeadersSpec);
         when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
 
         when(orderRepository.findByOrderIdentifier(order.getOrderIdentifier())).thenReturn(Optional.of(order));
@@ -416,7 +418,8 @@ public class OrderServiceTests {
         when(responseSpec.bodyToMono(Boolean.class))
                 .thenReturn(Mono.just(true), Mono.just(false));
 
-        Assertions.assertThatThrownBy(() -> orderService.updateOrderStatus(order.getOrderIdentifier(), token, csrfToken.getToken(), orderUpdateRequest));
+        Assertions.assertThatThrownBy(() -> orderService.updateOrderStatus(order.getOrderIdentifier(), token,
+                csrfToken.getToken(), orderUpdateRequest));
     }
 
     @Test
@@ -429,7 +432,8 @@ public class OrderServiceTests {
         orderUpdateRequest.setStatus(OrderStatus.CANCELED);
         orderUpdateRequest.setItemsToCancel(itemsToCancel);
 
-        Assertions.assertThatThrownBy(() -> orderService.updateOrderStatus(order.getOrderIdentifier(), token.substring(7), csrfToken.getToken(), orderUpdateRequest));
+        Assertions.assertThatThrownBy(() -> orderService.updateOrderStatus(order.getOrderIdentifier(),
+                token.substring(7), csrfToken.getToken(), orderUpdateRequest));
 
     }
 
@@ -445,12 +449,14 @@ public class OrderServiceTests {
 
         when(webClientBuilder.build()).thenReturn(webClient);
         when(webClient.get()).thenReturn(requestHeadersUriSpec);
-        when(requestHeadersUriSpec.uri(variablesConfiguration.getAdminVerificationUrl() + token.substring(7))).thenReturn(requestHeadersSpec);
+        when(requestHeadersUriSpec.uri(variablesConfiguration.getAdminVerificationUrl() + token.substring(7)))
+                .thenReturn(requestHeadersSpec);
         when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
         when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
 
         when(orderRepository.findByOrderIdentifier(order.getOrderIdentifier())).thenReturn(Optional.empty());
-        Assertions.assertThatThrownBy(() -> orderService.updateOrderStatus(order.getOrderIdentifier(), token, csrfToken.getToken(), orderUpdateRequest));
+        Assertions.assertThatThrownBy(() -> orderService.updateOrderStatus(order.getOrderIdentifier(), token,
+                csrfToken.getToken(), orderUpdateRequest));
 
     }
 
@@ -465,11 +471,13 @@ public class OrderServiceTests {
 
         when(webClientBuilder.build()).thenReturn(webClient);
         when(webClient.get()).thenReturn(requestHeadersUriSpec);
-        when(requestHeadersUriSpec.uri(variablesConfiguration.getAdminVerificationUrl() + token.substring(7))).thenReturn(requestHeadersSpec);
+        when(requestHeadersUriSpec.uri(variablesConfiguration.getAdminVerificationUrl() + token.substring(7)))
+                .thenReturn(requestHeadersSpec);
         when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
         when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(false));
 
-        Assertions.assertThatThrownBy(() -> orderService.updateOrderStatus(order.getUserIdentifier(), token, csrfToken.getToken(), orderUpdateRequest));
+        Assertions.assertThatThrownBy(() -> orderService.updateOrderStatus(order.getUserIdentifier(), token,
+                csrfToken.getToken(), orderUpdateRequest));
 
     }
 
@@ -480,59 +488,14 @@ public class OrderServiceTests {
 
         when(webClientBuilder.build()).thenReturn(webClient);
         when(webClient.get()).thenReturn(requestHeadersUriSpec);
-        when(requestHeadersUriSpec.uri(variablesConfiguration.getAdminVerificationUrl() + token.substring(7))).thenReturn(requestHeadersSpec);
+        when(requestHeadersUriSpec.uri(variablesConfiguration.getAdminVerificationUrl() + token.substring(7)))
+                .thenReturn(requestHeadersSpec);
         when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
         when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
 
-        Assertions.assertThatThrownBy(() -> orderService.updateOrderStatus(order.getUserIdentifier(), token, csrfToken.getToken(), orderUpdateRequest));
+        Assertions.assertThatThrownBy(() -> orderService.updateOrderStatus(order.getUserIdentifier(), token,
+                csrfToken.getToken(), orderUpdateRequest));
 
     }
-
-    @Test
-    public void generatePdfTest() throws FileNotFoundException {
-
-        UUID uuid = UUID.randomUUID();
-
-        when(webClientBuilder.build()).thenReturn(webClient);
-        when(webClient.get()).thenReturn(requestHeadersUriSpec);
-        when(requestHeadersUriSpec.uri(variablesConfiguration.getAdminVerificationUrl() + token.substring(7))).thenReturn(requestHeadersSpec);
-        when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
-        when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
-
-        when(orderRepository.findByOrderIdentifier(uuid)).thenReturn(Optional.of(order));
-
-
-        Assertions.assertThat(orderService.generatePdfFileResponse(uuid, token)).isNotNull();
-        
-    }
-
-    @Test
-    public void generatePdfNoAdminAuthorityTest() {
-
-        UUID uuid = UUID.randomUUID();
-
-        when(webClientBuilder.build()).thenReturn(webClient);
-        when(webClient.get()).thenReturn(requestHeadersUriSpec);
-        when(requestHeadersUriSpec.uri(variablesConfiguration.getAdminVerificationUrl() + token.substring(7))).thenReturn(requestHeadersSpec);
-        when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
-        when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(false));
-
-        Assertions.assertThatThrownBy(() -> orderService.generatePdfFileResponse(uuid, token));
-
-    }
-
-    @Test
-    public void generatePdfSource() {
-
-        UUID uuid2 = UUID.randomUUID();
-
-        when(orderRepository.findByOrderIdentifier(uuid2)).thenReturn(Optional.empty());
-
-        Assertions.assertThatThrownBy(() -> orderService.generatePdfSource(uuid2));
-
-    }
-
-
-
 
 }

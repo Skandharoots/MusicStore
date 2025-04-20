@@ -23,45 +23,43 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableMethodSecurity
 public class WebAppConfig {
 
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowCredentials(true);
-        configuration.setAllowedOrigins(List.of("http://localhost:4000",
-                "http://prometheus.default.svc.cluster.local:9090",
-                "http://loki.default.svc.cluster.local:3100"));
-        configuration.setMaxAge(3600L);
-        configuration.setAllowedHeaders(List.of("*"));
-        configuration.setAllowedMethods(List.of("*"));
-        configuration.setExposedHeaders(List.of("*"));
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
+        @Bean
+        public CorsConfigurationSource corsConfigurationSource() {
+                CorsConfiguration configuration = new CorsConfiguration();
+                configuration.setAllowCredentials(true);
+                configuration.setAllowedOrigins(List.of("http://localhost:4000",
+                                "http://prometheus.default.svc.cluster.local:9090",
+                                "http://loki.default.svc.cluster.local:3100"));
+                configuration.setMaxAge(3600L);
+                configuration.setAllowedHeaders(List.of("*"));
+                configuration.setAllowedMethods(List.of("*"));
+                configuration.setExposedHeaders(List.of("*"));
+                UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+                source.registerCorsConfiguration("/**", configuration);
+                return source;
+        }
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-                .cors(c -> c.configurationSource(corsConfigurationSource()))
-                .csrf(httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer
-                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                        .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
-                )
-                .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers(HttpMethod.POST, "/api/order/create").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/order/get/**").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/api/order/update/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/order/invoice/pdf/**").permitAll()
-                        .requestMatchers("/actuator/**").permitAll()
-                        .requestMatchers("/order-svc/api-docs/**",
-                                "/order-svc/v3/api-docs/**").permitAll()
-                        .requestMatchers("/error").permitAll()
-                        .anyRequest()
-                        .authenticated()
-                )
-                .sessionManagement(customizer -> customizer
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .formLogin(AbstractHttpConfigurer::disable);
-        return http.build();
-    }
+        @Bean
+        public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+                http
+                                .cors(c -> c.configurationSource(corsConfigurationSource()))
+                                .csrf(httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer
+                                                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                                                .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler()))
+                                .authorizeHttpRequests((requests) -> requests
+                                                .requestMatchers(HttpMethod.POST, "/api/order/create").permitAll()
+                                                .requestMatchers(HttpMethod.POST, "/api/order/get/**").permitAll()
+                                                .requestMatchers(HttpMethod.PUT, "/api/order/update/**").permitAll()
+                                                .requestMatchers("/actuator/**").permitAll()
+                                                .requestMatchers("/order-svc/api-docs/**",
+                                                                "/order-svc/v3/api-docs/**")
+                                                .permitAll()
+                                                .requestMatchers("/error").permitAll()
+                                                .anyRequest()
+                                                .authenticated())
+                                .sessionManagement(customizer -> customizer
+                                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                                .formLogin(AbstractHttpConfigurer::disable);
+                return http.build();
+        }
 }

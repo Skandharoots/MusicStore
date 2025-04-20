@@ -3,10 +3,11 @@ import {useEffect, useState} from "react";
 import LocalStorageHelper from "../../helpers/LocalStorageHelper.jsx";
 import {Slide, toast} from "react-toastify";
 import axios from "axios";
-import {Backdrop, CircularProgress} from "@mui/material";
+import {Backdrop, Button, CircularProgress} from "@mui/material";
 import './style/MyOrderPage.scss';
 import OrderProductItem from "./components/OrderProductItem.jsx";
 import { format } from "date-fns";
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 
 
 function MyOrderPage() {
@@ -27,7 +28,10 @@ function MyOrderPage() {
     const [openBackdrop, setOpenBackdrop] = useState(false);
     const [showNotFound, setShowNotFound] = useState(false);
     const [showOrderDetails, setShowOrderDetails] = useState(false);
-
+    const [pdfFile, setPdfFile] = useState(null);
+    const [pdfFileName, setPdfFileName] = useState('');
+    const [showDownloadInvoice, setShowDownloadInvoice] = useState(false);
+    
     const navigate = useNavigate();
     const orderId = useParams();
 
@@ -42,10 +46,11 @@ function MyOrderPage() {
         LocalStorageHelper.CommitRefresh();
         axios.get('api/users/csrf/token')
         .then(res => {
+            let token = res.data.token;
             axios.post(`api/order/get/${orderId.orderId}`, {}, {
                 headers: {
                     Authorization: 'Bearer ' + LocalStorageHelper.getJwtToken(),
-                    'X-XSRF-TOKEN': res.data.token,
+                    'X-XSRF-TOKEN': token,
                     'Content-Type': 'application/json'
                 }
             }).then((response) => {
@@ -62,9 +67,54 @@ function MyOrderPage() {
                     setZipCode(response.data.zipCode);
                     setStatus(response.data.status);
                     setTotalPrice(response.data.totalPrice);
-                    setOpenBackdrop(false);
                     setShowOrderDetails(true);
                     setShowNotFound(false);
+
+                    axios.get(`api/invoice/list?path=${orderId.orderId}`)
+                        .then(res => {
+                            if (res.data.length > 0) {
+                                let fileName = res.data[0].split('/')[1];
+                                axios.get(`api/invoice/read?path=${res.data[0]}`, {responseType: 'blob'})
+                                .then(res => {
+                                    let blob = new Blob([res.data], {type: "application/pdf"});
+                                    setPdfFile(blob);
+                                    setPdfFileName(String(fileName));
+                                    setShowDownloadInvoice(true);
+                                    setOpenBackdrop(false);
+                                }).catch((e) => {
+                                    setOpenBackdrop(false);
+                                    toast.error(err.response.data.message, {
+                                        position: "bottom-center",
+                                        autoClose: 3000,
+                                        hideProgressBar: false,
+                                        closeOnClick: true,
+                                        pauseOnHover: true,
+                                        draggable: false,
+                                        progress: undefined,
+                                        theme: "light",
+                                        transition: Slide,
+                                    })
+                                })
+                            } else {
+                                setOpenBackdrop(false);
+                                setShowDownloadInvoice(false);
+                            }
+                            
+                        }).catch((e) => {
+                            setOpenBackdrop(false);
+                            toast.error(e.response.data.message, {
+                                position: "bottom-center",
+                                autoClose: 3000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: false,
+                                progress: undefined,
+                                theme: "light",
+                                transition: Slide,
+                            });
+                        })
+
                 }).catch(() => {
                 setOpenBackdrop(false);
                 setShowOrderDetails(false);
@@ -83,7 +133,7 @@ function MyOrderPage() {
             })
 
         }).catch(() => {
-            setOpenBackdrop(true);
+            setOpenBackdrop(false);
             toast.error('Cannot fetch token', {
                 position: "bottom-center",
                 autoClose: 3000,
@@ -99,11 +149,24 @@ function MyOrderPage() {
 
     }, []);
 
+    const downloadPdf = (e) => {
+
+        const aTag = document.createElement('a');
+        let file = URL.createObjectURL(pdfFile);
+        let fileName = pdfFileName;
+        aTag.href = file;
+        aTag.setAttribute('download', fileName);
+        document.body.appendChild(aTag);
+        aTag.click();
+        window.open(file);
+
+    }
+
     const parseStatus = (status) => {
         if (status === 'IN_PROGRESS') {
             return <p style={{
                 margin: '0',
-                fontSize: '36px',
+                fontSize: '30px',
                 fontWeight: 'bold',
                 overflow: 'hidden',
                 textWrap: 'nowrap',
@@ -112,7 +175,7 @@ function MyOrderPage() {
         } else if (status === 'SENT') {
             return <p style={{
                 margin: '0',
-                fontSize: '36px',
+                fontSize: '30px',
                 fontWeight: 'bold',
                 overflow: 'hidden',
                 textWrap: 'nowrap',
@@ -121,7 +184,7 @@ function MyOrderPage() {
         } else if (status === 'COMPLETED') {
             return <p style={{
                 margin: '0',
-                fontSize: '36px',
+                fontSize: '30px',
                 fontWeight: 'bold',
                 overflow: 'hidden',
                 textWrap: 'nowrap',
@@ -130,7 +193,7 @@ function MyOrderPage() {
         } else if (status === 'CANCELED') {
             return <p style={{
                 margin: '0',
-                fontSize: '36px',
+                fontSize: '30px',
                 fontWeight: 'bold',
                 overflow: 'hidden',
                 textWrap: 'nowrap',
@@ -139,7 +202,7 @@ function MyOrderPage() {
         } else if (status === 'FAILED') {
             return <p style={{
                 margin: '0',
-                fontSize: '36px',
+                fontSize: '30px',
                 fontWeight: 'bold',
                 overflow: 'hidden',
                 textWrap: 'nowrap',
@@ -187,23 +250,64 @@ function MyOrderPage() {
                             borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
                             marginBottom: '16px',
                         }}>
-                            <p style={{margin: '0', fontSize: '22px', fontWeight: 'bold'}}>Order nr: <span
-                                style={{
-                                    margin: '0',
-                                    fontSize: '22px',
-                                    fontWeight: 'normal'
-                                }}>{order.orderIdentifier}</span></p>
-                            <p style={{
-                                margin: '0',
-                                fontSize: '18px',
-                                fontWeight: 'bold',
-                            }}>Date of purchase: <span
+                            <p style={{margin: '0', fontSize: '18px', fontWeight: 'bold'}}>Order nr: <span
                                 style={{
                                     margin: '0',
                                     fontSize: '18px',
                                     fontWeight: 'normal'
+                                }}>{order.orderIdentifier}</span></p>
+                            <p style={{
+                                margin: '0',
+                                fontSize: '16px',
+                                fontWeight: 'bold',
+                            }}>Date of purchase: <span
+                                style={{
+                                    margin: '0',
+                                    fontSize: '16px',
+                                    fontWeight: 'normal'
                                 }}>{format(dateCreated, "MMMM do, yyyy")}</span></p>
                         </div>
+                        {showDownloadInvoice &&
+                            <div className="my-order-invoice"
+                            style={{
+                                display: 'flex',
+                            flexDirection: 'row',
+                            width: '100%',
+                            height: 'fit-content',
+                            justifyContent: 'flex-start',
+                            alignItems: 'flex-start',
+                            borderRadius: '1em',
+                            marginBottom: '16px',
+                            padding: '16px',
+                            boxSizing: 'border-box',
+                            borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
+                            }}
+                        >
+                            <Button
+                                className="download-btn"
+                                type="button"
+                                endIcon={<PictureAsPdfIcon />}
+                                fullWidth
+                                variant="outlined"
+                                onClick={downloadPdf}
+                                sx={{
+                                    maxWidth: '350px',
+                                    margin: '0 0 16px 0',
+                                    "&:hover": {
+                                        borderColor: 'rgb(49,140,23)',
+                                        color: 'rgb(49,140,23)',
+                                        backgroundColor: 'rgba(49, 140, 23, 0.1)'
+                                    },
+                                    color: 'rgb(39, 99, 24)',
+                                    borderColor: 'rgb(39, 99, 24)',
+                                    
+                                }}
+                            >
+                                Download invoice
+                            </Button>
+                        </div>
+
+                        }
                         <div className="my-order-left">
                             <div className="order-details-header">
                                 <p style={{margin: '0', fontSize: '18px', fontWeight: 'bold'}}>Order details:</p>

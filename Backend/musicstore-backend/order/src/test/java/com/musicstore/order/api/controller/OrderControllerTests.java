@@ -293,19 +293,4 @@ public class OrderControllerTests {
         resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 
-    @Test
-    public void generatePdfTest() throws Exception {
-
-        UUID uuid = UUID.randomUUID();
-        String token = "Bearer " + UUID.randomUUID();
-
-        ResultActions resultActions = mockMvc.perform(post("/api/order/invoice/pdf/{uuid}", uuid)
-                .header("Authorization", token)
-                .cookie(new Cookie("XSRF_TOKEN", csrfToken.getToken()))
-                ); 
-                
-        resultActions.andExpect(MockMvcResultMatchers.status().isOk());
-    
-
-    }
 }

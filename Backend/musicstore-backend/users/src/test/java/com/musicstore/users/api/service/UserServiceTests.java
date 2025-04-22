@@ -5,16 +5,20 @@ import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.musicstore.users.dto.AuthenticationResponse;
 import com.musicstore.users.dto.LoginResponse;
+import com.musicstore.users.dto.PasswordResetRequest;
+import com.musicstore.users.dto.PasswordResetRequestSettings;
 import com.musicstore.users.dto.RegisterRequest;
 import com.musicstore.users.dto.UserInformationResponse;
 import com.musicstore.users.mail.EmailService;
 import com.musicstore.users.model.ConfirmationToken;
+import com.musicstore.users.model.PasswordResetToken;
 import com.musicstore.users.model.UserRole;
 import com.musicstore.users.model.Users;
 import com.musicstore.users.repository.UserRepository;
 import com.musicstore.users.security.config.VariablesConfiguration;
 import com.musicstore.users.service.ConfirmationTokenService;
 import com.musicstore.users.service.JwtService;
+import com.musicstore.users.service.PasswordResetTokenService;
 import com.musicstore.users.service.UserService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -35,6 +39,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
@@ -75,6 +80,9 @@ public class UserServiceTests {
 
     @Mock
     private HttpServletRequest request;
+
+    @Mock
+    private PasswordResetTokenService passwordResetTokenService;
 
     private ConfirmationToken confirmationToken;
 
@@ -338,5 +346,290 @@ public class UserServiceTests {
         Assertions.assertThatThrownBy(() -> userService.refresh(request, response));
 
     }
+
+    @Test
+    public void generatePasswordResetTokenTest() {
+
+        String email = "test@test";
+
+        Users user = new Users(
+                "Marek",
+                "Kopania",
+                email,
+                "test",
+                UserRole.USER);
+
+        user.setEnabled(true);
+
+        String token = UUID.randomUUID().toString();
+
+        PasswordResetToken passTok = new PasswordResetToken(
+                token,
+                LocalDateTime.of(2025, 06, 12, 22, 0, 0),
+                LocalDateTime.of(2025, 06, 12, 22, 10, 0),
+                user);
+
+        when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
+        when(passwordResetTokenService.getPasswordResetTokenByUserUuid(user.getUuid()))
+                .thenReturn(Optional.of(passTok));
+        when(variablesConfiguration.getPassResetUrl()).thenReturn("http:localhost:8222/api/test");
+
+        String responseToken = userService.generatePasswordResetToken(email);
+
+        Assertions.assertThat(responseToken.equals(token));
+
+    }
+
+    @Test
+    public void generatePasswordResetTokenTokenNotPresentTest() {
+
+        String email = "test@test";
+
+        Users user = new Users(
+                "Marek",
+                "Kopania",
+                email,
+                "test",
+                UserRole.USER);
+
+        user.setEnabled(true);
+
+        String token = UUID.randomUUID().toString();
+
+        PasswordResetToken passTok = new PasswordResetToken(
+                token,
+                LocalDateTime.of(2025, 06, 12, 22, 0, 0),
+                LocalDateTime.of(2025, 06, 12, 22, 10, 0),
+                user);
+
+        when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
+        when(passwordResetTokenService.getPasswordResetTokenByUserUuid(user.getUuid())).thenReturn(Optional.empty());
+        when(variablesConfiguration.getPassResetUrl()).thenReturn("http:localhost:8222/api/test");
+
+        String responseToken = userService.generatePasswordResetToken(email);
+
+        Assertions.assertThat(!responseToken.isEmpty());
+    }
+
+    @Test
+    public void generatePasswordResetTokenUserNotFoundTest() {
+        String email = "test@test";
+
+        when(userRepository.findByEmail(email)).thenReturn(Optional.empty());
+
+        Assertions.assertThatThrownBy(() -> userService.generatePasswordResetToken(email));
+    }
+
+    @Test
+    public void generatePasswordResetTokenUserNotEnabledTest() {
+
+        String email = "test@test";
+
+        Users user = new Users(
+                "Marek",
+                "Kopania",
+                email,
+                "test",
+                UserRole.USER);
+
+        user.setEnabled(false);
+
+        String token = UUID.randomUUID().toString();
+
+        PasswordResetToken passTok = new PasswordResetToken(
+                token,
+                LocalDateTime.of(2025, 06, 12, 22, 0, 0),
+                LocalDateTime.of(2025, 06, 12, 22, 10, 0),
+                user);
+
+        when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
+
+        Assertions.assertThatThrownBy(() -> userService.generatePasswordResetToken(email));
+
+    }
+
+    @Test
+    public void resetPasswordEmailTest() {
+
+        String token = UUID.randomUUID().toString();
+
+        Users user = new Users(
+                "Marek",
+                "Kopania",
+                "test@test.com",
+                "$hdj@Njsd",
+                UserRole.USER);
+
+        PasswordResetToken resTok = new PasswordResetToken(
+                token,
+                LocalDateTime.of(2025, 04, 22, 22, 0, 0),
+                LocalDateTime.of(2025, 04, 22, 22, 10, 0),
+                user);
+
+        PasswordResetRequest request = new PasswordResetRequest(token, "N3wP$ssword", "N3wP$ssword");
+
+        when(passwordResetTokenService.getPasswordResetToken(token)).thenReturn(Optional.of(resTok));
+        when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+
+        String response = userService.resetPasswordEmail(request);
+        Assertions.assertThat(!response.isEmpty());
+
+    }
+
+    @Test
+    public void resetPasswordEmailTokenNotPresentTest() {
+
+        String token = UUID.randomUUID().toString();
+
+        Users user = new Users(
+                "Marek",
+                "Kopania",
+                "test@test.com",
+                "$hdj@Njsd",
+                UserRole.USER);
+
+        PasswordResetRequest request = new PasswordResetRequest(token, "N3wP$ssword", "N3wP$ssword");
+
+        when(passwordResetTokenService.getPasswordResetToken(token)).thenReturn(Optional.empty());
+        Assertions.assertThatThrownBy(() -> userService.resetPasswordEmail(request));
+
+    }
+
+    @Test
+    public void resetPasswordEmailPasswordsNotMatchingTest() {
+
+        String token = UUID.randomUUID().toString();
+
+        Users user = new Users(
+                "Marek",
+                "Kopania",
+                "test@test.com",
+                "$hdj@Njsd",
+                UserRole.USER);
+
+        PasswordResetToken resTok = new PasswordResetToken(
+                token,
+                LocalDateTime.of(2025, 04, 22, 22, 0, 0),
+                LocalDateTime.of(2025, 04, 22, 22, 10, 0),
+                user);
+
+        PasswordResetRequest request = new PasswordResetRequest(token, "N3wP$ssword", "N3wP$sswo232rd");
+
+        when(passwordResetTokenService.getPasswordResetToken(token)).thenReturn(Optional.of(resTok));
+        Assertions.assertThatThrownBy(() -> userService.resetPasswordEmail(request));
+
+    }
+
+    @Test
+    public void resetPasswordEmailPasswordUserNotFoundTest() {
+
+        String token = UUID.randomUUID().toString();
+
+        Users user = new Users(
+                "Marek",
+                "Kopania",
+                "test@test.com",
+                "$hdj@Njsd",
+                UserRole.USER);
+
+        PasswordResetToken resTok = new PasswordResetToken(
+                token,
+                LocalDateTime.of(2025, 04, 22, 22, 0, 0),
+                LocalDateTime.of(2025, 04, 22, 22, 10, 0),
+                user);
+
+        PasswordResetRequest request = new PasswordResetRequest(token, "N3wP$ssword", "N3wP$ssword");
+        when(passwordResetTokenService.getPasswordResetToken(token)).thenReturn(Optional.of(resTok));
+        when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.empty());
+
+        Assertions.assertThatThrownBy(() -> userService.resetPasswordEmail(request));
+
+    }
+
+    @Test
+    public void resetPasswordSettingsTest() {
+
+        String token = UUID.randomUUID().toString();
+
+        String pass = bCryptPasswordEncoder.encode("$hdj@Njsd");
+
+        Users user = new Users(
+                "Marek",
+                "Kopania",
+                "test@test.com",
+                pass,
+                UserRole.USER);
+
+        PasswordResetRequestSettings request = new PasswordResetRequestSettings(
+                "$hdj@Njsd", "89asd@#$#Asda", "89asd@#$#Asda");
+
+        when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+        when(jwtService.getUsername(token)).thenReturn(user.getEmail());
+        when(bCryptPasswordEncoder.matches(request.getCurrent(), user.getPassword())).thenReturn(true);
+        String response = userService.resetPasswordSettings(request, token);
+        Assertions.assertThat(!response.isEmpty());
+
+    }
+
+    @Test
+    public void resetPasswordSettingsPasswordAndConfirmationDoesNotMatchTest() {
+
+        String token = UUID.randomUUID().toString();
+
+        String pass = bCryptPasswordEncoder.encode("$hdj@Njsd");
+
+        Users user = new Users(
+                "Marek",
+                "Kopania",
+                "test@test.com",
+                pass,
+                UserRole.USER);
+
+        PasswordResetRequestSettings request = new PasswordResetRequestSettings(
+                "$hdj@Njsd", "89asd@#$#2323Asda", "89asd@#$#Asda");
+
+        when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+        when(jwtService.getUsername(token)).thenReturn(user.getEmail());
+        Assertions.assertThatThrownBy(() -> userService.resetPasswordSettings(request, token));
+
+    }
+
+    @Test
+    public void resetPasswordSettingsUserNotFoundTest() {
+
+        String token = UUID.randomUUID().toString();
+        PasswordResetRequestSettings request = new PasswordResetRequestSettings(
+                "$hdj@Njsd", "89asd@#$#Asda", "89asd@#$#Asda");
+
+        when(userRepository.findByEmail("test@test.com")).thenReturn(Optional.empty());
+        when(jwtService.getUsername(token)).thenReturn("test@test.com");
+        Assertions.assertThatThrownBy(() -> userService.resetPasswordSettings(request, token));
+
+    }
+
+    @Test
+    public void resetPasswordSettingsCurrentPasswordDoesNotMatch() {
+
+        String token = UUID.randomUUID().toString();
+
+        String pass = bCryptPasswordEncoder.encode("$hdj@Njsd");
+
+        Users user = new Users(
+                "Marek",
+                "Kopania",
+                "test@test.com",
+                pass,
+                UserRole.USER);
+
+        PasswordResetRequestSettings request = new PasswordResetRequestSettings(
+                "$hdj2345@Njsd", "89asd@#$#Asda", "89asd@#$#Asda");
+
+        when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+        when(jwtService.getUsername(token)).thenReturn(user.getEmail());
+        when(bCryptPasswordEncoder.matches(request.getCurrent(), user.getPassword())).thenReturn(false);
+        Assertions.assertThatThrownBy(() -> userService.resetPasswordSettings(request, token));
+
+    }
+
 
 }

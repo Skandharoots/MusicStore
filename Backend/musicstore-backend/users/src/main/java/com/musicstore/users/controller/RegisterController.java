@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.exc.StreamWriteException;
 import com.fasterxml.jackson.databind.DatabindException;
 import com.musicstore.users.dto.LoginRequest;
 import com.musicstore.users.dto.LoginResponse;
+import com.musicstore.users.dto.PasswordResetRequest;
+import com.musicstore.users.dto.PasswordResetRequestSettings;
 import com.musicstore.users.dto.RegisterRequest;
 import com.musicstore.users.dto.UserInformationResponse;
 import com.musicstore.users.service.LoginService;
@@ -17,6 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -30,6 +33,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -110,6 +114,26 @@ public class RegisterController {
             HttpServletRequest request,
             HttpServletResponse response) throws StreamWriteException, DatabindException, IOException {
         userService.refresh(request, response);
+    }
+
+    @GetMapping("/password/email/{email}")
+    public String getPasswordResetEmail(
+        @PathVariable(name = "email") String email
+    ) {
+        return userService.generatePasswordResetToken(email);
+    }
+
+    @PostMapping("/password/email/reset")
+    public String resetPasswordEmail(@Valid @RequestBody PasswordResetRequest request) {
+        return userService.resetPasswordEmail(request);
+    }
+    
+    @PostMapping("/password/settings/reset")
+    public String resetPasswordSettings(
+        @RequestHeader(HttpHeaders.AUTHORIZATION) String token,
+        @Valid @RequestBody PasswordResetRequestSettings request
+    ) {
+        return userService.resetPasswordSettings(request, token);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)

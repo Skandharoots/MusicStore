@@ -19,6 +19,9 @@ public class VariablesConfiguration {
     @Value("${my.refresh-token.expires}")
     private Long refreshTokenExpiration;
 
+    @Value("${my.pass_reset_url}")
+    private String passResUrl;
+
     @Bean
     public String getJwtSecret() {
         return jwtSecret;
@@ -37,5 +40,10 @@ public class VariablesConfiguration {
     @Bean
     public Long getRefreshExpiration() {
         return refreshTokenExpiration;
+    }
+
+    @Bean
+    public String getPassResetUrl() {
+        return passResUrl;
     }
 }

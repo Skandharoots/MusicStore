@@ -1,17 +1,18 @@
 package com.musicstore.users.api.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.musicstore.users.controller.RegisterController;
 import com.musicstore.users.dto.AuthenticationResponse;
 import com.musicstore.users.dto.LoginRequest;
 import com.musicstore.users.dto.LoginResponse;
+import com.musicstore.users.dto.PasswordResetRequest;
+import com.musicstore.users.dto.PasswordResetRequestSettings;
 import com.musicstore.users.dto.RegisterRequest;
 import com.musicstore.users.dto.UserInformationResponse;
 import com.musicstore.users.model.UserRole;
 import com.musicstore.users.service.*;
 import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 
 import org.junit.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,7 +24,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.security.web.csrf.DefaultCsrfToken;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -31,8 +31,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import java.util.UUID;
-
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
@@ -78,7 +76,7 @@ public class RegistryControllerTests {
                                 .firstName("Marek")
                                 .lastName("Kopania")
                                 .email("test@test.com")
-                                .password("Very$tron9pass")
+                                .password("4kdj@#slKsds")
                                 .build();
 
                 ResultActions resultActions = mockMvc.perform(post("/api/users/register")
@@ -231,7 +229,7 @@ public class RegistryControllerTests {
                                 .firstName("Marek")
                                 .lastName("Kopania")
                                 .email("test@test.com")
-                                .password("Very$tron9pass")
+                                .password("7@#asdlKj23")
                                 .build();
 
                 LoginResponse loginResponse = LoginResponse.builder()
@@ -286,5 +284,97 @@ public class RegistryControllerTests {
                 resultActions
                                 .andExpect(MockMvcResultMatchers.status().isOk())
                                 .andExpect(MockMvcResultMatchers.content().contentType("text/plain;charset=UTF-8"));
+        }
+
+        @Test
+        public void getPasswordResetEmailTest() throws Exception {
+
+                String email = "test@test.com";
+                String token = UUID.randomUUID().toString();
+                when(userService.generatePasswordResetToken(email)).thenReturn(token);
+                
+                ResultActions resultActions = mockMvc.perform(get("/api/users/password/email/{email}", email));
+                resultActions.andExpect(MockMvcResultMatchers.status().isOk());
+                resultActions.andExpect(MockMvcResultMatchers.content().contentType("text/plain;charset=UTF-8"));
+
+        }
+
+        @Test
+        public void resetPasswordEmailTest() throws JsonProcessingException, Exception {
+
+                String token = UUID.randomUUID().toString();
+
+                PasswordResetRequest request = PasswordResetRequest.builder()
+                        .token(token)
+                        .password("V$rh273Sd23%$")
+                        .passwordConfirmation("V$rh273Sd23%$")
+                        .build();
+
+                when(userService.resetPasswordEmail(request)).thenReturn("Password reset successfully.");
+
+                ResultActions resultActions = mockMvc.perform(post("/api/users/password/email/reset")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request))
+                        );
+
+                resultActions.andExpect(MockMvcResultMatchers.status().isOk());
+                resultActions.andExpect(MockMvcResultMatchers.content().contentType("text/plain;charset=UTF-8"));
+
+        }
+
+        @Test
+        public void resetPasswordEmailInvalidTest() throws JsonProcessingException, Exception {
+
+                String token = UUID.randomUUID().toString();
+
+                PasswordResetRequest request = PasswordResetRequest.builder()
+                        .token(token)
+                        .password("V$r")
+                        .passwordConfirmation("V$r")
+                        .build();
+
+                ResultActions resultActions = mockMvc.perform(post("/api/users/password/email/reset")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request))
+                        );
+
+                resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest());
+
+        }
+
+        @Test
+        public void resetPasswordSettingsTest() throws JsonProcessingException, Exception {
+
+                String token = UUID.randomUUID().toString();
+                PasswordResetRequestSettings request = new PasswordResetRequestSettings(
+                        "Wh#re4R3", "C0mm)nThing", "C0mm)nThing");
+                
+                when(userService.resetPasswordSettings(request, token)).thenReturn("Password successfully changed.");
+
+                ResultActions resultActions = mockMvc.perform(post("/api/users/password/settings/reset")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request))
+                        .header("Authorization", "Bearer " + token)
+                );
+
+                resultActions.andExpect(MockMvcResultMatchers.status().isOk());
+
+        }
+
+        @Test
+        public void resetPasswordSettingsInvalidTest() throws JsonProcessingException, Exception {
+
+                String token = UUID.randomUUID().toString();
+                PasswordResetRequestSettings request = new PasswordResetRequestSettings(
+                        "Wh#re4R3", "C0mm)", "C0mm)");
+                
+                ResultActions resultActions = mockMvc.perform(post("/api/users/password/settings/reset")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request))
+                        .header("Authorization", "Bearer " + token)
+                );
+
+                resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest());
+
         }
 }

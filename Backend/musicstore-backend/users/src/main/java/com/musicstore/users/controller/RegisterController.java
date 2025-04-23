@@ -123,12 +123,12 @@ public class RegisterController {
         return userService.generatePasswordResetToken(email);
     }
 
-    @PostMapping("/password/email/reset")
+    @PutMapping("/password/email/reset")
     public String resetPasswordEmail(@Valid @RequestBody PasswordResetRequest request) {
         return userService.resetPasswordEmail(request);
     }
     
-    @PostMapping("/password/settings/reset")
+    @PutMapping("/password/settings/reset")
     public String resetPasswordSettings(
         @RequestHeader(HttpHeaders.AUTHORIZATION) String token,
         @Valid @RequestBody PasswordResetRequestSettings request

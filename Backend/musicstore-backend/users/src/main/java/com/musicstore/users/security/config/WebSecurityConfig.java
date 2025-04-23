@@ -71,9 +71,9 @@ public class WebSecurityConfig {
                                                 .permitAll()
                                                 .requestMatchers(HttpMethod.GET, "/api/users/password/email/**")
                                                 .permitAll()
-                                                .requestMatchers(HttpMethod.POST, "/api/users/password/email/reset")
+                                                .requestMatchers(HttpMethod.PUT, "/api/users/password/email/reset")
                                                 .permitAll()
-                                                .requestMatchers(HttpMethod.POST, "/api/users/password/settings/reset")
+                                                .requestMatchers(HttpMethod.PUT, "/api/users/password/settings/reset")
                                                 .permitAll()
                                                 .requestMatchers("/actuator/**").permitAll()
                                                 .requestMatchers("/users-svc/api-docs/**",

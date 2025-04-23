@@ -29,6 +29,16 @@ function Account() {
     const [open, setOpen] = useState(false);
     const [confirmText, setConfirmText] = useState('');
     const [openBackdrop, setOpenBackdrop] = useState(false);
+    const [currentPassword, setCurrentPassword] = useState('');
+    const [currentPasswordError, setCurrentPasswordError] = useState(false);
+    const [currentPasswordErrorMsg, setCurrentPasswordErrorMsg] = useState('');
+    const [newPassword, setNewPassword] = useState('');
+    const [confirmNewPassword, setConfirmNewPassword] = useState('');
+    const [newPasswordError, setNewPasswordError] = useState(false);
+    const [newPasswordErrorMsg, setNewPasswordErrorMsg] = useState('');
+    const [confirmNewPasswordError, setConfirmNewPasswordError] = useState(false);
+    const [confirmNewPasswordErrorMsg, setConfirmNewPasswordErrorMsg] = useState('');
+    const [hideChangePassword, setHideChangePassword] = useState(true);
 
     const [emailError, setEmailError] = React.useState(false);
     const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
@@ -107,6 +117,36 @@ function Account() {
     const handleClose = () => {
         setOpen(false);
     };
+
+    const validateNewPassword = () => {
+
+        let isValid = true;
+
+        if (!(confirmNewPassword === newPassword)) {
+            setConfirmNewPasswordError(true);
+            setConfirmNewPasswordErrorMsg('Passwords do not match.');
+            isValid = false;
+        } else {
+            setConfirmNewPasswordError(false);
+            setConfirmNewPasswordErrorMsg('');
+        }
+
+        if (!newPassword || newPassword.length < 6 || newPassword.length > 50) {
+            setNewPasswordError(true);
+            setNewPasswordErrorMsg('Password must be at least 6 and max 50 characters long.');
+            isValid = false;
+        }  else if (!/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–\[{}\]:;',?/*~$^+=<>]).{6,50}$/.test(newPassword)) {
+            setNewPasswordError(true);
+            setNewPasswordErrorMsg('Password must contain one lower and upper case letter, one number and one special character.');
+            isValid = false;
+        } else {
+            setNewPasswordError(false);
+            setNewPasswordErrorMsg('');
+        }
+
+        return isValid;
+
+    }
 
     const validateInputs = () => {
 
@@ -304,6 +344,94 @@ function Account() {
         })
     }
 
+    const enablePassChange = () => {
+        setHideChangePassword(false);
+    }
+
+    const updatePassword = (e) => {
+        e.preventDefault();
+        if (!validateNewPassword()) {
+            return;
+        }
+        setOpenBackdrop(true);
+        LocalStorageHelper.CommitRefresh();
+
+        axios.get('api/users/csrf/token', {})
+            .then(res => {
+                axios.put('api/users/password/settings/reset', {
+                        current: currentPassword,
+                        password: newPassword,
+                        passwordConfirmation: confirmNewPassword,
+                    }, {
+                        headers: {
+                            'Authorization': 'Bearer ' + LocalStorageHelper.getJwtToken(),
+                            'X-XSRF-TOKEN': res.data.token,
+                        }
+                    }).then((resp) => {
+                        setCurrentPasswordError(false); 
+                        setCurrentPasswordErrorMsg('');
+                        setNewPasswordError(false);
+                        setNewPasswordErrorMsg('');
+                        setConfirmNewPasswordError(false);
+                        setConfirmNewPasswordErrorMsg('');
+                        setOpenBackdrop(false);
+                        toast.success("Password updated.", {
+                            position: "bottom-center",
+                            autoClose: 5000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: false,
+                            progress: undefined,
+                            theme: "light",
+                            transition: Slide,
+                        })
+                    }).catch(e => {
+                        if (e.response.data.current) {
+                            setCurrentPasswordError(true); 
+                            setCurrentPasswordErrorMsg(e.response.data.current);
+                        }
+                        if (e.response.data.password) {
+                            setNewPasswordError(true);
+                            setNewPasswordErrorMsg(e.response.data.password);
+                        }
+                        if (e.response.data.passwordConfirmaiton) {
+                            setConfirmNewPasswordError(true);
+                            setConfirmNewPasswordErrorMsg(e.response.data.passwordConfirmaiton);
+                        }
+                        if (e.response.data.message) {
+                            toast.error(e.response.data.message, {
+                                position: "bottom-center",
+                                autoClose: 3000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: false,
+                                progress: undefined,
+                                theme: "light",
+                                transition: Slide,
+                            })
+                        }
+                        setOpenBackdrop(false);
+                    })
+                
+            }).catch(() => {
+                setOpenBackdrop(false);
+                toast.error("Cannot fetch token", {
+                    position: "bottom-center",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: false,
+                    progress: undefined,
+                    theme: "light",
+                    transition: Slide,
+                })
+            });
+
+    }
+
     return (
         <div className="account">
             <Backdrop
@@ -490,6 +618,150 @@ function Account() {
                             Update Account
                         </Button>
                     </Box>
+                </div>
+                <div className="info-edit">
+                <Typography
+                        component="h1"
+                        variant="h5"
+                        sx={{
+                            width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)', color: 'black'
+                            , margin: '0 auto 5% auto'
+                        }}
+                    >
+                        Change password
+                    </Typography>
+                    <Box
+                        sx={{
+                            width: '100%'
+                        }}
+                    >
+                        {!hideChangePassword && (
+                            <>
+                            <TextField
+                                size={"small"}
+                                error={currentPasswordError}
+                                helperText={currentPasswordErrorMsg}
+                                id="currentPass"
+                                type="password"
+                                name="currentPassword"
+                                placeholder="••••••"
+                                autoComplete="currentPassword"
+                                autoFocus
+                                required
+                                fullWidth
+                                variant="outlined"
+                                color={currentPasswordError ? 'error' : 'primary'}
+                                label="Current password"
+                                value={currentPassword}
+                                onChange={e => setCurrentPassword(e.target.value)}
+                                sx={{
+                                    width: '70%',
+                                    margin: '0 auto 5% auto',
+                                    "& label.Mui-focused": {
+                                        color: 'rgb(39, 99, 24)'
+                                    },
+                                    "& .MuiOutlinedInput-root": {
+                                        "&.Mui-focused fieldset": {
+                                            borderColor: 'rgb(39, 99, 24)'
+                                        }
+                                    }
+                                }}
+                            />
+                            <TextField
+                                size={"small"}
+                                error={newPasswordError}
+                                helperText={newPasswordErrorMsg}
+                                id="newPassword"
+                                type="password"
+                                name="newPassword"
+                                placeholder="••••••"
+                                autoComplete="newPassword"
+                                autoFocus
+                                required
+                                fullWidth
+                                variant="outlined"
+                                color={newPasswordError ? 'error' : 'primary'}
+                                label="New password"
+                                value={newPassword}
+                                onChange={e => setNewPassword(e.target.value)}
+                                sx={{
+                                    width: '70%',
+                                    margin: '0 auto 5% auto',
+                                    "& label.Mui-focused": {
+                                        color: 'rgb(39, 99, 24)'
+                                    },
+                                    "& .MuiOutlinedInput-root": {
+                                        "&.Mui-focused fieldset": {
+                                            borderColor: 'rgb(39, 99, 24)'
+                                        }
+                                    }
+                                }}
+                            />
+                            <TextField
+                                size={"small"}
+                                error={confirmNewPasswordError}
+                                helperText={confirmNewPasswordErrorMsg}
+                                id="confirmNewPassword"
+                                type="password"
+                                name="confirmNewPassword"
+                                placeholder="••••••"
+                                autoComplete="confirmNewPassword"
+                                required
+                                fullWidth
+                                variant="outlined"
+                                color={confirmNewPasswordError ? 'error' : 'primary'}
+                                label="Confirm new password"
+                                value={confirmNewPassword}
+                                onChange={e => setConfirmNewPassword(e.target.value)}
+                                sx={{
+                                    width: '70%',
+                                    margin: '0 auto 5% auto',
+                                    "& label.Mui-focused": {
+                                        color: 'rgb(39, 99, 24)'
+                                    },
+                                    "& .MuiOutlinedInput-root": {
+                                        "&.Mui-focused fieldset": {
+                                            borderColor: 'rgb(39, 99, 24)'
+                                        }
+                                    }
+                                }}
+                            />
+                        </>
+                        )}
+                        {hideChangePassword && 
+                            <Button
+                                className="enable-btn"
+                                fullWidth
+                                variant="contained"
+                                endIcon={<UpdateOutlinedIcon />}
+                                onClick={enablePassChange}
+                                sx={{
+                                    width: '70%',
+                                    backgroundColor: 'rgb(39, 99, 24)',
+                                    "&:hover": {backgroundColor: 'rgb(49,140,23)'}
+                                }}
+                            >
+                                Enable
+                            </Button>
+                        }
+                        {!hideChangePassword && 
+                            <Button
+                                className="enable-btn"
+                                fullWidth
+                                variant="contained"
+                                endIcon={<UpdateOutlinedIcon />}
+                                onClick={updatePassword}
+                                sx={{
+                                    width: '70%',
+                                    backgroundColor: 'rgb(39, 99, 24)',
+                                    "&:hover": {backgroundColor: 'rgb(49,140,23)'}
+                                }}
+                            >
+                                Change password
+                            </Button>
+                        }
+                        </Box>
+                        
                 </div>
                 <div className={"account-deletion"}>
                     <Typography

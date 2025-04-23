@@ -116,7 +116,7 @@ function PasswordResetLanding() {
 
         axios.get('api/users/csrf/token')
             .then(res => {
-                axios.post(`api/users/password/email/reset`, {
+                axios.put(`api/users/password/email/reset`, {
                     token: param.token,
                     password: password,
                     passwordConfirmation: passwordConfirmation

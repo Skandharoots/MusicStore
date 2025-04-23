@@ -20,10 +20,7 @@ import com.musicstore.users.service.ConfirmationTokenService;
 import com.musicstore.users.service.JwtService;
 import com.musicstore.users.service.PasswordResetTokenService;
 import com.musicstore.users.service.UserService;
-
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,26 +29,14 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
 import java.io.IOException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
-
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -639,7 +624,7 @@ public class UserServiceTests {
     @Test
     public void resetPasswordSettingsTest() {
 
-        String token = UUID.randomUUID().toString();
+        String token = "Bearer " + UUID.randomUUID().toString();
 
         String pass = bCryptPasswordEncoder.encode("$hdj@Njsd");
 
@@ -654,7 +639,7 @@ public class UserServiceTests {
                 "$hdj@Njsd", "89asd@#$#Asda", "89asd@#$#Asda");
 
         when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
-        when(jwtService.getUsername(token)).thenReturn(user.getEmail());
+        when(jwtService.getUsername(token.substring(7))).thenReturn(user.getEmail());
         when(bCryptPasswordEncoder.matches(request.getCurrent(), user.getPassword())).thenReturn(true);
         String response = userService.resetPasswordSettings(request, token);
         Assertions.assertThat(!response.isEmpty());
@@ -664,7 +649,7 @@ public class UserServiceTests {
     @Test
     public void resetPasswordSettingsPasswordAndConfirmationDoesNotMatchTest() {
 
-        String token = UUID.randomUUID().toString();
+        String token = "Bearer " + UUID.randomUUID().toString();
 
         String pass = bCryptPasswordEncoder.encode("$hdj@Njsd");
 
@@ -679,7 +664,7 @@ public class UserServiceTests {
                 "$hdj@Njsd", "89asd@#$#2323Asda", "89asd@#$#Asda");
 
         when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
-        when(jwtService.getUsername(token)).thenReturn(user.getEmail());
+        when(jwtService.getUsername(token.substring(7))).thenReturn(user.getEmail());
         Assertions.assertThatThrownBy(() -> userService.resetPasswordSettings(request, token));
 
     }
@@ -687,12 +672,12 @@ public class UserServiceTests {
     @Test
     public void resetPasswordSettingsUserNotFoundTest() {
 
-        String token = UUID.randomUUID().toString();
+        String token = "Bearer " + UUID.randomUUID().toString();
         PasswordResetRequestSettings request = new PasswordResetRequestSettings(
                 "$hdj@Njsd", "89asd@#$#Asda", "89asd@#$#Asda");
 
         when(userRepository.findByEmail("test@test.com")).thenReturn(Optional.empty());
-        when(jwtService.getUsername(token)).thenReturn("test@test.com");
+        when(jwtService.getUsername(token.substring(7))).thenReturn("test@test.com");
         Assertions.assertThatThrownBy(() -> userService.resetPasswordSettings(request, token));
 
     }
@@ -700,7 +685,7 @@ public class UserServiceTests {
     @Test
     public void resetPasswordSettingsCurrentPasswordDoesNotMatch() {
 
-        String token = UUID.randomUUID().toString();
+        String token = "Bearer " + UUID.randomUUID().toString();
 
         String pass = bCryptPasswordEncoder.encode("$hdj@Njsd");
 
@@ -712,10 +697,10 @@ public class UserServiceTests {
                 UserRole.USER);
 
         PasswordResetRequestSettings request = new PasswordResetRequestSettings(
-                "$hdj2345@Njsd", "89asd@#$#Asda", "89asd@#$#Asda");
+                "M0th#rH3re", "89asd@#$#Asda", "89asd@#$#Asda");
 
         when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
-        when(jwtService.getUsername(token)).thenReturn(user.getEmail());
+        when(jwtService.getUsername(token.substring(7))).thenReturn(user.getEmail());
         when(bCryptPasswordEncoder.matches(request.getCurrent(), user.getPassword())).thenReturn(false);
         Assertions.assertThatThrownBy(() -> userService.resetPasswordSettings(request, token));
 

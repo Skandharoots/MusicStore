@@ -334,19 +334,20 @@ public class UserService implements UserDetailsService {
 
         public String resetPasswordSettings(PasswordResetRequestSettings request, String token) {
 
-                Users user = userRepository.findByEmail(jwtService.getUsername(token))
+                Users user = userRepository.findByEmail(jwtService.getUsername(token.substring(7)))
                                 .orElseThrow(
                                                 () -> new UsernameNotFoundException(
                                                                 String.format(USER_NOT_FOUND_MESSAGE,
-                                                                                jwtService.getUsername(token))));
+                                                                                jwtService.getUsername(
+                                                                                                token.substring(7)))));
 
-                if (!request.getPassword().equals(request.getPasswordConfirmaiton())) {
+                if (!request.getPassword().equals(request.getPasswordConfirmation())) {
                         log.error("Password and password confirmation for reset do not match [" + request.getPassword()
-                                        + ", " + request.getPasswordConfirmaiton() + "]");
+                                        + ", " + request.getPasswordConfirmation() + "]");
                         throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                                         "Password and password confirmation for reset do not match ["
                                                         + request.getPassword()
-                                                        + ", " + request.getPasswordConfirmaiton() + "]");
+                                                        + ", " + request.getPasswordConfirmation() + "]");
                 }
 
                 if (!bcryptPasswordEncoder.matches(request.getCurrent(), user.getPassword())) {

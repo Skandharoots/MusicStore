@@ -312,7 +312,7 @@ public class RegistryControllerTests {
 
                 when(userService.resetPasswordEmail(request)).thenReturn("Password reset successfully.");
 
-                ResultActions resultActions = mockMvc.perform(post("/api/users/password/email/reset")
+                ResultActions resultActions = mockMvc.perform(put("/api/users/password/email/reset")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request))
                         );
@@ -333,7 +333,7 @@ public class RegistryControllerTests {
                         .passwordConfirmation("V$r")
                         .build();
 
-                ResultActions resultActions = mockMvc.perform(post("/api/users/password/email/reset")
+                ResultActions resultActions = mockMvc.perform(put("/api/users/password/email/reset")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request))
                         );
@@ -351,7 +351,7 @@ public class RegistryControllerTests {
                 
                 when(userService.resetPasswordSettings(request, token)).thenReturn("Password successfully changed.");
 
-                ResultActions resultActions = mockMvc.perform(post("/api/users/password/settings/reset")
+                ResultActions resultActions = mockMvc.perform(put("/api/users/password/settings/reset")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request))
                         .header("Authorization", "Bearer " + token)
@@ -368,7 +368,7 @@ public class RegistryControllerTests {
                 PasswordResetRequestSettings request = new PasswordResetRequestSettings(
                         "Wh#re4R3", "C0mm)", "C0mm)");
                 
-                ResultActions resultActions = mockMvc.perform(post("/api/users/password/settings/reset")
+                ResultActions resultActions = mockMvc.perform(put("/api/users/password/settings/reset")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request))
                         .header("Authorization", "Bearer " + token)

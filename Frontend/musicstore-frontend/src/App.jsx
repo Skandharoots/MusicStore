@@ -40,6 +40,8 @@ import OrderPage from "./pages/order/OrderPage.jsx";
 import UpdateOrder from "./pages/admin/order/UpdateOrder.jsx";
 import MyOrderPage from "./pages/account/MyOrderPage.jsx";
 import ProductsSearchPage from "./pages/products/ProductsSearchPage.jsx";
+import PasswordResetRequest from './pages/password/PasswordResetRequest.jsx';
+import PasswordResetLanding from './pages/password/PasswordResetLanding.jsx';
 
 axios.defaults.baseURL = "http://localhost:8222/";
 axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
@@ -105,6 +107,14 @@ const router = createBrowserRouter([
             {
                 path: '/login',
                 element: <Login />,
+            },
+            {
+                path: '/password',
+                element: <PasswordResetRequest/>
+            },
+            {
+                path: '/password/reset/:token',
+                element: <PasswordResetLanding/>
             },
             {
                 path: '/signup',

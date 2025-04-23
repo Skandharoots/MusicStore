@@ -336,9 +336,27 @@ function Login() {
                     >
                         Sign in
                     </Button>
+                    <div
+                        style={{
+                            width: '70%',
+                            height: 'fit-content',
+                            display: 'flex',
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            margin: '0 auto',
+                        }}
+                    >
+                        <Typography sx={{ textAlign: 'center', margin: '5% 0 0 0', color: 'black'  }}>
+                        <Link
+                            to="/password"
+                            variant="body2"
+                            sx={{ alignSelf: 'right', width: '100%'}}
+                        >
+                          Forgot password?
+                        </Link>
+                    </Typography>
                     <Typography sx={{ textAlign: 'center', margin: '5% 0 0 0', color: 'black'  }}>
-                        Don&apos;t have an account?{' '}
-                        <span>
                         <Link
                             to="/signup"
                             variant="body2"
@@ -346,8 +364,9 @@ function Login() {
                         >
                           Sign up
                         </Link>
-                      </span>
                     </Typography>
+
+                    </div>
                 </Box>
             </div>
         </div>

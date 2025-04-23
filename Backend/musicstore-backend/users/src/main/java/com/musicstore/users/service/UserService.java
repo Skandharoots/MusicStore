@@ -235,15 +235,17 @@ public class UserService implements UserDetailsService {
                         Optional<PasswordResetToken> token = passwordResetTokenService
                                         .getPasswordResetTokenByUserUuid(user.getUuid());
 
-                        if (token.isPresent()) {
+                        if (token.isPresent() && token.get().getExpiresAt().isAfter(LocalDateTime.now())
+                                        && token.get().getConfirmedAt() == null) {
                                 PasswordResetToken resetToken = token.get();
 
                                 String link = variablesConfiguration.getPassResetUrl() + resetToken.getToken();
 
-                                emailService.send(user.getEmail(), buildResetPasswordEmail(user.getFirstName(), link));
+                                emailService.sendPasswordReset(user.getEmail(),
+                                                buildResetPasswordEmail(user.getFirstName(), link));
 
                                 log.info("Password reset processed and email sent to: " + user.getEmail());
-                                return resetToken.getToken();
+                                return "Token generated";
                         } else {
                                 String tokenUuid = UUID.randomUUID().toString();
 
@@ -257,9 +259,10 @@ public class UserService implements UserDetailsService {
 
                                 String link = variablesConfiguration.getPassResetUrl() + newToken.getToken();
 
-                                emailService.send(user.getEmail(), buildResetPasswordEmail(user.getEmail(), link));
+                                emailService.sendPasswordReset(user.getEmail(),
+                                                buildResetPasswordEmail(user.getFirstName(), link));
 
-                                return tokenUuid;
+                                return "Token generated";
                         }
 
                 } else {
@@ -274,6 +277,25 @@ public class UserService implements UserDetailsService {
                 Optional<PasswordResetToken> resetToken = passwordResetTokenService
                                 .getPasswordResetToken(request.getToken());
 
+                if (!resetToken.isPresent()) {
+                        log.error("Reset token: " + request.getToken() + " not found.");
+                        throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                                        "Reset token: " + request.getToken() + " not found.");
+                }
+
+                if (resetToken.get().getConfirmedAt() != null) {
+                        log.error("Password reset token already confirmed");
+                        throw new ResponseStatusException(
+                                        HttpStatus.BAD_REQUEST, "Password reset token already confirmed");
+                }
+
+                LocalDateTime expiredAt = resetToken.get().getExpiresAt();
+
+                if (expiredAt.isBefore(LocalDateTime.now())) {
+                        log.error("Password reset token already expired");
+                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Expired token");
+                }
+
                 if (!request.getPassword().equals(request.getPasswordConfirmation())) {
                         log.error("Password and password confirmation for reset do not match [" + request.getPassword()
                                         + ", " + request.getPasswordConfirmation() + "]");
@@ -283,18 +305,20 @@ public class UserService implements UserDetailsService {
                                                         + ", " + request.getPasswordConfirmation() + "]");
                 }
 
-                if (!resetToken.isPresent()) {
-                        log.error("Reset token: " + request.getToken() + " not found.");
-                        throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                                        "Reset token: " + request.getToken() + " not found.");
-                }
-
                 Users user = userRepository.findByEmail(resetToken.get().getUser().getEmail())
                                 .orElseThrow(
                                                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                                                                 "User with email: "
                                                                                 + resetToken.get().getUser().getEmail()
                                                                                 + " not found."));
+
+                if (bcryptPasswordEncoder.matches(request.getPassword(), user.getPassword())) {
+                        log.error("New password for user: " + user.getEmail() + "cannot be the same as the old one.");
+                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                                        "New password cannot be the same as current.");
+                }
+
+                passwordResetTokenService.deletePasswordResetToken(user.getId());
 
                 String passwordEncoded = bcryptPasswordEncoder.encode(request.getPasswordConfirmation());
 
@@ -551,7 +575,7 @@ public class UserService implements UserDetailsService {
                                 + "padding-bottom:5px;padding-top:5px;text-align:center;text-decoration:none;width:100%;"
                                 + "word-break:keep-all;\"><span style=\"word-break: break-word; padding-left: 20px; padding-right: 20px; font-size: "
                                 + "23px; display: inline-block; letter-spacing: normal;\">"
-                                + "<span style=\"word-break: break-word; line-height: 46px;\">Activate</span></span></a><!--[if mso]></center></v:textbox></v:roundrect><![endif]--></div>\n"
+                                + "<span style=\"word-break: break-word; line-height: 46px;\">Reset</span></span></a><!--[if mso]></center></v:textbox></v:roundrect><![endif]--></div>\n"
                                 + "                                            </td>\n"
                                 + "                                        </tr>\n"
                                 + "                                    </table>\n"

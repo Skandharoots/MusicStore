@@ -14,6 +14,7 @@ function SignupConfirm() {
     const [showRegisterButton, setShowRegisterButton] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
     const [hideCountdown, setHideCountdown] = useState(true);
+    
     const token = useParams();
     const navigate = useNavigate();
 

@@ -16,6 +16,7 @@ import lombok.Getter;
 public class PasswordResetRequest {
 
     private String token;
+    
     @NotNull(message = "Password cannot be empty")
     @NotBlank(message = "Password cannot be empty")
     @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{6,50}$",

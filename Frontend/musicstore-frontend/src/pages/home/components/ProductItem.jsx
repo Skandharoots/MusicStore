@@ -52,6 +52,8 @@ function ProductItem(props) {
                                 }
                             }).then(() => {
                                 setOpen(true);
+                                LocalStorageHelper.setBasketItems(1);
+                                window.dispatchEvent(new Event('basket'));
                             }).catch(() => {
                                 toast.error("Could not update basket items", {
                                     position: "bottom-center",
@@ -95,6 +97,8 @@ function ProductItem(props) {
                                 }
                             }).then(() => {
                                 setOpen(true);
+                                LocalStorageHelper.setBasketItems(1);
+                                window.dispatchEvent(new Event('basket'));
                             }).catch((error) => {
                                 toast.error(error.response.data.message, {
                                     position: "bottom-center",
@@ -137,6 +141,8 @@ function ProductItem(props) {
             });
 
         } else {
+            LocalStorageHelper.setBasketItems(1);
+            window.dispatchEvent(new Event('basket'));
             let basket = JSON.parse(localStorage.getItem('basket'));
             if (!basket) {
                 const newBasket = [

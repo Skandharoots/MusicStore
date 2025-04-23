@@ -126,6 +126,8 @@ function ProductDetailsPage() {
                                 }
                             }).then(() => {
                                 setOpen(true);
+                                LocalStorageHelper.setBasketItems(selectedQuantity - currentQuantity);
+                                window.dispatchEvent(new Event('basket'));
                             }).catch(() => {
                                 toast.error("Could not update basket items", {
                                     position: "bottom-center",
@@ -169,6 +171,8 @@ function ProductDetailsPage() {
                                 }
                             }).then(() => {
                                 setOpen(true);
+                                LocalStorageHelper.setBasketItems(selectedQuantity);
+                                window.dispatchEvent(new Event('basket'));
                             }).catch((error) => {
                                 toast.error(error.response.data.message, {
                                     position: "bottom-center",
@@ -221,6 +225,8 @@ function ProductDetailsPage() {
                     },
                 ];
                 localStorage.setItem('basket', JSON.stringify(newBasket));
+                LocalStorageHelper.setBasketItems(selectedQuantity);
+                window.dispatchEvent(new Event('basket'));
             } else {
                 let itemToUpdate = null;
                 [...basket].map((item) => {
@@ -239,6 +245,8 @@ function ProductDetailsPage() {
                     basket.splice(index, 1);
                     basket.push(newItem);
                     localStorage.setItem('basket', JSON.stringify(basket));
+                    LocalStorageHelper.setBasketItems(selectedQuantity - itemToUpdate.quantity);
+                    window.dispatchEvent(new Event('basket'));
                 } else {
                     let newItem = {
                         productSkuId: productId.productSkuId,
@@ -248,6 +256,8 @@ function ProductDetailsPage() {
                     };
                     basket.push(newItem);
                     localStorage.setItem('basket', JSON.stringify(basket));
+                    LocalStorageHelper.setBasketItems(selectedQuantity);
+                    window.dispatchEvent(new Event('basket'));
                 }
             }
         }

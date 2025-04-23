@@ -12,6 +12,12 @@ import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import AdminPanelSettingsOutlinedIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
 import {NavLink} from "react-router-dom";
 import axios from "axios";
+import Badge from '@mui/material/Badge';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import Button from '@mui/material/Button';
+import SettingsIcon from '@mui/icons-material/Settings';
+import AssignmentOutlinedIcon from '@mui/icons-material/AssignmentOutlined';
 
 function Navbar() {
 
@@ -19,6 +25,18 @@ function Navbar() {
     const [search, setSearch] = React.useState('');
     const [userName, setUserName] = React.useState('');
     const [categories, setCategories] = React.useState([]);
+    const [basketCount, setBasketCount] = React.useState(0);
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    
+    const open = Boolean(anchorEl);
+    
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
 
     const navigate = useNavigate();
 
@@ -28,6 +46,10 @@ function Navbar() {
 
     window.addEventListener('storage', () => {
         setUserName(LocalStorageHelper.getUserName());
+    });
+
+    window.addEventListener('basket', () => {
+        setBasketCount(parseInt(LocalStorageHelper.getBasketItems()))
     })
 
     window.addEventListener('category', () => {
@@ -36,6 +58,10 @@ function Navbar() {
                 setCategories(res.data);
             }).catch(() => {})
     })
+
+    useEffect(() => {
+        setBasketCount(LocalStorageHelper.getBasketItems().toString());
+    }, [])
 
     useEffect(() => {
         axios.get('api/products/categories/get')
@@ -81,21 +107,62 @@ function Navbar() {
                     <ul>
                         { LocalStorageHelper.IsUserLogged() === true &&
                             <li>
-                                <Tooltip title={"My account"}>
-                                    <NavLink to="/account">
-                                        <div className={"welcome-text"}>
+                                    <div>
+                                        <Button
+                                            id="basic-button"
+                                            aria-controls={open ? 'basic-menu' : undefined}
+                                            aria-haspopup="true"
+                                            aria-expanded={open ? 'true' : undefined}
+                                            onClick={handleClick}
+                                            endIcon={<PersonOutlineOutlinedIcon
+                                                fontSize={"large"}
+                                            />}
+                                            sx={{
+                                                height: '50px',
+                                                color: 'black',
+                                                backgroundColor: 'white',
+                                                borderRadius: '1em',
+                                                boxShadow: '0 5px 15px rgba(0, 0, 0, 0.1)',
+                                                fontSize: '12px',
+                                                fontWeight: 'bold',
+                                                textAlign: 'left',
+                                                '&:hover': {
+                                                    backgroundColor: 'rgba(184, 184, 184, 0.2)'
+                                                },
+                                            }}
+                                        >
                                             <p style={{
                                                 maxWidth: '50px',
                                                 overflow: 'hidden',
                                             }}>
                                                 Hi,<br/>{userName}
                                             </p>
-                                        </div>
-                                        <PersonOutlineOutlinedIcon
-                                            fontSize={"medium"}
-                                        />
-                                    </NavLink>
-                                </Tooltip>
+                                        </Button>
+                                        <Menu
+                                            id="basic-menu"
+                                            anchorEl={anchorEl}
+                                            open={open}
+                                            onClose={handleClose}
+                                            slotProps={{
+                                                paper: {
+                                                      style: {
+                                                            borderRadius: '1em',
+                                                            width: "180px",
+                                                            marginTop: "2px",
+                                                            padding: '4px',
+                                                            backgroundColor: "white",
+                                                        },
+                                                 },
+                                            }}
+                                            
+                                            MenuListProps={{
+                                            'aria-labelledby': 'basic-button',
+                                            }}
+                                        >
+                                            <MenuItem onClick={() => {handleClose(); navigate("/account")}}><SettingsIcon/>{'  '} My account</MenuItem>
+                                            <MenuItem onClick={() => {handleClose(); navigate("/myorders")}}><AssignmentOutlinedIcon/>{'  '} My orders</MenuItem>
+                                        </Menu>
+                                    </div>
                             </li>
                         }
                         { LocalStorageHelper.IsUserLogged() === false &&
@@ -115,7 +182,9 @@ function Navbar() {
                         <li>
                             <Tooltip title={"Basket"}>
                                 <NavLink to="/basket">
-                                    <ShoppingCartOutlinedIcon fontSize={"medium"}/>
+                                <Badge badgeContent={basketCount} color="secondary">
+                                    <ShoppingCartOutlinedIcon color="aciton" fontSize={"medium"}/>
+                                </Badge> 
                                 </NavLink>
                             </Tooltip>
                         </li>

@@ -104,6 +104,8 @@ function Basket() {
         event.preventDefault();
         setOpenBackdrop(true);
         if (LocalStorageHelper.IsUserLogged()) {
+            LocalStorageHelper.setClearBasketItems();
+            window.dispatchEvent(new Event('basket'));
             LocalStorageHelper.CommitRefresh();
             axios.get('api/users/csrf/token', {})
                 .then(res => {
@@ -159,6 +161,8 @@ function Basket() {
                     setOpen(false);
             });
         } else {
+            LocalStorageHelper.clearBasketItems(0);
+            window.dispatchEvent(new Event('basket'));
             localStorage.removeItem("basket");
             setBasketItems([]);
             setShowBasketEmpty(true);

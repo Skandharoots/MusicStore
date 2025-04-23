@@ -134,6 +134,8 @@ function BasketItem(props) {
         setOpenBackdrop(true);
         setOpen(false);
         if (LocalStorageHelper.IsUserLogged() === true) {
+            LocalStorageHelper.setBasketItems(-parseFloat(selectedQuantity));
+            window.dispatchEvent(new Event('basket'));
             LocalStorageHelper.CommitRefresh();
             axios.get('api/users/csrf/token', {})
                 .then((response) => {
@@ -172,6 +174,8 @@ function BasketItem(props) {
                     })
                 })
         } else {
+            LocalStorageHelper.setBasketItems(-parseFloat(selectedQuantity));
+            window.dispatchEvent(new Event('basket'));
             let basket = JSON.parse(localStorage.getItem('basket'));
             let itemToRemove = null;
             [...basket].map((item) => {
@@ -211,6 +215,8 @@ function BasketItem(props) {
 
     const handleQuantityChange = (event) => {
         event.preventDefault();
+        LocalStorageHelper.setBasketItems(parseFloat(parseFloat(event.target.value) - parseFloat(selectedQuantity)));
+        window.dispatchEvent(new Event('basket'));
         setSelectedQuantity(event.target.value);
         LocalStorageHelper.CommitRefresh();
         axios.get('api/users/csrf/token')

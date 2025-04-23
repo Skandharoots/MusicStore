@@ -100,6 +100,33 @@ class LocalStorageHelper {
         localStorage.setItem('userName', userName);
     }
 
+    static getBasketItems() {
+        let items = localStorage.getItem('inBasket');
+        if (items === null || items === undefined) {
+            localStorage.setItem('inBasket', parseFloat(0));
+            return 0;
+        } else {
+            return parseFloat(items);
+        }
+        
+    }
+
+    static setBasketItems(diff) {
+        let current = localStorage.getItem('inBasket');
+        if (current) {
+            console.log(current, diff);
+            let newCount = parseFloat(current) + diff;
+            localStorage.setItem('inBasket', newCount);
+        } else {
+            localStorage.setItem('inBasket', diff);
+        }
+        
+    }
+
+    static setClearBasketItems() {
+        localStorage.setItem('inBasket', 0);
+    }
+
     static LoginUser(userUuid, userFirstName, jwt, userRole, refresh) {
         localStorage.setItem('userUuid', userUuid);
         localStorage.setItem('authValidUntil', Date.now() + 24 * 60 * 60 * 1000); // 1 day

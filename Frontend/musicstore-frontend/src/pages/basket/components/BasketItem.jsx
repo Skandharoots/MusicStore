@@ -134,7 +134,7 @@ function BasketItem(props) {
         setOpenBackdrop(true);
         setOpen(false);
         if (LocalStorageHelper.IsUserLogged() === true) {
-            LocalStorageHelper.setBasketItems(-parseFloat(selectedQuantity));
+            LocalStorageHelper.setBasketItems(-selectedQuantity);
             window.dispatchEvent(new Event('basket'));
             LocalStorageHelper.CommitRefresh();
             axios.get('api/users/csrf/token', {})
@@ -174,7 +174,7 @@ function BasketItem(props) {
                     })
                 })
         } else {
-            LocalStorageHelper.setBasketItems(-parseFloat(selectedQuantity));
+            LocalStorageHelper.setBasketItems(-selectedQuantity);
             window.dispatchEvent(new Event('basket'));
             let basket = JSON.parse(localStorage.getItem('basket'));
             let itemToRemove = null;

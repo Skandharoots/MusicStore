@@ -145,6 +145,8 @@ class LocalStorageHelper {
         localStorage.removeItem("credentials");
         localStorage.removeItem("refresh");
         localStorage.removeItem("userRole");
+        localStorage.setItem("inBasket", 0);
+        window.dispatchEvent(new Event('basket'));
     }
 
 }

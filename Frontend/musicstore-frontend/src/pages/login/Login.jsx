@@ -193,6 +193,12 @@ function Login() {
                             }
                         }
                         localStorage.removeItem('basket');
+                        let inBasket = 0;
+                        [...res.data].forEach((item) => {
+                            inBasket += item.quantity;
+                        });
+                        LocalStorageHelper.setBasketItems(parseInt(inBasket));
+                        window.dispatchEvent(new Event('basket'));
                     }).catch(() => {});
                     setOpenBackdrop(false);
                     toast.success("Welcome, " + response.data.firstName + "!", {

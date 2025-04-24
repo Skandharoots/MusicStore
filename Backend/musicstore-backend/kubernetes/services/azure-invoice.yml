@@ -1,0 +1,79 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: azure-invoice
+  labels:
+    app: azure-invoice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: azure-invoice
+  template:
+    metadata:
+      labels:
+        app: azure-invoice
+    spec:
+      containers:
+        - name: azure-invoice
+          image: skandharoots/azure-invoice:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 7090
+          readinessProbe:
+            tcpSocket:
+              port: 7090
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              port: 7090
+              path: /actuator/health
+            initialDelaySeconds: 40
+            periodSeconds: 10
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: kubernetes
+            - name: SPRING_CONFIG_IMPORT
+              valueFrom:
+                configMapKeyRef:
+                  key: config-server-url
+                  name: config-server-cm
+            - name: SPRING_CLOUD_AZURE_STORAGE_CONNECTION_STRING
+              valueFrom:
+                configMapKeyRef:
+                  key: azr_con_str
+                  name: azurite-cfg
+            - name: LOKI_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: LOKI_URL
+                  name: loki-cfg
+      initContainers:
+        #Wait for azurite to show up
+        - name: wait-for-mysql
+          image: busybox
+          command: [ "sh", "-c", "until nc -zv azurite.default.svc.cluster.local 10000 > /dev/null; do echo Waiting for master.; sleep 2; done;" ]
+        # Wait for discovery to show up
+        - name: wait-for-discovery
+          image: busybox
+          command: [ "sh", "-c", "until nc -zv discovery-0.discovery.default.svc.cluster.local 8761 > /dev/null; do echo Waiting for master.; sleep 2; done;" ]
+          #Wait for config server to show up
+        - name: wait-for-config-server
+          image: busybox
+          command: [ "sh", "-c", "until nc -zv config-server-svc.default.svc.cluster.local 80 > /dev/null; do echo Waiting for master.; sleep 2; done;" ]
+
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: azure-invoice-svc
+spec:
+  selector:
+    app: azure-invoice
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: 8020
+      protocol: TCP

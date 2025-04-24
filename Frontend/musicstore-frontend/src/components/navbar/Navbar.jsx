@@ -107,62 +107,62 @@ function Navbar() {
                     <ul>
                         { LocalStorageHelper.IsUserLogged() === true &&
                             <li>
-                                    <div>
-                                        <Button
-                                            id="basic-button"
-                                            aria-controls={open ? 'basic-menu' : undefined}
-                                            aria-haspopup="true"
-                                            aria-expanded={open ? 'true' : undefined}
-                                            onClick={handleClick}
-                                            endIcon={<PersonOutlineOutlinedIcon
-                                                fontSize={"large"}
-                                            />}
-                                            sx={{
-                                                height: '50px',
-                                                color: 'black',
-                                                backgroundColor: 'white',
-                                                borderRadius: '1em',
-                                                boxShadow: '0 5px 15px rgba(0, 0, 0, 0.1)',
-                                                fontSize: '12px',
-                                                fontWeight: 'bold',
-                                                textAlign: 'left',
-                                                '&:hover': {
-                                                    backgroundColor: 'rgba(184, 184, 184, 0.2)'
+                                <div>
+                                    <Button
+                                        id="basic-button"
+                                        aria-controls={open ? 'basic-menu' : undefined}
+                                        aria-haspopup="true"
+                                        aria-expanded={open ? 'true' : undefined}
+                                        onClick={handleClick}
+                                        endIcon={<PersonOutlineOutlinedIcon
+                                            fontSize={"large"}
+                                        />}
+                                        sx={{
+                                            height: '50px',
+                                            color: 'black',
+                                            backgroundColor: 'white',
+                                            borderRadius: '1em',
+                                            boxShadow: '0 5px 15px rgba(0, 0, 0, 0.1)',
+                                            fontSize: '12px',
+                                            fontWeight: 'bold',
+                                            textAlign: 'left',
+                                            '&:hover': {
+                                                backgroundColor: 'rgba(184, 184, 184, 0.2)'
+                                            },
+                                        }}
+                                    >
+                                        <p style={{
+                                            maxWidth: '50px',
+                                            overflow: 'hidden',
+                                        }}>
+                                            Hi,<br/>{userName}
+                                        </p>
+                                    </Button>
+                                    <Menu
+                                        id="basic-menu"
+                                        anchorEl={anchorEl}
+                                        open={open}
+                                        onClose={handleClose}
+                                        slotProps={{
+                                            paper: {
+                                                    style: {
+                                                        borderRadius: '1em',
+                                                        width: "180px",
+                                                        marginTop: "2px",
+                                                        padding: '4px',
+                                                        backgroundColor: "white",
+                                                    },
                                                 },
-                                            }}
-                                        >
-                                            <p style={{
-                                                maxWidth: '50px',
-                                                overflow: 'hidden',
-                                            }}>
-                                                Hi,<br/>{userName}
-                                            </p>
-                                        </Button>
-                                        <Menu
-                                            id="basic-menu"
-                                            anchorEl={anchorEl}
-                                            open={open}
-                                            onClose={handleClose}
-                                            slotProps={{
-                                                paper: {
-                                                      style: {
-                                                            borderRadius: '1em',
-                                                            width: "180px",
-                                                            marginTop: "2px",
-                                                            padding: '4px',
-                                                            backgroundColor: "white",
-                                                        },
-                                                 },
-                                            }}
-                                            
-                                            MenuListProps={{
-                                            'aria-labelledby': 'basic-button',
-                                            }}
-                                        >
-                                            <MenuItem onClick={() => {handleClose(); navigate("/account")}}><SettingsIcon/>{'  '} My account</MenuItem>
-                                            <MenuItem onClick={() => {handleClose(); navigate("/myorders")}}><AssignmentOutlinedIcon/>{'  '} My orders</MenuItem>
-                                        </Menu>
-                                    </div>
+                                        }}
+                                        
+                                        MenuListProps={{
+                                        'aria-labelledby': 'basic-button',
+                                        }}
+                                    >
+                                        <MenuItem onClick={() => {handleClose(); navigate("/account")}}><SettingsIcon/>{'  '} My account</MenuItem>
+                                        <MenuItem onClick={() => {handleClose(); navigate("/myorders")}}><AssignmentOutlinedIcon/>{'  '} My orders</MenuItem>
+                                    </Menu>
+                                </div>
                             </li>
                         }
                         { LocalStorageHelper.IsUserLogged() === false &&

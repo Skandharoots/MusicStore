@@ -103,10 +103,10 @@ class LocalStorageHelper {
     static getBasketItems() {
         let items = localStorage.getItem('inBasket');
         if (items === null || items === undefined) {
-            localStorage.setItem('inBasket', parseFloat(0));
+            localStorage.setItem('inBasket', parseInt(0));
             return 0;
         } else {
-            return parseFloat(items);
+            return parseInt(items);
         }
         
     }
@@ -115,7 +115,7 @@ class LocalStorageHelper {
         let current = localStorage.getItem('inBasket');
         if (current) {
             console.log(current, diff);
-            let newCount = parseFloat(current) + diff;
+            let newCount = parseInt(current) + diff;
             localStorage.setItem('inBasket', newCount);
         } else {
             localStorage.setItem('inBasket', diff);

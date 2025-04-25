@@ -9,9 +9,9 @@ export default defineConfig({
     https: false,
     strictPort: true,
     origin: "http://0.0.0.0:80",
-    port: 3000,
+    port: 4000,
     hmr: {
-      port: 3000,
+      port: 4000,
       clientPort: 443
     }
   },

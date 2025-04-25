@@ -119,7 +119,7 @@ spring:
               allowedHeaders: "*"
               allowCredentials: true
               maxAge: 30
-        - id: orders
+        - id: azure-invoice
           uri: lb://azure-invoice
           predicates:
             - Path=/api/invoice/** , /invoice-svc/**

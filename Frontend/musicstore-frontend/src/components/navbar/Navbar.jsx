@@ -182,7 +182,7 @@ function Navbar() {
                         <li>
                             <Tooltip title={"Basket"}>
                                 <NavLink to="/basket">
-                                <Badge badgeContent={basketCount} color="secondary">
+                                <Badge badgeContent={basketCount} color="success">
                                     <ShoppingCartOutlinedIcon color="aciton" fontSize={"medium"}/>
                                 </Badge> 
                                 </NavLink>

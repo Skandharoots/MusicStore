@@ -42,6 +42,7 @@
         <module>azure-service</module>
         <module>apigateway</module>
         <module>azure-invoice</module>
+        <module>opinions</module>
     </modules>
 
     <properties>

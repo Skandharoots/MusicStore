@@ -104,6 +104,7 @@ data:
     CREATE DATABASE IF NOT EXISTS orders;
     CREATE DATABASE IF NOT EXISTS shoppingcarts;
     CREATE DATABASE IF NOT EXISTS products;
+    CREATE DATABASE IF NOT EXISTS opinions;
 
 ---
 

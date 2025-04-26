@@ -142,6 +142,24 @@ spring:
               allowedHeaders: "*"
               allowCredentials: true
               maxAge: 30
+        - id: opinions
+          uri: lb://opinions
+          predicates:
+            - Path=/api/opinions/** , /opinions-svc/**
+          filters:
+            - JwtAuthFilter
+          metadata:
+            cors:
+              allowedOrigins: "http://localhost:4000"
+              allowedMethods:
+                - GET
+                - POST
+                - PUT
+                - DELETE
+                - OPTIONS
+              allowedHeaders: "*"
+              allowCredentials: true
+              maxAge: 30
         - id: discovery
           uri: http://discovery-0.discovery.default.svc.cluster.local:8761
           predicates:

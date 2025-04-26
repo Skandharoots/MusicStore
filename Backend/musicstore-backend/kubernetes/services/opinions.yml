@@ -1,0 +1,90 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: opinions
+  labels:
+    app: opinions
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: opinions
+  template:
+    metadata:
+      labels:
+        app: opinions
+    spec:
+      containers:
+        - name: opinions
+          image: skandharoots/opinions:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 7080
+          readinessProbe:
+            tcpSocket:
+              port: 7080
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              port: 7080
+              path: /actuator/health
+            initialDelaySeconds: 40
+            periodSeconds: 10
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: kubernetes
+            - name: SPRING_CONFIG_IMPORT
+              valueFrom:
+                configMapKeyRef:
+                  key: config-server-url
+                  name: config-server-cm
+            - name: SPRING_DATASOURCE_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: mysql_orders_url
+                  name: mysql-config
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  key: mysql_username
+                  name: mysql-secrets
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: mysql_root_password
+                  name: mysql-secrets
+            - name: LOKI_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: LOKI_URL
+                  name: loki-cfg
+      initContainers:
+        #Wait for mysql to show up
+        - name: wait-for-mysql
+          image: busybox
+          command: [ "sh", "-c", "until nc -zv mysql.default.svc.cluster.local 3306 > /dev/null; do echo Waiting for master.; sleep 2; done;" ]
+          # Wait for discovery to show up
+        - name: wait-for-discovery
+          image: busybox
+          command: [ "sh", "-c", "until nc -zv discovery-0.discovery.default.svc.cluster.local 8761 > /dev/null; do echo Waiting for master.; sleep 2; done;" ]
+          #Wait for config server to show up
+        - name: wait-for-config-server
+          image: busybox
+          command: [ "sh", "-c", "until nc -zv config-server-svc.default.svc.cluster.local 80 > /dev/null; do echo Waiting for master.; sleep 2; done;" ]
+
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: opinions-svc
+spec:
+  selector:
+    app: opinions
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: 7080
+      protocol: TCP
+

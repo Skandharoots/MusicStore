@@ -28,7 +28,7 @@ public class RouteValidator {
                         "/api/products/subcategories/get/**",
                         "/api/products/subcategories/get",
                         "/api/cart/get/**",
-                        "/api/opinion/get",
+                        "/api/opinions/get",
                         "/api/opinions/get/user",
                         "/api/opinions/get/opinion",
                         "/api/users/adminauthorize",
@@ -47,7 +47,8 @@ public class RouteValidator {
                         "/order-svc/v3/api-docs",
                         "/azure-svc/v3/api-docs",
                         "/cart-svc/v3/api-docs",
-                        "/products-svc/v3/api-docs"
+                        "/products-svc/v3/api-docs",
+                        "/opinions-svc/v3/api-docs"
 
         );
 

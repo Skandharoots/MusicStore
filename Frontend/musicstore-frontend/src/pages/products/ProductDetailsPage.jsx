@@ -11,7 +11,10 @@ import {
     DialogTitle,
     FormControl,
     MenuItem,
-    Select
+    Select,
+    Rating,
+    Stack,
+    TextField
 } from "@mui/material";
 import ShareIcon from '@mui/icons-material/Share';
 import axios from "axios";
@@ -19,7 +22,12 @@ import {Slide, toast, ToastContainer} from "react-toastify";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import LocalStorageHelper from "../../helpers/LocalStorageHelper.jsx";
 import parse from "html-react-parser";
-
+import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
+import Box from '@mui/material/Box';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import { styled } from '@mui/material/styles';
+import LoginIcon from '@mui/icons-material/Login';
 
 function ProductDetailsPage() {
 
@@ -32,6 +40,12 @@ function ProductDetailsPage() {
     const [manufacturerName, setManufacturerName] = useState('');
     const [subcategoryName, setSubcategoryName] = useState('');
     const [countryName, setCountryName] = useState('');
+    const [opinions, setOpinions] = useState([]);
+    const [rating, setRating] = useState(0);
+    const [userRating, setUserRating] = useState(1);
+    const [productOpinion, setProductOpinion] = useState('');
+    const [productOpinionError, setProductOpinionError] = useState(false);
+    const [productOpinionErrorMsg, setProductOpinionErrorMsg] = useState('');
     const [showFoundPage, setShowFoundPage] = useState(false);
     const [showNotFoundPage, setShowNotFoundPage] = useState(false);
     const [open, setOpen] = useState(false);
@@ -79,6 +93,40 @@ function ProductDetailsPage() {
             setOpenBackdrop(false);
             setShowFoundPage(false);
             setShowNotFoundPage(true);
+        });
+    }, [productId.productSkuId]);
+
+    useEffect(() => {
+        axios.get(`api/opinions/get/${productId.productSkuId}`)
+        .then(res => {
+            setOpinions(res.data);
+            let rating = 0;
+            res.data.forEach(opinion => {
+                if (opinion.rating === 'ONE') {
+                    rating += 1;
+                } else if (opinion.rating === 'TWO') {
+                    rating += 2;
+                } else if (opinion.rating === 'THREE') {
+                    rating += 3;
+                } else if (opinion.rating === 'FOUR') {
+                    rating += 4;
+                } else if (opinion.rating === 'FIVE') {
+                    rating += 5;
+                }
+            });
+            let ratingResult = 0;
+            rating != 0 ? ratingResult = rating / res.data.length : ratingResult = 0;
+            setRating(parseFloat(ratingResult).toFixed(1));
+            console.log(rating);
+            console.log(res.data);
+        }).catch(() => {
+            toast.error('Error getting opinions', {
+                position: "bottom-center",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+            });
         });
     }, [productId.productSkuId]);
 
@@ -291,6 +339,96 @@ function ProductDetailsPage() {
 
     }
 
+    const handleProductOpinion = () => {
+        
+        let isValid = true;
+
+        if (productOpinion.length < 10) {
+            setProductOpinionError(true);
+            setProductOpinionErrorMsg('Opinion must be at least 10 characters long');
+            isValid = false;
+        } else {
+            setProductOpinionError(false);
+            setProductOpinionErrorMsg('');
+        }
+
+        if (!/^[ -~]*$/gm.test(productOpinion)) {
+            setProductOpinionError(true);
+            setProductOpinionErrorMsg('Opinion can only contain printable characters');
+            isValid = false;
+        } else {
+            setProductOpinionError(false);
+            setProductOpinionErrorMsg('');
+        }
+
+        return isValid;
+    }
+
+    const StyledRating = styled(Rating)({
+        '& .MuiRating-iconFilled': {
+          color: '#ff6d75',
+        },
+        '& .MuiRating-iconHover': {
+          color: '#ff3d47',
+        },
+      });
+
+    const submitOpinion = (e) => {
+        e.preventDefault();
+        if (!handleProductOpinion()) {
+            return;
+        }
+        LocalStorageHelper.CommitRefresh();
+        axios.get('api/users/csrf/token')
+            .then((response) => {
+                axios.post(`api/opinions/create`, {
+                    productUuid: productId.productSkuId,
+                    userId: LocalStorageHelper.GetActiveUser(),
+                    username: LocalStorageHelper.getUserName(),
+                    rating: userRating,
+                    opinion: productOpinion
+                }, {
+                    headers: {
+                        'Authorization': 'Bearer ' + LocalStorageHelper.getJwtToken(),
+                        'X-XSRF-TOKEN': response.data.token,
+                        'Content-Type': 'application/json',
+                    }
+                }).then(() => {
+                    toast.success('Opinion added successfully', {
+                        position: "bottom-center",
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        theme: "light",
+                        transition: Slide,
+                    });
+                }).catch((e) => {
+                    toast.error(e.response.data.message, {
+                        position: "bottom-center",
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        theme: "light",
+                        transition: Slide,
+                    });
+                })
+            }).catch(() => {
+                toast.error('Cannot fetch token', {
+                    position: "bottom-center",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    theme: "light",
+                    transition: Slide,
+                });
+            });
+        
+        
+    }
+
     let inStockBanner;
 
     if (productQuantity >= 10) {
@@ -418,6 +556,34 @@ function ProductDetailsPage() {
                                 alignItems: 'flex-start',
 
                             }}>
+                                <div style={{
+                                    width: '100%',
+                                    height: 'fit-content',
+                                    display: 'flex',
+                                    justifyContent: 'flex-start',
+                                    alignItems: 'flex-end',
+                                    flexDirection: 'column',
+                                    borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
+                                    marginBottom: '4px',
+                                    paddingBottom: '4px',
+                                }}>
+                                    <div style={{
+                                        width: '100%',
+                                        height: 'fit-content',
+                                        display: 'flex',
+                                        flexDirection: 'row',
+                                        justifyContent: 'space-between',
+                                        alignItems: 'flex-end',
+                                    }}>
+                                        <p style={{margin: '0', fontSize: '16px'}}>Rating: </p>
+                                        <p style={{margin: '0', fontSize: '16px'}}>{parseFloat(rating).toFixed(1)}/{parseFloat(5).toFixed(1)}</p>
+                                    </div>
+                                    <Stack spacing={1}>
+                                        <Rating name="half-rating-read" value={parseInt(rating)} precision={0.5} readOnly />
+                                    </Stack>
+                                    
+                                </div>
+                                
                                 <div style={{
                                     width: "100%",
                                     height: "fit-content",
@@ -608,13 +774,125 @@ function ProductDetailsPage() {
                     </div>
                 </div>
                 <div className="product-description"  style={{
-            width: '100%',
-            height: 'fit-content',
-
-            boxSizing: 'border-box',
-        }}>
+                        width: '100%',
+                        height: 'fit-content',
+                        boxSizing: 'border-box',
+                 }}>
                     {parse(productDescription)}
-        </div>
+                </div>
+                <div style={{
+                    width: '100%',
+                    height: 'fit-content',
+                    boxSizing: 'border-box',
+                    margin: '0 auto',
+                    borderTop: '1px solid rgba(0, 0, 0, 0.1)',
+                    paddingTop: '16px',
+                }}>
+                    <div className="product-opinions-content"
+                        style={{
+                            width: '100%',
+                            height: 'fit-content',
+                            boxSizing: 'border-box',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'flex-start',
+                            alignItems: 'flex-start',
+                            borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
+                            paddingBottom: '16px',
+                        }}
+                    >
+                        {LocalStorageHelper.IsUserLogged() === false &&
+                            <>
+                                <p style={{ margin: '0', fontSize: '20px', fontWeight: 'bold' }}></p>
+                                <Button
+                                    className="submit-btn"
+                                    type="button"
+                                    variant="contained"
+                                    endIcon={<LoginIcon />}
+                                    onClick={() => { navigate('/login'); } }
+                                    sx={{
+                                        width: '30%',
+                                        minWidth: '200px',
+                                        backgroundColor: 'rgb(39, 99, 24)',
+                                        "&:hover": { backgroundColor: 'rgb(49,140,23)' }
+                                    }}
+                                >
+                                    Log in to rate the product
+                                </Button>
+                            </>
+                        }
+                        {LocalStorageHelper.IsUserLogged() === true &&
+                            <>
+                                <p style={{margin: '0', fontSize: '20px', fontWeight: 'bold'}}>Rate the product</p>
+                                <Box sx={{ '& > legend': { mt: 2 } }}>
+                                    <StyledRating
+                                        name="customized-color"
+                                        value={userRating}
+                                        getLabelText={(value) => `${value} Heart${value !== 1 ? 's' : ''}`}
+                                        precision={1}
+                                        onChange={(e, nv) => {
+                                            setUserRating(nv);
+                                        }}
+                                        icon={<FavoriteIcon fontSize="inherit" />}
+                                        emptyIcon={<FavoriteBorderIcon fontSize="inherit" />}
+                                    />
+                                </Box>
+                                <TextField
+                                    size={"large"}
+                                    id="opinion"
+                                    label="Your opinion"
+                                    multiline
+                                    rows={4}
+                                    required
+                                    error={productOpinionError}
+                                    helperText={productOpinionErrorMsg}
+                                    color={productOpinionError ? 'error' : 'primary'}
+                                    value={productOpinion}
+                                    onChange={e => setProductOpinion(e.target.value)}
+                                    variant={"outlined"}
+                                    sx={{
+                                        width: '40%',
+                                        margin: '16px 0 16px 0',
+                                        "& label.Mui-focused": {
+                                            color: 'rgb(39, 99, 24)'
+                                        },
+                                        "& .MuiOutlinedInput-root": {
+                                            "&.Mui-focused fieldset": {
+                                                borderColor: 'rgb(39, 99, 24)'
+                                            }
+                                        }
+                                    }}
+                                />
+                                <Button
+                                    className="submit-btn"
+                                    type="button"
+                                    variant="contained"
+                                    endIcon={<AddOutlinedIcon />}
+                                    onClick={submitOpinion}
+                                    sx={{
+                                        width: '40%',
+                                        backgroundColor: 'rgb(39, 99, 24)',
+                                        "&:hover": {backgroundColor: 'rgb(49,140,23)'}
+                                    }}
+                                >
+                                Submit
+                                </Button>
+                            </>
+                        }
+                    </div>
+                    <div className="product-opinions-header" 
+                        style={{
+                            width: '100%',
+                            height: 'fit-content',
+                            boxSizing: 'border-box',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'flex-start',
+                            alignItems: 'flex-start',
+                    }}>
+                        <p style={{margin: '0', fontSize: '20px', fontWeight: 'bold'}}>Opinions</p>
+                    </div>
+                </div>
         </>
     )
 

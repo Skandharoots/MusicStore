@@ -837,7 +837,7 @@ function ProductDetailsPage() {
                         width: '100%',
                         maxHeight: 'fit-content',
                         boxSizing: 'border-box',
-                        padding: '0',
+                        padding: '0 0 16px 0',
                         margin: '0',
                  }} dangerouslySetInnerHTML={{ __html: productDescription }}>
                 </div>

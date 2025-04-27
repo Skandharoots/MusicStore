@@ -14,11 +14,12 @@ public class OpinionModelTests {
 
         UUID productUuid = UUID.randomUUID();
         UUID userId = UUID.randomUUID();
+        String productName = "Strat";
         String username = "John Doe";
         Rating rating = Rating.FIVE;
         String comment = "This is a test comment";
 
-        Opinion opinion = new Opinion(productUuid, userId, username, rating, comment);
+        Opinion opinion = new Opinion(productUuid, productName, userId, username, rating, comment);
 
         Assertions.assertThat(opinion.getProductUuid()).isEqualTo(productUuid);
         Assertions.assertThat(opinion.getUserId()).isEqualTo(userId);
@@ -37,8 +38,8 @@ public class OpinionModelTests {
         String username = "John Doe";
         Rating rating = Rating.FIVE;
         String comment = "This is a test comment";
-
-        Opinion opinion = new Opinion(productUuid, userId, username, rating, comment);
+        String productName = "Strat";
+        Opinion opinion = new Opinion(productUuid, productName, userId, username, rating, comment);
 
         Assertions.assertThat(opinion.getProductUuid()).isEqualTo(productUuid);
         Assertions.assertThat(opinion.getUserId()).isEqualTo(userId);

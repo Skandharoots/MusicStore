@@ -42,6 +42,7 @@ import MyOrderPage from "./pages/account/MyOrderPage.jsx";
 import ProductsSearchPage from "./pages/products/ProductsSearchPage.jsx";
 import PasswordResetRequest from './pages/password/PasswordResetRequest.jsx';
 import PasswordResetLanding from './pages/password/PasswordResetLanding.jsx';
+import Opinions from './pages/account/Opinions.jsx';
 
 axios.defaults.baseURL = "http://localhost:8222/";
 axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
@@ -160,6 +161,10 @@ const router = createBrowserRouter([
                         path: '/myorders/:orderId',
                         element: <MyOrderPage />
                     },
+                    {
+                        path: '/myratings',
+                        element: <Opinions/>
+                    }
                 ]
             },
             {

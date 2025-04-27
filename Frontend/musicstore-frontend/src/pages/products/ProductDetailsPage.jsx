@@ -13,12 +13,13 @@ import {
     MenuItem,
     Select,
     Rating,
+    TextField,
     Stack,
-    TextField
+    Pagination
 } from "@mui/material";
 import ShareIcon from '@mui/icons-material/Share';
 import axios from "axios";
-import {Slide, toast, ToastContainer} from "react-toastify";
+import {Slide, toast} from "react-toastify";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import LocalStorageHelper from "../../helpers/LocalStorageHelper.jsx";
 import parse from "html-react-parser";
@@ -28,6 +29,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { styled } from '@mui/material/styles';
 import LoginIcon from '@mui/icons-material/Login';
+import Opinion from './components/Opinion.jsx';
 
 function ProductDetailsPage() {
 
@@ -41,6 +43,9 @@ function ProductDetailsPage() {
     const [subcategoryName, setSubcategoryName] = useState('');
     const [countryName, setCountryName] = useState('');
     const [opinions, setOpinions] = useState([]);
+    const [totalPages, setTotalPages] = useState(1);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [perPage, setPerPage] = useState(10);
     const [rating, setRating] = useState(0);
     const [userRating, setUserRating] = useState(1);
     const [productOpinion, setProductOpinion] = useState('');
@@ -50,6 +55,8 @@ function ProductDetailsPage() {
     const [showNotFoundPage, setShowNotFoundPage] = useState(false);
     const [open, setOpen] = useState(false);
     const [openBackdrop, setOpenBackdrop] = useState(false);
+    const [reload, setReload] = useState(false);
+    const [disableOpinionSubmit, setDisableOpinionSubmit] = useState(false);
 
     const navigate = useNavigate();
 
@@ -97,11 +104,21 @@ function ProductDetailsPage() {
     }, [productId.productSkuId]);
 
     useEffect(() => {
-        axios.get(`api/opinions/get/${productId.productSkuId}`)
+        axios.get(`api/opinions/get/${productId.productSkuId}`, {
+            params: {
+                page: currentPage - 1,
+                pageSize: perPage
+            }
+        })
         .then(res => {
-            setOpinions(res.data);
+            setOpinions(res.data.content);
+            if (res.data.totalPages < 1) {
+                setTotalPages(1);
+            } else {
+                setTotalPages(res.data.totalPages);
+            }
             let rating = 0;
-            res.data.forEach(opinion => {
+            [...res.data.content].forEach(opinion => {
                 if (opinion.rating === 'ONE') {
                     rating += 1;
                 } else if (opinion.rating === 'TWO') {
@@ -113,12 +130,13 @@ function ProductDetailsPage() {
                 } else if (opinion.rating === 'FIVE') {
                     rating += 5;
                 }
+                if (opinion.userId === LocalStorageHelper.GetActiveUser()) {
+                    setDisableOpinionSubmit(true);
+                }
             });
             let ratingResult = 0;
-            rating != 0 ? ratingResult = rating / res.data.length : ratingResult = 0;
+            rating != 0 ? ratingResult = rating / res.data.content.length : ratingResult = 0;
             setRating(parseFloat(ratingResult).toFixed(1));
-            console.log(rating);
-            console.log(res.data);
         }).catch(() => {
             toast.error('Error getting opinions', {
                 position: "bottom-center",
@@ -126,9 +144,13 @@ function ProductDetailsPage() {
                 hideProgressBar: false,
                 closeOnClick: true,
                 pauseOnHover: true,
+                draggable: false,
+                progress: undefined,
+                theme: "light",
+                transition: Slide,
             });
         });
-    }, [productId.productSkuId]);
+    }, [productId.productSkuId, reload, currentPage]);
 
     const renderQuantityItems = () => {
         let items = []
@@ -343,16 +365,11 @@ function ProductDetailsPage() {
         
         let isValid = true;
 
-        if (productOpinion.length < 10) {
+        if (productOpinion.length < 10 || productOpinion.length > 500) {
             setProductOpinionError(true);
-            setProductOpinionErrorMsg('Opinion must be at least 10 characters long');
+            setProductOpinionErrorMsg('Opinion must be at least 10 and at max 500 characters long');
             isValid = false;
-        } else {
-            setProductOpinionError(false);
-            setProductOpinionErrorMsg('');
-        }
-
-        if (!/^[ -~]*$/gm.test(productOpinion)) {
+        } else if (!/^[ -~]*$/gm.test(productOpinion)) {
             setProductOpinionError(true);
             setProductOpinionErrorMsg('Opinion can only contain printable characters');
             isValid = false;
@@ -373,20 +390,38 @@ function ProductDetailsPage() {
         },
       });
 
+    const generateRating = () => {
+        let rating = "";
+        if (userRating === 1) {
+            rating = "ONE";
+        } else if (userRating === 2) {
+            rating = "TWO";
+        } else if (userRating === 3) {
+            rating = "THREE";
+        } else if (userRating === 4) {
+            rating = "FOUR";
+        } else if (userRating === 5) {
+            rating = "FIVE";
+        }
+        return rating;
+    }
+
     const submitOpinion = (e) => {
-        e.preventDefault();
-        if (!handleProductOpinion()) {
+        if (handleProductOpinion() === false) {
             return;
         }
+        setOpenBackdrop(true);
         LocalStorageHelper.CommitRefresh();
         axios.get('api/users/csrf/token')
             .then((response) => {
+                console.log("Step 3");
                 axios.post(`api/opinions/create`, {
                     productUuid: productId.productSkuId,
+                    productName: productName,
                     userId: LocalStorageHelper.GetActiveUser(),
                     username: LocalStorageHelper.getUserName(),
-                    rating: userRating,
-                    opinion: productOpinion
+                    rating: generateRating(),
+                    comment: productOpinion
                 }, {
                     headers: {
                         'Authorization': 'Bearer ' + LocalStorageHelper.getJwtToken(),
@@ -394,33 +429,47 @@ function ProductDetailsPage() {
                         'Content-Type': 'application/json',
                     }
                 }).then(() => {
+                    reload ? setReload(false) : setReload(true);
+                    setProductOpinion('');
+                    setProductOpinionError(false);
+                    setProductOpinionErrorMsg('');
+                    setUserRating(1);
+                    setOpenBackdrop(false);
                     toast.success('Opinion added successfully', {
                         position: "bottom-center",
                         autoClose: 3000,
                         hideProgressBar: false,
                         closeOnClick: true,
                         pauseOnHover: true,
+                        draggable: false,
+                        progress: undefined,
                         theme: "light",
                         transition: Slide,
                     });
                 }).catch((e) => {
+                    setOpenBackdrop(false);
                     toast.error(e.response.data.message, {
                         position: "bottom-center",
                         autoClose: 3000,
                         hideProgressBar: false,
                         closeOnClick: true,
                         pauseOnHover: true,
+                        draggable: false,
+                        progress: undefined,
                         theme: "light",
                         transition: Slide,
                     });
                 })
             }).catch(() => {
+                setOpenBackdrop(false);
                 toast.error('Cannot fetch token', {
                     position: "bottom-center",
                     autoClose: 3000,
                     hideProgressBar: false,
                     closeOnClick: true,
                     pauseOnHover: true,
+                    draggable: false,
+                    progress: undefined,
                     theme: "light",
                     transition: Slide,
                 });
@@ -452,6 +501,10 @@ function ProductDetailsPage() {
             fontWeight: 'bold',
             color: 'rgb(243,148,5)'
         }}>Last items</p>
+    }
+
+    const changePage = (event, value) => {
+        setCurrentPage(value);
     }
 
     return (
@@ -575,13 +628,20 @@ function ProductDetailsPage() {
                                         justifyContent: 'space-between',
                                         alignItems: 'flex-end',
                                     }}>
-                                        <p style={{margin: '0', fontSize: '16px'}}>Rating: </p>
+                                        <p style={{margin: '0', fontSize: '16px'}}></p>
                                         <p style={{margin: '0', fontSize: '16px'}}>{parseFloat(rating).toFixed(1)}/{parseFloat(5).toFixed(1)}</p>
                                     </div>
-                                    <Stack spacing={1}>
-                                        <Rating name="half-rating-read" value={parseInt(rating)} precision={0.5} readOnly />
-                                    </Stack>
-                                    
+                                    <Box sx={{ '& > legend': { mt: 2 } }}>
+                                        <StyledRating
+                                            name="customized-color"
+                                            value={parseInt(rating)}
+                                            getLabelText={(value) => `${value} Heart${value !== 1 ? 's' : ''}`}
+                                            precision={0.5}
+                                            icon={<FavoriteIcon fontSize="inherit" />}
+                                            readOnly
+                                            emptyIcon={<FavoriteBorderIcon fontSize="inherit"/>}
+                                        />
+                                    </Box>
                                 </div>
                                 
                                 <div style={{
@@ -775,10 +835,11 @@ function ProductDetailsPage() {
                 </div>
                 <div className="product-description"  style={{
                         width: '100%',
-                        height: 'fit-content',
+                        maxHeight: 'fit-content',
                         boxSizing: 'border-box',
-                 }}>
-                    {parse(productDescription)}
+                        padding: '0',
+                        margin: '0',
+                 }} dangerouslySetInnerHTML={{ __html: productDescription }}>
                 </div>
                 <div style={{
                     width: '100%',
@@ -803,18 +864,29 @@ function ProductDetailsPage() {
                     >
                         {LocalStorageHelper.IsUserLogged() === false &&
                             <>
-                                <p style={{ margin: '0', fontSize: '20px', fontWeight: 'bold' }}></p>
                                 <Button
                                     className="submit-btn"
                                     type="button"
-                                    variant="contained"
+                                    variant="outlined"
                                     endIcon={<LoginIcon />}
                                     onClick={() => { navigate('/login'); } }
                                     sx={{
-                                        width: '30%',
+                                        width: 'fit-content',
                                         minWidth: '200px',
-                                        backgroundColor: 'rgb(39, 99, 24)',
-                                        "&:hover": { backgroundColor: 'rgb(49,140,23)' }
+                                        borderColor: 'rgb(39, 99, 24)',
+                                        color: 'rgb(39, 99, 24)',
+                                        outline: 'none !important',
+                                        "&:focus": {
+                                            bordeerColor: 'rgba(49,140,23, 0.1)', 
+                                            outline: 'none !important',
+                                        },
+                                        "&:hover": { 
+                                            borderColor: 'rgba(49,140,23, 0.1)',
+                                            backgroundColor: 'rgba(49,140,23, 0.1)',
+                                            color: 'rgba(49,140,23)',
+                                            outline: 'none !important',
+ 
+                                        }
                                     }}
                                 >
                                     Log in to rate the product
@@ -828,6 +900,7 @@ function ProductDetailsPage() {
                                     <StyledRating
                                         name="customized-color"
                                         value={userRating}
+                                        disabled={disableOpinionSubmit}
                                         getLabelText={(value) => `${value} Heart${value !== 1 ? 's' : ''}`}
                                         precision={1}
                                         onChange={(e, nv) => {
@@ -838,12 +911,13 @@ function ProductDetailsPage() {
                                     />
                                 </Box>
                                 <TextField
-                                    size={"large"}
-                                    id="opinion"
-                                    label="Your opinion"
+                                    size={"small"}
+                                    id="productOpinion"
+                                    label="Opinion"
                                     multiline
                                     rows={4}
                                     required
+                                    disabled={disableOpinionSubmit}
                                     error={productOpinionError}
                                     helperText={productOpinionErrorMsg}
                                     color={productOpinionError ? 'error' : 'primary'}
@@ -861,11 +935,11 @@ function ProductDetailsPage() {
                                                 borderColor: 'rgb(39, 99, 24)'
                                             }
                                         }
-                                    }}
-                                />
+                                    }}/>
                                 <Button
                                     className="submit-btn"
                                     type="button"
+                                    disabled={disableOpinionSubmit}
                                     variant="contained"
                                     endIcon={<AddOutlinedIcon />}
                                     onClick={submitOpinion}
@@ -889,15 +963,57 @@ function ProductDetailsPage() {
                             flexDirection: 'column',
                             justifyContent: 'flex-start',
                             alignItems: 'flex-start',
+                            marginBottom: '16px',
                     }}>
                         <p style={{margin: '0', fontSize: '20px', fontWeight: 'bold'}}>Opinions</p>
+                    </div>
+                    <div className="product-opinions-content"
+                        style={{
+                            width: '100%',
+                            height: 'fit-content',
+                            boxSizing: 'border-box',
+                        }}
+                    >
+                        {opinions.map((opinion) => (
+                            <Opinion opinion={opinion} id={opinion.id} key={opinion.id} />
+                        ))}
+                    </div>
+                    <div style={{
+                        display: 'flex',
+                        width: '100%',
+                        boxSizing: 'border-box',
+                        flexDirection: 'row',
+                        justifyContent: 'flex-end',
+                        alignItems: 'center',
+                        padding: '16px 0 16px 0'
+                    }}>
+                        <Stack spacing={2} sx={{boxSizing: 'border-box',}}>
+                            <Pagination page={currentPage} count={totalPages} onChange={changePage} shape={"rounded"}
+                                        sx={{
+                                            boxSizing: 'border-box',
+                                            '& .MuiPaginationItem-rounded': {
+                                                outline: 'none !important',
+                                                "&:hover": {
+                                                    outline: 'none !important',
+                                                    backgroundColor: 'rgba(39, 99, 24, 0.2)'
+                                                },
+                                            },
+                                            '& .Mui-selected': {
+                                                backgroundColor: 'rgba(39, 99, 24, 0.5) !important',
+                                                "&:hover": {
+                                                    outline: 'none !important',
+                                                    backgroundColor: 'rgba(39, 99, 24, 0.2) !important'
+                                                },
+                                            }
+                                        }}
+                            />
+                        </Stack>
                     </div>
                 </div>
         </>
     )
 
 }
-            <ToastContainer />
 </div>
 
 )

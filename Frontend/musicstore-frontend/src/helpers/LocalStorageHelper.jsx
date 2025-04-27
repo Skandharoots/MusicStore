@@ -129,8 +129,8 @@ class LocalStorageHelper {
 
     static LoginUser(userUuid, userFirstName, jwt, userRole, refresh) {
         localStorage.setItem('userUuid', userUuid);
-        localStorage.setItem('authValidUntil', Date.now() + 24 * 60 * 60 * 1000); // 1 day
-        localStorage.setItem('refreshUntil', Date.now() + 31 * 24 * 60 * 60 * 1000) // 1 month
+        localStorage.setItem('authValidUntil', Date.now() + (24 * 60 * 60 * 1000)); // 1 day
+        localStorage.setItem('refreshUntil', Date.now() + (31 * 24 * 60 * 60 * 1000)) // 1 month
         localStorage.setItem('userName', userFirstName);
         localStorage.setItem('credentials', jwt);
         localStorage.setItem('refresh', refresh);

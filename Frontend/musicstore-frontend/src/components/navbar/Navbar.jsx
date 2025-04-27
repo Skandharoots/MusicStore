@@ -18,6 +18,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Button from '@mui/material/Button';
 import SettingsIcon from '@mui/icons-material/Settings';
 import AssignmentOutlinedIcon from '@mui/icons-material/AssignmentOutlined';
+import CommentIcon from '@mui/icons-material/Comment';
 
 function Navbar() {
 
@@ -161,6 +162,7 @@ function Navbar() {
                                     >
                                         <MenuItem onClick={() => {handleClose(); navigate("/account")}}><SettingsIcon/>{'  '} My account</MenuItem>
                                         <MenuItem onClick={() => {handleClose(); navigate("/myorders")}}><AssignmentOutlinedIcon/>{'  '} My orders</MenuItem>
+                                        <MenuItem onClick={() => {handleClose(); navigate("/myratings")}}><CommentIcon/>{'  '} My opinions</MenuItem>
                                     </Menu>
                                 </div>
                             </li>

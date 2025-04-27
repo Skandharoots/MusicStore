@@ -3,6 +3,8 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import AssignmentOutlinedIcon from '@mui/icons-material/AssignmentOutlined';
 import {NavLink} from "react-router-dom";
+import CommentIcon from '@mui/icons-material/Comment';
+
 
 function LeftSideRibbon() {
 
@@ -20,6 +22,11 @@ function LeftSideRibbon() {
                         <NavLink to="/basket">
                             <ShoppingCartOutlinedIcon fontSize={"medium"}/>
                             Basket</NavLink>
+                    </li>
+                    <li>
+                        <NavLink to="/myratings"><CommentIcon fontSize={"medium"}/>
+                            Opinions
+                        </NavLink>
                     </li>
                     <li>
                         <NavLink to="/account"><SettingsIcon fontSize={"medium"}/>

@@ -1,12 +1,10 @@
 package com.musicstore.opinions.service;
 
 import static org.mockito.Mockito.when;
-
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-
-import jakarta.ws.rs.NotFoundException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,9 +12,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.data.domain.*;
 
 import com.musicstore.opinions.dto.OpinionRequestDto;
 import com.musicstore.opinions.model.Opinion;
@@ -40,14 +40,28 @@ public class OpinionServiceTests {
         String username = "John Doe";
         Rating rating = Rating.FIVE;
         String comment = "This is a test comment";
-
-        Opinion opinion = new Opinion(productUuid, userId, username, rating, comment);
-        OpinionRequestDto opinionRequestDto = new OpinionRequestDto(productUuid, userId, username, rating, comment);
+        String productName = "Strat";
+        Opinion opinion = new Opinion(productUuid, productName, userId, username, rating, comment);
+        OpinionRequestDto opinionRequestDto = new OpinionRequestDto(productUuid, productName, userId, username, rating,
+                comment);
 
         when(opinionRepository.save(Mockito.any(Opinion.class))).thenReturn(opinion);
         String response = opinionService.addOpinion(opinionRequestDto);
         Assertions.assertThat(response).isNotNull();
         Assertions.assertThat(response).isEqualTo("Opinion added successfully");
+
+    }
+
+    @Test
+    public void addOpinionAlreadyExistsTest() {
+
+        UUID productUuid = UUID.randomUUID();
+        UUID userId = UUID.randomUUID();
+        OpinionRequestDto opinionRequestDto = new OpinionRequestDto(productUuid, "Strat", userId, "John Doe",
+                Rating.FIVE, "This is a test comment");
+        when(opinionRepository.findByProductUuidAndUserId(productUuid, userId)).thenReturn(Optional.of(new Opinion()));
+        Assertions.assertThatThrownBy(() -> opinionService.addOpinion(opinionRequestDto))
+                .isInstanceOf(ResponseStatusException.class);
 
     }
 
@@ -59,14 +73,17 @@ public class OpinionServiceTests {
         String username = "John Doe";
         Rating rating = Rating.FIVE;
         String comment = "This is a test comment";
+        String productName = "Strat";
+        Opinion opinion = new Opinion(productUuid, productName, userId, username, rating, comment);
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("dateAdded").descending());
+        List<Opinion> opinions = new ArrayList<>();
+        opinions.add(opinion);
+        Page<Opinion> opinionsPage = new PageImpl<>(opinions, pageable, opinions.size());
 
-        Opinion opinion = new Opinion(productUuid, userId, username, rating, comment);
-
-        when(opinionRepository.findAllByUserId(userId)).thenReturn(List.of(opinion));
-        List<Opinion> opinions = opinionService.getOpinionsByUsername(userId);
-        Assertions.assertThat(opinions).isNotNull();
-        Assertions.assertThat(opinions).hasSize(1);
-        Assertions.assertThat(opinions.get(0)).isEqualTo(opinion);
+        when(opinionRepository.findAllByUserId(userId, pageable)).thenReturn(opinionsPage);
+        Page<Opinion> opinions2 = opinionService.getOpinionsByUsername(userId, 0, 10);
+        Assertions.assertThat(opinions2).isNotNull();
+        Assertions.assertThat(opinions2).hasSize(1);
     }
 
     @Test
@@ -77,8 +94,8 @@ public class OpinionServiceTests {
         String username = "John Doe";
         Rating rating = Rating.FIVE;
         String comment = "This is a test comment";
-
-        Opinion opinion = new Opinion(productUuid, userId, username, rating, comment);
+        String productName = "Strat";
+        Opinion opinion = new Opinion(productUuid, productName, userId, username, rating, comment);
 
         when(opinionRepository.findByProductUuidAndUserId(productUuid, userId)).thenReturn(Optional.of(opinion));
         Optional<Opinion> opinion2 = opinionService.getOpinionByProductIdAndUserId(productUuid, userId);
@@ -91,7 +108,8 @@ public class OpinionServiceTests {
 
         UUID uuid = UUID.randomUUID();
         when(opinionRepository.findByProductUuidAndUserId(uuid, uuid)).thenReturn(Optional.empty());
-        Assertions.assertThatThrownBy(() -> opinionService.getOpinionByProductIdAndUserId(uuid, uuid)).isInstanceOf(ResponseStatusException.class).hasMessageContaining("Opinion not found");
+        Assertions.assertThatThrownBy(() -> opinionService.getOpinionByProductIdAndUserId(uuid, uuid))
+                .isInstanceOf(ResponseStatusException.class).hasMessageContaining("Opinion not found");
     }
 
     @Test
@@ -102,14 +120,18 @@ public class OpinionServiceTests {
         String username = "John Doe";
         Rating rating = Rating.FIVE;
         String comment = "This is a test comment";
+        String productName = "Strat";
+        Opinion opinion = new Opinion(productUuid, productName, userId, username, rating, comment);
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("dateAdded").descending());
+        List<Opinion> opinions = new ArrayList<>();
+        opinions.add(opinion);
+        Page<Opinion> opinionsPage = new PageImpl<>(opinions, pageable, opinions.size());
 
-        Opinion opinion = new Opinion(productUuid, userId, username, rating, comment);
-
-        when(opinionRepository.findAllByProductUuid(productUuid)).thenReturn(List.of(opinion));
-        List<Opinion> opinions = opinionService.getOpinionsByProductId(productUuid);
-        Assertions.assertThat(opinions).isNotNull();
-        Assertions.assertThat(opinions).hasSize(1);
-        Assertions.assertThat(opinions.get(0)).isEqualTo(opinion);
+        when(opinionRepository.findAllByProductUuid(productUuid, pageable)).thenReturn(opinionsPage);
+        Page<Opinion> opinions2 = opinionService.getOpinionsByProductId(productUuid, 0, 10);
+        Assertions.assertThat(opinions2).isNotNull();
+        Assertions.assertThat(opinions2).hasSize(1);
+        Assertions.assertThat(opinions2.getContent().get(0)).isEqualTo(opinion);
     }
 
     @Test
@@ -120,8 +142,8 @@ public class OpinionServiceTests {
         String username = "John Doe";
         Rating rating = Rating.FIVE;
         String comment = "This is a test comment";
-
-        Opinion opinion = new Opinion(productUuid, userId, username, rating, comment);
+        String productName = "Strat";
+        Opinion opinion = new Opinion(productUuid, productName, userId, username, rating, comment);
 
         when(opinionRepository.findById(opinion.getId())).thenReturn(Optional.of(opinion));
         Optional<Opinion> opinion2 = opinionService.getOpinionById(opinion.getId());
@@ -133,7 +155,8 @@ public class OpinionServiceTests {
     public void getOpinionByIdNotFoundTest() {
 
         when(opinionRepository.findById(Mockito.anyLong())).thenReturn(Optional.empty());
-        Assertions.assertThatThrownBy(() -> opinionService.getOpinionById(1L)).isInstanceOf(ResponseStatusException.class).hasMessageContaining("Opinion not found");
+        Assertions.assertThatThrownBy(() -> opinionService.getOpinionById(1L))
+                .isInstanceOf(ResponseStatusException.class).hasMessageContaining("Opinion not found");
     }
 
     @Test
@@ -146,22 +169,24 @@ public class OpinionServiceTests {
         String comment = "This is a test comment";
         Rating rating2 = Rating.FOUR;
         String comment2 = "This is a test comment 2";
-
-        Opinion opinion = new Opinion(productUuid, userId, username, rating, comment);
-        OpinionRequestDto opinionRequestDto = new OpinionRequestDto(productUuid, userId, username, rating2, comment2);
+        String productName = "Strat";
+        Opinion opinion = new Opinion(productUuid, productName, userId, username, rating, comment);
+        OpinionRequestDto opinionRequestDto = new OpinionRequestDto(productUuid, productName, userId, username, rating2,
+                comment2);
 
         when(opinionRepository.findById(opinion.getId())).thenReturn(Optional.of(opinion));
         String response = opinionService.updateOpinion(opinion.getId(), opinionRequestDto);
         Assertions.assertThat(response).isNotNull();
         Assertions.assertThat(response).isEqualTo("Opinion updated successfully");
-        
+
     }
 
     @Test
     public void updateOpinionNotFoundTest() {
 
         when(opinionRepository.findById(Mockito.anyLong())).thenReturn(Optional.empty());
-        Assertions.assertThatThrownBy(() -> opinionService.updateOpinion(1L, new OpinionRequestDto())).isInstanceOf(ResponseStatusException.class).hasMessageContaining("Opinion with id 1 not found");
+        Assertions.assertThatThrownBy(() -> opinionService.updateOpinion(1L, new OpinionRequestDto()))
+                .isInstanceOf(ResponseStatusException.class).hasMessageContaining("Opinion with id 1 not found");
 
     }
 
@@ -173,8 +198,8 @@ public class OpinionServiceTests {
         String username = "John Doe";
         Rating rating = Rating.FIVE;
         String comment = "This is a test comment";
-
-        Opinion opinion = new Opinion(productUuid, userId, username, rating, comment);
+        String productName = "Strat";
+        Opinion opinion = new Opinion(productUuid, productName, userId, username, rating, comment);
 
         when(opinionRepository.findById(opinion.getId())).thenReturn(Optional.of(opinion));
         String response = opinionService.deleteOpinion(opinion.getId());
@@ -186,7 +211,8 @@ public class OpinionServiceTests {
     public void deleteOpinionNotFoundTest() {
 
         when(opinionRepository.findById(Mockito.anyLong())).thenReturn(Optional.empty());
-        Assertions.assertThatThrownBy(() -> opinionService.deleteOpinion(1L)).isInstanceOf(ResponseStatusException.class).hasMessageContaining("Opinion not found");
+        Assertions.assertThatThrownBy(() -> opinionService.deleteOpinion(1L))
+                .isInstanceOf(ResponseStatusException.class).hasMessageContaining("Opinion not found");
     }
 
 }

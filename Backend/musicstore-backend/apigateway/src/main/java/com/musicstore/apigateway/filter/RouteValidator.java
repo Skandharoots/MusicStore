@@ -31,6 +31,7 @@ public class RouteValidator {
                         "/api/opinions/get",
                         "/api/opinions/get/user",
                         "/api/opinions/get/opinion",
+                        "/api/opinions/get/users",
                         "/api/users/adminauthorize",
                         "/api/azure/read",
                         "/api/azure/list",

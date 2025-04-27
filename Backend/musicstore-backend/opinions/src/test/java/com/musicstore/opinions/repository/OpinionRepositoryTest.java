@@ -11,6 +11,8 @@ import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import com.musicstore.opinions.model.Opinion;
 import com.musicstore.opinions.model.Rating;
@@ -33,8 +35,8 @@ public class OpinionRepositoryTest {
         String username = "John Doe";
         Rating rating = Rating.FIVE;
         String comment = "This is a test comment";
-
-        Opinion opinion = new Opinion(productUuid, userId, username, rating, comment);
+        String productName = "Strat";
+        Opinion opinion = new Opinion(productUuid, productName, userId, username, rating, comment);
 
         entityManager.persist(opinion);
         entityManager.flush();
@@ -58,8 +60,8 @@ public class OpinionRepositoryTest {
         String username = "John Doe";
         Rating rating = Rating.FIVE;
         String comment = "This is a test comment";
-
-        Opinion opinion = new Opinion(productUuid, userId, username, rating, comment);
+        String productName = "Strat";
+        Opinion opinion = new Opinion(productUuid, productName, userId, username, rating, comment);
 
         entityManager.persist(opinion);
         entityManager.flush();
@@ -84,8 +86,8 @@ public class OpinionRepositoryTest {
         String username = "John Doe";
         Rating rating = Rating.FIVE;
         String comment = "This is a test comment";
-
-        Opinion opinion = new Opinion(productUuid, userId, username, rating, comment);
+        String productName = "Strat";
+        Opinion opinion = new Opinion(productUuid, productName, userId, username, rating, comment);
 
         entityManager.persist(opinion);
         entityManager.flush();
@@ -110,21 +112,21 @@ public class OpinionRepositoryTest {
         String username = "John Doe";
         Rating rating = Rating.FIVE;
         String comment = "This is a test comment";
-
-        Opinion opinion = new Opinion(productUuid, userId, username, rating, comment);
+        String productName = "Strat";
+        Opinion opinion = new Opinion(productUuid, productName, userId, username, rating, comment);
 
         entityManager.persist(opinion);
         entityManager.flush();
 
-        List<Opinion> opinions = opinionRepository.findAllByProductUuid(productUuid);
+        Page<Opinion> opinions = opinionRepository.findAllByProductUuid(productUuid, Pageable.unpaged());
 
         Assertions.assertThat(opinions).isNotNull();
-        Assertions.assertThat(opinions.size()).isEqualTo(1);
-        Assertions.assertThat(opinions.get(0).getProductUuid()).isEqualTo(productUuid);
-        Assertions.assertThat(opinions.get(0).getUserId()).isEqualTo(userId);
-        Assertions.assertThat(opinions.get(0).getUsername()).isEqualTo(username);
-        Assertions.assertThat(opinions.get(0).getRating()).isEqualTo(rating);
-        Assertions.assertThat(opinions.get(0).getComment()).isEqualTo(comment);
+        Assertions.assertThat(opinions.getTotalElements()).isEqualTo(1);
+        Assertions.assertThat(opinions.getContent().get(0).getProductUuid()).isEqualTo(productUuid);
+        Assertions.assertThat(opinions.getContent().get(0).getUserId()).isEqualTo(userId);
+        Assertions.assertThat(opinions.getContent().get(0).getUsername()).isEqualTo(username);
+        Assertions.assertThat(opinions.getContent().get(0).getRating()).isEqualTo(rating);
+        Assertions.assertThat(opinions.getContent().get(0).getComment()).isEqualTo(comment);
 
     }
 
@@ -136,8 +138,8 @@ public class OpinionRepositoryTest {
         String username = "John Doe";
         Rating rating = Rating.FIVE;
         String comment = "This is a test comment";
-
-        Opinion opinion = new Opinion(productUuid, userId, username, rating, comment);
+        String productName = "Strat";
+        Opinion opinion = new Opinion(productUuid, productName, userId, username, rating, comment);
 
         entityManager.persist(opinion);
         entityManager.flush();  
@@ -164,8 +166,8 @@ public class OpinionRepositoryTest {
         String username = "John Doe";
         Rating rating = Rating.FIVE;
         String comment = "This is a test comment";
-
-        Opinion opinion = new Opinion(productUuid, userId, username, rating, comment);
+        String productName = "Strat";
+        Opinion opinion = new Opinion(productUuid, productName, userId, username, rating, comment);
 
         entityManager.persist(opinion);
         entityManager.flush();

@@ -51,6 +51,8 @@ public class WebAppConfig {
                                                 .requestMatchers(HttpMethod.GET, "/api/opinions/get/**").permitAll()
                                                 .requestMatchers(HttpMethod.GET, "/api/opinions/get/opinion/**")
                                                 .permitAll()
+                                                .requestMatchers(HttpMethod.GET, "/api/opinions/get/users/**")
+                                                .permitAll()
                                                 .requestMatchers(HttpMethod.GET, "/api/opinions/get/user/**")
                                                 .permitAll()
                                                 .requestMatchers(HttpMethod.PUT, "/api/opinions/update/**").permitAll()

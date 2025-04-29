@@ -292,6 +292,7 @@ function FavouriteItem(props) {
             >
                 <img alt={'No image'}
                      src={img}
+                     onClick={() => {navigate(`/product/${props.item.productUuid}/${props.item.productName}`)}}
                      style={{
                          objectFit: 'cover',
                          maxWidth: '100%',
@@ -344,20 +345,23 @@ function FavouriteItem(props) {
                     </Select>
                 </FormControl>
             </div>
-            <div style={{
-                display: 'flex',
-                flexWrap: 'wrap',
-                flexDirection: 'column',
-                maxWidth: '60%',
-                height: '100%',
-                justifyContent: 'flex-start',
-                alignItems: 'flex-start',
-                boxSizing: 'border-box',
-                minWidth: '60%',
+            <div className={"text-fields"}
+                 onClick={() => {navigate(`/product/${props.item.productUuid}/${props.item.productName}`)}}
+                 style={{
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    flexDirection: 'column',
+                    maxWidth: '60%',
+                    height: '100%',
+                    justifyContent: 'flex-start',
+                    alignItems: 'flex-start',
+                    boxSizing: 'border-box',
+                    minWidth: '60%',
 
             }}>
                 <Tooltip title={`${props.item.productName}`}>
-                    <p style={{margin: '0', fontSize: '16px', maxWidth: '100%' , overflow: 'hidden', textWrap: 'wrap'}}>{props.item.productName}</p>
+                    <p style={{margin: '0', fontSize: '16px', maxWidth: '100%' , overflow: 'hidden', textWrap: 'wrap',
+                    }}>{props.item.productName}</p>
                 </Tooltip>
                 <p style={{margin: '0 8px 0 0', fontSize: '14px', maxWidth: '100%' , overflow: 'hidden', textWrap: 'nowrap'}}>Price: {props.item.price}$</p>
                 <p style={{margin: '0 8px 0 0', fontSize: '14px', maxWidth: '100%' , overflow: 'hidden', textWrap: 'nowrap'}}>Quantity: {props.item.quantity}</p>

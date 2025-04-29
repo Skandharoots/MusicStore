@@ -8,6 +8,7 @@ import {Backdrop, CircularProgress} from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import Stack from "@mui/material/Stack";
 import Pagination from "@mui/material/Pagination";
+import {useNavigate} from "react-router-dom";
 
 function Favourites() {
 
@@ -17,11 +18,13 @@ function Favourites() {
     const [perPage, setPerPage] = useState(10);
     const [openBackdrop, setOpenBackdrop] = useState(false);
 
+    const navigate = useNavigate();
+
     useEffect(() => {
         if (LocalStorageHelper.IsUserLogged() === false) {
             navigate('/');
         }
-    }, []);
+    }, [navigate]);
 
     useEffect(() => {
         setOpenBackdrop(true);
@@ -34,6 +37,7 @@ function Favourites() {
                 setOpenBackdrop(false);
                 setTotalPages(res.data.totalPages);
                 setFavourites(res.data.content);
+                console.log(res.data.content);
             }).catch(e => {
                 setOpenBackdrop(false);
                 toast.error(e.response.data.message, {
@@ -54,6 +58,12 @@ function Favourites() {
         setCurrentPage(value);
     }
 
+    const removeById = (idToDelete) => {
+        setFavourites(currentItems => currentItems.filter(
+            ({id}) => id !== idToDelete)
+        );
+    };
+
     return (
         <div className="favourites-container">
             <Backdrop
@@ -68,7 +78,7 @@ function Favourites() {
             <Grid container style={{paddingLeft: '16px', paddingBottom: '16px', paddingRight: '16px', borderBottom: '1px solid rgba(0, 0, 0, 0.1)'}} rowSpacing={2.7} columnSpacing={2.7}>
                 {
                     favorites.map((fav, index) => (
-                        <FavouriteItem key={fav.id} id={index} item={fav} />
+                        <FavouriteItem key={fav.id} id={index} item={fav} onDelete={removeById} />
                     ))
                 }
             </Grid>

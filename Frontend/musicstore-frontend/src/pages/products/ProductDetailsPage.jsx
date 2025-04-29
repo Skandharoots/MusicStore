@@ -725,7 +725,6 @@ function ProductDetailsPage() {
                             </div>
                             <div style={{
                                 width: "50%",
-                                minWidth: '150px',
                                 height: "fit-content",
                                 display: "flex",
                                 flexDirection: 'column',
@@ -733,6 +732,7 @@ function ProductDetailsPage() {
                                 alignItems: 'flex-start',
                                 border: '1px solid rgba(0, 0, 0, 0.1)',
                                 borderRadius: '0.5em',
+                                minWidth: '200px',
                             }}>
                                 <div style={{
                                     width: '100%',

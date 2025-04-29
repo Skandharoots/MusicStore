@@ -3,7 +3,8 @@ import axios from "axios";
 import {Slide, toast} from "react-toastify";
 import Tooltip from "@mui/material/Tooltip";
 import {
-    Button,
+    Backdrop,
+    Button, CircularProgress,
     Dialog, DialogActions,
     DialogContent,
     DialogContentText,
@@ -17,6 +18,7 @@ import {useNavigate} from "react-router-dom";
 import LocalStorageHelper from "../../../../helpers/LocalStorageHelper.jsx";
 import AddShoppingCartOutlinedIcon from "@mui/icons-material/AddShoppingCartOutlined";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 
 function FavouriteItem(props) {
@@ -24,6 +26,8 @@ function FavouriteItem(props) {
     const [img, setImg] = useState(null);
     const [selectedQuantity, setSelectedQuantity] = useState(1);
     const [open, setOpen] = useState(false);
+    const [openDelete, setOpenDelete] = useState(false);
+    const [openBackdrop, setOpenBackdrop] = useState(false);
     const [inStock, setInStock] = useState(10);
 
     const navigate = useNavigate();
@@ -182,6 +186,71 @@ function FavouriteItem(props) {
         navigate('/basket');
     }
 
+    const handleDeleteOpen = () => {
+        setOpenDelete(true);
+    }
+
+    const handleDeleteClose = () => {
+        setOpenDelete(false);
+    }
+
+    const deleteFavorite = (e) => {
+        e.preventDefault();
+        LocalStorageHelper.CommitRefresh();
+        setOpenBackdrop(true);
+        axios.get('api/users/csrf/token')
+        .then((response) => {
+            axios.delete(`api/favorites/delete/${props.item.id}`, {
+                headers: {
+                    'Authorization': 'Bearer ' + LocalStorageHelper.getJwtToken(),
+                    'X-XSRF-TOKEN': response.data.token,
+                }
+            }).then(() => {
+                props.onDelete(props.item.id);
+                handleDeleteClose();
+                setOpenBackdrop(false);
+                toast.success("Product deleted!", {
+                    position: "bottom-center",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: false,
+                    progress: undefined,
+                    theme: "light",
+                    transition: Slide,
+                });
+            }).catch((e) => {
+                setOpenBackdrop(false);
+                toast.error(e.response.data.message, {
+                    position: "bottom-center",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: false,
+                    progress: undefined,
+                    theme: "light",
+                    transition: Slide,
+                });
+            })
+        }).catch(() => {
+            setOpenBackdrop(false);
+            toast.error("Cannot fetch token", {
+                position: "bottom-center",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: false,
+                progress: undefined,
+                theme: "light",
+                transition: Slide,
+            });
+        })
+
+    }
+
     useEffect(() => {
 
         axios.get(`api/azure/list?path=${props.item.productUuid}`, {})
@@ -279,10 +348,19 @@ function FavouriteItem(props) {
             width: "100%",
             boxSizing: "border-box",
             minWidth: '100px',
+             display: 'flex',
+             flexDirection: 'row',
+             justifyContent: 'space-around',
             "&:hover": {
                 cursor: 'pointer',
             }
         }}>
+            <Backdrop
+                sx={(theme) => ({color: '#fff', zIndex: theme.zIndex.drawer + 1})}
+                open={openBackdrop}
+            >
+                <CircularProgress color="inherit"/>
+            </Backdrop>
             <div className="fav-img"
                  style={{
                      maxWidth: '40%', maxHeight: '85px', aspectRatio: "16 / 9",
@@ -356,7 +434,7 @@ function FavouriteItem(props) {
                     justifyContent: 'flex-start',
                     alignItems: 'flex-start',
                     boxSizing: 'border-box',
-                    minWidth: '60%',
+                    minWidth: '50%',
 
             }}>
                 <Tooltip title={`${props.item.productName}`}>
@@ -366,7 +444,15 @@ function FavouriteItem(props) {
                 <p style={{margin: '0 8px 0 0', fontSize: '14px', maxWidth: '100%' , overflow: 'hidden', textWrap: 'nowrap'}}>Price: {props.item.price}$</p>
                 <p style={{margin: '0 8px 0 0', fontSize: '14px', maxWidth: '100%' , overflow: 'hidden', textWrap: 'nowrap'}}>Quantity: {props.item.quantity}</p>
             </div>
-            <div>
+            <div style={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'flex-start',
+                height: '100%',
+                width: 'fit-content',
+                minWidth: '100px',
+            }}>
                 <React.Fragment>
                     <Tooltip title={"Add to basket"}>
                         <Button
@@ -377,6 +463,7 @@ function FavouriteItem(props) {
                                 borderColor: 'rgb(39, 99, 24)',
                                 backgroundColor: 'transparent',
                                 width: '40px',
+                                marginRight: '10px',
                                 zIndex: 20,
                                 position: 'relative',
                                 margin: 'auto 0',
@@ -444,6 +531,78 @@ function FavouriteItem(props) {
                                 }}
                             >
                                 Basket
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
+                </React.Fragment>
+                <React.Fragment>
+                    <Tooltip title={"Delete favorite"}>
+                        <Button
+                            variant="outlined"
+                            size="small"
+                            type="button"
+                            onClick={handleDeleteOpen}
+                            fullWidth
+                            sx={{
+                                borderColor: 'rgb(159,20,20)',
+                                color: 'rgb(159,20,20)',
+                                backgroundColor: 'transparent',
+                                width: '40px',
+                                zIndex: 20,
+                                position: 'relative',
+                                margin: 'auto 0',
+                                right: '10px',
+                                top: '0',
+                                bottom: '0',
+                                outline: 'none !important',
+                                minWidth: '0',
+                                height: '40px',
+                                display: 'flex',
+                                "&:hover": {
+                                    backgroundColor: 'rgba(159,20,20,0.2)',
+                                    outline: 'none !important',
+                                    borderColor: 'rgb(159,20,20)'
+                                },
+                                "&:focus": {
+                                    backgroundColor: 'rgba(159,20,20,0.2)',
+                                    outline: 'none !important',
+                                    borderColor: 'rgb(159,20,20)'
+                                }
+                            }}
+                        >
+                            <DeleteIcon fontSize="small"/>
+                        </Button>
+                    </Tooltip>
+                    <Dialog
+                        open={openDelete}
+                        onClose={handleDeleteClose}
+                    >
+                        <DialogTitle>Delete product</DialogTitle>
+                        <DialogContent>
+                            <DialogContentText>
+                                Do you want to delete {props.item.productName} favorite?
+                            </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button
+                                variant="contained"
+                                onClick={handleDeleteClose}
+                                sx={{
+                                    backgroundColor: 'rgb(11,108,128)',
+                                    "&:hover": {backgroundColor: 'rgb(16,147,177)'},
+                                }}
+                            >
+                                Cancel
+                            </Button>
+                            <Button
+                                variant="contained"
+                                onClick={deleteFavorite}
+                                sx={{
+                                    backgroundColor: 'rgb(159,20,20)',
+                                    "&:hover": {backgroundColor: 'rgb(193,56,56)'},
+                                }}
+                            >
+                                Delete
                             </Button>
                         </DialogActions>
                     </Dialog>

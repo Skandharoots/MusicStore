@@ -43,6 +43,7 @@
         <module>apigateway</module>
         <module>azure-invoice</module>
         <module>opinions</module>
+        <module>favorites</module>
     </modules>
 
     <properties>

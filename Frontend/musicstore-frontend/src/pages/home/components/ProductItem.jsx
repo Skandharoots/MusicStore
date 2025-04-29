@@ -5,16 +5,27 @@ import Grid from "@mui/material/Grid2";
 import '../style/ProductItem.scss';
 import {useNavigate} from "react-router-dom";
 import Tooltip from "@mui/material/Tooltip";
-import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from "@mui/material";
+import {
+    Backdrop,
+    Button,
+    CircularProgress,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle
+} from "@mui/material";
 import AddShoppingCartOutlinedIcon from '@mui/icons-material/AddShoppingCartOutlined';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import LocalStorageHelper from "../../../helpers/LocalStorageHelper.jsx";
+import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 
 function ProductItem(props) {
     const [img, setImg] = useState(null);
     const [opacity, setOpacity] = useState(0);
     const [disableBasket, setDisableBasket] = useState(false);
     const [open, setOpen] = useState(false);
+    const [openBackdrop, setOpenBackdrop] = useState(false);
 
     const navigate = useNavigate();
 
@@ -237,7 +248,68 @@ function ProductItem(props) {
         } else {
             setOpacity(1);
         }
-    }, [props])
+    }, [props]);
+
+    const handleClickFavorites = (e) => {
+        e.preventDefault();
+        LocalStorageHelper.CommitRefresh();
+        setOpenBackdrop(true);
+        axios.get('api/users/csrf/token')
+            .then((response) => {
+                axios.post('api/favorites/create', {
+                    productUuid: props.item.productSkuId,
+                    userUuid: LocalStorageHelper.GetActiveUser(),
+                    productName: props.item.productName,
+                    productPrice: props.item.productPrice,
+                    quantity: 1
+                }, {
+                    headers: {
+                        'Authorization': 'Bearer ' + LocalStorageHelper.getJwtToken(),
+                        'X-XSRF-TOKEN': response.data.token,
+                        'Content-Type': 'application/json',
+                    }
+                }).then(() => {
+                    setOpenBackdrop(false);
+                    toast.success("Product added to favorites.", {
+                        position: "bottom-center",
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: false,
+                        progress: undefined,
+                        theme: "light",
+                        transition: Slide,
+                    });
+                }).catch((e) => {
+                    setOpenBackdrop(false);
+                    toast.error(e.response.data.message, {
+                        position: "bottom-center",
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: false,
+                        progress: undefined,
+                        theme: "light",
+                        transition: Slide,
+                    });
+                })
+            }).catch(() => {
+            setOpenBackdrop(false);
+            toast.error("Cannot fetch token", {
+                position: "bottom-center",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: false,
+                progress: undefined,
+                theme: "light",
+                transition: Slide,
+            });
+        })
+    }
 
     return (
         <Grid
@@ -262,6 +334,47 @@ function ProductItem(props) {
             }}
             key={props.item.id}
         >
+            <Backdrop
+                sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
+                open={openBackdrop}
+            >
+                <CircularProgress color="inherit" />
+            </Backdrop>
+            {LocalStorageHelper.IsUserLogged() === true &&
+                <Tooltip title={"Add to favorites"}>
+                    <Button
+                        variant={"outlined"}
+                        fullWidth={false}
+                        onClick={handleClickFavorites}
+                        sx={{
+                            borderColor: 'rgb(158,26,96)',
+                            backgroundColor: 'transparent',
+                            width: '35px',
+                            zIndex: 20,
+                            minWidth: '0',
+                            height: '35px',
+                            display: 'flex',
+                            position: 'relative',
+                            alignSelf: 'end',
+                            margin: '8px 8px 0 0',
+
+                            "&:hover": {
+                                backgroundColor: 'rgba(158,26,96,0.3)',
+                                outline: 'none !important',
+                                borderColor: 'rgb(158,26,96)'
+                            },
+                            "&:focus": {
+                                backgroundColor: 'rgba(158,26,96,0.3)',
+                                outline: 'none !important',
+                                borderColor: 'rgb(158,26,96)'
+                            }
+                        }}
+                    >
+                        <FavoriteBorderOutlinedIcon size={"small"}
+                                                    sx={{color: 'rgb(158,26,96)', fontSize: '16px'}}/>
+                    </Button>
+                </Tooltip>
+            }
             <div style={{
                 width: "100%",
                 height: "150px",

@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: favorites
+  config:
+    import: optional:configserver:http://localhost:8889

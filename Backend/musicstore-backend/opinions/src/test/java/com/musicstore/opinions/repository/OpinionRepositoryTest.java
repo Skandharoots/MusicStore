@@ -182,8 +182,7 @@ public class OpinionRepositoryTest {
         Optional<Opinion> foundOpinion2 = opinionRepository.findById(opinion.getId());
 
         Assertions.assertThat(foundOpinion2).isEmpty();
-        Assertions.assertThat(foundOpinion2.isPresent()).isFalse();
-        
+
     }
 
 }

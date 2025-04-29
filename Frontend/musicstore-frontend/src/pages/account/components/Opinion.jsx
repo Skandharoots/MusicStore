@@ -368,6 +368,7 @@ function Opinion(props) {
                         height: myHeight,
                         borderColor: 'rgb(39, 99, 24)',
                         color: 'rgb(39, 99, 24)',
+                        marginRight: '8px',
                        outline: 'none !important',
                         "&:focus": {
                             bordeerColor: 'rgba(49,140,23, 0.1)', 

@@ -19,6 +19,7 @@ import Button from '@mui/material/Button';
 import SettingsIcon from '@mui/icons-material/Settings';
 import AssignmentOutlinedIcon from '@mui/icons-material/AssignmentOutlined';
 import CommentIcon from '@mui/icons-material/Comment';
+import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 
 function Navbar() {
 
@@ -163,6 +164,7 @@ function Navbar() {
                                         <MenuItem onClick={() => {handleClose(); navigate("/account")}}><SettingsIcon/>{'  '} My account</MenuItem>
                                         <MenuItem onClick={() => {handleClose(); navigate("/myorders")}}><AssignmentOutlinedIcon/>{'  '} My orders</MenuItem>
                                         <MenuItem onClick={() => {handleClose(); navigate("/myratings")}}><CommentIcon/>{'  '} My opinions</MenuItem>
+                                        <MenuItem onClick={() => {handleClose(); navigate("/favourites")}}><FavoriteBorderOutlinedIcon/>{'  '} Favorites</MenuItem>
                                     </Menu>
                                 </div>
                             </li>
@@ -190,6 +192,15 @@ function Navbar() {
                                 </NavLink>
                             </Tooltip>
                         </li>
+                        {LocalStorageHelper.IsUserLogged() === true &&
+                            <li>
+                                <Tooltip title={"Favourites"}>
+                                    <NavLink to="/favourites">
+                                        <FavoriteBorderOutlinedIcon fontSize='medium'/>
+                                    </NavLink>
+                                </Tooltip>
+                            </li>
+                        }
                         {LocalStorageHelper.isUserAdmin() === true &&
                             <li>
                                 <Tooltip title={"Admin panel"}>

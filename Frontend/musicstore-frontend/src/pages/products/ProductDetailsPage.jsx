@@ -22,7 +22,6 @@ import axios from "axios";
 import {Slide, toast} from "react-toastify";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import LocalStorageHelper from "../../helpers/LocalStorageHelper.jsx";
-import parse from "html-react-parser";
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 import Box from '@mui/material/Box';
 import FavoriteIcon from '@mui/icons-material/Favorite';
@@ -30,6 +29,8 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { styled } from '@mui/material/styles';
 import LoginIcon from '@mui/icons-material/Login';
 import Opinion from './components/Opinion.jsx';
+import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
+import Tooltip from "@mui/material/Tooltip";
 
 function ProductDetailsPage() {
 
@@ -406,7 +407,7 @@ function ProductDetailsPage() {
         return rating;
     }
 
-    const submitOpinion = (e) => {
+    const submitOpinion = () => {
         if (handleProductOpinion() === false) {
             return;
         }
@@ -482,21 +483,21 @@ function ProductDetailsPage() {
 
     if (productQuantity >= 10) {
         inStockBanner = <p style={{
-            margin: '0',
+            margin: '0 0 0 4px',
             fontSize: '20px',
             fontWeight: 'bold',
             color: 'rgb(53,166,26)'
         }}>In Stock</p>
     } else if (productQuantity === 0) {
         inStockBanner = <p style={{
-            margin: '0',
+            margin: '0 0 0 4px',
             fontSize: '20px',
             fontWeight: 'bold',
             color: 'rgb(184,16,16)'
         }}>Out of stock</p>
     } else {
         inStockBanner = <p style={{
-            margin: '0',
+            margin: '0 0 0 4px',
             fontSize: '20px',
             fontWeight: 'bold',
             color: 'rgb(243,148,5)'
@@ -505,6 +506,67 @@ function ProductDetailsPage() {
 
     const changePage = (event, value) => {
         setCurrentPage(value);
+    }
+
+    const handleClickFavorites = (e) => {
+        e.preventDefault();
+        LocalStorageHelper.CommitRefresh();
+        setOpenBackdrop(true);
+        axios.get('api/users/csrf/token')
+            .then((response) => {
+                axios.post('api/favorites/create', {
+                    productUuid: productId.productSkuId,
+                    userUuid: LocalStorageHelper.GetActiveUser(),
+                    productName: productName,
+                    productPrice: productPrice,
+                    quantity: 1
+                }, {
+                    headers: {
+                        'Authorization': 'Bearer ' + LocalStorageHelper.getJwtToken(),
+                        'X-XSRF-TOKEN': response.data.token,
+                        'Content-Type': 'application/json',
+                    }
+                }).then(() => {
+                    setOpenBackdrop(false);
+                    toast.success("Product added to favorites.", {
+                        position: "bottom-center",
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: false,
+                        progress: undefined,
+                        theme: "light",
+                        transition: Slide,
+                    });
+                }).catch((e) => {
+                    setOpenBackdrop(false);
+                    toast.error(e.response.data.message, {
+                        position: "bottom-center",
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: false,
+                        progress: undefined,
+                        theme: "light",
+                        transition: Slide,
+                    });
+                })
+            }).catch(() => {
+            setOpenBackdrop(false);
+            toast.error("Cannot fetch token", {
+                position: "bottom-center",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: false,
+                progress: undefined,
+                theme: "light",
+                transition: Slide,
+            });
+        })
     }
 
     return (
@@ -554,7 +616,7 @@ function ProductDetailsPage() {
                     <div
                         style={{
                             maxWidth: "1200px",
-                            minWidth: "300px",
+                            minWidth: "200px",
                             width: "45%",
                             aspectRatio: "10 / 6",
 
@@ -565,7 +627,7 @@ function ProductDetailsPage() {
                         <div
                             style={{
                                 width: "100%",
-                                minWidth: "300px",
+                                minWidth: "200px",
                                 height: "fit-content",
                                 display: "flex",
                                 flexDirection: "column",
@@ -592,16 +654,18 @@ function ProductDetailsPage() {
                         </div>
                         <div style={{
                             width: '100%',
-                            minWidth: '300px',
+                            minWidth: '200px',
                             height: 'fit-content',
+                            flexWrap: 'wrap',
                             display: 'flex',
                             flexDirection: 'row',
-                            justifyContent: 'space-between',
+                            justifyContent: 'space-around',
                             alignItems: 'flex-start',
                             marginTop: '1rem',
                         }}>
                             <div style={{
                                 width: "48%",
+                                minWidth: '150px',
                                 height: "fit-content",
                                 display: "flex",
                                 flexDirection: 'column',
@@ -643,7 +707,6 @@ function ProductDetailsPage() {
                                         />
                                     </Box>
                                 </div>
-                                
                                 <div style={{
                                     width: "100%",
                                     height: "fit-content",
@@ -662,6 +725,7 @@ function ProductDetailsPage() {
                             </div>
                             <div style={{
                                 width: "50%",
+                                minWidth: '150px',
                                 height: "fit-content",
                                 display: "flex",
                                 flexDirection: 'column',
@@ -674,16 +738,56 @@ function ProductDetailsPage() {
                                     width: '100%',
                                     boxSizing: 'border-box',
                                     display: 'flex',
-                                    flexDirection: 'column',
+                                    flexDirection: 'row',
                                     padding: '0 5% 0 0',
-                                    justifyContent: 'flex-end',
+                                    justifyContent: 'space-between',
                                     alignItems: 'flex-end',
                                     borderBottom: '1px solid rgba(0, 0, 0, 0.1)'
                                 }}>
+                                    <Tooltip title={"Add to favorites"}>
+                                        <Button
+                                            variant={"outlined"}
+                                            fullWidth={false}
+                                            onClick={handleClickFavorites}
+                                            sx={{
+                                                borderColor: 'rgb(158,26,96)',
+                                                backgroundColor: 'transparent',
+                                                zIndex: 20,
+                                                minWidth: '0',
+                                                width: '30px',
+                                                height: '30px',
+                                                display: 'flex',
+                                                margin: '4px 2px 16px 22px',
+                                                "&:hover": {
+                                                    backgroundColor: 'rgba(158,26,96,0.3)',
+                                                    outline: 'none !important',
+                                                    borderColor: 'rgb(158,26,96)'
+                                                },
+                                                "&:focus": {
+                                                    backgroundColor: 'rgba(158,26,96,0.3)',
+                                                    outline: 'none !important',
+                                                    borderColor: 'rgb(158,26,96)'
+                                                }
+                                            }}
+                                        ><FavoriteBorderOutlinedIcon size={"large"}
+                                                                     sx={{color: 'rgb(158,26,96)', fontSize: '26px'}}/>
+                                        </Button>
+                                    </Tooltip>
+                                    <div style={{
+                                        width: '70%',
+                                        boxSizing: 'border-box',
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        padding: '0 5% 0 0',
+                                        justifyContent: 'space-between',
+                                        alignItems: 'flex-end',
+                                        borderBottom: '1px solid rgba(0, 0, 0, 0.1)'
+                                    }}>
                                     <p style={{margin: '0', fontSize: '24px', fontWeight: 'bold'}}>{parseFloat(productPrice).toFixed(2)}$</p>
                                     {
                                         inStockBanner
                                     }
+                                    </div>
                                 </div>
                                 <div style={{
                                     width: '100%',

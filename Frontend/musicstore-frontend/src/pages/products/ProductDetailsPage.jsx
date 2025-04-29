@@ -757,7 +757,7 @@ function ProductDetailsPage() {
                                                 width: '30px',
                                                 height: '30px',
                                                 display: 'flex',
-                                                margin: '4px 2px 16px 22px',
+                                                margin: '4px 2px 16px 10%',
                                                 "&:hover": {
                                                     backgroundColor: 'rgba(158,26,96,0.3)',
                                                     outline: 'none !important',

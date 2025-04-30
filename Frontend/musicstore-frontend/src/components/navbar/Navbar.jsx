@@ -16,22 +16,26 @@ import Badge from '@mui/material/Badge';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Button from '@mui/material/Button';
+import { FormControlLabel } from '@mui/material';
 import SettingsIcon from '@mui/icons-material/Settings';
 import AssignmentOutlinedIcon from '@mui/icons-material/AssignmentOutlined';
 import CommentIcon from '@mui/icons-material/Comment';
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
+import { styled } from '@mui/material/styles';
+import Switch from '@mui/material/Switch';
+import { FormGroup } from '@mui/material';
+
 
 function Navbar() {
-
 
     const [search, setSearch] = React.useState('');
     const [userName, setUserName] = React.useState('');
     const [categories, setCategories] = React.useState([]);
     const [basketCount, setBasketCount] = React.useState(0);
     const [anchorEl, setAnchorEl] = React.useState(null);
-    
+
     const open = Boolean(anchorEl);
-    
+
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
@@ -156,7 +160,7 @@ function Navbar() {
                                                     },
                                                 },
                                         }}
-                                        
+
                                         MenuListProps={{
                                         'aria-labelledby': 'basic-button',
                                         }}
@@ -188,7 +192,7 @@ function Navbar() {
                                 <NavLink to="/basket">
                                 <Badge badgeContent={basketCount} color="success">
                                     <ShoppingCartOutlinedIcon color="aciton" fontSize={"medium"}/>
-                                </Badge> 
+                                </Badge>
                                 </NavLink>
                             </Tooltip>
                         </li>

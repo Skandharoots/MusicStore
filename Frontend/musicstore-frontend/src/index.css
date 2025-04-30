@@ -11,6 +11,11 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  --background-color: rgb(255, 255, 255);
+  --text-color: rgb(0, 0, 0);
+  --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  --border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 a {

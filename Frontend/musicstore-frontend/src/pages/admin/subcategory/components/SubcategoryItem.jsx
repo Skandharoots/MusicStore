@@ -6,8 +6,12 @@ import {
     DialogActions,
     DialogContent,
     DialogContentText,
-    DialogTitle
+    DialogTitle,
+    Typography,
+    Box,
+    styled
 } from "@mui/material";
+import Grid from "@mui/material/Grid2";
 import {Link} from "react-router-dom";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -15,12 +19,74 @@ import {Slide, toast} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 import LocalStorageHelper from "../../../../helpers/LocalStorageHelper.jsx";
-import Grid from "@mui/material/Grid2";
 import React, {useState} from "react";
 
+const SubcategoryItemContainer = styled(Grid)(({theme}) => ({
+    display: 'flex',
+    flexDirection: 'row',
+    width: '240px',
+    height: '70px',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+    paddingRight: '4px',
+    fontSize: '12px',
+    color: theme.palette.text.primary,
+    boxShadow: '0 5px 15px ' + theme.palette.itemShadow.main,
+    transition: 'all 0.3s',
+    "&:hover": {
+        boxShadow: '0 5px 15px ' + theme.palette.itemShadow.light,
+    },
+}));
+
+const MetricsContainer = styled(Box)(({theme}) => ({
+    width: '60%',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    height: '100%',
+    padding: '0 2%'
+}));
+
+const ButtonsContainer = styled(Box)(({theme}) => ({
+    height: '100%',
+    marginRight: '0',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    padding: '2% 0',
+    boxSizing: 'border-box',
+}));
+
+const EditButton = styled(Button)(({theme}) => ({
+    width: 'fit-content',
+    color: theme.palette.mybutton.colorTwo,
+    backgroundColor: theme.palette.editBtn.main,
+    "&:hover": {backgroundColor: theme.palette.editBtn.light}
+}));
+
+const DeleteButton = styled(Button)(({theme}) => ({
+    width: 'fit-content',
+    backgroundColor: theme.palette.errorBtn.main,
+    color: theme.palette.mybutton.colorTwo,
+    "&:hover": {backgroundColor: theme.palette.errorBtn.light},
+    "&:focus": {outline: 'none !important'},
+}));
+
+const CancelButton = styled(Button)(({theme}) => ({
+    backgroundColor: theme.palette.blueBtn.main,
+    color: theme.palette.mybutton.colorTwo,
+    "&:hover": {backgroundColor: theme.palette.blueBtn.light},
+}));
+
+const ConfirmDeleteButton = styled(Button)(({theme}) => ({
+    backgroundColor: theme.palette.errorBtn.main,
+    color: theme.palette.mybutton.colorTwo,
+    "&:hover": {backgroundColor: theme.palette.errorBtn.light},
+}));
 
 function SubcategoryItem(props) {
-
     const [open, setOpen] = useState(false);
     const [openBackdrop, setOpenBackdrop] = useState(false);
 
@@ -87,88 +153,48 @@ function SubcategoryItem(props) {
         });
     }
 
-
     return (
-        <Grid sx={{
-            display: 'flex',
-            flexDirection: 'row',
-            width: '240px',
-            height: '70px',
-            alignItems: 'flex-start',
-            justifyContent: 'space-between',
-            paddingRight: '4px',
-            color: 'black',
-            fontSize: '12px',
-            boxShadow: '0 5px 15px rgba(0, 0, 0, 0.1)',
-            transition: 'all 0.3s',
-            "&:hover": {
-                boxShadow: '0 5px 15px rgba(0, 0, 0, 0.4)',
-            },
-        }}
-              key={props.id}
-        >
+        <SubcategoryItemContainer key={props.id}>
             <Backdrop
-                sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
+                sx={(theme) => ({color: '#fff', zIndex: theme.zIndex.drawer + 1})}
                 open={openBackdrop}
             >
-                <CircularProgress color="inherit" />
+                <CircularProgress color="inherit"/>
             </Backdrop>
-            <div className="subcategory-metrics"
-                 style={{
-                     width: '60%',
-                     display: 'flex',
-                     flexDirection: 'column',
-                     justifyContent: 'center',
-                     alignItems: 'flex-start',
-                     height: '100%',
-                     padding: '0 2%'
-                 }}>
-                <p style={{margin: '0', overflow: 'hidden', textWrap: 'nowrap'}}><b>Id: </b>{props.subcategory.id}</p>
-                <p style={{margin: '0', overflow: 'hidden', textWrap: 'nowrap'}}><b>Name: </b>{props.subcategory.name}</p>
-                <p style={{margin: '0', overflow: 'hidden', textWrap: 'nowrap'}}><b>Category: </b>{props.subcategory.category.name}</p>
 
-            </div>
-            <div className="subcategory-buttons"
-                 style={{
-                     height: '100%',
-                     marginRight: '0',
-                     display: 'flex',
-                     flexDirection: 'column',
-                     justifyContent: 'space-between',
-                     alignItems: 'flex-start',
-                     padding: '2% 0',
-                     boxSizing: 'border-box',
-                 }}
-            >
-                <Button
+            <MetricsContainer>
+                <Typography variant="body2" sx={{margin: '0', overflow: 'hidden', textWrap: 'nowrap'}}>
+                    <b>Id: </b>{props.subcategory.id}
+                </Typography>
+                <Typography variant="body2" sx={{margin: '0', overflow: 'hidden', textWrap: 'nowrap'}}>
+                    <b>Name: </b>{props.subcategory.name}
+                </Typography>
+                <Typography variant="body2" sx={{margin: '0', overflow: 'hidden', textWrap: 'nowrap'}}>
+                    <b>Category: </b>{props.subcategory.category.name}
+                </Typography>
+            </MetricsContainer>
+
+            <ButtonsContainer>
+                <EditButton
                     component={Link}
                     to={"/admin/subcategory/update/" + props.id}
                     variant="contained"
                     size="small"
                     type="button"
-                    sx={{
-                        width: 'fit-content',
-                        backgroundColor: 'rgb(255, 189, 3)',
-                        "&:hover": {backgroundColor: 'rgb(255,211,51)'}
-                    }}
                 >
-                    <EditIcon fontSize="small" />
-                </Button>
+                    <EditIcon fontSize="small"/>
+                </EditButton>
+
                 <React.Fragment>
-                    <Button
+                    <DeleteButton
                         variant="contained"
                         size="small"
                         type="button"
                         onClick={handleClickOpen}
-                        sx={{
-                            width: 'fit-content',
-                            backgroundColor: 'rgb(159,20,20)',
-                            "&:hover": {backgroundColor: 'rgb(193,56,56)'},
-                            "&:focus": {outline: 'none !important'},
-                        }}
                     >
-                        <DeleteIcon fontSize="small" />
-                    </Button>
+                        <DeleteIcon fontSize="small"/>
+                    </DeleteButton>
+
                     <Dialog
                         open={open}
                         onClose={handleClose}
@@ -180,34 +206,24 @@ function SubcategoryItem(props) {
                             </DialogContentText>
                         </DialogContent>
                         <DialogActions>
-                            <Button
+                            <CancelButton
                                 variant="contained"
                                 onClick={handleClose}
-                                sx={{
-                                    backgroundColor: 'rgb(11,108,128)',
-                                    "&:hover": {backgroundColor: 'rgb(16,147,177)'},
-                                }}
                             >
                                 Cancel
-                            </Button>
-                            <Button
+                            </CancelButton>
+                            <ConfirmDeleteButton
                                 variant="contained"
                                 onClick={deleteSubcategory}
-                                sx={{
-                                    backgroundColor: 'rgb(159,20,20)',
-                                    "&:hover": {backgroundColor: 'rgb(193,56,56)'},
-                                }}
                             >
                                 Delete
-                            </Button>
+                            </ConfirmDeleteButton>
                         </DialogActions>
                     </Dialog>
                 </React.Fragment>
-            </div>
-
-        </Grid>
-    )
-
+            </ButtonsContainer>
+        </SubcategoryItemContainer>
+    );
 }
 
 export default SubcategoryItem;

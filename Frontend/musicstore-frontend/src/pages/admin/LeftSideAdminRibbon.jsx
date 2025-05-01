@@ -8,7 +8,6 @@ import AssignmentOutlinedIcon from "@mui/icons-material/AssignmentOutlined";
 import {Box, Typography, List, ListItem, styled} from "@mui/material";
 
 const AdminRibbonContainer = styled(Box)(({theme}) => ({
-    margin: 0,
     padding: 0,
     height: 'fit-content',
     width: '300px',

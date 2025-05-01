@@ -3,21 +3,110 @@ import React, {useEffect, useState} from 'react';
 import {
     Backdrop,
     Box,
-    Button, CircularProgress,
+    Button,
+    CircularProgress,
     Dialog,
     DialogActions,
     DialogContent,
     DialogContentText,
     DialogTitle,
-    Typography
+    TextField,
+    Typography,
+    styled
 } from "@mui/material";
-import TextField from "@mui/material/TextField";
 import UpdateOutlinedIcon from '@mui/icons-material/UpdateOutlined';
 import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined';
 import axios from "axios";
 import {Slide, toast} from "react-toastify";
 import LocalStorageHelper from "../../helpers/LocalStorageHelper.jsx";
 import {useNavigate} from "react-router-dom";
+
+const AccountContainer = styled(Box)(({theme}) => ({
+    height: 'fit-content',
+    minHeight: '80dvh',
+    width: '780px',
+    color: theme.palette.text.primary,
+    borderLeft: `1px solid ${theme.palette.divider}`,
+}));
+
+const PageInfo = styled(Box)(({theme}) => ({
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    fontSize: '20px',
+    padding: '16px 16px',
+    borderBottom: `1px solid ${theme.palette.divider}`,
+}));
+
+const AccountInfo = styled(Box)(({theme}) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+}));
+
+const InfoEdit = styled(Box)(({theme}) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    textAlign: 'center',
+    width: '400px',
+    margin: '16px',
+    borderRadius: '1em',
+    boxShadow: '0 5px 15px ' + theme.palette.formShadow.main,
+    padding: '2%',
+}));
+
+const AccountDeletion = styled(Box)(({theme}) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    textAlign: 'center',
+    width: '400px',
+    margin: '16px',
+    borderRadius: '1em',
+    boxShadow: '0 5px 15px ' + theme.palette.formShadow.main,
+    padding: '2%',
+}));
+
+const StyledTextField = styled(TextField)(({theme}) => ({
+    width: '70%',
+    margin: '0 auto 5% auto',
+    '& label.Mui-focused': {
+        color: theme.palette.primary.main,
+    },
+    '& .MuiOutlinedInput-root': {
+        '&.Mui-focused fieldset': {
+            borderColor: theme.palette.primary.main,
+        },
+    },
+}));
+
+const StyledButton = styled(Button)(({theme}) => ({
+    width: '70%',
+    minWidth: '0',
+    color: theme.palette.mybutton.colorTwo,
+    backgroundColor: theme.palette.irish.main,
+    '&:hover': {
+        backgroundColor: theme.palette.irish.light,
+    },
+}));
+
+const DeleteButton = styled(Button)(({theme}) => ({
+    width: '70%',
+    minWidth: '0',
+    color: theme.palette.mybutton.colorTwo,
+    backgroundColor: theme.palette.errorBtn.main,
+    '&:hover': {
+        backgroundColor: theme.palette.errorBtn.light,
+    },
+    '&:focus': {
+        outline: 'none !important',
+    },
+}));
 
 function Account() {
 
@@ -433,37 +522,36 @@ function Account() {
     }
 
     return (
-        <div className="account">
+        <AccountContainer>
             <Backdrop
                 sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
                 open={openBackdrop}
             >
                 <CircularProgress color="inherit" />
             </Backdrop>
-            <div className="page-info">
-                <h5>Account Settings</h5>
-            </div>
-            <div className="account-info">
-                <div className="info-edit">
+            <PageInfo>
+                <Typography variant="h5">Account Settings</Typography>
+            </PageInfo>
+            <AccountInfo>
+                <InfoEdit>
                     <Typography
                         component="h1"
                         variant="h5"
                         sx={{
-                            width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)', color: 'black'
-                            , margin: '0 auto 5% auto'
+                            width: '100%',
+                            fontSize: 'clamp(2rem, 10vw, 2.15rem)',
+                            margin: '0 auto 5% auto'
                         }}
                     >
                         Edit account details
                     </Typography>
-                    <Box
-
-                    >
-                        <TextField
-                            size={"small"}
+                    <Box>
+                        <StyledTextField
+                            size="small"
                             error={firstNameError}
                             helperText={firstNameErrorMessage}
                             id="firstName"
-                            type="email"
+                            type="text"
                             name="firstName"
                             placeholder="John"
                             autoComplete="firstName"
@@ -475,25 +563,13 @@ function Account() {
                             label="First name"
                             value={firstName}
                             onChange={e => setFirstName(e.target.value)}
-                            sx={{
-                                width: '70%',
-                                margin: '0 auto 5% auto',
-                                "& label.Mui-focused": {
-                                    color: 'rgb(39, 99, 24)'
-                                },
-                                "& .MuiOutlinedInput-root": {
-                                    "&.Mui-focused fieldset": {
-                                        borderColor: 'rgb(39, 99, 24)'
-                                    }
-                                }
-                            }}
                         />
-                        <TextField
-                            size={"small"}
+                        <StyledTextField
+                            size="small"
                             error={lastNameError}
                             helperText={lastNameErrorMessage}
                             id="lastName"
-                            type="email"
+                            type="text"
                             name="lastName"
                             placeholder="Doe"
                             autoComplete="lastName"
@@ -504,21 +580,9 @@ function Account() {
                             label="Last name"
                             value={lastName}
                             onChange={e => setLastName(e.target.value)}
-                            sx={{
-                                width: '70%',
-                                margin: '0 auto 5% auto',
-                                "& label.Mui-focused": {
-                                    color: 'rgb(39, 99, 24)'
-                                },
-                                "& .MuiOutlinedInput-root": {
-                                    "&.Mui-focused fieldset": {
-                                        borderColor: 'rgb(39, 99, 24)'
-                                    }
-                                }
-                            }}
                         />
-                        <TextField
-                            size={"small"}
+                        <StyledTextField
+                            size="small"
                             error={emailError}
                             helperText={emailErrorMessage}
                             id="email"
@@ -533,21 +597,9 @@ function Account() {
                             label="Email"
                             value={email}
                             onChange={e => setEmail(e.target.value)}
-                            sx={{
-                                width: '70%',
-                                margin: '0 auto 5% auto',
-                                "& label.Mui-focused": {
-                                    color: 'rgb(39, 99, 24)'
-                                },
-                                "& .MuiOutlinedInput-root": {
-                                    "&.Mui-focused fieldset": {
-                                        borderColor: 'rgb(39, 99, 24)'
-                                    }
-                                }
-                            }}
                         />
-                        <TextField
-                            size={"small"}
+                        <StyledTextField
+                            size="small"
                             error={passwordError}
                             helperText={passwordErrorMessage}
                             name="password"
@@ -561,21 +613,9 @@ function Account() {
                             label="Password"
                             value={password}
                             onChange={e => setPassword(e.target.value)}
-                            sx={{
-                                width: '70%',
-                                margin: '0 auto 5% auto',
-                                "& label.Mui-focused": {
-                                    color: 'rgb(39, 99, 24)'
-                                },
-                                "& .MuiOutlinedInput-root": {
-                                    "&.Mui-focused fieldset": {
-                                        borderColor: 'rgb(39, 99, 24)'
-                                    }
-                                }
-                            }}
                         />
-                        <TextField
-                            size={"small"}
+                        <StyledTextField
+                            size="small"
                             error={confirmPasswordError}
                             helperText={confirmPasswordErrorMessage}
                             name="confirmPassword"
@@ -589,264 +629,186 @@ function Account() {
                             label="Confirm password"
                             value={confirmPassword}
                             onChange={e => setConfirmPassword(e.target.value)}
-                            sx={{
-                                width: '70%',
-                                margin: '0 auto 5% auto',
-                                "& label.Mui-focused": {
-                                    color: 'rgb(39, 99, 24)'
-                                },
-                                "& .MuiOutlinedInput-root": {
-                                    "&.Mui-focused fieldset": {
-                                        borderColor: 'rgb(39, 99, 24)'
-                                    }
-                                }
-                            }}
                         />
-                        <Button
-                            className="signup-btn"
+                        <StyledButton
                             type="submit"
                             fullWidth
                             variant="contained"
                             endIcon={<UpdateOutlinedIcon />}
                             onClick={updateUser}
-                            sx={{
-                                width: '70%',
-                                backgroundColor: 'rgb(39, 99, 24)',
-                                "&:hover": {backgroundColor: 'rgb(49,140,23)'}
-                            }}
                         >
                             Update Account
-                        </Button>
+                        </StyledButton>
                     </Box>
-                </div>
-                <div className="info-edit">
-                <Typography
-                        component="h1"
-                        variant="h5"
-                        sx={{
-                            width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)', color: 'black'
-                            , margin: '0 auto 5% auto'
-                        }}
-                    >
-                        Change password
-                    </Typography>
-                    <Box
-                        sx={{
-                            width: '100%'
-                        }}
-                    >
-                        {!hideChangePassword && (
-                            <>
-                            <TextField
-                                size={"small"}
-                                error={currentPasswordError}
-                                helperText={currentPasswordErrorMsg}
-                                id="currentPass"
-                                type="password"
-                                name="currentPassword"
-                                placeholder="••••••"
-                                autoComplete="currentPassword"
-                                autoFocus
-                                required
-                                fullWidth
-                                variant="outlined"
-                                color={currentPasswordError ? 'error' : 'primary'}
-                                label="Current password"
-                                value={currentPassword}
-                                onChange={e => setCurrentPassword(e.target.value)}
-                                sx={{
-                                    width: '70%',
-                                    margin: '0 auto 5% auto',
-                                    "& label.Mui-focused": {
-                                        color: 'rgb(39, 99, 24)'
-                                    },
-                                    "& .MuiOutlinedInput-root": {
-                                        "&.Mui-focused fieldset": {
-                                            borderColor: 'rgb(39, 99, 24)'
-                                        }
-                                    }
-                                }}
-                            />
-                            <TextField
-                                size={"small"}
-                                error={newPasswordError}
-                                helperText={newPasswordErrorMsg}
-                                id="newPassword"
-                                type="password"
-                                name="newPassword"
-                                placeholder="••••••"
-                                autoComplete="newPassword"
-                                autoFocus
-                                required
-                                fullWidth
-                                variant="outlined"
-                                color={newPasswordError ? 'error' : 'primary'}
-                                label="New password"
-                                value={newPassword}
-                                onChange={e => setNewPassword(e.target.value)}
-                                sx={{
-                                    width: '70%',
-                                    margin: '0 auto 5% auto',
-                                    "& label.Mui-focused": {
-                                        color: 'rgb(39, 99, 24)'
-                                    },
-                                    "& .MuiOutlinedInput-root": {
-                                        "&.Mui-focused fieldset": {
-                                            borderColor: 'rgb(39, 99, 24)'
-                                        }
-                                    }
-                                }}
-                            />
-                            <TextField
-                                size={"small"}
-                                error={confirmNewPasswordError}
-                                helperText={confirmNewPasswordErrorMsg}
-                                id="confirmNewPassword"
-                                type="password"
-                                name="confirmNewPassword"
-                                placeholder="••••••"
-                                autoComplete="confirmNewPassword"
-                                required
-                                fullWidth
-                                variant="outlined"
-                                color={confirmNewPasswordError ? 'error' : 'primary'}
-                                label="Confirm new password"
-                                value={confirmNewPassword}
-                                onChange={e => setConfirmNewPassword(e.target.value)}
-                                sx={{
-                                    width: '70%',
-                                    margin: '0 auto 5% auto',
-                                    "& label.Mui-focused": {
-                                        color: 'rgb(39, 99, 24)'
-                                    },
-                                    "& .MuiOutlinedInput-root": {
-                                        "&.Mui-focused fieldset": {
-                                            borderColor: 'rgb(39, 99, 24)'
-                                        }
-                                    }
-                                }}
-                            />
-                        </>
-                        )}
-                        {hideChangePassword && 
-                            <Button
-                                className="enable-btn"
-                                fullWidth
-                                variant="contained"
-                                endIcon={<UpdateOutlinedIcon />}
-                                onClick={enablePassChange}
-                                sx={{
-                                    width: '70%',
-                                    backgroundColor: 'rgb(39, 99, 24)',
-                                    "&:hover": {backgroundColor: 'rgb(49,140,23)'}
-                                }}
-                            >
-                                Enable
-                            </Button>
-                        }
-                        {!hideChangePassword && 
-                            <Button
-                                className="enable-btn"
-                                fullWidth
-                                variant="contained"
-                                endIcon={<UpdateOutlinedIcon />}
-                                onClick={updatePassword}
-                                sx={{
-                                    width: '70%',
-                                    backgroundColor: 'rgb(39, 99, 24)',
-                                    "&:hover": {backgroundColor: 'rgb(49,140,23)'}
-                                }}
-                            >
-                                Change password
-                            </Button>
-                        }
-                        </Box>
-                        
-                </div>
-                <div className={"account-deletion"}>
+                </InfoEdit>
+                <InfoEdit>
                     <Typography
                         component="h1"
                         variant="h5"
                         sx={{
-                            width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)', color: 'black'
-                            , margin: '0 auto 5% auto'
+                            width: '100%',
+                            fontSize: 'clamp(2rem, 10vw, 2.15rem)',
+                            margin: '0 auto 5% auto'
+                        }}
+                    >
+                        Change password
+                    </Typography>
+                    <Box sx={{width: '100%'}}>
+                        {!hideChangePassword && (
+                            <>
+                                <StyledTextField
+                                    size="small"
+                                    error={currentPasswordError}
+                                    helperText={currentPasswordErrorMsg}
+                                    id="currentPass"
+                                    type="password"
+                                    name="currentPassword"
+                                    placeholder="••••••"
+                                    autoComplete="currentPassword"
+                                    autoFocus
+                                    required
+                                    fullWidth
+                                    variant="outlined"
+                                    color={currentPasswordError ? 'error' : 'primary'}
+                                    label="Current password"
+                                    value={currentPassword}
+                                    onChange={e => setCurrentPassword(e.target.value)}
+                                />
+                                <StyledTextField
+                                    size="small"
+                                    error={newPasswordError}
+                                    helperText={newPasswordErrorMsg}
+                                    id="newPassword"
+                                    type="password"
+                                    name="newPassword"
+                                    placeholder="••••••"
+                                    autoComplete="newPassword"
+                                    required
+                                    fullWidth
+                                    variant="outlined"
+                                    color={newPasswordError ? 'error' : 'primary'}
+                                    label="New password"
+                                    value={newPassword}
+                                    onChange={e => setNewPassword(e.target.value)}
+                                />
+                                <StyledTextField
+                                    size="small"
+                                    error={confirmNewPasswordError}
+                                    helperText={confirmNewPasswordErrorMsg}
+                                    id="confirmNewPassword"
+                                    type="password"
+                                    name="confirmNewPassword"
+                                    placeholder="••••••"
+                                    autoComplete="confirmNewPassword"
+                                    required
+                                    fullWidth
+                                    variant="outlined"
+                                    color={confirmNewPasswordError ? 'error' : 'primary'}
+                                    label="Confirm new password"
+                                    value={confirmNewPassword}
+                                    onChange={e => setConfirmNewPassword(e.target.value)}
+                                />
+                            </>
+                        )}
+                        {hideChangePassword && 
+                            <StyledButton
+                                fullWidth
+                                type="button"
+                                variant="contained"
+                                endIcon={<UpdateOutlinedIcon />}
+                                onClick={enablePassChange}
+                            >
+                                Enable
+                            </StyledButton>
+                        }
+                        {!hideChangePassword && 
+                            <StyledButton
+                                fullWidth
+                                type="submit"
+                                variant="contained"
+                                endIcon={<UpdateOutlinedIcon />}
+                                onClick={updatePassword}
+                            >
+                                Change password
+                            </StyledButton>
+                        }
+                    </Box>
+                </InfoEdit>
+                <AccountDeletion>
+                    <Typography
+                        component="h1"
+                        variant="h5"
+                        sx={{
+                            width: '100%',
+                            fontSize: 'clamp(2rem, 10vw, 2.15rem)',
+                            margin: '0 auto 5% auto'
                         }}
                     >
                         Delete Your Account
                     </Typography>
-                    <Box
-                        sx={{width:'100%'}}
-                    >
-                        <React.Fragment>
-                            <Button
-                                className="signup-btn"
-                                type="submit"
-                                fullWidth
-                                variant="contained"
-                                endIcon={<DeleteForeverOutlinedIcon />}
-                                onClick={handleClickOpen}
-                                sx={{
-                                    width: '70%',
-                                    backgroundColor: 'rgb(159,20,20)',
-                                    "&:hover": {backgroundColor: 'rgb(193,56,56)'},
-                                    "&:focus": {outline: 'none !important'},
-                                }}
-                            >
-                                Delete Account
-                            </Button>
-                            <Dialog
-                                open={open}
-                                onClose={handleClose}
-                            >
-                                <DialogTitle>Delete Account</DialogTitle>
-                                <DialogContent>
-                                    <DialogContentText>
-                                        Do you want to delete Your account?
-                                        If yes, type &quot;YES&quot; inside the field.
-                                    </DialogContentText>
-                                    <TextField
-                                        autoFocus
-                                        required
-                                        value={confirmText}
-                                        onChange={e => setConfirmText(e.target.value)}
-                                        margin="dense"
-                                        id="confirm"
-                                        name="email"
-                                        label="Confirm deletion"
-                                        type="email"
-                                        fullWidth
-                                        variant="standard"
-                                    />
-                                </DialogContent>
-                                <DialogActions>
-                                    <Button
-                                        variant="contained"
-                                        onClick={handleClose}
-                                        sx={{
-                                            backgroundColor: 'rgb(11,108,128)',
-                                            "&:hover": {backgroundColor: 'rgb(16,147,177)'},
-                                        }}
-                                    >
-                                        Cancel
-                                    </Button>
-                                    <Button
-                                        variant="contained"
-                                        onClick={deleteUser}
-                                        sx={{
-                                            backgroundColor: 'rgb(159,20,20)',
-                                            "&:hover": {backgroundColor: 'rgb(193,56,56)'},
-                                        }}
-                                    >
-                                        Delete
-                                    </Button>
-                                </DialogActions>
-                            </Dialog>
-                        </React.Fragment>
-
+                    <Box sx={{width: '100%'}}>
+                        <DeleteButton
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                            endIcon={<DeleteForeverOutlinedIcon />}
+                            onClick={handleClickOpen}
+                        >
+                            Delete Account
+                        </DeleteButton>
+                        <Dialog
+                            open={open}
+                            onClose={handleClose}
+                        >
+                            <DialogTitle>Delete Account</DialogTitle>
+                            <DialogContent>
+                                <DialogContentText>
+                                    Do you want to delete Your account?
+                                    If yes, type "YES" inside the field.
+                                </DialogContentText>
+                                <TextField
+                                    autoFocus
+                                    required
+                                    value={confirmText}
+                                    onChange={e => setConfirmText(e.target.value)}
+                                    margin="dense"
+                                    id="confirm"
+                                    name="email"
+                                    label="Confirm deletion"
+                                    type="email"
+                                    fullWidth
+                                    variant="standard"
+                                />
+                            </DialogContent>
+                            <DialogActions>
+                                <Button
+                                    variant="contained"
+                                    onClick={handleClose}
+                                    sx={{
+                                        backgroundColor: 'rgb(11,108,128)',
+                                        color: 'white',
+                                        '&:hover': {backgroundColor: 'rgb(16,147,177)'},
+                                    }}
+                                >
+                                    Cancel
+                                </Button>
+                                <Button
+                                    variant="contained"
+                                    onClick={deleteUser}
+                                    sx={{
+                                        backgroundColor: 'rgb(159,20,20)',
+                                        color: 'white',
+                                        '&:hover': {backgroundColor: 'rgb(193,56,56)'},
+                                    }}
+                                >
+                                    Delete
+                                </Button>
+                            </DialogActions>
+                        </Dialog>
                     </Box>
-                </div>
-            </div>
-        </div>
+                </AccountDeletion>
+            </AccountInfo>
+        </AccountContainer>
     );
 }
 

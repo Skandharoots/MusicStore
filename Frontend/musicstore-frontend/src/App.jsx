@@ -280,6 +280,10 @@ function App() {
                 dark: 'rgb(39, 99, 24)',
                 contrastText: 'rgb(255, 255, 255)',
             },
+            editBtn: {
+                main: 'rgb(255, 189, 3)',
+                light: 'rgb(255,211,51)',
+            },
             errorBtn: {
                 main: 'rgb(159,20,20)',
                 light: 'rgb(193,56,56)',

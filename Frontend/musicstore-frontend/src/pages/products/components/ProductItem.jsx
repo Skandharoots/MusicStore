@@ -32,6 +32,7 @@ const ProductItemContainer = styled(Grid)(({ theme }) => ({
     justifyContent: 'flex-start',
     padding: '4px',
     color: 'black',
+    borderRadius: '1em',
     fontSize: '12px',
     boxSizing: 'border-box',
     boxShadow: '0 5px 15px ' + theme.palette.itemShadow.main,

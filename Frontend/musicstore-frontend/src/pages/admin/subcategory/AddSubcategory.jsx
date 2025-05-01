@@ -1,25 +1,79 @@
 import {
+    Backdrop,
     Box,
     Button,
-    Select,
-    MenuItem,
-    Typography,
-    InputLabel,
-    FormControl,
     CircularProgress,
-    Backdrop
+    FormControl,
+    InputLabel,
+    MenuItem,
+    Select,
+    TextField,
+    Typography,
+    styled
 } from "@mui/material";
-import TextField from "@mui/material/TextField";
 import {useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
 import axios from "axios";
-import '../style/AddSubcategory.scss';
 import LocalStorageHelper from "../../../helpers/LocalStorageHelper.jsx";
 import {Slide, toast} from "react-toastify";
 
+const SubcategoryAddContainer = styled(Box)(({theme}) => ({
+    height: 'fit-content',
+    display: 'flex',
+    flexDirection: 'column',
+    minHeight: '80dvh',
+    width: '796px',
+    borderLeft: '1px solid ' + theme.palette.divider,
+}));
+
+const AddSubcategoryForm = styled(Box)(({theme}) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    textAlign: 'center',
+    maxWidth: '400px',
+    minWidth: '200px',
+    margin: '5% 20%',
+    borderRadius: '1em',
+    boxShadow: '0 5px 15px ' + theme.palette.formShadow.main,
+    padding: '2%',
+}));
+
+const StyledFormControl = styled(FormControl)(({theme}) => ({
+    width: '70%',
+    margin: '0 auto 5% auto',
+    "& label.Mui-focused": {
+        color: theme.palette.irish.main,
+    },
+    "& .MuiOutlinedInput-root": {
+        "&.Mui-focused fieldset": {
+            borderColor: theme.palette.irish.main,
+        }
+    }
+}));
+
+const StyledTextField = styled(TextField)(({theme}) => ({
+    width: '70%',
+    margin: '0 auto 5% auto',
+    "& label.Mui-focused": {
+        color: theme.palette.irish.main,
+    },
+    "& .MuiOutlinedInput-root": {
+        "&.Mui-focused fieldset": {
+            borderColor: theme.palette.irish.main,
+        }
+    }
+}));
+
+const AddButton = styled(Button)(({theme}) => ({
+    width: '70%',
+    backgroundColor: theme.palette.irish.main,
+    color: theme.palette.mybutton.colorTwo,
+    "&:hover": {backgroundColor: theme.palette.irish.light},
+}));
 
 function AddSubcategory() {
-
     const [subcategoryName, setSubcategoryName] = useState('');
     const [categories, setCategories] = useState([]);
     const [selectCategoryId, setSelectCategoryId] = useState('');
@@ -41,21 +95,21 @@ function AddSubcategory() {
 
     useEffect(() => {
         axios.get('api/products/categories/get', {})
-        .then(res => {
-            setCategories(res.data);
-        }).catch(error => {
-            toast.error(error.response.data.message, {
-                position: "bottom-center",
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: false,
-                progress: undefined,
-                theme: "light",
-                transition: Slide,
-            });
-        })
+            .then(res => {
+                setCategories(res.data);
+            }).catch(error => {
+                toast.error(error.response.data.message, {
+                    position: "bottom-center",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: false,
+                    progress: undefined,
+                    theme: "light",
+                    transition: Slide,
+                });
+            })
     }, [])
 
     const handleCategoryChange = (event) => {
@@ -63,7 +117,6 @@ function AddSubcategory() {
     };
 
     const validateInputs = () => {
-
         let isValid = true;
 
         if (!subcategoryName
@@ -130,80 +183,61 @@ function AddSubcategory() {
                     });
                 })
             }).catch(() => {
-            toast.error("Cannot fetch token", {
-                position: "bottom-center",
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: false,
-                progress: undefined,
-                theme: "light",
-                transition: Slide,
+                toast.error("Cannot fetch token", {
+                    position: "bottom-center",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: false,
+                    progress: undefined,
+                    theme: "light",
+                    transition: Slide,
+                });
             });
-        });
     }
 
-
-
     return (
-        <div className="SubcategoryAdd">
+        <SubcategoryAddContainer>
             <Backdrop
-                sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
+                sx={(theme) => ({color: '#fff', zIndex: theme.zIndex.drawer + 1})}
                 open={openBackdrop}
             >
-                <CircularProgress color="inherit" />
+                <CircularProgress color="inherit"/>
             </Backdrop>
-            <div className="AddSubcatForm">
+
+            <AddSubcategoryForm>
                 <Typography
                     component="h1"
                     variant="h5"
                     sx={{
-                        width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)', color: 'black'
-                        , margin: '0 auto 5% auto'
+                        width: '100%',
+                        fontSize: 'clamp(2rem, 10vw, 2.15rem)',
+                        color: theme => theme.palette.text.primary,
+                        margin: '0 auto 5% auto'
                     }}
                 >
                     Add subcategory
                 </Typography>
-                <Box
-                    component="form"
-                    onSubmit={submitSubcategory}
-                    noValidate
 
-                >
-                    <FormControl
-                                 size="small"
-                                 autoFocus
-                                 sx={{
-                                     m: 1,
-                                     width: '70%',
-                                     margin: '0 auto 5% auto',
-                                     "& label.Mui-focused": {
-                                         color: 'rgb(39, 99, 24)'
-                                     },
-                                     "& .MuiOutlinedInput-root": {
-                                         "&.Mui-focused fieldset": {
-                                             borderColor: 'rgb(39, 99, 24)'
-                                         }
-                                     }
-                                 }}
-                    >
-                        <InputLabel id="demo-simple-select-outlined-label">Select category</InputLabel>
+                <Box component="form" onSubmit={submitSubcategory} noValidate>
+                    <StyledFormControl size="small" autoFocus>
+                        <InputLabel id="categoryLabel">Select category</InputLabel>
                         <Select
-                            labelId="demo-simple-select-outlined-label"
-                            id="demo-simple-select-outlined"
-                            label={"Select category"}
+                            labelId="categoryLabel"
+                            id="category"
+                            label="Select category"
                             value={selectCategoryId}
                             onChange={handleCategoryChange}
-                         variant={"outlined"}>
-                            {
-                                categories.map(({id, name}) => (
-                                    <MenuItem key={id} value={id}>{name}</MenuItem>
-                                ))
-                            }
+                            variant="outlined"
+                        >
+                            {categories.map(({id, name}) => (
+                                <MenuItem key={id} value={id}>{name}</MenuItem>
+                            ))}
                         </Select>
-                    </FormControl>
-                    <TextField
+                    </StyledFormControl>
+
+                    <StyledTextField
                         error={subcategoryNameError}
                         helperText={subcategoryNameErrorMsg}
                         id="subcategoryName"
@@ -219,37 +253,20 @@ function AddSubcategory() {
                         label="Subcategory"
                         value={subcategoryName}
                         onChange={e => setSubcategoryName(e.target.value)}
-                        sx={{
-                            width: '70%',
-                            margin: '0 auto 5% auto',
-                            "& label.Mui-focused": {
-                                color: 'rgb(39, 99, 24)'
-                            },
-                            "& .MuiOutlinedInput-root": {
-                                "&.Mui-focused fieldset": {
-                                    borderColor: 'rgb(39, 99, 24)'
-                                }
-                            }
-                        }}
                     />
-                    <Button
-                        className="add-btn"
+
+                    <AddButton
                         type="submit"
                         fullWidth
                         variant="contained"
                         onClick={validateInputs}
-                        sx={{
-                            width: '70%',
-                            backgroundColor: 'rgb(39, 99, 24)',
-                            "&:hover": {backgroundColor: 'rgb(49,140,23)'}
-                        }}
                     >
                         Add Subcategory
-                    </Button>
+                    </AddButton>
                 </Box>
-            </div>
-        </div>
-    )
+            </AddSubcategoryForm>
+        </SubcategoryAddContainer>
+    );
 }
 
 export default AddSubcategory;

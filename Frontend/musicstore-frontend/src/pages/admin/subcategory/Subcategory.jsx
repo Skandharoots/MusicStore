@@ -1,7 +1,6 @@
-import '../style/Subcategory.scss';
-import {Backdrop, Button, CircularProgress} from "@mui/material";
-import Grid from '@mui/material/Grid2';
-import { useNavigate } from "react-router-dom";
+import {Backdrop, Button, CircularProgress, Typography, styled} from "@mui/material";
+import Grid from "@mui/material/Grid2";
+import {useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
 import LocalStorageHelper from "../../../helpers/LocalStorageHelper.jsx";
 import SubcategoryItem from "./components/SubcategoryItem.jsx";
@@ -9,8 +8,53 @@ import AddIcon from '@mui/icons-material/Add';
 import axios from "axios";
 import {Slide, toast} from "react-toastify";
 
-function Subcategory() {
+const SubcategoryContainer = styled('div')(({theme}) => ({
+    height: 'fit-content',
+    display: 'flex',
+    flexDirection: 'column',
+    minHeight: '80dvh',
+    width: '796px',
+    borderLeft: '1px solid ' + theme.palette.divider,
+}));
 
+const PageTitle = styled('div')(({theme}) => ({
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'start',
+    alignItems: 'center',
+    color: 'black',
+    fontSize: '20px',
+    padding: '0 16px',
+    padding: '16px 0 16px 16px',
+    color: theme.palette.text.primary,
+
+}));
+
+const ActionsContainer = styled('div')(({theme}) => ({
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    height: 'fit-content',
+    color: 'black',
+    padding: '0 16px 8px 16px',
+    marginBottom: '16px',
+    borderBottom: '1px solid ' + theme.palette.divider,
+}));
+
+const AddButton = styled(Button)(({theme}) => ({
+    width: 'fit-content',
+    backgroundColor: theme.palette.irish.main,
+    color: theme.palette.mybutton.colorTwo,
+    "&:hover": {backgroundColor: theme.palette.irish.light},
+    marginBottom: '16px',
+}));
+
+const SubcategoriesGrid = styled(Grid)(({theme}) => ({
+    paddingLeft: '16px',
+}));
+
+function Subcategory() {
     const [subcategories, setSubcategories] = useState([]);
     const [openBackdrop, setOpenBackdrop] = useState(false);
     const navigate = useNavigate();
@@ -58,45 +102,42 @@ function Subcategory() {
     }, [])
 
     return (
-        <div className="subcategory">
+        <SubcategoryContainer>
             <Backdrop
-                sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
+                sx={(theme) => ({color: '#fff', zIndex: theme.zIndex.drawer + 1})}
                 open={openBackdrop}
             >
-                <CircularProgress color="inherit" />
+                <CircularProgress color="inherit"/>
             </Backdrop>
-            <div className="page-title">
-                <h5>Subcategories</h5>
-            </div>
-            <div className="actions">
-                <Button
-                    className="add-button"
+
+            <PageTitle>
+                <Typography variant="h5">Subcategories</Typography>
+            </PageTitle>
+
+            <ActionsContainer>
+                <AddButton
                     variant="contained"
                     type="button"
-                    endIcon={<AddIcon fontSize="small" />}
+                    endIcon={<AddIcon fontSize="small"/>}
                     fullWidth
                     onClick={redirect}
-                    sx={{
-                        width: 'fit-content',
-                        backgroundColor: 'rgb(39, 99, 24)',
-                        "&:hover": {backgroundColor: 'rgb(49,140,23)'},
-                        marginBottom: '16px',
-                    }}
                 >
                     Add
-                </Button>
-            </div>
+                </AddButton>
+            </ActionsContainer>
 
-            <Grid container style={{paddingLeft: '16px'}} rowSpacing={2.7} columnSpacing={2.7}>
-                {
-                    subcategories.map((subcategory) => (
-                        <SubcategoryItem key={subcategory.id} subcategory={subcategory} onDelete={removeById} { ...subcategory}/>
-                    ))
-                }
-            </Grid>
-
-        </div>
-    )
+            <SubcategoriesGrid container rowSpacing={2.7} columnSpacing={2.7}>
+                {subcategories.map((subcategory) => (
+                    <SubcategoryItem
+                        key={subcategory.id}
+                        subcategory={subcategory}
+                        onDelete={removeById}
+                        {...subcategory}
+                    />
+                ))}
+            </SubcategoriesGrid>
+        </SubcategoryContainer>
+    );
 }
 
 export default Subcategory;

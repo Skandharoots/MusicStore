@@ -107,11 +107,11 @@ const StyledFormControl = styled(FormControl)(({ theme }) => ({
     width: 'fit-content',
     height: 'fit-content',
     "& label.Mui-focused": {
-        color: theme.palette.primary.main
+        color: theme.palette.irish.main
     },
     "& .MuiOutlinedInput-root": {
         "&.Mui-focused fieldset": {
-            borderColor: theme.palette.primary.main
+            borderColor: theme.palette.irish.main
         }
     }
 }));

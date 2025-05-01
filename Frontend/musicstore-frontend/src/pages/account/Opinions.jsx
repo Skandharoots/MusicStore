@@ -2,19 +2,67 @@ import './style/Opinions.scss';
 import {useEffect, useState} from "react";
 import LocalStorageHelper from "../../helpers/LocalStorageHelper.jsx";
 import {useNavigate} from "react-router-dom";
+import {
+    Backdrop,
+    Box,
+    CircularProgress,
+    Pagination,
+    Stack,
+    styled
+} from "@mui/material";
 import Grid from "@mui/material/Grid2";
-import Stack from "@mui/material/Stack";
-import Pagination from "@mui/material/Pagination";
 import OrderUserItem from "./components/OrderUserItem.jsx";
 import axios from "axios";
 import {Slide, toast} from "react-toastify";
-import {Backdrop, CircularProgress} from "@mui/material";
 import Opinion from './components/Opinion.jsx';
+
+const OpinionsContainer = styled(Box)(({theme}) => ({
+    height: 'fit-content',
+    minHeight: '80dvh',
+    maxWidth: '780px',
+    width: '100%',
+    color: theme.palette.text.primary,
+    borderLeft: `1px solid ${theme.palette.divider}`,
+}));
+
+const OpinionsGrid = styled(Grid)(({theme}) => ({
+    boxSizing: 'border-box',
+    padding: '16px',
+    rowSpacing: 2.7,
+    columnSpacing: 2.7,
+}));
+
+const PaginationContainer = styled(Box)(({theme}) => ({
+    display: 'flex',
+    width: '100%',
+    boxSizing: 'border-box',
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    padding: '16px 0',
+}));
+
+const StyledPagination = styled(Pagination)(({theme}) => ({
+    boxSizing: 'border-box',
+    '& .MuiPaginationItem-rounded': {
+        outline: 'none !important',
+        '&:hover': {
+            outline: 'none !important',
+            backgroundColor: 'rgba(39, 99, 24, 0.2)',
+        },
+    },
+    '& .Mui-selected': {
+        backgroundColor: 'rgba(39, 99, 24, 0.5) !important',
+        '&:hover': {
+            outline: 'none !important',
+            backgroundColor: 'rgba(39, 99, 24, 0.2) !important',
+        },
+    },
+}));
 
 const perPage = 20;
 
 function Opinions() {
-
     const [opinions, setOpinions] = useState([]);
     const [openBackdrop, setOpenBackdrop] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
@@ -73,68 +121,38 @@ function Opinions() {
     };
 
     return (
-        <div className="my-opinions">
+        <OpinionsContainer>
             <Backdrop
                 sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
                 open={openBackdrop}
             >
                 <CircularProgress color="inherit" />
             </Backdrop>
-                
-                    <Grid container
-                          style={{
-                              boxSizing: 'border-box',
-                              paddingLeft: '16px',
-                              paddingBottom: '16px',
-                              paddingRight: '16px',
-                              paddingTop: '16px',
-                          }}
-                          rowSpacing={2.7}
-                          columnSpacing={2.7}
-                    >
-                        {
-                            [...opinions].map((opinion) => (
-                                <Opinion key={opinion.id} id={opinion.id} opinion={opinion} onDelete={removeById} onUpdate={reloadOpinions}/>
-                            ))
-                        }
-                    </Grid>
-                    <div
-                        style={{
-                            display: 'flex',
-                            width: '100%',
-                            boxSizing: 'border-box',
-                            flexDirection: 'row',
-                            justifyContent: 'flex-end',
-                            alignItems: 'center',
-                            padding: '16px 0 16px 0'
-                            }}
-                    >
-                        <Stack spacing={2} sx={{boxSizing: 'border-box',}}>
-                            <Pagination page={currentPage} count={totalPages} onChange={changePage} shape={"rounded"}
-                                        sx={{
-                                            boxSizing: 'border-box',
-                                            '& .MuiPaginationItem-rounded': {
-                                                outline: 'none !important',
-                                                "&:hover": {
-                                                    outline: 'none !important',
-                                                    backgroundColor: 'rgba(39, 99, 24, 0.2)'
-                                                },
-                                            },
-                                            '& .Mui-selected': {
-                                                backgroundColor: 'rgba(39, 99, 24, 0.5) !important',
-                                                "&:hover": {
-                                                    outline: 'none !important',
-                                                    backgroundColor: 'rgba(39, 99, 24, 0.2) !important'
-                                                },
-                                            }
-                                        }}
-                            />
-                        </Stack>
-                    </div>
+            
+            <OpinionsGrid container>
+                {[...opinions].map((opinion) => (
+                    <Opinion 
+                        key={opinion.id} 
+                        id={opinion.id} 
+                        opinion={opinion} 
+                        onDelete={removeById} 
+                        onUpdate={reloadOpinions}
+                    />
+                ))}
+            </OpinionsGrid>
 
-        </div>
-    )
-
+            <PaginationContainer>
+                <Stack spacing={2}>
+                    <StyledPagination 
+                        page={currentPage} 
+                        count={totalPages} 
+                        onChange={changePage} 
+                        shape="rounded"
+                    />
+                </Stack>
+            </PaginationContainer>
+        </OpinionsContainer>
+    );
 }
 
 export default Opinions;

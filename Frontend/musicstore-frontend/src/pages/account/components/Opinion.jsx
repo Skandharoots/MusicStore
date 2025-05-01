@@ -1,30 +1,170 @@
-import Box from '@mui/material/Box';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import { styled } from '@mui/material/styles';
 import {
-    Rating,
-    Button,
     Backdrop,
+    Box,
+    Button,
     CircularProgress,
     Dialog,
     DialogActions,
     DialogContent,
     DialogContentText,
     DialogTitle,
-    TextField
+    Rating,
+    TextField,
+    styled,
+    Typography
 } from "@mui/material";
-import React, {useEffect, useState} from "react";
-import axios from "axios";
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import React, {useEffect, useState} from "react";
+import axios from "axios";
 import LocalStorageHelper from "../../../helpers/LocalStorageHelper";
 import {Slide, toast} from "react-toastify";
 
+const OpinionContainer = styled(Box)(({theme}) => ({
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
+    boxShadow: '0 5px 15px 0 ' + theme.palette.formShadow.main,
+    color: theme.palette.text.primary,
+    borderRadius: '1em',
+    padding: '8px',
+}));
 
+const ItemImage = styled(Box)(({theme}) => ({
+    width: '200px',
+    maxHeight: '85px',
+    aspectRatio: '16 / 9',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundSize: 'cover',
+    margin: '0 0',
+}));
+
+const Image = styled('img')(({theme}) => ({
+    objectFit: 'cover',
+    maxWidth: '100%',
+    maxHeight: '100%',
+    display: 'block',
+    flexShrink: '0',
+    flexGrow: '0',
+}));
+
+const ProductInfo = styled(Box)(({theme}) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
+    width: 'fit-content',
+    height: 'fit-content',
+}));
+
+const CommentContainer = styled(Box)(({theme}) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '50%',
+}));
+
+const CommentText = styled('p')(({theme}) => ({
+    margin: '0',
+    padding: '8px',
+    fontSize: '16px',
+    fontWeight: 'normal',
+    textWrap: 'wrap',
+    overflow: 'hidden',
+}));
+
+const ButtonContainer = styled(Box)(({theme}) => ({
+    display: 'flex',
+    flexDirection: 'row',
+    width: '100%',
+    height: 'fit-content',
+    marginTop: '8px',
+    alignItems: 'flex-end',
+    justifyContent: 'flex-end',
+}));
+
+const ActionButtons = styled(Box)(({theme}) => ({
+    height: '100%',
+    width: 'fit-content',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+}));
+
+const StyledRating = styled(Rating)(({theme}) => ({
+    '& .MuiRating-iconFilled': {
+        color: '#ff6d75',
+    },
+    '& .MuiRating-iconHover': {
+        color: '#ff3d47',
+    },
+}));
+
+const ShowMoreButton = styled(Button)(({theme}) => ({
+    fontSize: '10px',
+    fontWeight: 'bold',
+    height: '36px',
+    borderColor: theme.palette.primary.main,
+    color: theme.palette.primary.main,
+    marginRight: '8px',
+    outline: 'none !important',
+    '&:focus': {
+        borderColor: theme.palette.primary.light,
+        outline: 'none !important',
+    },
+    '&:hover': {
+        borderColor: theme.palette.primary.light,
+        backgroundColor: 'rgba(255, 255, 255, 0.1)',
+        color: theme.palette.primary.light,
+        outline: 'none !important',
+    },
+}));
+
+const EditButton = styled(Button)(({theme}) => ({
+    width: 'fit-content',
+    margin: '4px 0',
+    color: theme.palette.mybutton.colorTwo,
+    backgroundColor: theme.palette.editBtn.main,
+    '&:hover': {
+        backgroundColor: theme.palette.editBtn.light,
+    },
+}));
+
+const DeleteButton = styled(Button)(({theme}) => ({
+    width: 'fit-content',
+    margin: '4px 0',
+    color: theme.palette.mybutton.colorTwo,
+    backgroundColor: theme.palette.errorBtn.main,
+    '&:hover': {
+        backgroundColor: theme.palette.errorBtn.light,
+    },
+    '&:focus': {
+        outline: 'none !important',
+    },
+}));
+
+const StyledTextField = styled(TextField)(({theme}) => ({
+    width: '500px',
+    margin: '16px 0',
+    '& label.Mui-focused': {
+        color: theme.palette.primary.main,
+    },
+    '& .MuiOutlinedInput-root': {
+        '&.Mui-focused fieldset': {
+            borderColor: theme.palette.primary.main,
+        },
+    },
+}));
 
 function Opinion(props) {
-
     const [myHeight, setMyHeight] = useState('36px');
     const [editText, setEditText] = useState('');
     const [productOpinionError, setProductOpinionError] = useState(false);
@@ -71,8 +211,8 @@ function Opinion(props) {
                 progress: undefined,
                 theme: "light",
                 transition: Slide,
-            })
-        })
+            });
+        });
     }, [props.opinion]);
     
     useEffect(() => {
@@ -85,15 +225,15 @@ function Opinion(props) {
                 setEditText(props.opinion.comment);
             }).catch(() => {
                 //
-            })
+            });
         }).catch(() => {
             //
-        })
+        });
     }, [props.opinion]);
 
     const changeHeight = () => {
         setMyHeight(myHeight === '36px' ? 'fit-content' : '36px');
-    }
+    };
 
     const generateRating = (rating) => {
         if (rating === 'ONE') {
@@ -107,19 +247,9 @@ function Opinion(props) {
         } else if (rating === 'FIVE') {
             return 5;
         }
-    }
-
-    const StyledRating = styled(Rating)({
-        '& .MuiRating-iconFilled': {
-          color: '#ff6d75',
-        },
-        '& .MuiRating-iconHover': {
-          color: '#ff3d47',
-        },
-    });
+    };
 
     const validateOpinion = () => {
-    
         let isValid = true;
 
         if (editText.length < 10 || editText.length > 500) {
@@ -136,7 +266,7 @@ function Opinion(props) {
         }
 
         return isValid;
-    }
+    };
 
     const updateOpinion = (event) => {
         event.preventDefault();
@@ -205,17 +335,17 @@ function Opinion(props) {
                 handleCloseEdit();
                 toast.error("Cannot fetch token", {
                     position: "bottom-center",
-                        autoClose: 5000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: false,
-                        progress: undefined,
-                        theme: "light",
-                        transition: Slide,
-                    });
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: false,
+                    progress: undefined,
+                    theme: "light",
+                    transition: Slide,
+                });
             });
-    }
+    };
 
     const deleteOpinion = (event) => {
         event.preventDefault();
@@ -256,7 +386,7 @@ function Opinion(props) {
                         theme: "light",
                         transition: Slide,
                     });
-                })
+                });
             }).catch(() => {
                 setOpenBackdrop(false);
                 toast.error("Cannot fetch token", {
@@ -270,297 +400,182 @@ function Opinion(props) {
                     theme: "light",
                     transition: Slide,
                 });
-        });
-    }
-
+            });
+    };
 
     return (
-        <div
-            style={{
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                width: '100%',
-                boxShadow: '0 5px 15px 0 rgba(0, 0, 0, 0.1)',
-                color: 'black',
-                borderRadius: '1em',
-                padding: '8px',
-            }}
-        >
+        <OpinionContainer>
             <Backdrop
                 sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
                 open={openBackdrop}
             >
                 <CircularProgress color="inherit" />
             </Backdrop>
-            <div className="item-img"
-                 style={{
-                     width: '200px', maxHeight: '85px', aspectRatio: "16 / 9",
-                     display: 'flex', justifyContent: 'center', alignItems: 'center',
-                     backgroundSize: 'cover', margin: '0 0',
-                 }}
-            >
-                <img alt={'No image'} src={image}
-                     style={{
-                         objectFit: 'cover',
-                         maxWidth: '100%',
-                         maxHeight: '100%',
-                         display: 'block',
-                         flexShrink: '0',
-                         flexGrow: '0',
-                     }}
-                />
-            </div>
-            <div
-                style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'flex-start',
-                    justifyContent: 'flex-start',
-                    width: 'fit-content',
-                    height: 'fit-content',
-                    
-                }}
-            >
+            
+            <ItemImage>
+                <Image alt="No image" src={image} />
+            </ItemImage>
+
+            <ProductInfo>
                 <Box sx={{ '& > legend': { mt: 2 } }}>
-                <StyledRating
-                    name="customized-color"
-                    value={generateRating(props.opinion.rating)}
-                    getLabelText={(value) => `${value} Heart${value !== 1 ? 's' : ''}`}
-                    precision={0.5}
-                    icon={<FavoriteIcon fontSize="inherit" />}
-                    emptyIcon={<FavoriteBorderIcon fontSize="inherit" />}
-                    readOnly
-                    size="small"
-                />
+                    <StyledRating
+                        name="customized-color"
+                        value={generateRating(props.opinion.rating)}
+                        getLabelText={(value) => `${value} Heart${value !== 1 ? 's' : ''}`}
+                        precision={0.5}
+                        icon={<FavoriteIcon fontSize="inherit" />}
+                        emptyIcon={<FavoriteBorderIcon fontSize="inherit" />}
+                        readOnly
+                        size="small"
+                    />
                 </Box>
-                <p style={{margin: '0', fontSize: '16px', fontWeight: 'normal'}}>{productName}</p>
-                    
-                
-            </div>
-            <div style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: '50%',
-            }}>
-                <p style={{margin: '0', padding: '8px', fontSize: '16px', fontWeight: 'normal', textWrap: 'wrap', overflow: 'hidden', height: myHeight}}>{props.opinion.comment}</p>
-                <div 
-                    style={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                        width: '100%',
-                        height: 'fit-content',
-                        marginTop: '8px',
-                        alignItems: 'flex-end',
-                        justifyContent: 'flex-end',
-                    }}
-                >
+                <Typography variant="body1">{productName}</Typography>
+            </ProductInfo>
+
+            <CommentContainer>
+                <CommentText sx={{ height: myHeight }}>{props.opinion.comment}</CommentText>
+                <ButtonContainer>
                     {myHeight === '36px' && 
-                    <Button
-                        variant="text"
-                    onClick={changeHeight} 
-                    sx={{
-                        fontSize: '10px', 
-                        fontWeight: 'bold', 
-                        height: myHeight,
-                        borderColor: 'rgb(39, 99, 24)',
-                        color: 'rgb(39, 99, 24)',
-                        marginRight: '8px',
-                       outline: 'none !important',
-                        "&:focus": {
-                            bordeerColor: 'rgba(49,140,23, 0.1)', 
-                            outline: 'none !important',
-                        },
-                        "&:hover": { 
-                            borderColor: 'rgba(49,140,23, 0.1)',
-                            backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                            color: 'rgba(49,140,23)',
-                            outline: 'none !important',
+                        <ShowMoreButton
+                            variant="text"
+                            onClick={changeHeight}
+                        >
+                            Show more
+                        </ShowMoreButton>
+                    }
+                    {myHeight === 'fit-content' && 
+                        <ShowMoreButton
+                            variant="text"
+                            onClick={changeHeight}
+                        >
+                            Hide
+                        </ShowMoreButton>
+                    }
+                </ButtonContainer>
+            </CommentContainer>
 
-                        }
-                    }}>Show more</Button>
-                }
-                {myHeight === 'fit-content' && 
-                    <Button
-                    variant='text' 
-                    onClick={changeHeight}
-                    sx={{
-                        fontSize: '10px', 
-                        fontWeight: 'bold', 
-                        borderColor: 'rgb(39, 99, 24)',
-                        color: 'rgb(39, 99, 24)',
-                        outline: 'none !important',
-                        "&:focus": {
-                            bordeerColor: 'rgba(49,140,23, 0.1)', 
-                            outline: 'none !important',
-                        },
-                        "&:hover": { 
-                            borderColor: 'rgba(49,140,23, 0.1)',
-                            backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                            color: 'rgba(49,140,23)',
-                            outline: 'none !important',
-
-                        }
-                    }}>Hide</Button>
-                } 
-                </div>
-            </div>
-            <div
-                    style={{
-                        height: '100%',
-                        width: 'fit-content',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                    }}
+            <ActionButtons>
+                <EditButton
+                    variant="contained"
+                    size="small"
+                    type="button"
+                    fullWidth
+                    onClick={handleClickOpenEdit}
                 >
-                    <React.Fragment>
+                    <EditIcon fontSize="small"/>
+                </EditButton>
+
+                <DeleteButton
+                    variant="contained"
+                    size="small"
+                    type="button"
+                    onClick={handleClickOpen}
+                    fullWidth
+                >
+                    <DeleteIcon fontSize="small"/>
+                </DeleteButton>
+            </ActionButtons>
+
+            <Dialog
+                open={openEdit}
+                onClose={handleCloseEdit}
+            >
+                <DialogTitle>Edit opinion</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Change your opinion
+                    </DialogContentText>
+                    <Typography variant="body1" sx={{ margin: '16px 0 4px 0' }}>
+                        Rate product
+                    </Typography>
+                    <Box sx={{ '& > legend': { mt: 2 }, marginBottom: '16px' }}>
+                        <StyledRating
+                            name="customized-color"
+                            value={userRating}
+                            getLabelText={(value) => `${value} Heart${value !== 1 ? 's' : ''}`}
+                            precision={1}
+                            onChange={(e, nv) => {
+                                setUserRating(nv);
+                            }}
+                            icon={<FavoriteIcon fontSize="inherit" />}
+                            emptyIcon={<FavoriteBorderIcon fontSize="inherit" />}
+                        />
+                    </Box>
+                    <StyledTextField
+                        size="large"
+                        id="opinion"
+                        label="Your opinion"
+                        multiline
+                        rows={4}
+                        required
+                        error={productOpinionError}
+                        helperText={productOpinionErrorMsg}
+                        color={productOpinionError ? 'error' : 'primary'}
+                        value={editText}
+                        onChange={e => setEditText(e.target.value)}
+                        variant="outlined"
+                    />
+                </DialogContent>
+                <DialogActions>
                     <Button
                         variant="contained"
-                        size="small"
-                        type="button"
-                        fullWidth
-                        onClick={handleClickOpenEdit}
+                        onClick={handleCloseEdit}
                         sx={{
-                            width: 'fit-content',
-                            margin: '4px 0',
-                            backgroundColor: 'rgb(255, 189, 3)',
-                            "&:hover": {backgroundColor: 'rgb(255,211,51)'}
+                            color: theme => theme.palette.mybutton.colorTwo,
+                            backgroundColor: 'rgb(11,108,128)',
+                            '&:hover': {backgroundColor: 'rgb(16,147,177)'},
                         }}
                     >
-                        <EditIcon fontSize="small"/>
+                        Cancel
                     </Button>
-                        <Dialog
-                            open={openEdit}
-                            onClose={handleCloseEdit}
-                        >
-                            <DialogTitle>Edit opinion</DialogTitle>
-                            <DialogContent>
-                                <DialogContentText>
-                                    Change your opinion
-                                </DialogContentText>
-                                <p style={{margin: '16px 0 4px 0'}}>Rate product</p>
-                                <Box sx={{ '& > legend': { mt: 2 }, marginBottom: '16px' }}>
-                                    <StyledRating
-                                        name="customized-color"
-                                        value={userRating}
-                                        getLabelText={(value) => `${value} Heart${value !== 1 ? 's' : ''}`}
-                                        precision={1}
-                                        onChange={(e, nv) => {
-                                            setUserRating(nv);
-                                        }}
-                                        icon={<FavoriteIcon fontSize="inherit" />}
-                                        emptyIcon={<FavoriteBorderIcon fontSize="inherit" />}
-                                    />
-                                </Box>
-                                <TextField
-                                    size={"large"}
-                                    id="opinion"
-                                    label="Your opinion"
-                                    multiline
-                                    rows={4}
-                                    required
-                                    error={productOpinionError}
-                                    helperText={productOpinionErrorMsg}
-                                    color={productOpinionError ? 'error' : 'primary'}
-                                    value={editText}
-                                    onChange={e => setEditText(e.target.value)}
-                                    variant={"outlined"}
-                                    sx={{
-                                        width: '500px',
-                                        margin: '16px 0 16px 0',
-                                        "& label.Mui-focused": {
-                                            color: 'rgb(39, 99, 24)'
-                                        },
-                                        "& .MuiOutlinedInput-root": {
-                                            "&.Mui-focused fieldset": {
-                                                borderColor: 'rgb(39, 99, 24)'
-                                            }
-                                        }
-                                    }}
-                                />
-                            </DialogContent>
-                            <DialogActions>
-                                <Button
-                                    variant="contained"
-                                    onClick={handleCloseEdit}
-                                    sx={{
-                                        backgroundColor: 'rgb(11,108,128)',
-                                        "&:hover": {backgroundColor: 'rgb(16,147,177)'},
-                                    }}
-                                >
-                                    Cancel
-                                </Button>
-                                <Button
-                                    variant="contained"
-                                    onClick={updateOpinion}
-                                    sx={{
-                                        backgroundColor: 'rgb(255, 189, 3)',
-                                        "&:hover": {backgroundColor: 'rgb(255,211,51)'}
-                                    }}
-                                >
-                                    Update
-                                </Button>
-                            </DialogActions>
-                        </Dialog>
-                    </React.Fragment>
-                    <React.Fragment>
-                        <Button
-                            variant="contained"
-                            size="small"
-                            type="button"
-                            onClick={handleClickOpen}
-                            fullWidth
-                            sx={{
-                                width: 'fit-content',
-                                margin: '4px 0',
-                                backgroundColor: 'rgb(159,20,20)',
-                                "&:hover": {backgroundColor: 'rgb(193,56,56)'},
-                                "&:focus": {outline: 'none !important'},
-                            }}
-                        >
-                            <DeleteIcon fontSize="small"/>
-                        </Button>
-                        <Dialog
-                            open={open}
-                            onClose={handleClose}
-                        >
-                            <DialogTitle>Delete opinion</DialogTitle>
-                            <DialogContent>
-                                <DialogContentText>
-                                    Do you want to delete opinion for product?
-                                </DialogContentText>
-                            </DialogContent>
-                            <DialogActions>
-                                <Button
-                                    variant="contained"
-                                    onClick={handleClose}
-                                    sx={{
-                                        backgroundColor: 'rgb(11,108,128)',
-                                        "&:hover": {backgroundColor: 'rgb(16,147,177)'},
-                                    }}
-                                >
-                                    Cancel
-                                </Button>
-                                <Button
-                                    variant="contained"
-                                    onClick={deleteOpinion}
-                                    sx={{
-                                        backgroundColor: 'rgb(159,20,20)',
-                                        "&:hover": {backgroundColor: 'rgb(193,56,56)'},
-                                    }}
-                                >
-                                    Delete
-                                </Button>
-                            </DialogActions>
-                        </Dialog>
-                    </React.Fragment>
-                </div>
-        </div>
+                    <Button
+                        variant="contained"
+                        onClick={updateOpinion}
+                        sx={{
+                            color: theme => theme.palette.mybutton.colorTwo,
+                            backgroundColor: 'rgb(255, 189, 3)',
+                            '&:hover': {backgroundColor: 'rgb(255,211,51)'}
+                        }}
+                    >
+                        Update
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
+            <Dialog
+                open={open}
+                onClose={handleClose}
+            >
+                <DialogTitle>Delete opinion</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Do you want to delete opinion for product?
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button
+                        variant="contained"
+                        onClick={handleClose}
+                        sx={{
+                            backgroundColor: 'rgb(11,108,128)',
+                            '&:hover': {backgroundColor: 'rgb(16,147,177)'},
+                        }}
+                    >
+                        Cancel
+                    </Button>
+                    <Button
+                        variant="contained"
+                        onClick={deleteOpinion}
+                        sx={{
+                            backgroundColor: 'rgb(159,20,20)',
+                            '&:hover': {backgroundColor: 'rgb(193,56,56)'},
+                        }}
+                    >
+                        Delete
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        </OpinionContainer>
     );
 }
 

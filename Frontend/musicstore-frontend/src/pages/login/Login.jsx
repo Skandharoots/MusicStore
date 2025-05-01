@@ -6,10 +6,57 @@ import 'react-toastify/dist/ReactToastify.css';
 import LocalStorageHelper from "../../helpers/LocalStorageHelper.jsx";
 import TextField from '@mui/material/TextField';
 import {useState} from "react";
-import {Backdrop, Box, Button, CircularProgress, Typography} from "@mui/material";
+import {Backdrop, Box, Button, CircularProgress, Typography, Paper, styled} from "@mui/material";
 import {Link} from "react-router-dom";
 import axios from "axios";
 
+const LoginContainer = styled(Box)(({ theme }) => ({
+    margin: 0,
+    padding: 0,
+    display: 'flex',
+    flexDirection: 'column',
+    backgroundColor: theme.palette.background.default,
+    minHeight: '80dvh',
+}));
+
+const LoginForm = styled(Paper)(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    textAlign: 'center',
+    maxWidth: '400px',
+    margin: '5% auto',
+    borderRadius: '1em',
+    boxShadow: '0 5px 15px ' + theme.palette.formShadow.main,
+    padding: '2%',
+    backgroundColor: theme.palette.background.paper,
+}));
+
+const LinksContainer = styled(Box)({
+    width: '70%',
+    height: 'fit-content',
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    margin: '0 auto',
+});
+
+const StyledLink = styled(Link)(({ theme }) => ({
+    color: theme.palette.text.primary,
+    textDecoration: 'none',
+    '&:hover': {
+        color: theme.palette.primary.main,
+    },
+}));
+
+const StyledButton = styled(Button)(({ theme }) => ({
+    color: theme.palette.mybutton.colorTwo,
+    width: '70%',
+    backgroundColor: 'rgb(39, 99, 24)',
+    "&:hover": {backgroundColor: 'rgb(49,140,23)'}
+}));
 
 function Login() {
 
@@ -26,6 +73,12 @@ function Login() {
     useEffect(() => {
         document.title = 'Log in';
     }, []);
+
+    useEffect(() => {
+        if (LocalStorageHelper.IsUserLogged()) {
+            navigate('/');
+        }
+    }, [navigate]);
 
     const validateInputs = () => {
 
@@ -247,20 +300,21 @@ function Login() {
     }
 
     return (
-        <div className="Login">
+        <LoginContainer>
             <Backdrop
                 sx={(theme) => ({color: '#fff', zIndex: theme.zIndex.drawer + 1})}
                 open={openBackdrop}
             >
                 <CircularProgress color="inherit"/>
             </Backdrop>
-            <div className="LoginForm">
+            <LoginForm>
                 <Typography
                     component="h1"
                     variant="h5"
                     sx={{
-                        width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)', color: 'black'
-                        , margin: '0 auto 5% auto'
+                        width: '100%',
+                        fontSize: 'clamp(2rem, 10vw, 2.15rem)',
+                        margin: '0 auto 5% auto',
                     }}
                 >
                     Sign in
@@ -269,9 +323,7 @@ function Login() {
                     component="form"
                     onSubmit={submitLogin}
                     noValidate
-
                 >
-
                     <TextField
                         error={emailError}
                         helperText={emailErrorMessage}
@@ -323,60 +375,35 @@ function Login() {
                             },
                             "& .MuiOutlinedInput-root": {
                                 "&.Mui-focused fieldset": {
-                                borderColor: 'rgb(39, 99, 24)'
+                                    borderColor: 'rgb(39, 99, 24)'
+                                }
                             }
-                        }
                         }}
                     />
-                    <Button
-                        className="login-btn"
+                    <StyledButton
                         type="submit"
                         fullWidth
                         variant="contained"
                         onClick={validateInputs}
-                        sx={{
-                            width: '70%',
-                            backgroundColor: 'rgb(39, 99, 24)',
-                            "&:hover": {backgroundColor: 'rgb(49,140,23)'}
-                        }}
                     >
                         Sign in
-                    </Button>
-                    <div
-                        style={{
-                            width: '70%',
-                            height: 'fit-content',
-                            display: 'flex',
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                            margin: '0 auto',
-                        }}
-                    >
-                        <Typography sx={{ textAlign: 'center', margin: '5% 0 0 0', color: 'black'  }}>
-                        <Link
-                            to="/password"
-                            variant="body2"
-                            sx={{ alignSelf: 'right', width: '100%'}}
-                        >
-                          Forgot password?
-                        </Link>
-                    </Typography>
-                    <Typography sx={{ textAlign: 'center', margin: '5% 0 0 0', color: 'black'  }}>
-                        <Link
-                            to="/signup"
-                            variant="body2"
-                            sx={{ alignSelf: 'right', width: '100%'}}
-                        >
-                          Sign up
-                        </Link>
-                    </Typography>
-
-                    </div>
+                    </StyledButton>
+                    <LinksContainer>
+                        <Typography sx={{ textAlign: 'center', margin: '5% 0 0 0' }}>
+                            <StyledLink to="/password">
+                                Forgot password?
+                            </StyledLink>
+                        </Typography>
+                        <Typography sx={{ textAlign: 'center', margin: '5% 0 0 0' }}>
+                            <StyledLink to="/signup">
+                                Sign up
+                            </StyledLink>
+                        </Typography>
+                    </LinksContainer>
                 </Box>
-            </div>
-        </div>
-    )
+            </LoginForm>
+        </LoginContainer>
+    );
 }
 
 export default Login;

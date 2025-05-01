@@ -1,4 +1,4 @@
-import {Backdrop, Box, Button, CircularProgress, Typography} from "@mui/material";
+import {Backdrop, Button, CircularProgress, Typography, Box, styled} from "@mui/material";
 import TextField from "@mui/material/TextField";
 import {useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
@@ -7,9 +7,53 @@ import '../style/AddManufacturer.scss';
 import LocalStorageHelper from "../../../helpers/LocalStorageHelper.jsx";
 import {Slide, toast} from "react-toastify";
 
+const ManufacturerAddContainer = styled(Box)(({theme}) => ({
+    height: 'fit-content',
+    display: 'flex',
+    flexDirection: 'column',
+    minHeight: '80dvh',
+    width: '796px',
+    borderLeft: `1px solid ${theme.palette.divider}`,
+    backgroundColor: theme.palette.background.paper,
+}));
+
+const AddManufacturerForm = styled(Box)(({theme}) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    justifyItems: 'center',
+    alignItems: 'center',
+    textAlign: 'center',
+    maxWidth: '400px',
+    minWidth: '200px',
+    margin: '5% 20%',
+    borderRadius: '1em',
+    boxShadow: '0 5px 15px ' + theme.palette.formShadow.main,
+    padding: '2%',
+}));
+
+const StyledTextField = styled(TextField)(({theme}) => ({
+    width: '70%',
+    margin: '0 auto 5% auto',
+    "& label.Mui-focused": {
+        color: 'rgb(39, 99, 24)'
+    },
+    "& .MuiOutlinedInput-root": {
+        "&.Mui-focused fieldset": {
+            borderColor: 'rgb(39, 99, 24)'
+        }
+    }
+}));
+
+const AddButton = styled(Button)(({theme}) => ({
+    width: '70%',
+    backgroundColor: 'rgb(39, 99, 24)',
+    color: theme.palette.mybutton.colorTwo,
+    "&:hover": {
+        backgroundColor: 'rgb(49,140,23)'
+    }
+}));
 
 function AddManufacturer() {
-
     const [manufacturerName, setManufacturerName] = useState('');
     const [manufacturerNameError, setManufacturerNameError] = useState(false);
     const [manufacturerNameErrorMsg, setManufacturerNameErrorMsg] = useState('');
@@ -27,13 +71,10 @@ function AddManufacturer() {
         }
     }, []);
 
-
     const validateInputs = () => {
-
         let isValid = true;
 
-        if (!manufacturerName
-            || !/^[A-Z][A-Za-z ']{1,49}/i.test(manufacturerName)) {
+        if (!manufacturerName || !/^[A-Z][A-Za-z ']{1,49}/i.test(manufacturerName)) {
             setManufacturerNameError(true);
             setManufacturerNameErrorMsg('Please enter a valid manufacturer name.');
             isValid = false;
@@ -53,7 +94,7 @@ function AddManufacturer() {
         LocalStorageHelper.CommitRefresh();
         axios.get('api/users/csrf/token', {})
             .then((response) => {
-                setManufacturerNameError(true);
+                setOpenBackdrop(true);
                 axios.post('api/products/manufacturers/create',
                     {
                         name: manufacturerName,
@@ -65,19 +106,19 @@ function AddManufacturer() {
                             'Content-Type': 'application/json',
                         }
                     }).then(() => {
-                        setOpenBackdrop(false);
-                        toast.success('Manufacturer Added!', {
-                            position: "bottom-center",
-                            autoClose: 5000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: false,
-                            progress: undefined,
-                            theme: "light",
-                            transition: Slide,
-                        });
-                        navigate('/admin/manufacturer');
+                    setOpenBackdrop(false);
+                    toast.success('Manufacturer Added!', {
+                        position: "bottom-center",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: false,
+                        progress: undefined,
+                        theme: "light",
+                        transition: Slide,
+                    });
+                    navigate('/admin/manufacturer');
                 }).catch((error) => {
                     setOpenBackdrop(false);
                     toast.error(error.response.data.message, {
@@ -107,35 +148,34 @@ function AddManufacturer() {
         });
     }
 
-
-
     return (
-        <div className="ManufacturerAdd">
+        <ManufacturerAddContainer>
             <Backdrop
                 sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
                 open={openBackdrop}
             >
                 <CircularProgress color="inherit" />
             </Backdrop>
-            <div className="AddManForm">
+            
+            <AddManufacturerForm>
                 <Typography
                     component="h1"
                     variant="h5"
                     sx={{
-                        width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)', color: 'black'
-                        , margin: '0 auto 5% auto'
+                        width: '100%',
+                        fontSize: 'clamp(2rem, 10vw, 2.15rem)',
+                        margin: '0 auto 5% auto'
                     }}
                 >
                     Add manufacturer
                 </Typography>
+                
                 <Box
                     component="form"
                     onSubmit={submitManufacturer}
                     noValidate
-
                 >
-
-                    <TextField
+                    <StyledTextField
                         error={manufacturerNameError}
                         helperText={manufacturerNameErrorMsg}
                         id="manufacturerName"
@@ -151,36 +191,19 @@ function AddManufacturer() {
                         label="Manufacturer"
                         value={manufacturerName}
                         onChange={e => setManufacturerName(e.target.value)}
-                        sx={{
-                            width: '70%',
-                            margin: '0 auto 5% auto',
-                            "& label.Mui-focused": {
-                                color: 'rgb(39, 99, 24)'
-                            },
-                            "& .MuiOutlinedInput-root": {
-                                "&.Mui-focused fieldset": {
-                                    borderColor: 'rgb(39, 99, 24)'
-                                }
-                            }
-                        }}
                     />
-                    <Button
-                        className="add-btn"
+                    
+                    <AddButton
                         type="submit"
                         fullWidth
                         variant="contained"
                         onClick={validateInputs}
-                        sx={{
-                            width: '70%',
-                            backgroundColor: 'rgb(39, 99, 24)',
-                            "&:hover": {backgroundColor: 'rgb(49,140,23)'}
-                        }}
                     >
                         Add Manufacturer
-                    </Button>
+                    </AddButton>
                 </Box>
-            </div>
-        </div>
+            </AddManufacturerForm>
+        </ManufacturerAddContainer>
     )
 }
 

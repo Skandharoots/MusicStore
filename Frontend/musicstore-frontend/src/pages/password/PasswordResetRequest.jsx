@@ -1,18 +1,51 @@
 import React, {useEffect, useState} from "react";
-import {Alert, AlertTitle, Backdrop, CircularProgress} from '@mui/material';
+import {Alert, AlertTitle, Backdrop, CircularProgress, Box, Button, Typography, Paper, styled} from '@mui/material';
 import CheckIcon from '@mui/icons-material/Check';
 import {Slide, toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import 'react-toastify/dist/ReactToastify.css';
 import TextField from '@mui/material/TextField';
-import {Box, Button, Typography} from "@mui/material";
 import axios from "axios";
 import './style/PasswordResetRequest.scss';
+import { useNavigate } from "react-router-dom";
+import LocalStorageHelper from "../../helpers/LocalStorageHelper";
 
+const PasswordContainer = styled(Box)(({ theme }) => ({
+    margin: 0,
+    padding: 0,
+    display: 'flex',
+    flexDirection: 'column',
+    backgroundColor: theme.palette.background.default,
+    minHeight: '80dvh',
+}));
 
+const PasswordForm = styled(Paper)(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    textAlign: 'center',
+    maxWidth: '400px',
+    margin: '5% auto',
+    borderRadius: '1em',
+    boxShadow: '0 5px 15px ' + theme.palette.formShadow.main,
+    padding: '2%',
+    backgroundColor: theme.palette.background.paper,
+}));
+
+const StyledAlert = styled(Alert)({
+    width: '400px',
+    margin: '32px auto 0 auto',
+    padding: '0 2%',
+});
+
+const StyledButton = styled(Button)(({ theme }) => ({
+    width: '70%',
+    color: theme.palette.mybutton.colorTwo,
+    backgroundColor: 'rgb(39, 99, 24)',
+    "&:hover": {backgroundColor: 'rgb(49,140,23)'}
+}));
 
 function PasswordResetRequest() {
-
     const [email, setEmail] = useState('');
     const [emailError, setEmailError] = useState(false);
     const [emailErrorMessage, setEmailErrorMessage] = useState('');
@@ -21,12 +54,19 @@ function PasswordResetRequest() {
     const [showErrorMsg, setShowErrorMsg] = useState('none')
     const [showSuccessMsg, setShowSucessMsg] = useState('none');
 
+    const navigate = useNavigate();
+
     useEffect(() => {
-            document.title = 'Reset password request';
-        }, []);
+        document.title = 'Reset password request';
+    }, []);
 
-    const validateInputs= (e) => {
+    useEffect(() => {
+        if (LocalStorageHelper.IsUserLogged()) {
+            navigate('/');
+        }
+    }, [navigate]);
 
+    const validateInputs = (e) => {
         let isValid = true;
 
         if (!email || !/^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i.test(email)) {
@@ -58,43 +98,38 @@ function PasswordResetRequest() {
     }
 
     return (
-        <div className='pass'>
+        <PasswordContainer>
             <Backdrop
                 sx={(theme) => ({color: '#fff', zIndex: theme.zIndex.drawer + 1})}
                 open={openBackdrop}
             >
                 <CircularProgress color="inherit"/>
             </Backdrop>
-            <Alert variant='filled'
-                   severity="success"
-                   icon={<CheckIcon fontSize='inherit' />}
-                   sx={{
-                       display: showSuccessMsg,
-                       width: '400px',
-                       margin: '32px auto 0 auto',
-                       padding: '0 2%',
-                   }}>
+            <StyledAlert
+                variant='filled'
+                severity="success"
+                icon={<CheckIcon fontSize='inherit' />}
+                sx={{ display: showSuccessMsg }}
+            >
                 <AlertTitle>Success</AlertTitle>
                 We have sent a password reset email message. Please check your inbox at {email}.
-            </Alert>
-            <Alert variant='filled'
-                   severity='error'
-                   onClose={() => setShowErrorMsg('none')}
-                   sx={{
-                       display: showErrorMsg,
-                       width: '400px',
-                       margin: '32px auto 0 auto',
-                       padding: '0 2%',
-                   }}>
+            </StyledAlert>
+            <StyledAlert
+                variant='filled'
+                severity='error'
+                onClose={() => setShowErrorMsg('none')}
+                sx={{ display: showErrorMsg }}
+            >
                 <AlertTitle>Error, {errorMsg}</AlertTitle>
-            </Alert>
-            <div className="pass-form">
+            </StyledAlert>
+            <PasswordForm>
                 <Typography
                     component="h1"
                     variant="h5"
                     sx={{
-                        width: '100%', fontSize: '14px', color: 'black'
-                        , margin: '0 auto 5% auto'
+                        width: '100%',
+                        fontSize: '14px',
+                        margin: '0 auto 5% auto',
                     }}
                 >
                     Please enter your email to reset your password
@@ -103,9 +138,7 @@ function PasswordResetRequest() {
                     component="form"
                     onSubmit={submitRequest}
                     noValidate
-
                 >
-
                     <TextField
                         error={emailError}
                         helperText={emailErrorMessage}
@@ -135,8 +168,7 @@ function PasswordResetRequest() {
                             }
                         }}
                     />
-                    <Button
-                        className="login-btn"
+                    <StyledButton
                         type="submit"
                         fullWidth
                         variant="contained"
@@ -148,13 +180,11 @@ function PasswordResetRequest() {
                         }}
                     >
                         Password reset
-                    </Button>
+                    </StyledButton>
                 </Box>
-            </div>
-        </div>
-
-    )
-
+            </PasswordForm>
+        </PasswordContainer>
+    );
 }
 
 export default PasswordResetRequest;

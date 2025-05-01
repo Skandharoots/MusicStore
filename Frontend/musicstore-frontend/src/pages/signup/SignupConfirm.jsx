@@ -1,12 +1,36 @@
-import {Alert, Button, Typography} from "@mui/material";
+import {Alert, Box, Button, Typography, styled} from "@mui/material";
 import {useNavigate, useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import axios from "axios";
-import './style/SignupConfirm.scss';
 
+const SignupConfirmContainer = styled(Box)(({ theme }) => ({
+  margin: '0 0',
+  padding: 0,
+  display: 'flex',
+  flexDirection: 'column',
+  minHeight: '80dvh',
+}));
+
+const SignupConfirmContent = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'start',
+  alignItems: 'start',
+  textAlign: 'center',
+  width: '400px',
+  margin: '5% auto',
+  color: theme.palette.text.primary,
+  borderRadius: '1em',
+  boxShadow: '0 5px 15px ' + theme.palette.formShadow.main,
+  padding: '2%',
+}));
+
+const StyledAlert = styled(Alert)(({ theme }) => ({
+  margin: '1rem auto',
+  color: theme.palette.mybutton.colorOne,
+}));
 
 function SignupConfirm() {
-
     const [countDown, setCountDown] = useState(10);
     const [hideSuccess, setHideSuccess] = useState(true);
     const [hideError, setHideError] = useState(true);
@@ -18,6 +42,12 @@ function SignupConfirm() {
     const token = useParams();
     const navigate = useNavigate();
 
+    useEffect(() => {
+        if (LocalStorageHelper.IsUserLogged()) {
+            navigate('/');
+        }
+    }, [navigate]);
+
     const counter = () => {
         let interval = setInterval(() => {
             setCountDown(lastTimerCount => {
@@ -28,33 +58,26 @@ function SignupConfirm() {
                     return lastTimerCount - 1
                 }
             })
-        }, 1000) //each count lasts for a second
-        //cleanup the interval on complete
+        }, 1000)
         return () => clearInterval(interval)
     };
 
     const showButton = () => {
         if (showRegisterButton) {
             return (
-                <Button color="inherit" size="small" onClick={() => {
-                    navigate('/signup')
-                }}>
+                <Button color="inherit" size="small" onClick={() => navigate('/signup')}>
                     Register
                 </Button>
             )
         } else if (showLoginButton) {
             return (
-                <Button color="inherit" size="small" onClick={() => {
-                    navigate('/login')
-                }}>
+                <Button color="inherit" size="small" onClick={() => navigate('/login')}>
                     Login
                 </Button>
             )
         } else {
             return (
-                <Button color="inherit" size="small" onClick={() => {
-                    navigate('/signup')
-                }}>
+                <Button color="inherit" size="small" onClick={() => navigate('/signup')}>
                     Register
                 </Button>
             )
@@ -63,59 +86,59 @@ function SignupConfirm() {
 
     useEffect(() => {
         axios.get(`api/users/register/confirm?token=${token.token}`, {})
-        .then(() => {
-            setHideSuccess(false);
-            setHideCountdown(false);
-            counter();
-        }).catch((error) => {
-            setHideError(false);
-            setErrorMessage(error.response.data.message);
-            if (error.response.data.message === 'Email already confirmed') {
-                setShowLoginButton(true);
-            } else if (error.response.data.message === 'Confirmation token expired') {
-                setShowLoginButton(true);
-            }
-        })
+            .then(() => {
+                setHideSuccess(false);
+                setHideCountdown(false);
+                counter();
+            }).catch((error) => {
+                setHideError(false);
+                setErrorMessage(error.response.data.message);
+                if (error.response.data.message === 'Email already confirmed') {
+                    setShowLoginButton(true);
+                } else if (error.response.data.message === 'Confirmation token expired') {
+                    setShowLoginButton(true);
+                }
+            })
     }, [])
 
     return (
-        <div className="signup-confirm">
-            <div className="signup-confirm-content">
-                <Typography variant="h5" color="black">
+        <SignupConfirmContainer>
+            <SignupConfirmContent>
+                <Typography variant="h5">
                     Hi, we are confirming your account!
                 </Typography>
-                { !hideSuccess &&
-                    <Alert
+                {!hideSuccess && (
+                    <StyledAlert
                         severity="success"
-                        sx={{margin: '1rem auto'}}
                         hidden={hideSuccess}
                         action={
-                            <Button color="inherit" size="small" onClick={() => {navigate('/login')}}>
+                            <Button color="inherit" size="small" onClick={() => navigate('/login')}>
                                 LOGIN NOW
                             </Button>
                         }
                     >
                         Success! You can now log in!
-                    </Alert>
-                }
-                { !hideError &&
-                    <Alert
+                    </StyledAlert>
+                )}
+                {!hideError && (
+                    <StyledAlert
                         severity="error"
-                        sx={{margin: '1rem auto'}}
                         hidden={hideError}
-                        action={
-                            showButton()
-                        }
+                        action={showButton()}
                     >
                         Something went wrong. {errorMessage}
-                    </Alert>
-                }
-                <Typography hidden={hideCountdown} variant={"body1"} color="black">
+                    </StyledAlert>
+                )}
+                <Typography 
+                    hidden={hideCountdown} 
+                    variant="body1" 
+                    color="black"
+                >
                     We&apos;ll redirect you to the login page in - {countDown}
                 </Typography>
-            </div>
-        </div>
-    )
+            </SignupConfirmContent>
+        </SignupConfirmContainer>
+    );
 }
 
-export default SignupConfirm
+export default SignupConfirm;

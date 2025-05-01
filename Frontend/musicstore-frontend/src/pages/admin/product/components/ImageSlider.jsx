@@ -51,6 +51,7 @@ export function ImageSlider({ imageBinaries, onDelete }) {
                 height: "100%",
                 display: "flex",
                 overflow: "hidden",
+                backgroundColor: 'white',
             }}>
 
                     {images.map((url, index) => (

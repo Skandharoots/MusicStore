@@ -1,15 +1,107 @@
 import {useEffect, useState} from "react";
 import axios from "axios";
+import {Tooltip, Typography, Box, styled, Button} from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import {format} from "date-fns";
-import Tooltip from "@mui/material/Tooltip";
 import {Link} from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
-import {Button} from "@mui/material";
 
+const OrderItemContainer = styled(Grid)(({theme}) => ({
+    display: 'flex',
+    flexDirection: 'row',
+    height: 'fit-content',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    minWidth: '200px',
+    padding: '4px',
+    color: theme.palette.text.primary,
+    fontSize: '12px',
+    borderRadius: '1em',
+    boxShadow: '0 5px 15px ' + theme.palette.itemShadow.main,
+    boxSizing: 'border-box',
+    transition: 'all 0.3s',
+    "&:hover": {
+        boxShadow: '0 5px 15px ' + theme.palette.itemShadow.light,
+    },
+}));
+
+const EditButton = styled(Button)(({theme}) => ({
+    height: '100px',
+    width: '40px',
+    minWidth: '0',
+    minHeight: '0',
+    margin: '0 0 0 4%',
+    color: theme.palette.mybutton.colorTwo,
+    backgroundColor: 'rgb(255, 189, 3)',
+    "&:hover": {
+        backgroundColor: 'rgb(255,211,51)'
+    }
+}));
+
+const OrderDetails = styled(Box)(({theme}) => ({
+    width: '40%',
+    display: 'block',
+    height: '100%',
+    padding: '2%',
+}));
+
+const OrderText = styled(Typography)(({theme}) => ({
+    margin: '0',
+    fontSize: '12px',
+    fontWeight: 'bold',
+    overflow: 'hidden',
+    textWrap: 'nowrap',
+}));
+
+const OrderStatus = styled(Typography)(({theme, status}) => ({
+    margin: '0',
+    fontSize: '18px',
+    fontWeight: 'bold',
+    overflow: 'hidden',
+    textWrap: 'nowrap',
+    color: status === 'RECEIVED' ? theme.palette.text.primary :
+           status === 'SENT' ? 'rgb(20,120,143)' :
+           status === 'COMPLETED' ? 'rgb(39,99,24)' :
+           status === 'CANCELED' ? 'rgb(218,113,24)' :
+           status === 'RETURNED' ? 'rgb(159,20,20)' : theme.palette.text.primary,
+}));
+
+const ImagesContainer = styled(Box)(({theme}) => ({
+    display: 'flex',
+    flexDirection: 'row',
+    height: '100%',
+    width: '50%',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+}));
+
+const ImageWrapper = styled(Box)(({theme}) => ({
+    height: '70px',
+    display: "flex",
+    overflow: "hidden",
+}));
+
+const ImageContainer = styled(Box)(({theme}) => ({
+    maxHeight: '100%',
+    aspectRatio: "10 / 6",
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundSize: 'cover',
+    flexShrink: '0',
+    flexGrow: '0',
+}));
+
+const OrderImage = styled('img')(({theme}) => ({
+    objectFit: 'cover',
+    maxWidth: '100%',
+    maxHeight: '100%',
+    display: 'block',
+    flexShrink: '0',
+    flexGrow: '0',
+}));
 
 function AdminOrderItem(props) {
-
     const [images, setImages] = useState([]);
 
     useEffect(() => {
@@ -17,187 +109,64 @@ function AdminOrderItem(props) {
             const promises = [];
             [...props.item.orderItems].map((item) => {
                 promises.push(axios.get(`api/azure/read?path=${item.productSkuId}/0`, {responseType: 'blob'}))
-
-            })
+            });
             Promise.all(promises.map(p => p.catch(e => e))).then(ordered_array => {
-                ordered_array.forEach( result => {
+                ordered_array.forEach(result => {
                     let blob = new Blob([result.data], {type: "image/*"});
                     let imgUrl = URL.createObjectURL(blob);
                     setImages(old => [...old, imgUrl]);
-                } );
+                });
             });
         }
     }, []);
 
     const parseStatus = (status) => {
-
         let last = status[status.length - 1];
-
-        if (last === 'RECEIVED') {
-            return <p style={{
-                margin: '0',
-                fontSize: '18px',
-                fontWeight: 'bold',
-                overflow: 'hidden',
-                textWrap: 'nowrap',
-                color: 'black',
-            }}>Received</p>
-        } else if (last === 'SENT') {
-            return <p style={{
-                margin: '0',
-                fontSize: '18px',
-                fontWeight: 'bold',
-                overflow: 'hidden',
-                textWrap: 'nowrap',
-                color: 'rgb(20,120,143)'
-            }}>Sent</p>
-        } else if (last === 'COMPLETED') {
-            return <p style={{
-                margin: '0',
-                fontSize: '18px',
-                fontWeight: 'bold',
-                overflow: 'hidden',
-                textWrap: 'nowrap',
-                color: 'rgb(39,99,24)'
-            }}>Order completed</p>
-        } else if (last === 'CANCELED') {
-            return <p style={{
-                margin: '0',
-                fontSize: '18px',
-                fontWeight: 'bold',
-                overflow: 'hidden',
-                textWrap: 'nowrap',
-                color: 'rgb(218,113,24)'
-            }}>Order canceled</p>
-        } else if (last === 'RETURNED') {
-            return <p style={{
-                margin: '0',
-                fontSize: '18px',
-                fontWeight: 'bold',
-                overflow: 'hidden',
-                textWrap: 'nowrap',
-                color: 'rgb(159,20,20)'
-            }}>Order returned</p>
-        }
-    }
+        const statusText = {
+            'RECEIVED': 'Received',
+            'SENT': 'Sent',
+            'COMPLETED': 'Order completed',
+            'CANCELED': 'Order canceled',
+            'RETURNED': 'Order returned'
+        };
+        return <OrderStatus status={last}>{statusText[last]}</OrderStatus>;
+    };
 
     return (
-        <Grid
-            size={12}
-            sx={{
-                display: 'flex',
-                flexDirection: 'row',
-                height: 'fit-content',
-                alignItems: 'center',
-                justifyContent: 'flex-start',
-                minWidth: '200px',
-                padding: '4px',
-                color: 'black',
-                fontSize: '12px',
-                borderRadius: '1em',
-                boxShadow: '0 5px 15px rgba(0, 0, 0, 0.1)',
-                boxSizing: 'border-box',
-                transition: 'all 0.3s',
-                "&:hover": {
-                    boxShadow: '0 5px 15px rgba(0, 0, 0, 0.4)',
-                },
-            }}
-            key={props.item.id}
-        >
-            <div>
-                <Button
-                    component={Link}
-                    to={"/admin/order/update/" + props.item.orderIdentifier}
-                    variant="contained"
-                    size="large"
-                    type="button"
-                    sx={{
-                        height: '100px',
-                        width: '40px',
-                        minWidth: '0',
-                        minHeight: '0',
-                        margin: '0 0 0 4%',
-                        backgroundColor: 'rgb(255, 189, 3)',
-                        "&:hover": {backgroundColor: 'rgb(255,211,51)'}
-                    }}
-                >
-                    <EditIcon fontSize="small"/>
-                </Button>
-            </div>
-            <div className="order-details"
-                 style={{
-                     width: '40%', display: 'block',
-                     height: '100%',
-                     padding: '2%',
-                 }}>
+        <OrderItemContainer size={12} key={props.item.id}>
+            <EditButton
+                component={Link}
+                to={"/admin/order/update/" + props.item.orderIdentifier}
+                variant="contained"
+                size="large"
+                type="button"
+            >
+                <EditIcon fontSize="small"/>
+            </EditButton>
+            
+            <OrderDetails>
                 {parseStatus(props.item.status)}
-                <p style={{
-                    margin: '0',
-                    fontSize: '12px',
-                    fontWeight: 'bold',
-                    overflow: 'hidden',
-                    textWrap: 'nowrap'
-                }}>{props.item.name} {props.item.surname}</p>
-                <p style={{
-                    margin: '0',
-                    fontSize: '12px',
-                    fontWeight: 'bold',
-                    overflow: 'hidden',
-                    textWrap: 'nowrap'
-                }}>{format(props.item.dateCreated, "MMMM do, yyyy")}</p>
-                <p style={{
-                    margin: '0',
-                    fontSize: '12px',
-                    fontWeight: 'bold',
-                    overflow: 'hidden',
-                    textWrap: 'nowrap'
-                }}>{props.item.totalPrice}$</p>
+                <OrderText>{props.item.name} {props.item.surname}</OrderText>
+                <OrderText>{format(props.item.dateCreated, "MMMM do, yyyy")}</OrderText>
+                <OrderText>{props.item.totalPrice}$</OrderText>
                 <Tooltip title={props.item.orderIdentifier}>
-                    <p style={{margin: '0', overflow: 'hidden', fontSize: '12px'}}>
-                        <b>nr: </b>{props.item.orderIdentifier}</p>
+                    <OrderText>
+                        <b>nr: </b>{props.item.orderIdentifier}
+                    </OrderText>
                 </Tooltip>
-            </div>
-            <div style={{display: 'flex',
-                flexDirection: 'row',
-                height: '100%',
-                width: '50%',
-                justifyContent: 'flex-start',
-                alignItems: 'center',
-            }}>
-            {
-                [...images].map((image, index) => (
-                    <div key={index * 5} style={{
-                        height: '70px',
-                        display: "flex",
-                        overflow: "hidden",
-                    }}>
-                        <div
-                            className="order-item-img"
-                            key={index}
-                            style={{
-                                maxHeight: '100%', aspectRatio: "10 / 6",
-                                display: 'flex', justifyContent: 'center', alignItems: 'center',
-                                backgroundSize: 'cover', flexShrink: '0',
-                                flexGrow: '0',
-                            }}
-                        >
-                            <img alt={'No image'} src={image}
-                                 style={{
-                                     objectFit: 'cover',
-                                     maxWidth: '100%',
-                                     maxHeight: '100%',
-                                     display: 'block',
-                                     flexShrink: '0',
-                                     flexGrow: '0',
-                                 }}
-                            />
-                        </div>
-                    </div>
-                        ))
-                        }
-                    </div>
-                </Grid>
-                )
-            }
+            </OrderDetails>
+            
+            <ImagesContainer>
+                {[...images].map((image, index) => (
+                    <ImageWrapper key={index * 5}>
+                        <ImageContainer key={index}>
+                            <OrderImage alt={'No image'} src={image} />
+                        </ImageContainer>
+                    </ImageWrapper>
+                ))}
+            </ImagesContainer>
+        </OrderItemContainer>
+    );
+}
 
-                export default AdminOrderItem
+export default AdminOrderItem;

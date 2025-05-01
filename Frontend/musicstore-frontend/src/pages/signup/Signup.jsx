@@ -1,45 +1,99 @@
 import React, {useEffect, useState} from "react";
-import './style/Signup.scss';
-import {Alert, AlertTitle, Backdrop, CircularProgress} from '@mui/material';
+import {styled} from '@mui/material/styles';
+import {Alert, AlertTitle, Backdrop, Box, Button, CircularProgress, TextField, Typography} from '@mui/material';
 import CheckIcon from '@mui/icons-material/Check';
 import {Slide, toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import 'react-toastify/dist/ReactToastify.css';
-import TextField from '@mui/material/TextField';
-import {Box, Button, Typography} from "@mui/material";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import LocalStorageHelper from "../../helpers/LocalStorageHelper";
+
+const SignupContainer = styled(Box)(({ theme }) => ({
+  margin: '0 0',
+  padding: 0,
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'flex-start',
+  minHeight: '80dvh',
+}));
+
+const SignupForm = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'center',
+  textAlign: 'center',
+  maxWidth: '400px',
+  margin: '32px auto',
+  borderRadius: '1em',
+  boxShadow: '0 5px 15px ' + theme.palette.formShadow.main,
+  padding: '2%',
+}));
+
+const StyledTextField = styled(TextField)(({ theme }) => ({
+  width: '70%',
+  margin: '0 auto 5% auto',
+  "& label.Mui-focused": {
+    color: 'rgb(39, 99, 24)'
+  },
+  "& .MuiOutlinedInput-root": {
+    "&.Mui-focused fieldset": {
+      borderColor: 'rgb(39, 99, 24)'
+    }
+  }
+}));
+
+const StyledButton = styled(Button)(({ theme }) => ({
+  width: '70%',
+  backgroundColor: 'rgb(39, 99, 24)',
+  color: theme.palette.mybutton.colorTwo,
+  "&:hover": {
+    backgroundColor: 'rgb(49,140,23)'
+  }
+}));
+
+const StyledAlert = styled(Alert)(({ theme }) => ({
+  width: '400px',
+  margin: '32px auto 0 auto',
+  padding: '0 2%',
+}));
 
 function Signup() {
-
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = React.useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
 
-    const [showSuccessMsg, setShowSuccessMsg] = React.useState('none');
-    const [showErrorMsg, setShowErrorMsg] = React.useState('none');
-    const [registerErrorMsg, setRegisterErrorMsg] = React.useState('');
+    const [showSuccessMsg, setShowSuccessMsg] = useState('none');
+    const [showErrorMsg, setShowErrorMsg] = useState('none');
+    const [registerErrorMsg, setRegisterErrorMsg] = useState('');
 
-    const [emailError, setEmailError] = React.useState(false);
-    const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
-    const [passwordError, setPasswordError] = React.useState(false);
-    const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
-    const [confirmPasswordError, setConfirmPasswordError] = React.useState(false);
-    const [confirmPasswordErrorMessage, setConfirmPasswordErrorMessage] = React.useState('');
-    const [firstNameError, setFirstNameError] = React.useState(false);
-    const [firstNameErrorMessage, setFirstNameErrorMessage] = React.useState('');
-    const [lastNameError, setLastNameError] = React.useState(false);
-    const [lastNameErrorMessage, setLastNameErrorMessage] = React.useState('');
+    const [emailError, setEmailError] = useState(false);
+    const [emailErrorMessage, setEmailErrorMessage] = useState('');
+    const [passwordError, setPasswordError] = useState(false);
+    const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
+    const [confirmPasswordError, setConfirmPasswordError] = useState(false);
+    const [confirmPasswordErrorMessage, setConfirmPasswordErrorMessage] = useState('');
+    const [firstNameError, setFirstNameError] = useState(false);
+    const [firstNameErrorMessage, setFirstNameErrorMessage] = useState('');
+    const [lastNameError, setLastNameError] = useState(false);
+    const [lastNameErrorMessage, setLastNameErrorMessage] = useState('');
 
-    const [openBackdrop, setOpenBackdrop] = React.useState(false);
+    const [openBackdrop, setOpenBackdrop] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
         document.title = 'Sign up';
     }, []);
 
-    const validateInputs = () => {
+    useEffect(() => {
+        if (LocalStorageHelper.IsUserLogged()) {
+            navigate('/');
+        }
+    }, [navigate]);
 
+    const validateInputs = () => {
         let isValid = true;
 
         if (!firstName
@@ -105,30 +159,30 @@ function Signup() {
         }
         setOpenBackdrop(true);
         axios.get('api/users/csrf/token', {})
-        .then((response) => {
-            const headers = {
-                'Content-Type': 'application/json',
-                'X-XSRF-TOKEN': response.data.token,
-            }
-            axios.post('api/users/register',
-                {
-                    firstName: firstName,
-                    lastName: lastName,
-                    email: email,
-                    password: password,
-                },
-                {
-                    headers: headers,
-                })
-                .then(() => {
-                    setShowSuccessMsg('flex');
-                    setOpenBackdrop(false);
-                }).catch((error) => {
+            .then((response) => {
+                const headers = {
+                    'Content-Type': 'application/json',
+                    'X-XSRF-TOKEN': response.data.token,
+                }
+                axios.post('api/users/register',
+                    {
+                        firstName: firstName,
+                        lastName: lastName,
+                        email: email,
+                        password: password,
+                    },
+                    {
+                        headers: headers,
+                    })
+                    .then(() => {
+                        setShowSuccessMsg('flex');
+                        setOpenBackdrop(false);
+                    }).catch((error) => {
                     setRegisterErrorMsg(error.response.data.message);
                     setShowErrorMsg('flex');
                     setOpenBackdrop(false);
-            })
-        }).catch(() => {
+                })
+            }).catch(() => {
             setOpenBackdrop(false);
             toast.error("Cannot fetch token", {
                 position: "bottom-center",
@@ -142,47 +196,41 @@ function Signup() {
                 transition: Slide,
             });
         })
-
     }
 
     return (
-        <div className="Signup">
+        <SignupContainer>
             <Backdrop
-                sx={(theme) => ({color: '#fff', zIndex: theme.zIndex.drawer + 1})}
+                sx={{color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1}}
                 open={openBackdrop}
             >
                 <CircularProgress color="inherit"/>
             </Backdrop>
-            <Alert variant='filled'
-                   severity="success"
-                   icon={<CheckIcon fontSize='inherit' />}
-                   sx={{
-                       display: showSuccessMsg,
-                       width: '400px',
-                       margin: '32px auto 0 auto',
-                       padding: '0 2%',
-                   }}>
+            <StyledAlert
+                variant="filled"
+                severity="success"
+                icon={<CheckIcon fontSize="inherit" />}
+                sx={{display: showSuccessMsg}}
+            >
                 <AlertTitle>Success</AlertTitle>
                 Registration successful, please check your email to verify your account.
-            </Alert>
-            <Alert variant='filled'
-                   severity='error'
-                   onClose={() => setShowErrorMsg('none')}
-                   sx={{
-                       display: showErrorMsg,
-                       width: '400px',
-                       margin: '32px auto 0 auto',
-                       padding: '0 2%',
-                   }}>
+            </StyledAlert>
+            <StyledAlert
+                variant="filled"
+                severity="error"
+                onClose={() => setShowErrorMsg('none')}
+                sx={{display: showErrorMsg}}
+            >
                 <AlertTitle>Error, {registerErrorMsg}</AlertTitle>
-            </Alert>
-            <div className="SignupForm">
+            </StyledAlert>
+            <SignupForm>
                 <Typography
                     component="h1"
                     variant="h5"
                     sx={{
-                        width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)', color: 'black'
-                        , margin: '0 auto 5% auto'
+                        width: '100%',
+                        fontSize: 'clamp(2rem, 10vw, 2.15rem)',
+                        margin: '0 auto 5% auto'
                     }}
                 >
                     Sign up
@@ -191,9 +239,8 @@ function Signup() {
                     component="form"
                     onSubmit={submitRegister}
                     noValidate
-
                 >
-                    <TextField
+                    <StyledTextField
                         error={firstNameError}
                         helperText={firstNameErrorMessage}
                         id="firstName"
@@ -209,20 +256,8 @@ function Signup() {
                         label="First name"
                         value={firstName}
                         onChange={e => setFirstName(e.target.value)}
-                        sx={{
-                            width: '70%',
-                            margin: '0 auto 5% auto',
-                            "& label.Mui-focused": {
-                                color: 'rgb(39, 99, 24)'
-                            },
-                            "& .MuiOutlinedInput-root": {
-                                "&.Mui-focused fieldset": {
-                                    borderColor: 'rgb(39, 99, 24)'
-                                }
-                            }
-                        }}
                     />
-                    <TextField
+                    <StyledTextField
                         error={lastNameError}
                         helperText={lastNameErrorMessage}
                         id="lastName"
@@ -237,20 +272,8 @@ function Signup() {
                         label="Last name"
                         value={lastName}
                         onChange={e => setLastName(e.target.value)}
-                        sx={{
-                            width: '70%',
-                            margin: '0 auto 5% auto',
-                            "& label.Mui-focused": {
-                                color: 'rgb(39, 99, 24)'
-                            },
-                            "& .MuiOutlinedInput-root": {
-                                "&.Mui-focused fieldset": {
-                                    borderColor: 'rgb(39, 99, 24)'
-                                }
-                            }
-                        }}
                     />
-                    <TextField
+                    <StyledTextField
                         error={emailError}
                         helperText={emailErrorMessage}
                         id="email"
@@ -265,20 +288,8 @@ function Signup() {
                         label="Email"
                         value={email}
                         onChange={e => setEmail(e.target.value)}
-                        sx={{
-                            width: '70%',
-                            margin: '0 auto 5% auto',
-                            "& label.Mui-focused": {
-                                color: 'rgb(39, 99, 24)'
-                            },
-                            "& .MuiOutlinedInput-root": {
-                                "&.Mui-focused fieldset": {
-                                    borderColor: 'rgb(39, 99, 24)'
-                                }
-                            }
-                        }}
                     />
-                    <TextField
+                    <StyledTextField
                         error={passwordError}
                         helperText={passwordErrorMessage}
                         name="password"
@@ -289,23 +300,12 @@ function Signup() {
                         required
                         fullWidth
                         variant="outlined"
+                        color={passwordError ? 'error' : 'primary'}
                         label="Password"
                         value={password}
                         onChange={e => setPassword(e.target.value)}
-                        sx={{
-                            width: '70%',
-                            margin: '0 auto 5% auto',
-                            "& label.Mui-focused": {
-                                color: 'rgb(39, 99, 24)'
-                            },
-                            "& .MuiOutlinedInput-root": {
-                                "&.Mui-focused fieldset": {
-                                    borderColor: 'rgb(39, 99, 24)'
-                                }
-                            }
-                        }}
                     />
-                    <TextField
+                    <StyledTextField
                         error={confirmPasswordError}
                         helperText={confirmPasswordErrorMessage}
                         name="confirmPassword"
@@ -316,41 +316,23 @@ function Signup() {
                         required
                         fullWidth
                         variant="outlined"
+                        color={confirmPasswordError ? 'error' : 'primary'}
                         label="Confirm password"
                         value={confirmPassword}
                         onChange={e => setConfirmPassword(e.target.value)}
-                        sx={{
-                            width: '70%',
-                            margin: '0 auto 5% auto',
-                            "& label.Mui-focused": {
-                                color: 'rgb(39, 99, 24)'
-                            },
-                            "& .MuiOutlinedInput-root": {
-                                "&.Mui-focused fieldset": {
-                                    borderColor: 'rgb(39, 99, 24)'
-                                }
-                            }
-                        }}
                     />
-                    <Button
-                        className="signup-btn"
+                    <StyledButton
                         type="submit"
                         fullWidth
                         variant="contained"
                         onClick={validateInputs}
-                        sx={{
-                            width: '70%',
-                            backgroundColor: 'rgb(39, 99, 24)',
-                            "&:hover": {backgroundColor: 'rgb(49,140,23)'}
-                        }}
                     >
                         Sign up
-                    </Button>
+                    </StyledButton>
                 </Box>
-            </div>
-        </div>
-    )
-
+            </SignupForm>
+        </SignupContainer>
+    );
 }
 
 export default Signup;

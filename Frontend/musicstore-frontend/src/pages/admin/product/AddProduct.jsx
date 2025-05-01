@@ -5,7 +5,12 @@ import {
     MenuItem,
     Typography,
     InputLabel,
-    FormControl, InputAdornment, FormHelperText, CircularProgress, Backdrop,
+    FormControl,
+    InputAdornment,
+    FormHelperText,
+    CircularProgress,
+    Backdrop,
+    styled
 } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import {useNavigate} from "react-router-dom";
@@ -18,6 +23,89 @@ import '../style/AddProduct.scss';
 import LocalStorageHelper from "../../../helpers/LocalStorageHelper.jsx";
 import {Slide, toast} from "react-toastify";
 import {ImageSlider} from "./components/ImageSlider.jsx";
+
+const ProductAddContainer = styled(Box)(({theme}) => ({
+    height: 'fit-content',
+    display: 'flex',
+    flexDirection: 'column',
+    minHeight: '80dvh',
+    width: '796px',
+    borderLeft: '1px solid ' + theme.palette.divider,
+}));
+
+const AddProductForm = styled(Box)(({theme}) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    textAlign: 'center',
+    maxWidth: '515px',
+    minWidth: '200px',
+    margin: '16px 20% 16px 20%',
+    borderRadius: '1em',
+    boxShadow: '0 5px 15px ' + theme.palette.formShadow.main,
+    padding: '2%',
+}));
+
+const StyledFormControl = styled(FormControl)(({theme}) => ({
+    width: '70%',
+    margin: '0 auto 5% auto',
+    "& label.Mui-focused": {
+        color: theme.palette.irish.main,
+    },
+    "& .MuiOutlinedInput-root": {
+        "&.Mui-focused fieldset": {
+            borderColor: theme.palette.irish.main,
+        }
+    }
+}));
+
+const StyledTextField = styled(TextField)(({theme}) => ({
+    width: '70%',
+    margin: '0 auto 5% auto',
+    "& label.Mui-focused": {
+        color: theme.palette.irish.main,
+    },
+    "& .MuiOutlinedInput-root": {
+        "&.Mui-focused fieldset": {
+            borderColor: theme.palette.irish.main,
+        }
+    },
+    '& input[type=number]::-webkit-inner-spin-button, & input[type=number]::-webkit-outer-spin-button': {
+        '-webkit-appearance': 'none',
+        margin: 0,
+    },
+    '& input[type="number"]': {
+        '-moz-appearance': 'textfield',
+    },
+}));
+
+const UploadButton = styled(Button)(({theme}) => ({
+    width: '70%',
+    marginBottom: '8px',
+    backgroundColor: theme.palette.blueBtn.main,
+    "&:hover": {backgroundColor: theme.palette.blueBtn.light},
+}));
+
+const DeleteGalleryButton = styled(Button)(({theme}) => ({
+    width: '70%',
+    marginBottom: '8px',
+    backgroundColor: theme.palette.errorBtn.main,
+    "&:hover": {backgroundColor: theme.palette.errorBtn.light},
+}));
+
+const AddProductButton = styled(Button)(({theme}) => ({
+    width: '70%',
+    backgroundColor: theme.palette.irish.main,
+    "&:hover": {backgroundColor: theme.palette.irish.light},
+}));
+
+const ImageSliderContainer = styled(Box)(({theme}) => ({
+    maxWidth: "1200px",
+    width: "70%",
+    aspectRatio: "10 / 6",
+    margin: "0 auto 32px auto",
+}));
 
 function AddProduct() {
 
@@ -459,46 +547,35 @@ function AddProduct() {
 
 
     return (
-        <div className="ProductAdd">
+        <ProductAddContainer>
             <Backdrop
-                sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
+                sx={(theme) => ({color: '#fff', zIndex: theme.zIndex.drawer + 1})}
                 open={openBackdrop}
             >
-                <CircularProgress color="inherit" />
+                <CircularProgress color="inherit"/>
             </Backdrop>
-            <div className="AddProductForm">
+            
+            <AddProductForm>
                 <Typography
                     component="h1"
                     variant="h5"
                     sx={{
-                        width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)', color: 'black'
-                        , margin: '0 auto 5% auto'
+                        width: '100%',
+                        fontSize: 'clamp(2rem, 10vw, 2.15rem)',
+                        margin: '0 auto 5% auto'
                     }}
                 >
                     Add product
                 </Typography>
-                <Box
-                >
-                    <FormControl
-                                 autoFocus
-                                 noValidate
-                                 required
-                                 error={categoryError}
-                                 color={categoryError ? 'error' : 'primary'}
-                                 size="small"
-                                 sx={{
-                                     m: 1,
-                                     width: '70%',
-                                     margin: '0 auto 5% auto',
-                                     "& label.Mui-focused": {
-                                         color: 'rgb(39, 99, 24)'
-                                     },
-                                     "& .MuiOutlinedInput-root": {
-                                         "&.Mui-focused fieldset": {
-                                             borderColor: 'rgb(39, 99, 24)'
-                                         }
-                                     }
-                                 }}
+                
+                <Box>
+                    <StyledFormControl
+                        autoFocus
+                        noValidate
+                        required
+                        error={categoryError}
+                        color={categoryError ? 'error' : 'primary'}
+                        size="small"
                     >
                         <InputLabel id="categoryLabel">Select category</InputLabel>
                         <Select
@@ -508,34 +585,21 @@ function AddProduct() {
                             value={selectCategoryId}
                             onChange={handleCategoryChange}
                             required
-                            variant={"outlined"}>
-                            {
-                                categories.map(({id, name}) => (
-                                    <MenuItem key={id} value={id}>{name}</MenuItem>
-                                ))
-                            }
+                            variant={"outlined"}
+                        >
+                            {categories.map(({id, name}) => (
+                                <MenuItem key={id} value={id}>{name}</MenuItem>
+                            ))}
                         </Select>
                         <FormHelperText>{categoryErrorMsg}</FormHelperText>
-                    </FormControl>
-                    <FormControl
-                                 size="small"
-                                 required
-                                 noValidate
-                                 error={subcategoryError}
-                                 color={subcategoryError ? 'error' : 'primary'}
-                                 sx={{
-                                     m: 1,
-                                     width: '70%',
-                                     margin: '0 auto 5% auto',
-                                     "& label.Mui-focused": {
-                                         color: 'rgb(39, 99, 24)'
-                                     },
-                                     "& .MuiOutlinedInput-root": {
-                                         "&.Mui-focused fieldset": {
-                                             borderColor: 'rgb(39, 99, 24)'
-                                         }
-                                     }
-                                 }}
+                    </StyledFormControl>
+
+                    <StyledFormControl
+                        size="small"
+                        required
+                        noValidate
+                        error={subcategoryError}
+                        color={subcategoryError ? 'error' : 'primary'}
                     >
                         <InputLabel id="subcategoryLabel">Select subcategory</InputLabel>
                         <Select
@@ -545,34 +609,21 @@ function AddProduct() {
                             value={selectedSubcategoryId}
                             onChange={handleSubcategoryChange}
                             required
-                            variant={"outlined"}>
-                            {
-                                subcategories.map(({id, name}) => (
-                                    <MenuItem key={id} value={id}>{name}</MenuItem>
-                                ))
-                            }
+                            variant={"outlined"}
+                        >
+                            {subcategories.map(({id, name}) => (
+                                <MenuItem key={id} value={id}>{name}</MenuItem>
+                            ))}
                         </Select>
                         <FormHelperText>{subcategoryErrorMsg}</FormHelperText>
-                    </FormControl>
-                    <FormControl
-                                 size="small"
-                                 required
-                                 noValidate
-                                 error={countryError}
-                                 color={countryError ? 'error' : 'primary'}
-                                 sx={{
-                                     m: 1,
-                                     width: '70%',
-                                     margin: '0 auto 5% auto',
-                                     "& label.Mui-focused": {
-                                         color: 'rgb(39, 99, 24)'
-                                     },
-                                     "& .MuiOutlinedInput-root": {
-                                         "&.Mui-focused fieldset": {
-                                             borderColor: 'rgb(39, 99, 24)'
-                                         }
-                                     }
-                                 }}
+                    </StyledFormControl>
+
+                    <StyledFormControl
+                        size="small"
+                        required
+                        noValidate
+                        error={countryError}
+                        color={countryError ? 'error' : 'primary'}
                     >
                         <InputLabel id="countryLabel">Select country</InputLabel>
                         <Select
@@ -582,33 +633,20 @@ function AddProduct() {
                             value={selectedCountryId}
                             onChange={handleCountryChange}
                             required
-                            variant={"outlined"}>
-                            {
-                                countries.map(({id, name}) => (
-                                    <MenuItem key={id} value={id}>{name}</MenuItem>
-                                ))
-                            }
+                            variant={"outlined"}
+                        >
+                            {countries.map(({id, name}) => (
+                                <MenuItem key={id} value={id}>{name}</MenuItem>
+                            ))}
                         </Select>
                         <FormHelperText>{countryErrorMsg}</FormHelperText>
-                    </FormControl>
-                    <FormControl
-                                 size="small"
-                                 required
-                                 error={manufacturerError}
-                                 color={manufacturerError ? 'error' : 'primary'}
-                                 sx={{
-                                     m: 1,
-                                     width: '70%',
-                                     margin: '0 auto 5% auto',
-                                     "& label.Mui-focused": {
-                                         color: 'rgb(39, 99, 24)'
-                                     },
-                                     "& .MuiOutlinedInput-root": {
-                                         "&.Mui-focused fieldset": {
-                                             borderColor: 'rgb(39, 99, 24)'
-                                         }
-                                     }
-                                 }}
+                    </StyledFormControl>
+
+                    <StyledFormControl
+                        size="small"
+                        required
+                        error={manufacturerError}
+                        color={manufacturerError ? 'error' : 'primary'}
                     >
                         <InputLabel id="manufacturerLabel">Select manufacturer</InputLabel>
                         <Select
@@ -618,16 +656,16 @@ function AddProduct() {
                             value={selectedManufacturerId}
                             onChange={handleManufacturerChange}
                             required
-                            variant={"outlined"}>
-                            {
-                                manufacturers.map(({id, name}) => (
-                                    <MenuItem key={id} value={id}>{name}</MenuItem>
-                                ))
-                            }
+                            variant={"outlined"}
+                        >
+                            {manufacturers.map(({id, name}) => (
+                                <MenuItem key={id} value={id}>{name}</MenuItem>
+                            ))}
                         </Select>
                         <FormHelperText>{manufacturerErrorMsg}</FormHelperText>
-                    </FormControl>
-                    <TextField
+                    </StyledFormControl>
+
+                    <StyledTextField
                         size={"small"}
                         error={productNameError}
                         helperText={productNameErrorMsg}
@@ -643,20 +681,9 @@ function AddProduct() {
                         label="Product"
                         value={productName}
                         onChange={e => setProductName(e.target.value)}
-                        sx={{
-                            width: '70%',
-                            margin: '0 auto 5% auto',
-                            "& label.Mui-focused": {
-                                color: 'rgb(39, 99, 24)'
-                            },
-                            "& .MuiOutlinedInput-root": {
-                                "&.Mui-focused fieldset": {
-                                    borderColor: 'rgb(39, 99, 24)'
-                                }
-                            }
-                        }}
                     />
-                    <TextField
+
+                    <StyledTextField
                         size={"small"}
                         id="productDescription"
                         label="Description"
@@ -669,19 +696,9 @@ function AddProduct() {
                         value={productDescription}
                         onChange={e => setProductDescription(e.target.value)}
                         variant={"outlined"}
-                        sx={{
-                            width: '70%',
-                            margin: '0 auto 5% auto',
-                            "& label.Mui-focused": {
-                                color: 'rgb(39, 99, 24)'
-                            },
-                            "& .MuiOutlinedInput-root": {
-                                "&.Mui-focused fieldset": {
-                                    borderColor: 'rgb(39, 99, 24)'
-                                }
-                            }
-                        }}/>
-                    <TextField
+                    />
+
+                    <StyledTextField
                         size={"small"}
                         error={productPriceError}
                         helperText={productPriceErrorMsg}
@@ -693,33 +710,22 @@ function AddProduct() {
                         autoComplete="productPrice"
                         required
                         fullWidth
-                        slotProps={{
-                            input: {
-                                startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                                maxLength: 10,
-                                step: 0.50,
-                                inputMode: 'numeric',
-                            },
+                        InputProps={{
+                            startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        }}
+                        inputProps={{
+                            maxLength: 10,
+                            step: 0.50,
+                            inputMode: 'numeric',
                         }}
                         variant="outlined"
                         color={productPriceError ? 'error' : 'primary'}
                         label="Price"
                         value={productPrice}
                         onChange={e => setProductPrice(e.target.value)}
-                        sx={{
-                            width: '70%',
-                            margin: '0 auto 5% auto',
-                            "& label.Mui-focused": {
-                                color: 'rgb(39, 99, 24)'
-                            },
-                            "& .MuiOutlinedInput-root": {
-                                "&.Mui-focused fieldset": {
-                                    borderColor: 'rgb(39, 99, 24)'
-                                }
-                            }
-                        }}
                     />
-                    <TextField
+
+                    <StyledTextField
                         size={"small"}
                         error={productQuantityError}
                         helperText={productQuantityErrorMsg}
@@ -730,43 +736,24 @@ function AddProduct() {
                         autoComplete="productQuantity"
                         required
                         fullWidth
-                        slotProps={{
-                            input: {
-                                maxLength: 10,
-                                step: 1,
-                                inputMode: 'numeric',
-                            },
+                        inputProps={{
+                            maxLength: 10,
+                            step: 1,
+                            inputMode: 'numeric',
                         }}
                         variant="outlined"
                         color={productQuantityError ? 'error' : 'primary'}
                         label="Quantity"
                         value={productQuantity}
                         onChange={e => setProductQuantity(e.target.value)}
-                        sx={{
-                            width: '70%',
-                            margin: '0 auto 5% auto',
-                            "& label.Mui-focused": {
-                                color: 'rgb(39, 99, 24)'
-                            },
-                            "& .MuiOutlinedInput-root": {
-                                "&.Mui-focused fieldset": {
-                                    borderColor: 'rgb(39, 99, 24)'
-                                }
-                            }
-                        }}
                     />
-                    <Button
+
+                    <UploadButton
                         variant="contained"
                         component="label"
-                        endIcon={<CloudUploadOutlinedIcon />}
+                        endIcon={<CloudUploadOutlinedIcon/>}
                         formNoValidate
                         fullWidth
-                        sx={{
-                            width: '70%',
-                            marginBottom: '8px',
-                            backgroundColor: 'rgb(15,90,110)',
-                            "&:hover": {backgroundColor: 'rgb(33,123,145)'}
-                        }}
                     >
                         Upload Gallery Photos
                         <input
@@ -777,52 +764,38 @@ function AddProduct() {
                             multiple={true}
                             onChange={handleGallery}
                         />
-                    </Button>
-                    {!hideGallery &&
-                        <div
-                            style={{
-                                maxWidth: "1200px",
-                                width: "70%",
-                                aspectRatio: "10 / 6",
-                                margin: "0 auto 32px auto",
-                            }}>
+                    </UploadButton>
+
+                    {!hideGallery && (
+                        <ImageSliderContainer>
                             <ImageSlider imageBinaries={productGalleryPhoto} onDelete={delGalPhoto}/>
-                        </div>
-                    }
-                    { !hideDeleteGalBtn &&
-                        <Button variant="contained"
-                                fullWidth
-                                endIcon={<DeleteOutlineOutlinedIcon />}
-                                onClick={deleteGallery}
-                                sx={{
-                                    width: '70%',
-                                    marginBottom: '8px',
-                                    backgroundColor: 'rgb(159,20,20)',
-                                    "&:hover": {backgroundColor: 'rgb(193,56,56)'},
-                                }}
+                        </ImageSliderContainer>
+                    )}
+
+                    {!hideDeleteGalBtn && (
+                        <DeleteGalleryButton
+                            variant="contained"
+                            fullWidth
+                            endIcon={<DeleteOutlineOutlinedIcon/>}
+                            onClick={deleteGallery}
                         >
                             Delete Gallery Photos
-                        </Button>
-                    }
-                    <Button
-                        className="add-btn"
+                        </DeleteGalleryButton>
+                    )}
+
+                    <AddProductButton
                         type="button"
                         fullWidth
                         variant="contained"
-                        endIcon={<AddOutlinedIcon />}
+                        endIcon={<AddOutlinedIcon/>}
                         onClick={submitProduct}
-                        sx={{
-                            width: '70%',
-                            backgroundColor: 'rgb(39, 99, 24)',
-                            "&:hover": {backgroundColor: 'rgb(49,140,23)'}
-                        }}
                     >
                         Add Product
-                    </Button>
+                    </AddProductButton>
                 </Box>
-            </div>
-        </div>
-    )
+            </AddProductForm>
+        </ProductAddContainer>
+    );
 }
 
 export default AddProduct;

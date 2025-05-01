@@ -3,7 +3,6 @@ import {useEffect, useState} from "react";
 import axios from "axios";
 import LocalStorageHelper from "../../../helpers/LocalStorageHelper.jsx";
 import {Slide, toast} from "react-toastify";
-import '../style/UpdateOrder.scss';
 import {
     Backdrop,
     Box,
@@ -13,7 +12,12 @@ import {
     InputLabel,
     MenuItem,
     Select,
-    Typography
+    Typography,
+    styled,
+    TextField,
+    Stepper,
+    Step,
+    StepLabel
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import {format} from "date-fns";
@@ -22,11 +26,154 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import DeleteIcon from '@mui/icons-material/Delete';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
-import TextField from "@mui/material/TextField";
-import Stepper from '@mui/material/Stepper';
-import Step from '@mui/material/Step';
-import StepLabel from '@mui/material/StepLabel';
 
+const OrderUpdateContainer = styled(Box)(({theme}) => ({
+    height: 'fit-content',
+    display: 'flex',
+    flexDirection: 'column',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    minHeight: '80dvh',
+    width: '796px',
+    borderLeft: '1px solid ' + theme.palette.divider,
+    color: theme.palette.text.primary,
+}));
+
+const OrderUpdateForm = styled(Box)(({theme}) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    textAlign: 'center',
+    maxWidth: '950px',
+    minWidth: '200px',
+    margin: '16px 20% 16px 20%',
+    borderRadius: '1em',
+    boxShadow: '0 5px 15px ' + theme.palette.formShadow.main,
+    padding: '2%',
+}));
+
+const UpdateOrderLeft = styled(Box)(({theme}) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    boxSizing: 'border-box',
+    width: '100%',
+    borderBottom: '1px solid ' + theme.palette.divider,
+}));
+
+const OrderPersonalDetails = styled(Box)(({theme}) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+    width: '100%',
+    height: 'fit-content',
+    padding: '16px',
+    borderRadius: '1em',
+    marginBottom: '16px',
+    boxSizing: 'border-box',
+    boxShadow: '0 5px 15px ' + theme.palette.itemShadow.main,
+}));
+
+const OrderDelivery = styled(Box)(({theme}) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+    width: '100%',
+    height: 'fit-content',
+    padding: '16px',
+    borderRadius: '1em',
+    marginBottom: '16px',
+    boxSizing: 'border-box',
+    boxShadow: '0 5px 15px ' + theme.palette.itemShadow.main,
+}));
+
+const UpdateOrderRight = styled(Box)(({theme}) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+    boxSizing: 'border-box',
+    width: '100%',
+    minWidth: '180px',
+    padding: '0 0 0 0',
+    marginTop: '16px',
+}));
+
+const GenPdfContainer = styled(Box)(({theme}) => ({
+    width: '100%',
+    height: 'fit-content',
+    padding: '16px 0 0 0',
+    marginTop: '16px',
+    borderTop: '1px solid ' + theme.palette.divider,
+    display: 'flex',
+    flexDirection: 'column',
+}));
+
+const OrderInfoContainer = styled(Box)(({theme}) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    width: '100%',
+    height: 'fit-content',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+    borderRadius: '1em',
+    padding: '16px',
+    boxSizing: 'border-box',
+    boxShadow: '0 5px 15px ' + theme.palette.itemShadow.main,
+    marginBottom: '16px',
+}));
+
+const OrderInfoText = styled(Typography)(({theme}) => ({
+    margin: '0',
+    fontSize: '14px',
+    maxWidth: '100%',
+    textWrap: 'wrap',
+    fontWeight: 'bold',
+    width: '100%',
+    textAlign: 'left',
+}));
+
+const OrderInfoValue = styled(Typography)(({theme}) => ({
+    margin: '0',
+    fontSize: '14px',
+    maxWidth: '100%',
+    textWrap: 'wrap',
+    fontWeight: 'normal',
+    width: '100%',
+    textAlign: 'left',
+}));
+
+const PersonalInfoText = styled(Typography)(({theme}) => ({
+    margin: '0',
+    maxWidth: '100%',
+    wordBreak: 'break-all',
+    fontSize: '14px',
+    textWrap: 'wrap',
+    width: '100%',
+    textAlign: 'left',
+}));
+
+const StatusStepper = styled(Stepper)(({theme}) => ({
+    width: '100%',
+}));
+
+const StatusStep = styled(Step)(({theme, status}) => ({
+    '& .MuiStepLabel-root .Mui-completed': {
+        color: status === 'CANCELED' ? 'rgb(129, 36, 29)' :
+               status === 'RETURNED' ? 'rgb(172, 109, 20)' :
+               'rgb(39, 99, 24)',
+    },
+    '& .MuiStepLabel-root .Mui-active': {
+        color: status === 'CANCELED' ? 'rgb(129, 36, 29)' :
+               status === 'RETURNED' ? 'rgb(172, 109, 20)' :
+               'rgb(39, 99, 24)',
+    },
+}));
 
 function UpdateOrder() {
 
@@ -600,27 +747,56 @@ function UpdateOrder() {
     }
 
     return (
-        <div className="OrderUpdate">
+        <OrderUpdateContainer>
             <Backdrop
                 sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
                 open={openBackdrop}
             >
                 <CircularProgress color="inherit" />
             </Backdrop>
-            <div className="OrderUpdateForm">
+            <OrderUpdateForm>
                 <Typography
                     component="h1"
                     variant="h5"
                     sx={{
-                        width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)', color: 'black'
-                        , margin: '0 auto 5% auto'
+                        width: '100%',
+                        fontSize: 'clamp(2rem, 10vw, 2.15rem)',
+                        margin: '0 auto 5% auto'
                     }}
                 >
                     Update order
                 </Typography>
-                <div style={{
+                
+                <OrderInfoContainer>
+                    <OrderInfoText>Order nr: <OrderInfoValue>{order.orderIdentifier}</OrderInfoValue></OrderInfoText>
+                    <OrderInfoText>Date of purchase: <OrderInfoValue>{format(dateCreated, "MMMM do, yyyy")}</OrderInfoValue></OrderInfoText>
+                    <OrderInfoText>Total order price: <OrderInfoValue>{order.totalPrice}$</OrderInfoValue></OrderInfoText>
+                </OrderInfoContainer>
+
+                <UpdateOrderLeft>
+                    <OrderPersonalDetails>
+                        <PersonalInfoText>{name} {surname}</PersonalInfoText>
+                        <PersonalInfoText>{email}</PersonalInfoText>
+                        <PersonalInfoText>{phone}</PersonalInfoText>
+                    </OrderPersonalDetails>
+                    
+                    <OrderDelivery>
+                        <PersonalInfoText>{country}</PersonalInfoText>
+                        <PersonalInfoText>{city}</PersonalInfoText>
+                        <PersonalInfoText>{streetAddress}</PersonalInfoText>
+                        <PersonalInfoText>{zipCode}</PersonalInfoText>
+                    </OrderDelivery>
+                </UpdateOrderLeft>
+
+                <UpdateOrderRight>
+                    {[...orderItems].map(item => (
+                        <AdminOrderProductItem key={item.id} item={item}/>
+                    ))}
+                </UpdateOrderRight>
+
+                <Box sx={{
                     display: 'flex',
-                    flexDirection: 'column',
+                    flexDirection: 'row',
                     width: '100%',
                     height: 'fit-content',
                     justifyContent: 'flex-start',
@@ -628,61 +804,12 @@ function UpdateOrder() {
                     borderRadius: '1em',
                     padding: '16px',
                     boxSizing: 'border-box',
-                    boxShadow: '0 5px 15px rgba(0, 0, 0, 0.1)',
-                    marginBottom: '16px',
-                    color: 'black',
+                    borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
                 }}>
-                    <p style={{margin: '0', fontSize: '14px', maxWidth: '100%', textWrap: 'wrap' , fontWeight: 'bold'}}>Order nr: <span
-                        style={{margin: '0', fontSize: '14px', maxWidth: '100%', textWrap: 'wrap' , fontWeight: 'normal'}}>{order.orderIdentifier}</span></p>
-                    <p style={{margin: '0', fontSize: '14px', maxWidth: '100%', textWrap: 'wrap' , fontWeight: 'bold'}}>Date of purchase: <span
-                        style={{
-                            margin: '0',
-                            fontSize: '14px',
-                            fontWeight: 'normal'
-                        }}>{format(dateCreated, "MMMM do, yyyy")}</span></p>
-                    <p style={{margin: '0', fontSize: '14px', maxWidth: '100%', textWrap: 'wrap' , fontWeight: 'bold'}}>Total order price: <span
-                        style={{fontWeight: 'normal'}}>{order.totalPrice}$</span></p>
-                </div>
-                <div className="update-order-left">
-                    <div className="order-personal-details">
-                        <p style={{margin: '0', maxWidth: '100%', wordBreak: 'break-all', fontSize: '14px', textWrap: 'wrap'}}>{name} {surname}</p>
-                        <p style={{margin: '0', maxWidth: '100%', wordBreak: 'break-all', fontSize: '14px', textWrap: 'wrap'}}>{email}</p>
-                        <p style={{margin: '0', maxWidth: '100%', wordBreak: 'break-all', fontSize: '14px', textWrap: 'wrap'}}>{phone}</p>
-                    </div>
-                    <div className="order-delivery">
-                        <p style={{margin: '0', maxWidth: '100%', wordBreak: 'break-all', fontSize: '14px', textWrap: 'wrap'}}>{country}</p>
-                        <p style={{margin: '0', maxWidth: '100%', wordBreak: 'break-all', fontSize: '14px', textWrap: 'wrap'}}>{city}</p>
-                        <p style={{margin: '0', maxWidth: '100%', wordBreak: 'break-all', fontSize: '14px', textWrap: 'wrap'}}>{streetAddress}</p>
-                        <p style={{margin: '0', maxWidth: '100%', wordBreak: 'break-all', fontSize: '14px', textWrap: 'wrap'}}>{zipCode}</p>
-                    </div>
-                </div>
-                <div className="update-order-right">
-                    {
-                        [...orderItems].map(item => (
-                            <AdminOrderProductItem key={item.id} item={item}/>
-                        ))
-                    }
-                </div>
-                <div style={{
-                            display: 'flex',
-                            flexDirection: 'row',
-                            width: '100%',
-                            height: 'fit-content',
-                            justifyContent: 'flex-start',
-                            alignItems: 'flex-start',
-                            borderRadius: '1em',
-                            padding: '16px',
-                            boxSizing: 'border-box',
-                            borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
-                        }}>
-                            {parseStatus(statusArr)}
-                        </div>
-                <Box
-                    style={{
-                        marginTop: '16px',
-                        width: '100%',
-                    }}
-                >
+                    {parseStatus(statusArr)}
+                </Box>
+
+                <Box sx={{ marginTop: '16px', width: '100%' }}>
                     <FormControl
                         size="small"
                         sx={{
@@ -705,15 +832,16 @@ function UpdateOrder() {
                             value={status}
                             label="Order status"
                             onChange={e => setStatus(e.target.value)}
-                            variant={"outlined"}
+                            variant="outlined"
                         >
-                            <MenuItem value={"RECEIVED"}>Order received</MenuItem>
-                            <MenuItem value={"SENT"}>Order sent</MenuItem>
-                            <MenuItem value={"COMPLETED"}>Order completed</MenuItem>
-                            <MenuItem value={"CANCELED"}>Order canceled</MenuItem>
-                            <MenuItem value={"RETURNED"}>Order returned</MenuItem>
+                            <MenuItem value="RECEIVED">Order received</MenuItem>
+                            <MenuItem value="SENT">Order sent</MenuItem>
+                            <MenuItem value="COMPLETED">Order completed</MenuItem>
+                            <MenuItem value="CANCELED">Order canceled</MenuItem>
+                            <MenuItem value="RETURNED">Order returned</MenuItem>
                         </Select>
                     </FormControl>
+                    
                     <Button
                         className="add-btn"
                         type="button"
@@ -723,6 +851,7 @@ function UpdateOrder() {
                         onClick={updateOrder}
                         sx={{
                             width: '100%',
+                            color: 'white',
                             backgroundColor: 'rgb(39, 99, 24)',
                             "&:hover": {backgroundColor: 'rgb(49,140,23)'}
                         }}
@@ -730,18 +859,22 @@ function UpdateOrder() {
                         Update Order
                     </Button>
                 </Box>
-                <div className="genPdf">
-                <Typography
-                    component="h1"
-                    variant="h5"
-                    sx={{
-                        width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)', color: 'black'
-                        , margin: '0 auto 5% auto'
-                    }}
-                >Generate Invoice
+
+                <GenPdfContainer>
+                    <Typography
+                        component="h1"
+                        variant="h5"
+                        sx={{
+                            width: '100%',
+                            fontSize: 'clamp(2rem, 10vw, 2.15rem)',
+                            margin: '0 auto 5% auto'
+                        }}
+                    >
+                        Generate Invoice
                     </Typography>
+
                     <TextField
-                        size={"small"}
+                        size="small"
                         error={pdfFileError}
                         helperText={pdfFileErrorMessage}
                         id="pdfFileName"
@@ -769,31 +902,34 @@ function UpdateOrder() {
                             }
                         }}
                     />
-                    {showFileUploadButton &&
+
+                    {showFileUploadButton && (
                         <Button
-                        className="upload-btn"
-                        component="label"
-                        endIcon={<CloudUploadIcon/>}
-                        fullWidth
-                        variant="contained"
-                        sx={{
-                            width: '100%',
-                            backgroundColor: 'rgb(17, 128, 138)',
-                            "&:hover": {backgroundColor: 'rgb(18, 154, 167)'}
-                        }}
+                            className="upload-btn"
+                            component="label"
+                            endIcon={<CloudUploadIcon/>}
+                            fullWidth
+                            variant="contained"
+                            sx={{
+                                width: '100%',
+                                color: 'white',
+                                backgroundColor: 'rgb(17, 128, 138)',
+                                "&:hover": {backgroundColor: 'rgb(18, 154, 167)'}
+                            }}
                         >
                             Upload Pdf
-                        <input
-                            type="file"
-                            accept="image/*,.pdf"
-                            hidden
-                            formNoValidate
-                            multiple={false}
-                            onChange={handleFile}
+                            <input
+                                type="file"
+                                accept="image/*,.pdf"
+                                hidden
+                                formNoValidate
+                                multiple={false}
+                                onChange={handleFile}
                             />
                         </Button>
-                    }
-                    <div style={{
+                    )}
+
+                    <Box sx={{
                         width: '100%',
                         height: 'fit-content',
                         display: 'flex',
@@ -802,7 +938,7 @@ function UpdateOrder() {
                         alignItems: 'center',
                         marginTop: '8px',
                     }}>
-                        {showDeleteButton && 
+                        {showDeleteButton && (
                             <Button
                                 className="download-btn"
                                 type="button"
@@ -812,15 +948,16 @@ function UpdateOrder() {
                                 onClick={deletePdf}
                                 sx={{
                                     width: '47%',
+                                    color: 'white',
                                     backgroundColor: 'rgb(159, 20, 20)',
                                     "&:hover": {backgroundColor: 'rgb(193, 56, 56)'}
                                 }}
                             >
                                 Delete
                             </Button>
-                        }
-                    
-                        {showDownloadButton &&
+                        )}
+                        
+                        {showDownloadButton && (
                             <Button
                                 className="download-btn"
                                 type="button"
@@ -830,15 +967,17 @@ function UpdateOrder() {
                                 onClick={downloadPdf}
                                 sx={{
                                     width: generateWidth(),
+                                    color: 'white',
                                     backgroundColor: 'rgb(94, 48, 89)',
                                     "&:hover": {backgroundColor: 'rgb(127, 79, 121)'}
                                 }}
                             >
                                 Download
                             </Button>
-                        }
-                    </div>
-                    {showUploadButton &&
+                        )}
+                    </Box>
+
+                    {showUploadButton && (
                         <Button
                             className="download-btn"
                             type="button"
@@ -848,6 +987,7 @@ function UpdateOrder() {
                             onClick={uploadPdf}
                             sx={{
                                 marginTop: '8px',
+                                color: 'white',
                                 width: '100%',
                                 backgroundColor: 'rgb(17, 128, 138)',
                                 "&:hover": {backgroundColor: 'rgb(18, 154, 167)'}
@@ -855,12 +995,11 @@ function UpdateOrder() {
                         >
                             Upload to Azure
                         </Button>
-                    }
-
-                </div>
-            </div>
-        </div>
-    )
+                    )}
+                </GenPdfContainer>
+            </OrderUpdateForm>
+        </OrderUpdateContainer>
+    );
 }
 
 export default UpdateOrder;

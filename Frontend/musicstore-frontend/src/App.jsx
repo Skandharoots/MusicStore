@@ -4,7 +4,7 @@ import {
     RouterProvider,
     Outlet,
 } from "react-router-dom";
-import React from "react";
+import React, {useState} from "react";
 import Navbar from './components/navbar/Navbar.jsx';
 import Footer from './components/footer/Footer.jsx';
 import Home from './pages/home/Home.jsx';
@@ -45,12 +45,17 @@ import PasswordResetRequest from './pages/password/PasswordResetRequest.jsx';
 import PasswordResetLanding from './pages/password/PasswordResetLanding.jsx';
 import Opinions from './pages/account/Opinions.jsx';
 import Favourites from './pages/account/favourites/Favourites.jsx';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+import { Paper, Box } from '@mui/material';
+
 
 
 axios.defaults.baseURL = "http://localhost:8222/";
 axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
 axios.defaults.headers["Access-Control-Allow-Origin"] = "http://localhost:4000";
 axios.defaults.withCredentials = true;
+
 
 const Dashboard = () => {
     return (
@@ -64,37 +69,35 @@ const Dashboard = () => {
 
 const DashboardMyAcc = () => {
     return (
-        <div className={"my-acc-dash"}>
-            <div style={{
+        <Paper className={"my-acc-dash"}>
+            <Box style={{
                 display: "flex",
                 flexDirection: "row",
                 justifyContent: "center",
                 alignItems: "flex-start",
                 width: "100%",
-                backgroundColor: "white",
             }}>
                 <LeftSideRibbon />
                 <Outlet />
-            </div>
-        </div>
+            </Box>
+        </Paper>
     )
 }
 
 const DashboardAdmin = () => {
     return (
-        <div className={"admin-dash"}>
-            <div style={{
+        <Paper className={"admin-dash"}>
+            <Box style={{
                 display: "flex",
                 flexDirection: "row",
                 justifyContent: "center",
                 alignItems: "flex-start",
                 width: "100%",
-                backgroundColor: "white",
             }}>
                 <LeftSideAdminRibbon />
                 <Outlet />
-            </div>
-        </div>
+            </Box>
+        </Paper>
     )
 }
 
@@ -252,13 +255,126 @@ const router = createBrowserRouter([
     }
 ])
 
+
+
 function App() {
 
+    const [darkTheme, setDarkTheme] = useState(localStorage.getItem('theme') === 'dark');
+
+    const theme = createTheme({
+        palette: {
+            mode: darkTheme ? 'dark' : 'light',
+            background: {
+                default: darkTheme ? 'rgb(35, 35, 35)' : 'rgb(255, 255, 255)',
+                paper: darkTheme ? 'rgb(35, 35, 35)' : 'rgb(255, 255, 255)',
+                box: darkTheme ? 'rgb(35, 35, 35)' : 'rgb(255, 255, 255)',
+
+            },
+            mybutton: {
+                colorOne: darkTheme ? 'white' : 'black',
+                colorTwo: 'white',
+            },
+            irish: {
+                main: 'rgb(39, 99, 24)',
+                light: 'rgb(61, 147, 40)',
+                dark: 'rgb(39, 99, 24)',
+                contrastText: 'rgb(255, 255, 255)',
+            },
+            errorBtn: {
+                main: 'rgb(159,20,20)',
+                light: 'rgb(193,56,56)',
+            },
+            blueBtn: {
+                main: 'rgb(11,108,128)',
+                light: 'rgb(16,147,177)',
+            },
+            account: {
+                main: 'rgb(0, 0, 0)',
+                dark: 'rgb(255, 255, 255)',
+                light: 'rgb(0, 0, 0)',
+            },
+            shadowLink: {
+                main: 'rgba(184, 184, 184, 0.2)',
+                light: 'rgba(184, 184, 184, 0.2)',
+                dark: 'rgba(255, 255, 255, 0.4)',
+            },
+            shadow: {
+                main: 'rgba(184, 184, 184, 0.2)',
+                light: 'rgba(184, 184, 184, 0.4)',
+                dark: 'rgba(255, 255, 255, 0.2)',
+            },
+            itemShadow: {
+                main: darkTheme ? 'rgba(255, 255, 255, 0.5)' : 'rgba(0, 0, 0, 0.1)',
+                light: darkTheme ? 'rgba(255, 255, 255, 0.8)' : 'rgba(0, 0, 0, 0.4)',
+            },
+            formShadow: {
+                main: darkTheme ? 'rgba(255, 255, 255, 0.4)' : 'rgba(0, 0, 0, 0.1)',
+            },
+        },
+        components: {
+            MuiAppBar: {
+                styleOverrides: {
+                    root: {
+                        backgroundColor: darkTheme ? '#1e1e1e' : '#ffffff',
+                    },
+                },
+            },
+            MuiPaper: {
+                styleOverrides: {
+                    root: {
+                        backgroundColor: darkTheme ? '#1e1e1e' : '#ffffff',
+                    },
+                },
+            },
+            MuiLink: {
+                styleOverrides: {
+                    root: {
+                        textDecoration: 'none',
+                        color: 'inherit',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        fontSize: '12px',
+                        fontWeight: 'bold',
+                        minWidth: '50px',
+                        width: 'fit-content',
+                        padding: '0 5px',
+                        height: '50px',
+                        '&:hover': {
+                            borderRadius: '1em',
+                            color: 'inherit',
+                        },
+                    },
+                },
+            },
+            MuiTypography: {
+                styleOverrides: {
+                    root: {
+                        color: 'inherit'
+                    },
+                },
+            },
+            MuiAlert: {
+                styleOverrides: {
+                    root: {
+                        color: darkTheme ? 'white' : 'black',
+                    },
+                },
+            },
+        }
+    });
+      
+      window.addEventListener('theme', () => {
+        localStorage.getItem('theme') === 'dark' ? setDarkTheme(true) : setDarkTheme(false);
+      });
 
     return (
         <div className="App">
-            <RouterProvider router={router} />
-            <ToastContainer />
+            <ThemeProvider theme={theme}>
+                <CssBaseline />
+                <RouterProvider router={router} />
+                <ToastContainer />
+            </ThemeProvider>
         </div>
     );
 }

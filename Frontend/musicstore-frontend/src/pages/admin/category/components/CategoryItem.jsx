@@ -6,8 +6,11 @@ import {
     DialogActions,
     DialogContent,
     DialogContentText,
-    DialogTitle
+    DialogTitle,
+    Typography,
+    Box
 } from "@mui/material";
+import Grid from "@mui/material/Grid2";
 import {Link} from "react-router-dom";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -15,12 +18,86 @@ import {Slide, toast} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 import LocalStorageHelper from "../../../../helpers/LocalStorageHelper.jsx";
-import Grid from "@mui/material/Grid2";
 import React, {useState} from "react";
+import {styled} from "@mui/material/styles";
 
+const CategoryItemContainer = styled(Grid)(({theme}) => ({
+    display: 'flex',
+    flexDirection: 'row',
+    width: '240px',
+    height: '70px',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+    paddingRight: theme.spacing(0.5),
+    color: theme.palette.text.primary,
+    fontSize: '12px',
+    boxSizing: 'border-box',
+    boxShadow: '0 5px 15px ' + theme.palette.itemShadow.main,
+    transition: 'all 0.3s',
+    "&:hover": {
+        boxShadow: '0 5px 15px ' + theme.palette.itemShadow.light,
+    },
+}));
+
+const CategoryMetrics = styled(Box)(({theme}) => ({
+    width: '60%',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    height: '100%',
+    padding: theme.spacing(0, 0.25),
+}));
+
+const CategoryButtons = styled(Box)(({theme}) => ({
+    height: '100%',
+    marginRight: 0,
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    padding: theme.spacing(0.25, 0),
+    boxSizing: 'border-box',
+}));
+
+const EditButton = styled(Button)(({theme}) => ({
+    width: 'fit-content',
+    backgroundColor: 'rgb(255, 189, 3)',
+    color: theme.palette.mybutton.colorTwo,
+    "&:hover": {
+        backgroundColor: 'rgb(255,211,51)'
+    }
+}));
+
+const DeleteButton = styled(Button)(({theme}) => ({
+    width: 'fit-content',
+    backgroundColor: 'rgb(159,20,20)',
+    color: theme.palette.mybutton.colorTwo,
+    "&:hover": {
+        backgroundColor: 'rgb(193,56,56)'
+    },
+    "&:focus": {
+        outline: 'none !important'
+    }
+}));
+
+const CancelButton = styled(Button)(({theme}) => ({
+    backgroundColor: 'rgb(11,108,128)',
+    color: theme.palette.mybutton.colorTwo,
+    "&:hover": {
+        backgroundColor: 'rgb(16,147,177)'
+    }
+}));
+
+const ConfirmDeleteButton = styled(Button)(({theme}) => ({
+    backgroundColor: 'rgb(159,20,20)',
+    color: theme.palette.mybutton.colorTwo,
+    "&:hover": {
+        backgroundColor: 'rgb(193,56,56)'
+    }
+}));
 
 function CategoryItem(props) {
-
     const [open, setOpen] = useState(false);
     const [openBackdrop, setOpenBackdrop] = useState(false);
 
@@ -88,125 +165,63 @@ function CategoryItem(props) {
         });
     }
 
-
     return (
-        <Grid sx={{
-            display: 'flex',
-            flexDirection: 'row',
-            width: '240px',
-            height: '70px',
-            alignItems: 'flex-start',
-            justifyContent: 'space-between',
-            paddingRight: '4px',
-            color: 'black',
-            fontSize: '12px',
-            boxSizing: 'border-box',
-            boxShadow: '0 5px 15px rgba(0, 0, 0, 0.1)',
-            transition: 'all 0.3s',
-            "&:hover": {
-                boxShadow: '0 5px 15px rgba(0, 0, 0, 0.4)',
-            },
-        }}
-              key={props.id}
-        >
+        <CategoryItemContainer key={props.id}>
             <Backdrop
                 sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
                 open={openBackdrop}
             >
                 <CircularProgress color="inherit" />
             </Backdrop>
-            <div className="category-metrics"
-                 style={{width: '60%',
-                     display: 'flex',
-                     flexDirection: 'column',
-                     justifyContent: 'center',
-                     alignItems: 'flex-start',
-                     height: '100%',
-                     padding: '0 2%'
-                 }}>
-                <p style={{margin: '0', overflow: 'hidden', textWrap: 'nowrap'}}><b>Id: </b>{props.id}</p>
-                <p style={{margin: '0', overflow: 'hidden', textWrap: 'nowrap'}}><b>Name: </b>{props.name}</p>
-            </div>
-            <div className="category-buttons"
-                 style={{
-                     height: '100%',
-                     marginRight: '0',
-                     display: 'flex',
-                     flexDirection: 'column',
-                     justifyContent: 'space-between',
-                     alignItems: 'flex-start',
-                     padding: '2% 0',
-                     boxSizing: 'border-box',
-                 }}
-            >
-                <Button
+            
+            <CategoryMetrics>
+                <Typography variant="body2" sx={{ margin: 0, overflow: 'hidden', textWrap: 'nowrap' }}>
+                    <b>Id: </b>{props.id}
+                </Typography>
+                <Typography variant="body2" sx={{ margin: 0, overflow: 'hidden', textWrap: 'nowrap' }}>
+                    <b>Name: </b>{props.name}
+                </Typography>
+            </CategoryMetrics>
+
+            <CategoryButtons>
+                <EditButton
                     component={Link}
                     to={"/admin/category/update/" + props.id}
                     variant="contained"
                     size="small"
                     type="button"
-                    sx={{
-                        width: 'fit-content',
-                        backgroundColor: 'rgb(255, 189, 3)',
-                        "&:hover": {backgroundColor: 'rgb(255,211,51)'}
-                    }}
                 >
                     <EditIcon fontSize="small" />
-                </Button>
-                <React.Fragment>
-                    <Button
-                        variant="contained"
-                        size="small"
-                        type="button"
-                        onClick={handleClickOpen}
-                        sx={{
-                            width: 'fit-content',
-                            backgroundColor: 'rgb(159,20,20)',
-                            "&:hover": {backgroundColor: 'rgb(193,56,56)'},
-                            "&:focus": {outline: 'none !important'},
-                        }}
-                    >
-                        <DeleteIcon fontSize="small" />
-                    </Button>
-                    <Dialog
-                        open={open}
-                        onClose={handleClose}
-                    >
-                        <DialogTitle>Delete category</DialogTitle>
-                        <DialogContent>
-                            <DialogContentText>
-                                Do you want to delete {props.name} category?
-                            </DialogContentText>
-                        </DialogContent>
-                        <DialogActions>
-                            <Button
-                                variant="contained"
-                                onClick={handleClose}
-                                sx={{
-                                    backgroundColor: 'rgb(11,108,128)',
-                                    "&:hover": {backgroundColor: 'rgb(16,147,177)'},
-                                }}
-                            >
-                                Cancel
-                            </Button>
-                            <Button
-                                variant="contained"
-                                onClick={deleteCategory}
-                                sx={{
-                                    backgroundColor: 'rgb(159,20,20)',
-                                    "&:hover": {backgroundColor: 'rgb(193,56,56)'},
-                                }}
-                            >
-                                Delete
-                            </Button>
-                        </DialogActions>
-                    </Dialog>
-                </React.Fragment>
-            </div>
+                </EditButton>
 
-        </Grid>
-    )
+                <DeleteButton
+                    variant="contained"
+                    size="small"
+                    type="button"
+                    onClick={handleClickOpen}
+                >
+                    <DeleteIcon fontSize="small" />
+                </DeleteButton>
 
+                <Dialog open={open} onClose={handleClose}>
+                    <DialogTitle>Delete category</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            Do you want to delete {props.name} category?
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <CancelButton variant="contained" onClick={handleClose}>
+                            Cancel
+                        </CancelButton>
+                        <ConfirmDeleteButton variant="contained" onClick={deleteCategory}>
+                            Delete
+                        </ConfirmDeleteButton>
+                    </DialogActions>
+                </Dialog>
+            </CategoryButtons>
+        </CategoryItemContainer>
+    );
 }
 
 export default CategoryItem;

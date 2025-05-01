@@ -2,7 +2,6 @@ import React, {useEffect, useState} from "react";
 import axios from "axios";
 import {Slide, toast} from "react-toastify";
 import Grid from "@mui/material/Grid2";
-import '../style/ProductItem.scss';
 import {useNavigate} from "react-router-dom";
 import Tooltip from "@mui/material/Tooltip";
 import {
@@ -13,12 +12,149 @@ import {
     DialogActions,
     DialogContent,
     DialogContentText,
-    DialogTitle
+    DialogTitle,
+    Typography,
+    Box,
+    styled,
+    Paper
 } from "@mui/material";
 import AddShoppingCartOutlinedIcon from '@mui/icons-material/AddShoppingCartOutlined';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import LocalStorageHelper from "../../../helpers/LocalStorageHelper.jsx";
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
+
+
+const MyGrid = styled(Grid)(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    width: '240px',
+    height: 'fit-content',
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
+    padding: '4px',
+    color: 'black',
+    fontSize: '12px',
+    boxSizing: 'border-box',
+    boxShadow: '0 5px 15px ' + theme.palette.itemShadow.main,
+    transition: 'all 0.3s',
+    "&:hover": {
+        boxShadow: '0 5px 15px ' + theme.palette.itemShadow.light,
+        cursor: 'pointer',
+    },
+}));
+
+const ProductMetricsMain = styled(Box)(({ theme }) => ({
+    fontSize: '12px',
+    display: '-webkit-box',
+    WebkitLineClamp: 3,
+    WebkitBoxOrient: 'vertical',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    lineHeight: '1.5em',
+    height: '7em',
+    width: '100%',
+    padding: '0 2%',
+    marginTop: '4px',
+    color: theme.palette.text.primary,
+    '&:hover': {
+        cursor: 'pointer'
+    }
+}));
+
+const ProductImageContainer = styled(Box)({
+    width: "100%",
+    height: "150px",
+    display: "flex",
+    overflow: "hidden",
+    backgroundColor: 'white'
+});
+
+const ProductImage = styled(Box)({
+    width: '100%',
+    maxHeight: '100%',
+    aspectRatio: "16 / 9",
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundSize: 'cover',
+    flexShrink: '0',
+    flexGrow: '0',
+});
+
+const ProductItemButtons = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '100%',
+    padding: '0 2%',
+    boxSizing: 'border-box',
+    color: theme.palette.text.primary,
+}));
+
+const ProductName = styled(Typography)({
+    margin: '0',
+    width: '95%',
+    fontSize: '16px',
+    overflow: 'hidden',
+    textWrap: 'nowrap'
+});
+
+const ProductInfo = styled(Typography)({
+    margin: '0',
+    overflow: 'hidden',
+    textWrap: 'nowrap'
+});
+
+const ProductPrice = styled(Typography)({
+    fontSize: '16px',
+    fontWeight: 'bold',
+    overflow: 'hidden',
+    textWrap: 'nowrap'
+});
+
+const StyledButton = styled(Button)(({ theme }) => ({
+    borderColor: 'rgb(39, 99, 24)',
+    backgroundColor: 'transparent',
+    width: '35px',
+    zIndex: 20,
+    minWidth: '0',
+    height: '35px',
+    display: 'flex',
+    "&:hover": {
+        backgroundColor: 'rgba(49,140,23, 0.2)',
+        outline: 'none !important',
+        borderColor: 'rgb(39, 99, 24)'
+    },
+    "&:focus": {
+        backgroundColor: 'rgba(49,140,23, 0.2)',
+        outline: 'none !important',
+        borderColor: 'rgb(39, 99, 24)'
+    }
+}));
+
+const FavoriteButton = styled(Button)(({ theme }) => ({
+    borderColor: 'rgb(158,26,96)',
+    backgroundColor: 'transparent',
+    width: '35px',
+    zIndex: 20,
+    minWidth: '0',
+    height: '35px',
+    display: 'flex',
+    position: 'relative',
+    alignSelf: 'end',
+    margin: '0 4px 8px 0',
+    "&:hover": {
+        backgroundColor: 'rgba(158,26,96,0.3)',
+        outline: 'none !important',
+        borderColor: 'rgb(158,26,96)'
+    },
+    "&:focus": {
+        backgroundColor: 'rgba(158,26,96,0.3)',
+        outline: 'none !important',
+        borderColor: 'rgb(158,26,96)'
+    }
+}));
 
 function ProductItem(props) {
     const [img, setImg] = useState(null);
@@ -312,25 +448,9 @@ function ProductItem(props) {
     }
 
     return (
-        <Grid
+        <MyGrid
             sx={{
-                display: 'flex',
-                flexDirection: 'column',
                 opacity: opacity,
-                width: '240px',
-                height: 'fit-content',
-                alignItems: 'flex-start',
-                justifyContent: 'flex-start',
-                padding: '4px',
-                color: 'black',
-                fontSize: '12px',
-                boxSizing: 'border-box',
-                boxShadow: '0 5px 15px rgba(0, 0, 0, 0.1)',
-                transition: 'all 0.3s',
-                "&:hover": {
-                    boxShadow: '0 5px 15px rgba(0, 0, 0, 0.4)',
-                    cursor: 'pointer',
-                },
             }}
             key={props.item.id}
         >
@@ -342,54 +462,21 @@ function ProductItem(props) {
             </Backdrop>
             {LocalStorageHelper.IsUserLogged() === true &&
                 <Tooltip title={"Add to favorites"}>
-                    <Button
+                    <FavoriteButton
                         variant={"outlined"}
                         fullWidth={false}
                         onClick={handleClickFavorites}
-                        sx={{
-                            borderColor: 'rgb(158,26,96)',
-                            backgroundColor: 'transparent',
-                            width: '35px',
-                            zIndex: 20,
-                            minWidth: '0',
-                            height: '35px',
-                            display: 'flex',
-                            position: 'relative',
-                            alignSelf: 'end',
-                            margin: '8px 8px 0 0',
-
-                            "&:hover": {
-                                backgroundColor: 'rgba(158,26,96,0.3)',
-                                outline: 'none !important',
-                                borderColor: 'rgb(158,26,96)'
-                            },
-                            "&:focus": {
-                                backgroundColor: 'rgba(158,26,96,0.3)',
-                                outline: 'none !important',
-                                borderColor: 'rgb(158,26,96)'
-                            }
-                        }}
                     >
                         <FavoriteBorderOutlinedIcon size={"small"}
                                                     sx={{color: 'rgb(158,26,96)', fontSize: '16px'}}/>
-                    </Button>
+                    </FavoriteButton>
                 </Tooltip>
             }
-            <div style={{
-                width: "100%",
-                height: "150px",
-                display: "flex",
-                overflow: "hidden",
-            }}>
-                <div className="product-img"
-                     onClick={() => {
-                         navigate(`/product/${props.item.productSkuId}/${props.item.productName}`)
-                     }}
-                     style={{
-                         width: '100%', maxHeight: '100%', aspectRatio: "16 / 9",
-                         display: 'flex', justifyContent: 'center', alignItems: 'center',
-                         backgroundSize: 'cover', flexShrink: '0', flexGrow: '0',
-                     }}
+            <ProductImageContainer>
+                <ProductImage
+                    onClick={() => {
+                        navigate(`/product/${props.item.productSkuId}/${props.item.productName}`)
+                    }}
                 >
                     <img alt={'No image'} src={img}
                          style={{
@@ -401,134 +488,83 @@ function ProductItem(props) {
                              flexGrow: '0',
                          }}
                     />
-                </div>
-            </div>
-                <div className="product-metrics-main"
-                     style={{
-                         width: '100%',
-                         padding: '0 2%',
-                         marginTop: '4px',
-                         "&:hover": {cursor: 'pointer'}
-                     }}
-                     onClick={() => {
-                         navigate(navigate(`/product/${props.item.productSkuId}/${props.item.productName}`))
-                     }}
-                >
-                    <Tooltip title={props.item.productName}>
-                        <p style={{
-                            margin: '0',
-                            width: '95%',
-                            fontSize: '16px',
-                            overflow: 'hidden',
-                            textWrap: 'nowrap'
-                        }}>{props.item.productName}</p>
+                </ProductImage>
+            </ProductImageContainer>
+            <ProductMetricsMain
+                onClick={() => {
+                    navigate(`/product/${props.item.productSkuId}/${props.item.productName}`)
+                }}
+            >
+                <Tooltip title={props.item.productName}>
+                    <ProductName>{props.item.productName}</ProductName>
+                </Tooltip>
+                <ProductInfo>Brand: {props.item.manufacturer.name}</ProductInfo>
+                <ProductInfo>Made in: {props.item.builtinCountry.name}</ProductInfo>
+            </ProductMetricsMain>
+            <ProductItemButtons>
+                <ProductPrice>{props.item.productPrice.toFixed(2)}$</ProductPrice>
+                <React.Fragment>
+                    <Tooltip title={"Add to basket"}>
+                        <StyledButton
+                            variant={"outlined"}
+                            fullWidth={false}
+                            disabled={disableBasket}
+                            onClick={handleClickOpen}
+                        >
+                            <AddShoppingCartOutlinedIcon size={"small"}
+                                                         sx={{color: 'rgb(39, 99, 24)', fontSize: '16px'}}/>
+                        </StyledButton>
                     </Tooltip>
-                    <p style={{
-                        margin: '0',
-                        overflow: 'hidden',
-                        textWrap: 'nowrap'
-                    }}>Brand: {props.item.manufacturer.name}</p>
-                    <p style={{margin: '0', overflow: 'hidden', textWrap: 'nowrap'}}>Made
-                        in: {props.item.builtinCountry.name}</p>
-                </div>
-                <div className="product-item-buttons"
-                     style={{
-                         display: 'flex',
-                         flexDirection: 'row',
-                         justifyContent: 'space-between',
-                         alignItems: 'center',
-                         width: '100%',
-                         padding: '0 2%',
-                         boxSizing: 'border-box',
-                     }}
-                >
-                    <p style={{
-                        fontSize: '16px',
-                        fontWeight: 'bold',
-                        overflow: 'hidden',
-                        textWrap: 'nowrap'
-                    }}>{props.item.productPrice.toFixed(2)}$</p>
-                    <React.Fragment>
-                        <Tooltip title={"Add to basket"}>
+                    <Dialog
+                        open={open}
+                        onClose={handleClose}
+                    >
+                        <DialogTitle>Product added to basket</DialogTitle>
+                        <DialogContent>
+                            <DialogContentText>
+                                Do you want to continue shopping?
+                            </DialogContentText>
+                        </DialogContent>
+                        <DialogActions
+                            sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                             <Button
-                                variant={"outlined"}
-                                fullWidth={false}
-                                disabled={disableBasket}
-                                onClick={handleClickOpen}
+                                variant="outlined"
+                                onClick={handleClose}
+                                size="small"
                                 sx={{
-                                    borderColor: 'rgb(39, 99, 24)',
-                                    backgroundColor: 'transparent',
-                                    width: '35px',
-                                    zIndex: 20,
-                                    minWidth: '0',
-                                    height: '35px',
-                                    display: 'flex',
+                                    borderColor: 'rgb(11, 108, 128)',
+                                    color: 'rgb(11, 108, 128)',
+                                    fontSize: '12px',
                                     "&:hover": {
-                                        backgroundColor: 'rgba(49,140,23, 0.2)',
                                         outline: 'none !important',
-                                        borderColor: 'rgb(39, 99, 24)'
+                                        color: 'black',
+                                        backgroundColor: 'rgba(16,147,177, 0.2)',
+                                        borderColor: 'rgba(16,147,177, 0.2)',
                                     },
-                                    "&:focus": {
-                                        backgroundColor: 'rgba(49,140,23, 0.2)',
-                                        outline: 'none !important',
-                                        borderColor: 'rgb(39, 99, 24)'
-                                    }
                                 }}
                             >
-                                <AddShoppingCartOutlinedIcon size={"small"}
-                                                             sx={{color: 'rgb(39, 99, 24)', fontSize: '16px'}}/>
+                                Continue shopping
                             </Button>
-                        </Tooltip>
-                        <Dialog
-                            open={open}
-                            onClose={handleClose}
-                        >
-                            <DialogTitle>Product added to basket</DialogTitle>
-                            <DialogContent>
-                                <DialogContentText>
-                                    Do you want to continue shopping?
-                                </DialogContentText>
-                            </DialogContent>
-                            <DialogActions
-                                sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-                                <Button
-                                    variant="outlined"
-                                    onClick={handleClose}
-                                    size="small"
-                                    sx={{
-                                        borderColor: 'rgb(11, 108, 128)',
-                                        color: 'rgb(11, 108, 128)',
-                                        fontSize: '12px',
-                                        "&:hover": {
-                                            outline: 'none !important',
-                                            color: 'black',
-                                            backgroundColor: 'rgba(16,147,177, 0.2)',
-                                            borderColor: 'rgba(16,147,177, 0.2)',
-                                        },
-                                    }}
-                                >
-                                    Continue shopping
-                                </Button>
-                                <Button
-                                    variant="contained"
-                                    size="small"
-                                    onClick={goToBasket}
-                                    endIcon={<ArrowForwardIcon/>}
-                                    sx={{
-                                        fontSize: '12px',
-                                        backgroundColor: 'rgb(39, 99, 24)',
-                                        "&:hover": {backgroundColor: 'rgb(49,140,23)'}
-                                    }}
-                                >
-                                    Basket
-                                </Button>
-                            </DialogActions>
-                        </Dialog>
-                    </React.Fragment>
-                </div>
-
-        </Grid>
-)
+                            <Button
+                                variant="contained"
+                                size="small"
+                                onClick={goToBasket}
+                                endIcon={<ArrowForwardIcon/>}
+                                sx={{
+                                    fontSize: '12px',
+                                    color: 'white',
+                                    backgroundColor: 'rgb(39, 99, 24)',
+                                    "&:hover": {backgroundColor: 'rgb(49,140,23)'}
+                                }}
+                            >
+                                Basket
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
+                </React.Fragment>
+            </ProductItemButtons>
+        </MyGrid>
+    );
 }
 
 export default ProductItem;

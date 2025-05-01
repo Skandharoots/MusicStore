@@ -1,23 +1,124 @@
 import {useEffect, useState} from "react";
 import axios from "axios";
 import {Slide, toast} from "react-toastify";
-import '../style/OrderItem.scss';
 import Tooltip from "@mui/material/Tooltip";
 import {
     FormControl,
     MenuItem,
-    Select
+    Select,
+    Box,
+    Typography,
+    styled,
+    useTheme
 } from "@mui/material";
 import {useNavigate} from "react-router-dom";
 
+const OrderItemContainer = styled(Box)(({ theme }) => ({
+    width: '95%',
+    minWidth: '500px',
+    maxWidth: '600px',
+    height: 'fit-content',
+    minHeight: '90px',
+    boxSizing: 'border-box',
+    padding: '2% 2%',
+    display: 'flex',
+    flexWrap: 'wrap',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderRadius: '1em',
+    marginBottom: '16px',
+    backgroundColor: theme.palette.background.paper,
+    '&:hover': {
+        boxShadow: '0 5px 15px ' + theme.palette.itemShadow.light
+    }
+}));
+
+const ProductImage = styled(Box)(({ theme }) => ({
+    width: '100px',
+    height: '85px',
+    display: 'flex',
+    overflow: 'hidden',
+    '& .product-img': {
+        width: '100px',
+        maxHeight: '100%',
+        aspectRatio: '16 / 9',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundSize: 'cover',
+        '& img': {
+            objectFit: 'cover',
+            maxWidth: '100%',
+            maxHeight: '100%',
+            display: 'block',
+            flexShrink: '0',
+            flexGrow: '0'
+        }
+    }
+}));
+
+const ProductName = styled(Box)(({ theme }) => ({
+    width: '40%',
+    height: '90px',
+    overflow: 'hidden',
+    margin: '0',
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    cursor: 'pointer',
+    '& p': {
+        margin: '0',
+        fontSize: '18px'
+    }
+}));
+
+const ProductQuantity = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    flexWrap: 'wrap',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: '0',
+    width: 'fit-content',
+    height: 'fit-content',
+    '& .price': {
+        width: '120px',
+        '& p': {
+            margin: '0 8px 0 0',
+            fontSize: '14px'
+        }
+    }
+}));
+
+const StyledFormControl = styled(FormControl)(({ theme }) => ({
+    m: 1,
+    margin: '0 0',
+    width: 'fit-content',
+    height: 'fit-content',
+    "& label.Mui-focused": {
+        color: 'rgb(39, 99, 24)'
+    },
+    "& .MuiOutlinedInput-root": {
+        "&.Mui-focused fieldset": {
+            borderColor: 'rgb(39, 99, 24)'
+        }
+    }
+}));
+
+const StyledSelect = styled(Select)(({ theme }) => ({
+    height: '40px'
+}));
+
 function OrderItem(props) {
+    const theme = useTheme();
 
     const [img, setImg] = useState(null);
-    const [boxShadow, setBoxShadow] = useState('0 5px 15px rgba(0, 0, 0, 0.1)');
+    const [boxShadow, setBoxShadow] = useState('0 5px 15px ' + theme.palette.itemShadow.main);
     const navigate = useNavigate();
 
     useEffect(() => {
-
         axios.get(`api/azure/list?path=${props.item.productSkuId}`, {})
             .then((response) => {
                 axios.get(`api/azure/read?path=${response.data[0]}`, {responseType: 'blob'})
@@ -50,7 +151,6 @@ function OrderItem(props) {
                 transition: Slide,
             })
             }).catch(() => {})
-
     }, [props.item.productSkuId]);
 
     useEffect(() => {
@@ -76,78 +176,35 @@ function OrderItem(props) {
         });
     }, [props.item.productSkuId])
 
-
     return (
-        <div className="order-item" style={{boxShadow: boxShadow}}>
-            <div style={{
-                width: "100px",
-                height: "85px",
-                display: "flex",
-                overflow: "hidden",
-            }}>
-                <div className="product-img"
-                     style={{
-                         width: '100px', maxHeight: '100%', aspectRatio: "16 / 9",
-                         display: 'flex', justifyContent: 'center', alignItems: 'center',
-                         backgroundSize: 'cover',
-                     }}
-                >
-                    <img alt={'No image'} src={img}
-                         style={{
-                             objectFit: 'cover',
-                             maxWidth: '100%',
-                             maxHeight: '100%',
-                             display: 'block',
-                             flexShrink: '0',
-                             flexGrow: '0',
-                         }}
-                    />
-                </div>
-            </div>
-                <Tooltip title={`${props.item.productName}`}>
-                    <div className="product-name" onClick={() => {navigate(`/product/${props.item.productSkuId}/${props.item.productName}`)}}>
-                        <p style={{margin: '0', fontSize: '18px'}}>{props.item.productName}</p>
-                    </div>
-                </Tooltip>
-                <div className="product-quantity">
-                    <div style={{width: '120px'}}>
-                        <p style={{margin: '0 8px 0 0', fontSize: '14px'}}>{props.item.productPrice.toFixed(2)}$</p>
-                    </div>
-                    <FormControl
-                        size="small"
-                        autoFocus
-                        sx={{
-                            m: 1,
-                            margin: '0 0',
-                            width: 'fit-content',
-                            height: 'fit-content',
-                            "& label.Mui-focused": {
-                                color: 'rgb(39, 99, 24)'
-                            },
-                            "& .MuiOutlinedInput-root": {
-                                "&.Mui-focused fieldset": {
-                                    borderColor: 'rgb(39, 99, 24)'
-                                }
-                            }
-                        }}
+        <OrderItemContainer sx={{ boxShadow: boxShadow }}>
+            <ProductImage>
+                <Box className="product-img">
+                    <img alt={'No image'} src={img} />
+                </Box>
+            </ProductImage>
+            <Tooltip title={`${props.item.productName}`}>
+                <ProductName onClick={() => {navigate(`/product/${props.item.productSkuId}/${props.item.productName}`)}}>
+                    <Typography>{props.item.productName}</Typography>
+                </ProductName>
+            </Tooltip>
+            <ProductQuantity>
+                <Box className="price">
+                    <Typography>${props.item.productPrice.toFixed(2)}</Typography>
+                </Box>
+                <StyledFormControl size="small" autoFocus>
+                    <StyledSelect
+                        id="quantity-select"
+                        disabled={true}
+                        value={props.item.quantity}
+                        variant="outlined"
                     >
-                        <Select
-                            id="quantity-select"
-                            disabled={true}
-                            value={props.item.quantity}
-                            variant={"outlined"}
-                            sx={{
-                                height: '40px',
+                        <MenuItem key={props.item.id} value={props.item.quantity}>{props.item.quantity}</MenuItem>
+                    </StyledSelect>
+                </StyledFormControl>
+            </ProductQuantity>
+        </OrderItemContainer>
+    );
+}
 
-                            }}
-                        >
-                            <MenuItem key={props.item.id} value={props.item.quantity}>{props.item.quantity}</MenuItem>
-                        </Select>
-                    </FormControl>
-                </div>
-
-            </div>
-            )
-            }
-
-            export default OrderItem
+export default OrderItem;

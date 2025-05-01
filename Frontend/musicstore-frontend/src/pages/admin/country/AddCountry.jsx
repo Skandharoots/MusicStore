@@ -1,4 +1,4 @@
-import {Backdrop, Box, Button, CircularProgress, Typography} from "@mui/material";
+import {Backdrop, Button, CircularProgress, Typography, Box, styled} from "@mui/material";
 import TextField from "@mui/material/TextField";
 import {useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
@@ -7,9 +7,53 @@ import '../style/AddCountry.scss';
 import LocalStorageHelper from "../../../helpers/LocalStorageHelper.jsx";
 import {Slide, toast} from "react-toastify";
 
+const CountryAddContainer = styled(Box)(({theme}) => ({
+    height: 'fit-content',
+    display: 'flex',
+    flexDirection: 'column',
+    minHeight: '80dvh',
+    width: '796px',
+    borderLeft: `1px solid ${theme.palette.divider}`,
+    backgroundColor: theme.palette.background.paper,
+}));
+
+const AddCountryForm = styled(Box)(({theme}) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    textAlign: 'center',
+    maxWidth: '400px',
+    minWidth: '200px',
+    margin: '5% 20%',
+    borderRadius: '1em',
+    boxShadow: '0 5px 15px ' + theme.palette.formShadow.main,
+    padding: '2%',
+}));
+
+const StyledTextField = styled(TextField)(({theme}) => ({
+    width: '70%',
+    margin: '0 auto 5% auto',
+    "& label.Mui-focused": {
+        color: 'rgb(39, 99, 24)'
+    },
+    "& .MuiOutlinedInput-root": {
+        "&.Mui-focused fieldset": {
+            borderColor: 'rgb(39, 99, 24)'
+        }
+    }
+}));
+
+const AddButton = styled(Button)(({theme}) => ({
+    width: '70%',
+    backgroundColor: 'rgb(39, 99, 24)',
+    color: theme.palette.mybutton.colorTwo,
+    "&:hover": {
+        backgroundColor: 'rgb(49,140,23)'
+    }
+}));
 
 function AddCountry() {
-
     const [countryName, setCountryName] = useState('');
     const [countryNameError, setCountryNameError] = useState(false);
     const [countryNameErrorMsg, setCountryNameErrorMsg] = useState('');
@@ -27,13 +71,10 @@ function AddCountry() {
         }
     }, []);
 
-
     const validateInputs = () => {
-
         let isValid = true;
 
-        if (!countryName
-            || !/^[A-Z][A-Za-z ']{1,49}/i.test(countryName)) {
+        if (!countryName || !/^[A-Z][A-Za-z ']{1,49}/i.test(countryName)) {
             setCountryNameError(true);
             setCountryNameErrorMsg('Please enter a valid country name.');
             isValid = false;
@@ -107,35 +148,34 @@ function AddCountry() {
         });
     }
 
-
-
     return (
-        <div className="CountryAdd">
+        <CountryAddContainer>
             <Backdrop
                 sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
                 open={openBackdrop}
             >
                 <CircularProgress color="inherit" />
             </Backdrop>
-            <div className="AddCountForm">
+            
+            <AddCountryForm>
                 <Typography
                     component="h1"
                     variant="h5"
                     sx={{
-                        width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)', color: 'black'
-                        , margin: '0 auto 5% auto'
+                        width: '100%',
+                        fontSize: 'clamp(2rem, 10vw, 2.15rem)',
+                        margin: '0 auto 5% auto'
                     }}
                 >
                     Add country
                 </Typography>
+                
                 <Box
                     component="form"
                     onSubmit={submitCountry}
                     noValidate
-
                 >
-
-                    <TextField
+                    <StyledTextField
                         error={countryNameError}
                         helperText={countryNameErrorMsg}
                         id="countryName"
@@ -151,36 +191,19 @@ function AddCountry() {
                         label="Country"
                         value={countryName}
                         onChange={e => setCountryName(e.target.value)}
-                        sx={{
-                            width: '70%',
-                            margin: '0 auto 5% auto',
-                            "& label.Mui-focused": {
-                                color: 'rgb(39, 99, 24)'
-                            },
-                            "& .MuiOutlinedInput-root": {
-                                "&.Mui-focused fieldset": {
-                                    borderColor: 'rgb(39, 99, 24)'
-                                }
-                            }
-                        }}
                     />
-                    <Button
-                        className="add-btn"
+                    
+                    <AddButton
                         type="submit"
                         fullWidth
                         variant="contained"
                         onClick={validateInputs}
-                        sx={{
-                            width: '70%',
-                            backgroundColor: 'rgb(39, 99, 24)',
-                            "&:hover": {backgroundColor: 'rgb(49,140,23)'}
-                        }}
                     >
                         Add Country
-                    </Button>
+                    </AddButton>
                 </Box>
-            </div>
-        </div>
+            </AddCountryForm>
+        </CountryAddContainer>
     )
 }
 

@@ -1,26 +1,75 @@
 import React, {useEffect} from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import './style/PasswordResetLanding.scss';
 import {Slide, toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import TextField from '@mui/material/TextField';
 import {useState} from "react";
-import {Alert, Backdrop, Box, Button, CircularProgress, Typography} from "@mui/material";
-import {Link} from "react-router-dom";
+import {Alert, Backdrop, Box, Button, CircularProgress, Typography, Paper, styled} from "@mui/material";
 import axios from "axios";
+import TextField from '@mui/material/TextField';
+import LocalStorageHelper from "../../helpers/LocalStorageHelper";
 
+const ResetLandingContainer = styled(Box)(({ theme }) => ({
+    margin: 0,
+    padding: 0,
+    display: 'flex',
+    flexDirection: 'column',
+    backgroundColor: theme.palette.background.default,
+    minHeight: '80dvh',
+}));
+
+const ResetLandingForm = styled(Paper)(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    textAlign: 'center',
+    color: theme.palette.text.primary,
+    maxWidth: '400px',
+    margin: '5% auto',
+    borderRadius: '1em',
+    boxShadow: '0 5px 15px ' + theme.palette.formShadow.main,
+    padding: '2%',
+    backgroundColor: theme.palette.background.paper,
+}));
+
+const StyledTextField = styled(TextField)(({ theme }) => ({
+    width: '70%',
+    margin: '0 auto 5% auto',
+    color: theme.palette.text.primary,
+    "& label.Mui-focused": {
+        color: 'rgb(39, 99, 24)'
+    },
+    "& .MuiOutlinedInput-root": {
+        "&.Mui-focused fieldset": {
+            borderColor: 'rgb(39, 99, 24)'
+        }
+    }
+}));
+
+const StyledButton = styled(Button)(({ theme }) => ({
+    width: '70%',
+    backgroundColor: 'rgb(39, 99, 24)',
+    color: theme.palette.mybutton.colorTwo,
+    "&:hover": {
+        backgroundColor: 'rgb(49,140,23)'
+    }
+}));
+
+const StyledAlert = styled(Alert)({
+    margin: '1rem auto',
+    width: '70%'
+});
 
 function PasswordResetLanding() {
-
     const [passwordConfirmation, setPasswordConfirmation] = useState('');
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const [hideError, setHideError] = useState(true);
     const [hideSuccess, setHideSuccess] = useState(true);
     const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
-    const [passwordError, setPasswordError] = useState('');
+    const [passwordError, setPasswordError] = useState(false);
     const [passwordConfirmationError, setPasswordConfirmationError] = useState(false);
-    const [passwordConfirmationErrorMessage, setPasswordConfirmationErrorMessage] = useState(false);
+    const [passwordConfirmationErrorMessage, setPasswordConfirmationErrorMessage] = useState('');
     const [openBackdrop, setOpenBackdrop] = useState(false);
     const [countDown, setCountDown] = useState(10);
     const [hideCountdown, setHideCountdown] = useState(true);
@@ -34,6 +83,12 @@ function PasswordResetLanding() {
         document.title = 'Reset password';
     }, []);
 
+    useEffect(() => {
+        if (LocalStorageHelper.IsUserLogged()) {
+            navigate('/');
+        }
+    }, [navigate]);
+
     const counter = () => {
         let interval = setInterval(() => {
             setCountDown(lastTimerCount => {
@@ -44,33 +99,26 @@ function PasswordResetLanding() {
                     return lastTimerCount - 1
                 }
             })
-        }, 1000) //each count lasts for a second
-        //cleanup the interval on complete
+        }, 1000)
         return () => clearInterval(interval)
     };
 
     const showButton = () => {
         if (showRequestButton) {
             return (
-                <Button color="inherit" size="small" onClick={() => {
-                    navigate('/password')
-                }}>
+                <Button color="inherit" size="small" onClick={() => navigate('/password')}>
                     Request again
                 </Button>
             )
         } else if (showLoginButton) {
             return (
-                <Button color="inherit" size="small" onClick={() => {
-                    navigate('/login')
-                }}>
+                <Button color="inherit" size="small" onClick={() => navigate('/login')}>
                     Login
                 </Button>
             )
         } else {
             return (
-                <Button color="inherit" size="small" onClick={() => {
-                    navigate('/login')
-                }}>
+                <Button color="inherit" size="small" onClick={() => navigate('/login')}>
                     Login
                 </Button>
             )
@@ -78,7 +126,6 @@ function PasswordResetLanding() {
     }
 
     const validateInputs = () => {
-
         let isValid = true;
 
         if (!(passwordConfirmation === password)) {
@@ -105,7 +152,6 @@ function PasswordResetLanding() {
 
         return isValid;
     };
-
 
     const submitRequest = (event) => {
         event.preventDefault();
@@ -151,24 +197,24 @@ function PasswordResetLanding() {
                     transition: Slide,
                 });
             })   
-
     }
 
     return (
-        <div className="reset-landing">
+        <ResetLandingContainer>
             <Backdrop
                 sx={(theme) => ({color: '#fff', zIndex: theme.zIndex.drawer + 1})}
                 open={openBackdrop}
             >
                 <CircularProgress color="inherit"/>
             </Backdrop>
-            <div className="reset-landing-form">
+            <ResetLandingForm>
                 <Typography
                     component="h1"
                     variant="h5"
                     sx={{
-                        width: '100%', fontSize: '26px', color: 'black'
-                        , margin: '0 auto 5% auto'
+                        width: '100%',
+                        fontSize: '26px',
+                        margin: '0 auto 5% auto'
                     }}
                 >
                     Reset your password
@@ -177,9 +223,8 @@ function PasswordResetLanding() {
                     component="form"
                     onSubmit={submitRequest}
                     noValidate
-
                 >
-                    <TextField
+                    <StyledTextField
                         error={passwordError}
                         helperText={passwordErrorMessage}
                         id="password"
@@ -195,20 +240,8 @@ function PasswordResetLanding() {
                         label="Password"
                         value={password}
                         onChange={e => setPassword(e.target.value)}
-                        sx={{
-                            width: '70%',
-                            margin: '0 auto 5% auto',
-                            "& label.Mui-focused": {
-                                color: 'rgb(39, 99, 24)'
-                            },
-                            "& .MuiOutlinedInput-root": {
-                                "&.Mui-focused fieldset": {
-                                    borderColor: 'rgb(39, 99, 24)'
-                                }
-                            }
-                        }}
                     />
-                    <TextField
+                    <StyledTextField
                         error={passwordConfirmationError}
                         helperText={passwordConfirmationErrorMessage}
                         name="passwordConfirmation"
@@ -223,65 +256,48 @@ function PasswordResetLanding() {
                         label="Password confirmation"
                         value={passwordConfirmation}
                         onChange={e => setPasswordConfirmation(e.target.value)}
-                        sx={{
-                            width: '70%',
-                            margin: '0 auto 5% auto',
-                            "& label.Mui-focused": {
-                                color: 'rgb(39, 99, 24)'
-                            },
-                            "& .MuiOutlinedInput-root": {
-                                "&.Mui-focused fieldset": {
-                                borderColor: 'rgb(39, 99, 24)'
-                            }
-                        }
-                        }}
                     />
-                    <Button
-                        className="reset-btn"
+                    <StyledButton
                         type="submit"
                         fullWidth
                         variant="contained"
                         onClick={validateInputs}
-                        sx={{
-                            width: '70%',
-                            backgroundColor: 'rgb(39, 99, 24)',
-                            "&:hover": {backgroundColor: 'rgb(49,140,23)'}
-                        }}
                     >
                         Reset password
-                    </Button>
+                    </StyledButton>
                 </Box>
-                { !hideSuccess &&
-                <Alert
-                    severity="success"
-                    sx={{margin: '1rem auto', width: '70%'}}
-                    hidden={hideSuccess}
-                    action={
-                        <Button color="inherit" size="small" onClick={() => {navigate('/login')}}>
-                            LOGIN NOW
-                        </Button>
-                    }
-                >
-                    Success! You can now log in!
-                </Alert>
-                }
-                { !hideError &&
-                    <Alert
-                        severity="error"
-                        sx={{margin: '1rem auto', width: '70%'}}
-                        hidden={hideError}
+                {!hideSuccess && (
+                    <StyledAlert
+                        severity="success"
+                        hidden={hideSuccess}
                         action={
-                            showButton()
+                            <Button color="inherit" size="small" onClick={() => navigate('/login')}>
+                                LOGIN NOW
+                            </Button>
                         }
                     >
+                        Success! You can now log in!
+                    </StyledAlert>
+                )}
+                {!hideError && (
+                    <StyledAlert
+                        severity="error"
+                        hidden={hideError}
+                        action={showButton()}
+                    >
                         Something went wrong. {errorMessage}
-                    </Alert>
-                }
-                <Typography hidden={hideCountdown} variant={"body1"} color="black" sx={{width: '70%'}}>
+                    </StyledAlert>
+                )}
+                <Typography 
+                    hidden={hideCountdown} 
+                    variant="body1" 
+                    color="black" 
+                    sx={{width: '70%'}}
+                >
                     We&apos;ll redirect you to the login page in - {countDown}
                 </Typography>
-            </div>
-        </div>
+            </ResetLandingForm>
+        </ResetLandingContainer>
     )
 }
 

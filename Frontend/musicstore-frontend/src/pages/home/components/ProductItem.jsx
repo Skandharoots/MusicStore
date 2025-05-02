@@ -67,7 +67,8 @@ const ProductImageContainer = styled(Box)({
     height: "150px",
     display: "flex",
     overflow: "hidden",
-    backgroundColor: 'white'
+    backgroundColor: 'white',
+    borderRadius: '1em',
 });
 
 const ProductImage = styled(Box)({

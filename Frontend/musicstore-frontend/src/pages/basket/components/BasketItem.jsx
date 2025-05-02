@@ -45,29 +45,26 @@ const BasketItemContainer = styled(Box)(({ theme }) => ({
 }));
 
 const ProductImage = styled(Box)(({ theme }) => ({
-    width: '100px',
+    maxWidth: '40%',
     height: '85px',
+    aspectRatio: '16 / 9',
     display: 'flex',
-    overflow: 'hidden',
-    '& .product-img': {
-        width: '100px',
-        maxHeight: '100%',
-        aspectRatio: '16 / 9',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundSize: 'cover',
-        flexShrink: '0',
-        flexGrow: '0',
-        '& img': {
-            objectFit: 'cover',
-            maxWidth: '100%',
-            maxHeight: '100%',
-            display: 'block',
-            flexShrink: '0',
-            flexGrow: '0'
-        }
-    }
+    justifyContent: 'center',
+    alignItems: 'center',
+    display: "flex",
+    overflow: "hidden",
+    backgroundColor: 'white',
+    borderRadius: '1em',
+    marginRight: '16px',
+}));
+
+const ProductImg = styled('img')(({ theme }) => ({
+    objectFit: 'cover',
+    maxWidth: '100%',
+    maxHeight: '100%',
+    display: 'block',
+    flexShrink: '0',
+    flexGrow: '0'
 }));
 
 const ProductName = styled(Box)(({ theme }) => ({
@@ -126,10 +123,11 @@ const DeleteButton = styled(Button)(({ theme }) => ({
     margin: '0 0 0 8px',
     minWidth: '0',
     fontSize: '8px',
-    color: theme.palette.text.primary,
+    color: theme.palette.errorBtn.main,
+    borderColor: theme.palette.errorBtn.main,
     "&:hover": {
-        backgroundColor: 'rgba(0, 0, 0, 0.1)',
-        color: theme.palette.error.main
+        color: theme.palette.errorBtn.light,
+        borderColor: theme.palette.errorBtn.light,
     },
     "&:focus": {
         outline: 'none !important'
@@ -381,9 +379,7 @@ function BasketItem(props) {
                 <CircularProgress color="inherit"/>
             </Backdrop>
             <ProductImage>
-                <Box className="product-img">
-                    <img alt={'No image'} src={img} />
-                </Box>
+                    <ProductImg alt={'No image'} src={img} />
             </ProductImage>
             <Tooltip title={`${props.item.productName}`}>
                 <ProductName onClick={() => {navigate(`/product/${props.item.productSkuId}/${props.item.productName}`)}}>

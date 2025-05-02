@@ -79,21 +79,18 @@ const ImagesContainer = styled(Box)(({theme}) => ({
     alignItems: 'center',
 }));
 
-const ImageWrapper = styled(Box)(({theme}) => ({
-    height: "70px",
-    display: "flex",
-    overflow: "hidden",
-}));
-
 const ImageContainer = styled(Box)(({theme}) => ({
-    maxHeight: '70px',
-    aspectRatio: "10 / 6",
+    maxWidth: '40%',
+    height: '85px',
+    aspectRatio: '16 / 9',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundSize: 'cover',
-    flexShrink: '0',
-    flexGrow: '0',
+    display: "flex",
+    overflow: "hidden",
+    backgroundColor: 'white',
+    borderRadius: '1em',
+    marginRight: '16px',
 }));
 
 const StyledImage = styled('img')(({theme}) => ({
@@ -161,11 +158,9 @@ function OrderUserItem(props) {
 
             <ImagesContainer>
                 {images.map((image, index) => (
-                    <ImageWrapper key={index * 5}>
-                        <ImageContainer key={index}>
-                            <StyledImage alt="No image" src={image} />
-                        </ImageContainer>
-                    </ImageWrapper>
+                    <ImageContainer key={index}>
+                        <StyledImage alt="No image" src={image} />
+                    </ImageContainer>
                 ))}
             </ImagesContainer>
         </OrderItemContainer>

@@ -71,6 +71,7 @@ const ProductImage = styled(Box)({
     backgroundColor: 'white',
     flexShrink: '0',
     flexGrow: '0',
+    borderRadius: '1em',
 });
 
 const ProductButtons = styled(Box)(({ theme }) => ({

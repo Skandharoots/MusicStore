@@ -76,7 +76,7 @@ const ImagesContainer = styled(Box)(({theme}) => ({
 }));
 
 const ImageWrapper = styled(Box)(({theme}) => ({
-    height: '70px',
+    height: '100px',
     display: "flex",
     overflow: "hidden",
 }));
@@ -90,6 +90,8 @@ const ImageContainer = styled(Box)(({theme}) => ({
     backgroundSize: 'cover',
     flexShrink: '0',
     flexGrow: '0',
+    backgroundColor: 'white',
+    borderRadius: '1em',
 }));
 
 const OrderImage = styled('img')(({theme}) => ({

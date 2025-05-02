@@ -44,15 +44,30 @@ const FavoriteItemContainer = styled(Box)(({theme}) => ({
     },
 }));
 
-const ItemImage = styled(Box)(({theme}) => ({
+const ItemImageContainer = styled(Box)(({theme}) => ({
     maxWidth: '40%',
-    maxHeight: '85px',
+    height: '85px',
     aspectRatio: '16 / 9',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundSize: 'cover',
-    cursor: 'pointer',
+    display: "flex",
+    overflow: "hidden",
+    backgroundColor: 'white',
+    borderRadius: '1em',
+}));
+
+const ItemImage = styled(Box)(({theme}) => ({
+    maxWidth: '40%',
+    height: '85px',
+    aspectRatio: '16 / 9',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    display: "flex",
+    overflow: "hidden",
+    backgroundColor: 'white',
+    borderRadius: '1em',
 }));
 
 const Image = styled('img')(({theme}) => ({
@@ -532,9 +547,10 @@ function FavouriteItem(props) {
             >
                 <CircularProgress color="inherit"/>
             </Backdrop>
-            <ItemImage onClick={() => navigate(`/product/${props.item.productUuid}/${props.item.productName}`)}>
-                <Image alt="No image" src={img} />
-            </ItemImage>
+            
+                <ItemImage onClick={() => navigate(`/product/${props.item.productUuid}/${props.item.productName}`)}>
+                    <Image alt="No image" src={img} />
+                </ItemImage>
             <QuantityContainer>
                 <StyledFormControl size="small" autoFocus>
                     <StyledSelect

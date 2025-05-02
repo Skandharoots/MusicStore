@@ -53,31 +53,6 @@ const FavouritesGrid = styled(Grid)(({theme}) => ({
     columnSpacing: 2.7,
 }));
 
-const PaginationContainer = styled(Box)(({theme}) => ({
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-    padding: '16px 0',
-}));
-
-const StyledPagination = styled(Pagination)(({theme}) => ({
-    '& .MuiPaginationItem-rounded': {
-        outline: 'none !important',
-        '&:hover': {
-            outline: 'none !important',
-            backgroundColor: theme.palette.primary.light + '33',
-        },
-    },
-    '& .Mui-selected': {
-        backgroundColor: theme.palette.primary.main + '80 !important',
-        '&:hover': {
-            outline: 'none !important',
-            backgroundColor: theme.palette.primary.light + '33 !important',
-        },
-    },
-}));
-
 function Favourites() {
     const [favorites, setFavourites] = useState([]);
     const [totalPages, setTotalPages] = useState(1);
@@ -147,16 +122,41 @@ function Favourites() {
                 ))}
             </FavouritesGrid>
 
-            <PaginationContainer>
-                <Stack spacing={2}>
-                    <StyledPagination 
-                        page={currentPage} 
-                        count={totalPages} 
-                        onChange={changePage} 
-                        shape="rounded"
-                    />
-                </Stack>
-            </PaginationContainer>
+            <Box sx={{
+                        display: 'flex',
+                        width: '100%',
+                        boxSizing: 'border-box',
+                        flexDirection: 'row',
+                        justifyContent: 'flex-end',
+                        alignItems: 'center',
+                        padding: '16px 0 16px 0'
+                    }}>
+                        <Stack spacing={2} sx={{boxSizing: 'border-box'}}>
+                            <Pagination
+                                page={currentPage}
+                                count={totalPages}
+                                onChange={changePage}
+                                shape={"rounded"}
+                                sx={{
+                                    boxSizing: 'border-box',
+                                    '& .MuiPaginationItem-rounded': {
+                                        outline: 'none !important',
+                                        "&:hover": {
+                                            outline: 'none !important',
+                                            backgroundColor: 'rgba(39, 99, 24, 0.2)'
+                                        },
+                                    },
+                                    '& .Mui-selected': {
+                                        backgroundColor: 'rgba(39, 99, 24, 0.5) !important',
+                                        "&:hover": {
+                                            outline: 'none !important',
+                                            backgroundColor: 'rgba(39, 99, 24, 0.2) !important'
+                                        },
+                                    }
+                                }}
+                            />
+                        </Stack>
+                    </Box>
         </FavouritesContainer>
     );
 }

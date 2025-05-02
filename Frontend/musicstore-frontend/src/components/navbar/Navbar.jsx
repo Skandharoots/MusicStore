@@ -150,6 +150,14 @@ const StyledUserListItem = styled(ListItem)(({ theme }) => ({
         backgroundColor: theme.palette.shadowLink.main,
         color: theme.palette.text.primary,
     },
+    '&:focus': {
+        outline: 'none !important',
+        border: 'none !important',
+    },
+    '&:active': {
+        border: 'none !important',
+        outline: 'none !important',
+    },
 }));
 
 const StyledBottomContainer = styled(Paper)(({ theme }) => ({
@@ -203,6 +211,14 @@ const StyledAccountButton = styled(Button)(({ theme }) => ({
     textAlign: 'left',
     '&:hover': {
         backgroundColor: theme.palette.shadowLink.main,
+    },
+    '&:focus': {
+        outline: 'none !important',
+        border: 'none !important',
+    },
+    '&:active': {
+        border: 'none !important',
+        outline: 'none !important',
     },
 }));
 

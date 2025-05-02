@@ -229,7 +229,7 @@ function Signup() {
                     variant="h5"
                     sx={{
                         width: '100%',
-                        fontSize: 'clamp(2rem, 10vw, 2.15rem)',
+                        fontSize: 'clamp(2rem, 5vw, 2.15rem)',
                         margin: '0 auto 5% auto'
                     }}
                 >

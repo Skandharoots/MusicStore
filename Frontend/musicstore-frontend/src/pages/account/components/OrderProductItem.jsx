@@ -27,13 +27,17 @@ const OrderItemContainer = styled(Box)(({theme}) => ({
 }));
 
 const ItemImage = styled(Box)(({theme}) => ({
-    width: '100px',
-    maxHeight: '85px',
-    aspectRatio: "16 / 9",
+    maxWidth: '40%',
+    height: '85px',
+    aspectRatio: '16 / 9',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundSize: 'cover',
+    display: "flex",
+    overflow: "hidden",
+    backgroundColor: 'white',
+    borderRadius: '1em',
+    marginRight: '16px',
 }));
 
 const StyledImage = styled('img')(({theme}) => ({

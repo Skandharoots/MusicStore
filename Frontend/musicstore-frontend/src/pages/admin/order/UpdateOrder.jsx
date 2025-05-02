@@ -47,6 +47,7 @@ const OrderUpdateForm = styled(Box)(({theme}) => ({
     alignItems: 'center',
     textAlign: 'center',
     maxWidth: '950px',
+    width: '500px',
     minWidth: '200px',
     margin: '16px 20% 16px 20%',
     borderRadius: '1em',

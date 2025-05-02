@@ -45,6 +45,8 @@ const ImageContainer = styled(Box)(({theme}) => ({
     height: "150px",
     display: "flex",
     overflow: "hidden",
+    backgroundColor: 'white',
+    borderRadius: '1em',
 }));
 
 const ProductImage = styled(Box)(({theme}) => ({

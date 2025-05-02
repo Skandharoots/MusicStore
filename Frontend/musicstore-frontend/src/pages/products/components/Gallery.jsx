@@ -41,6 +41,7 @@ export function Gallery({ imageBinaries }) {
                 display: "flex",
                 overflow: "hidden",
                 backgroundColor: 'white',
+                borderRadius: '1em',
             }}>
 
                 {images.map((url, index) => (

@@ -35,14 +35,17 @@ const OpinionContainer = styled(Box)(({theme}) => ({
 }));
 
 const ItemImage = styled(Box)(({theme}) => ({
-    width: '200px',
-    maxHeight: '85px',
+    maxWidth: '40%',
+    height: '85px',
     aspectRatio: '16 / 9',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundSize: 'cover',
-    margin: '0 0',
+    display: "flex",
+    overflow: "hidden",
+    backgroundColor: 'white',
+    borderRadius: '1em',
+    marginRight: '16px',
 }));
 
 const Image = styled('img')(({theme}) => ({

@@ -36,7 +36,8 @@ const BasketContainer = styled(Box)(({ theme }) => ({
 const BasketMain = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'row',
-    width: '60%',
+    width: '100%',
+    maxWidth: '1500px',
     marginTop: '4%',
     boxSizing: 'border-box',
     justifyContent: 'center',

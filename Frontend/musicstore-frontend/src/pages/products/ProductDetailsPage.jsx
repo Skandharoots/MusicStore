@@ -56,7 +56,7 @@ const ProductDetailsHeader = styled(Box)(({ theme }) => ({
     padding: '0 0 16px 0',
     height: 'fit-content',
     boxSizing: 'border-box',
-    borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
+    borderBottom: '1px solid ' + theme.palette.divider,
     margin: '0 0 16px 0',
 }));
 

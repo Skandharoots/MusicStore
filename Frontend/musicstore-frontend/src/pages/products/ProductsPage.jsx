@@ -91,7 +91,7 @@ const RibbonHeader = styled(Box)(({ theme }) => ({
     width: '100%',
     padding: '16px 8px 0 8px',
     height: 'fit-content',
-    borderTop: '1px solid rgba(0, 0, 0, 0.1)',
+    borderTop: '1px solid ' + theme.palette.divider,
 }));
 
 const RibbonSection = styled(Box)(({ theme }) => ({
@@ -113,7 +113,7 @@ const ProductsPageContent = styled(Box)(({ theme }) => ({
     justifyContent: 'flex-start',
     alignItems: 'center',
     boxSizing: 'border-box',
-    borderLeft: '1px solid rgba(0, 0, 0, 0.1)',
+    borderLeft: '1px solid ' + theme.palette.divider,
     minHeight: '80dvh',
 }));
 
@@ -126,7 +126,7 @@ const ContentControls = styled(Box)(({ theme }) => ({
     padding: '8px 0',
     width: '100%',
     boxSizing: 'border-box',
-    borderBottom: 'rgba(0,0,0,0.1) solid 1px',
+    borderBottom: 'solid 1px ' + theme.palette.divider,
 }));
 
 const ContentGrid = styled(Box)(({ theme }) => ({

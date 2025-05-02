@@ -112,18 +112,18 @@ const ShowMoreButton = styled(Button)(({theme}) => ({
     fontSize: '10px',
     fontWeight: 'bold',
     height: '36px',
-    borderColor: theme.palette.primary.main,
-    color: theme.palette.primary.main,
+    borderColor: theme.palette.irish.main,
+    color: theme.palette.irish.main,
     marginRight: '8px',
     outline: 'none !important',
     '&:focus': {
-        borderColor: theme.palette.primary.light,
+        borderColor: theme.palette.irish.light,
         outline: 'none !important',
     },
     '&:hover': {
-        borderColor: theme.palette.primary.light,
+        borderColor: theme.palette.irish.light,
         backgroundColor: 'rgba(255, 255, 255, 0.1)',
-        color: theme.palette.primary.light,
+        color: theme.palette.irish.light,
         outline: 'none !important',
     },
 }));

@@ -35,7 +35,7 @@ import Opinion from './components/Opinion.jsx';
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 
 const ProductDetailsContainer = styled(Box)(({ theme }) => ({
-    margin: '0 0',
+    margin: '16px 0',
     padding: '0 20%',
     display: 'flex',
     flexDirection: 'column',

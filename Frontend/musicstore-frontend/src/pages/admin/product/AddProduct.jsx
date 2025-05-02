@@ -83,6 +83,7 @@ const UploadButton = styled(Button)(({theme}) => ({
     width: '70%',
     marginBottom: '8px',
     backgroundColor: theme.palette.blueBtn.main,
+    color: theme.palette.mybutton.colorTwo,
     "&:hover": {backgroundColor: theme.palette.blueBtn.light},
 }));
 
@@ -90,12 +91,14 @@ const DeleteGalleryButton = styled(Button)(({theme}) => ({
     width: '70%',
     marginBottom: '8px',
     backgroundColor: theme.palette.errorBtn.main,
+    color: theme.palette.mybutton.colorTwo,
     "&:hover": {backgroundColor: theme.palette.errorBtn.light},
 }));
 
 const AddProductButton = styled(Button)(({theme}) => ({
     width: '70%',
     backgroundColor: theme.palette.irish.main,
+    color: theme.palette.mybutton.colorTwo,
     "&:hover": {backgroundColor: theme.palette.irish.light},
 }));
 

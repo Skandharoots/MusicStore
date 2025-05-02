@@ -146,6 +146,7 @@ const InvoiceContainer = styled(Box)(({theme}) => ({
     borderRadius: '1em',
     marginBottom: '16px',
     padding: '16px',
+    marginLeft: '16px',
     boxSizing: 'border-box',
     border: '1px solid ' + theme.palette.formShadow.main,
 }));
@@ -162,13 +163,13 @@ const InvoiceInfo = styled(Box)(({theme}) => ({
 const InvoiceButton = styled(Button)(({theme}) => ({
     width: '90%',
     margin: '0',
+    borderColor: theme.palette.irish.main,
+    color: theme.palette.irish.main,
     '&:hover': {
-        borderColor: theme.palette.primary.main,
-        color: theme.palette.primary.main,
-        backgroundColor: theme.palette.primary.light + '33',
+        borderColor: theme.palette.irish.light,
+        color: theme.palette.irish.light,
+        backgroundColor: 'transparent',
     },
-    color: theme.palette.primary.main,
-    borderColor: theme.palette.primary.main,
 }));
 
 const NotFoundContainer = styled(Box)(({theme}) => ({

@@ -90,7 +90,7 @@ function ProductsSearchPage() {
         }).catch(() => {
             setOpenBackdrop(false);
         });
-    }, [currentPage]);
+    }, [currentPage, searchPhrase.searchPhrase]);
 
     const changePage = (event, value) => {
         setCurrentPage(value);

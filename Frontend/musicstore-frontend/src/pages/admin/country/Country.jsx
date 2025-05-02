@@ -14,7 +14,6 @@ const CountryContainer = styled(Box)(({theme}) => ({
     flexDirection: 'column',
     minHeight: '80dvh',
     width: '796px',
-    backgroundColor: theme.palette.background.paper,
     borderLeft: `1px solid ${theme.palette.divider}`,
 }));
 

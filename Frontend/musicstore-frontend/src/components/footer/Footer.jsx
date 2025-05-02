@@ -6,6 +6,7 @@ const FooterWrapper = styled(Box)(({ theme }) => ({
     width: '100%',
     padding: 0,
     margin: 0,
+    minHeight: '10dvh',
 }));
 
 const FooterContainer = styled(Box)(({ theme }) => ({
@@ -18,6 +19,7 @@ const FooterContainer = styled(Box)(({ theme }) => ({
     margin: 0,
     padding: '0 20%',
     borderTop: '1px solid ' + theme.palette.divider,
+    backgroundColor: theme.palette.background.default,
 }));
 
 const LeftContainer = styled(Box)(({ theme }) => ({

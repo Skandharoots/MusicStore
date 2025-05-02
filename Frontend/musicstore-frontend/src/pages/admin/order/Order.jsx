@@ -14,7 +14,6 @@ const OrderContainer = styled(Box)(({theme}) => ({
     minHeight: '80dvh',
     maxWidth: '796px',
     width: '100%',
-    backgroundColor: theme.palette.background.paper,
     borderLeft: `1px solid ${theme.palette.divider}`,
 }));
 
@@ -96,7 +95,7 @@ const ClearButton = styled(Button)(({theme}) => ({
 }));
 
 const OrdersGrid = styled(Grid)(({theme}) => ({
-    padding: theme.spacing(0, 2),
+    padding: theme.spacing(2, 2),
     borderBottom: `1px solid ${theme.palette.divider}`,
 }));
 

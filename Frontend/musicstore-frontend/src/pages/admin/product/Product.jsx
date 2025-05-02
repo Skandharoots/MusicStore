@@ -27,6 +27,7 @@ const PageTitle = styled(Box)(({theme}) => ({
     color: theme.palette.text.primary,
     fontSize: '20px',
     padding: '0 16px',
+    marginTop: '16px',
 }));
 
 const ActionsContainer = styled(Box)(({theme}) => ({

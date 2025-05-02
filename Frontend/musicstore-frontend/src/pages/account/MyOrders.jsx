@@ -27,6 +27,16 @@ const MyOrdersContainer = styled(Box)(({theme}) => ({
 
 }));
 
+const PageInfo = styled(Box)(({theme}) => ({
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    fontSize: '20px',
+    padding: '16px 16px',
+    borderBottom: `1px solid ${theme.palette.divider}`,
+}));
+
 const OrdersGrid = styled(Grid)(({theme}) => ({
     boxSizing: 'border-box',
     padding: '16px',
@@ -145,6 +155,9 @@ function MyOrders() {
 
             {showOrders && (
                 <>
+                    <PageInfo>
+                        <Typography variant="h5">My orders</Typography>
+                    </PageInfo>
                     <OrdersGrid container spacing={2.7}>
                         {orders.map((order) => (
                             <OrderUserItem key={order.id} id={order.id} item={order}/>

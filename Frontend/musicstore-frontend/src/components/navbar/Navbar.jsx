@@ -41,12 +41,12 @@ import axios from "axios";
 
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
     backgroundColor: theme.palette.background.default,
-    boxShadow: '0 5px 15px rgba(0, 0, 0, 0.1)',
     width: '100%',
     display: 'block',
     boxSizing: 'border-box',
     margin: '0',
     padding: '0',
+    minHeight: '10dvh',
 }));
 
 const StyledToolbar = styled(Toolbar)({

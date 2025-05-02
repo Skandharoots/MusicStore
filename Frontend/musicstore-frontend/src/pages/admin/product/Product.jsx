@@ -43,7 +43,7 @@ const ActionsContainer = styled(Box)(({theme}) => ({
 }));
 
 const SearchForm = styled('form')(({theme}) => ({
-    width: '30%',
+    width: '40%',
     minWidth: '200px',
     height: '50px',
     display: 'flex',

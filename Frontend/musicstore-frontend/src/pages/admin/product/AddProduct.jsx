@@ -19,7 +19,6 @@ import CloudUploadOutlinedIcon from '@mui/icons-material/CloudUploadOutlined';
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import axios from "axios";
-import '../style/AddProduct.scss';
 import LocalStorageHelper from "../../../helpers/LocalStorageHelper.jsx";
 import {Slide, toast} from "react-toastify";
 import {ImageSlider} from "./components/ImageSlider.jsx";

@@ -5,7 +5,6 @@ import {Slide, toast} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import axios from "axios";
 import LocalStorageHelper from "../../../helpers/LocalStorageHelper.jsx";
-import '../style/UpdateCategory.scss';
 
 const CategoryUpdateContainer = styled(Box)(({theme}) => ({
     height: 'fit-content',

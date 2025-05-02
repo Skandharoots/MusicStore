@@ -870,7 +870,7 @@ function UpdateOrder() {
                             margin: '0 auto 5% auto'
                         }}
                     >
-                        Generate Invoice
+                        Upload Invoice
                     </Typography>
 
                     <TextField

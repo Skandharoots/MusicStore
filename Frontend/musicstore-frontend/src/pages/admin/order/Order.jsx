@@ -1,10 +1,9 @@
-import '../style/Order.scss';
 import {useEffect, useState} from "react";
 import LocalStorageHelper from "../../../helpers/LocalStorageHelper.jsx";
 import {useNavigate} from "react-router-dom";
 import axios from "axios";
 import {Slide, toast} from "react-toastify";
-import {Backdrop, Button, CircularProgress, Stack, Pagination, Box, styled, TextField, IconButton, Typography} from "@mui/material";
+import {Backdrop, Button, CircularProgress, Stack, Pagination, Box, styled, TextField, IconButton, Typography, InputBase} from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import {RestoreRounded} from "@mui/icons-material";
@@ -45,7 +44,7 @@ const ActionsContainer = styled(Box)(({theme}) => ({
 
 const SearchForm = styled('form')(({theme}) => ({
     display: 'flex',
-    width: '30%',
+    width: '50%',
     minWidth: '200px',
     height: '50px',
     padding: 0,
@@ -54,26 +53,22 @@ const SearchForm = styled('form')(({theme}) => ({
     justifyContent: 'center',
 }));
 
-const SearchInput = styled(TextField)(({theme}) => ({
+const SearchInput = styled(InputBase)(({theme}) => ({
+    width: '80%',
     height: '40px',
     margin: 0,
     backgroundColor: theme.palette.background.paper,
-    '& .MuiOutlinedInput-root': {
-        height: '40px',
-        fontSize: '12px',
-        color: theme.palette.text.secondary,
-        '& fieldset': {
-            borderColor: theme.palette.text.secondary,
-            borderRadius: '1em',
-        },
-        '&:hover fieldset': {
-            borderColor: theme.palette.text.primary,
-        },
-        '&.Mui-focused fieldset': {
-            borderColor: theme.palette.text.primary,
-        },
+    fontSize: '16px',
+    color: theme.palette.text.primary,
+    border: `1px solid ${theme.palette.divider}`,
+    borderRadius: '1em',
+    padding: '0 10px',
+    boxShadow: '0 5px 15px rgba(0, 0, 0, 0.1)',
+    transition: 'border-color 0.3s ease-in-out',
+    '&:focus': {
+        borderColor: theme.palette.primary.main,
+        outline: 'none',
     },
-    boxShadow: '0 5px 15px ' + theme.palette.formShadow.main,
 }));
 
 const SearchButton = styled(IconButton)(({theme}) => ({

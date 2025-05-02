@@ -1,6 +1,5 @@
 import React, {useEffect} from "react";
 import { useNavigate } from "react-router-dom";
-import './style/Login.scss';
 import {Slide, toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import LocalStorageHelper from "../../helpers/LocalStorageHelper.jsx";

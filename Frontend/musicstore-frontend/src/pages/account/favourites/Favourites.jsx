@@ -1,4 +1,3 @@
-import '../style/Favourites.scss';
 import React, {useEffect, useState} from "react";
 import axios from "axios";
 import LocalStorageHelper from "../../../helpers/LocalStorageHelper.jsx";
@@ -23,6 +22,16 @@ const FavouritesContainer = styled(Box)(({theme}) => ({
     width: '100%',
     color: theme.palette.text.primary,
     borderLeft: `1px solid ${theme.palette.divider}`,
+}));
+
+const PageInfo = styled(Box)(({theme}) => ({
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    fontSize: '20px',
+    padding: '16px 16px',
+    borderBottom: `1px solid ${theme.palette.divider}`,
 }));
 
 const PageTitle = styled(Box)(({theme}) => ({
@@ -129,11 +138,9 @@ function Favourites() {
             >
                 <CircularProgress color="inherit"/>
             </Backdrop>
-
-            <PageTitle>
-                <Typography variant="h5">My favorites</Typography>
-            </PageTitle>
-
+            <PageInfo>
+                <Typography variant="h5">Favorites</Typography>
+            </PageInfo>
             <FavouritesGrid container>
                 {favorites.map((fav, index) => (
                     <FavouriteItem key={fav.id} id={index} item={fav} onDelete={removeById} />

@@ -3,7 +3,6 @@ import TextField from "@mui/material/TextField";
 import {useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
 import axios from "axios";
-import '../style/AddManufacturer.scss';
 import LocalStorageHelper from "../../../helpers/LocalStorageHelper.jsx";
 import {Slide, toast} from "react-toastify";
 

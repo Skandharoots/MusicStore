@@ -7,12 +7,12 @@ import {
     DialogContent,
     DialogContentText,
     DialogTitle,
-    Grid,
     Tooltip,
     Typography,
     Box,
     styled
 } from "@mui/material";
+import Grid from "@mui/material/Grid2";
 import {Link} from "react-router-dom";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -29,7 +29,8 @@ const ProductContainer = styled(Grid)(({theme}) => ({
     height: 'fit-content',
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
-    padding: '4px',
+    padding: '8px 4px 4px 4px',
+    borderRadius: '1em',
     color: theme.palette.text.primary,
     fontSize: '12px',
     boxShadow: '0 5px 15px ' + theme.palette.itemShadow.main,

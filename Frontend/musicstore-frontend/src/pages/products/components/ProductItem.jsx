@@ -3,7 +3,6 @@ import axios from "axios";
 import {Slide, toast} from "react-toastify";
 import {styled} from "@mui/material/styles";
 import Grid from "@mui/material/Grid2";
-import '../style/ProductItem.scss';
 import {useNavigate} from "react-router-dom";
 import Tooltip from "@mui/material/Tooltip";
 import {

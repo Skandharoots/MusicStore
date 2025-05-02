@@ -1,4 +1,3 @@
-import './style/Basket.scss';
 import React, {useEffect, useState} from "react";
 import LocalStorageHelper from "../../helpers/LocalStorageHelper.jsx";
 import axios from "axios";

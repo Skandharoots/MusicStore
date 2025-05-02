@@ -3,18 +3,194 @@ import {useEffect, useState} from "react";
 import LocalStorageHelper from "../../helpers/LocalStorageHelper.jsx";
 import {Slide, toast} from "react-toastify";
 import axios from "axios";
-import {Backdrop, Box, Button, CircularProgress} from "@mui/material";
-import './style/MyOrderPage.scss';
+import {
+    Backdrop,
+    Box,
+    Button,
+    CircularProgress,
+    Stepper,
+    Step,
+    StepLabel,
+    styled,
+    Typography
+} from "@mui/material";
 import OrderProductItem from "./components/OrderProductItem.jsx";
-import { format } from "date-fns";
+import {format} from "date-fns";
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
-import Stepper from '@mui/material/Stepper';
-import Step from '@mui/material/Step';
-import StepLabel from '@mui/material/StepLabel';
 
+const MyOrderPageContainer = styled(Box)(({theme}) => ({
+    height: 'fit-content',
+    minHeight: '80dvh',
+    width: '780px',
+    color: theme.palette.text.primary,
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+    padding: '16px',
+    boxSizing: 'border-box',
+    borderLeft: `1px solid ${theme.palette.divider}`,
+}));
+
+const OrderPageContent = styled(Box)(({theme}) => ({
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    width: '100%',
+    height: '100%',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+}));
+
+const OrderLeftSection = styled(Box)(({theme}) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+    boxSizing: 'border-box',
+    width: '50%',
+    minWidth: '340px',
+}));
+
+const OrderRightSection = styled(Box)(({theme}) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+    boxSizing: 'border-box',
+    width: '50%',
+    minWidth: '340px',
+    padding: '0',
+}));
+
+const SectionHeader = styled(Typography)(({theme}) => ({
+    width: '300px',
+    height: 'fit-content',
+    padding: '0',
+    marginLeft: '16px',
+    fontSize: '18px',
+    fontWeight: 'bold',
+}));
+
+const DetailsContainer = styled(Box)(({theme}) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+    width: '300px',
+    height: 'fit-content',
+    padding: '16px',
+    borderRadius: '1em',
+    marginLeft: '16px',
+    marginBottom: '32px',
+    boxSizing: 'border-box',
+    boxShadow: '0 5px 15px ' + theme.palette.formShadow.main,
+}));
+
+const DeliveryContainer = styled(Box)(({theme}) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+    width: '300px',
+    height: 'fit-content',
+    padding: '16px',
+    borderRadius: '1em',
+    marginLeft: '16px',
+    marginBottom: '64px',
+    boxSizing: 'border-box',
+    boxShadow: '0 5px 15px ' + theme.palette.formShadow.main,
+}));
+
+const DetailText = styled(Typography)(({theme}) => ({
+    margin: '0',
+    fontSize: '14px',
+}));
+
+const StatusContainer = styled(Box)(({theme}) => ({
+    display: 'flex',
+    flexDirection: 'row',
+    width: '100%',
+    height: 'fit-content',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+    borderRadius: '1em',
+    padding: '16px',
+    boxSizing: 'border-box',
+    borderBottom: `1px solid ${theme.palette.divider}`,
+}));
+
+const OrderInfoContainer = styled(Box)(({theme}) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    width: '100%',
+    height: 'fit-content',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+    borderRadius: '1em',
+    padding: '16px',
+    boxSizing: 'border-box',
+    borderBottom: `1px solid ${theme.palette.divider}`,
+    marginBottom: '16px',
+    marginLeft: '16px',
+    boxShadow: '0 5px 15px ' + theme.palette.formShadow.main,
+}));
+
+const InvoiceContainer = styled(Box)(({theme}) => ({
+    display: 'flex',
+    flexDirection: 'row',
+    width: '100%',
+    height: 'fit-content',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: '1em',
+    marginBottom: '16px',
+    padding: '16px',
+    boxSizing: 'border-box',
+    border: '1px solid ' + theme.palette.formShadow.main,
+}));
+
+const InvoiceInfo = styled(Box)(({theme}) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    width: '50%',
+    height: 'fit-content',
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+}));
+
+const InvoiceButton = styled(Button)(({theme}) => ({
+    width: '90%',
+    margin: '0',
+    '&:hover': {
+        borderColor: theme.palette.primary.main,
+        color: theme.palette.primary.main,
+        backgroundColor: theme.palette.primary.light + '33',
+    },
+    color: theme.palette.primary.main,
+    borderColor: theme.palette.primary.main,
+}));
+
+const NotFoundContainer = styled(Box)(({theme}) => ({
+    width: '400px',
+    display: 'flex',
+    flexDirection: 'row',
+    height: 'fit-content',
+    padding: '16px',
+    justifyContent: 'center',
+    alignItems: 'center',
+    textAlign: 'center',
+    borderRadius: '1em',
+    boxShadow: theme.shadows[2],
+}));
+
+const NotFoundText = styled(Typography)(({theme}) => ({
+    margin: '0',
+    fontSize: '20px',
+    fontWeight: 'normal',
+}));
 
 function MyOrderPage() {
-
     const [order, setOrder] = useState({});
     const [orderItems, setOrderItems] = useState([]);
     const [dateCreated, setDateCreated] = useState(null);
@@ -42,21 +218,21 @@ function MyOrderPage() {
         if (LocalStorageHelper.IsUserLogged() === false) {
             navigate('/');
         }
-    }, [])
+    }, []);
 
     useEffect(() => {
         setOpenBackdrop(true);
         LocalStorageHelper.CommitRefresh();
         axios.get('api/users/csrf/token')
-        .then(res => {
-            let token = res.data.token;
-            axios.post(`api/order/get/${orderId.orderId}`, {}, {
-                headers: {
-                    Authorization: 'Bearer ' + LocalStorageHelper.getJwtToken(),
-                    'X-XSRF-TOKEN': token,
-                    'Content-Type': 'application/json'
-                }
-            }).then((response) => {
+            .then(res => {
+                let token = res.data.token;
+                axios.post(`api/order/get/${orderId.orderId}`, {}, {
+                    headers: {
+                        Authorization: 'Bearer ' + LocalStorageHelper.getJwtToken(),
+                        'X-XSRF-TOKEN': token,
+                        'Content-Type': 'application/json'
+                    }
+                }).then((response) => {
                     setOrder(response.data);
                     setOrderItems(response.data.orderItems);
                     setDateCreated(response.data.dateCreated);
@@ -78,31 +254,30 @@ function MyOrderPage() {
                             if (res.data.length > 0) {
                                 let fileName = res.data[0].split('/')[1];
                                 axios.get(`api/invoice/read?path=${res.data[0]}`, {responseType: 'blob'})
-                                .then(res => {
-                                    let blob = new Blob([res.data], {type: "application/pdf"});
-                                    setPdfFile(blob);
-                                    setPdfFileName(fileName);
-                                    setShowDownloadInvoice(true);
-                                    setOpenBackdrop(false);
-                                }).catch((e) => {
-                                    setOpenBackdrop(false);
-                                    toast.error(err.response.data.message, {
-                                        position: "bottom-center",
-                                        autoClose: 3000,
-                                        hideProgressBar: false,
-                                        closeOnClick: true,
-                                        pauseOnHover: true,
-                                        draggable: false,
-                                        progress: undefined,
-                                        theme: "light",
-                                        transition: Slide,
-                                    })
-                                })
+                                    .then(res => {
+                                        let blob = new Blob([res.data], {type: "application/pdf"});
+                                        setPdfFile(blob);
+                                        setPdfFileName(fileName);
+                                        setShowDownloadInvoice(true);
+                                        setOpenBackdrop(false);
+                                    }).catch((e) => {
+                                        setOpenBackdrop(false);
+                                        toast.error(e.response.data.message, {
+                                            position: "bottom-center",
+                                            autoClose: 3000,
+                                            hideProgressBar: false,
+                                            closeOnClick: true,
+                                            pauseOnHover: true,
+                                            draggable: false,
+                                            progress: undefined,
+                                            theme: "light",
+                                            transition: Slide,
+                                        });
+                                    });
                             } else {
                                 setOpenBackdrop(false);
                                 setShowDownloadInvoice(false);
                             }
-                            
                         }).catch((e) => {
                             setOpenBackdrop(false);
                             toast.error(e.response.data.message, {
@@ -116,13 +291,26 @@ function MyOrderPage() {
                                 theme: "light",
                                 transition: Slide,
                             });
-                        })
-
+                        });
                 }).catch(() => {
+                    setOpenBackdrop(false);
+                    setShowOrderDetails(false);
+                    setShowNotFound(true);
+                    toast.error('Order not found', {
+                        position: "bottom-center",
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: false,
+                        progress: undefined,
+                        theme: "light",
+                        transition: Slide,
+                    });
+                });
+            }).catch(() => {
                 setOpenBackdrop(false);
-                setShowOrderDetails(false);
-                setShowNotFound(true);
-                toast.error('Order not found', {
+                toast.error('Cannot fetch token', {
                     position: "bottom-center",
                     autoClose: 3000,
                     hideProgressBar: false,
@@ -133,27 +321,10 @@ function MyOrderPage() {
                     theme: "light",
                     transition: Slide,
                 });
-            })
-
-        }).catch(() => {
-            setOpenBackdrop(false);
-            toast.error('Cannot fetch token', {
-                position: "bottom-center",
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: false,
-                progress: undefined,
-                theme: "light",
-                transition: Slide,
-            })
-        })
-
+            });
     }, []);
 
     const downloadPdf = (e) => {
-
         const aTag = document.createElement('a');
         let file = URL.createObjectURL(pdfFile);
         let fileName = pdfFileName;
@@ -162,8 +333,7 @@ function MyOrderPage() {
         document.body.appendChild(aTag);
         aTag.click();
         window.open(file);
-
-    }
+    };
 
     const steps1 = [
         'Order received',
@@ -334,180 +504,96 @@ function MyOrderPage() {
 
     }
 
-
     return (
-        <div className="my-order-page">
+        <MyOrderPageContainer>
             <Backdrop
                 sx={(theme) => ({color: '#fff', zIndex: theme.zIndex.drawer + 1})}
                 open={openBackdrop}
             >
                 <CircularProgress color="inherit"/>
             </Backdrop>
+
             {showOrderDetails && (
-                <>
-                    <div className="my-order-page-content">
-                        <div style={{
-                            display: 'flex',
-                            flexDirection: 'row',
-                            width: '100%',
-                            height: 'fit-content',
-                            justifyContent: 'flex-start',
-                            alignItems: 'flex-start',
-                            borderRadius: '1em',
-                            padding: '16px',
-                            boxSizing: 'border-box',
-                            borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
-                        }}>
-                            {parseStatus(status)}
-                        </div>
-                        <div style={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            width: '100%',
-                            height: 'fit-content',
-                            justifyContent: 'flex-start',
-                            alignItems: 'flex-start',
-                            borderRadius: '1em',
-                            padding: '16px',
-                            boxSizing: 'border-box',
-                            borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
-                            marginBottom: '16px',
-                        }}>
-                            <p style={{margin: '0', fontSize: '18px', fontWeight: 'bold'}}>Order nr: <span
-                                style={{
-                                    margin: '0',
-                                    fontSize: '18px',
-                                    fontWeight: 'normal'
-                                }}>{order.orderIdentifier}</span></p>
-                            <p style={{
-                                margin: '0',
-                                fontSize: '16px',
-                                fontWeight: 'bold',
-                            }}>Date of purchase: <span
-                                style={{
-                                    margin: '0',
-                                    fontSize: '16px',
-                                    fontWeight: 'normal'
-                                }}>{format(dateCreated, "MMMM do, yyyy")}</span></p>
-                                <p style={{margin: '0', fontSize: '16px', fontWeight: 'bold'}}>Total order price: <span
-                                style={{fontWeight: 'bold', color: 'rgb(39, 99, 24)'}}>{totalPrice}$</span></p>
-                        </div>
-                        {showDownloadInvoice &&
-                            <div className="my-order-invoice"
-                            style={{
-                                display: 'flex',
-                                flexDirection: 'row',
-                                width: '100%',
-                                height: 'fit-content',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                borderRadius: '1em',
-                                marginBottom: '16px',
-                                padding: '16px',
-                                boxSizing: 'border-box',
-                                borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
-                            }}
-                        >
-                            <div style={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                width: '50%',
-                                height: 'fit-content',
-                                justifyContent: 'center',
-                                alignItems: 'flex-start',
-                            }}>
-                                <p style={{margin: '0', fontSize: '16px', fontWeight: 'bold'}}>Download your invoice PDF:</p>
-                                <p style={{margin: '0', fontSize: '12px', fontWeight: 'normal', maxWidth: '90%', textWrap: 'wrap'}}>{pdfFileName}</p>
-                            </div>
-                            <Box sx={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                width: '50%',
-                                height: 'fit-content',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                textAlign: 'center',
-                            }}>
-                                <Button
-                                className="download-btn"
-                                type="button"
-                                endIcon={<PictureAsPdfIcon />}
-                                fullWidth
-                                variant="outlined"
-                                onClick={downloadPdf}
-                                sx={{
-                                    width: '90%',
-                                    margin: '0 0 0 0',
-                                    "&:hover": {
-                                        borderColor: 'rgb(49,140,23)',
-                                        color: 'rgb(49,140,23)',
-                                        backgroundColor: 'rgba(49, 140, 23, 0.1)'
-                                    },
-                                    color: 'rgb(39, 99, 24)',
-                                    borderColor: 'rgb(39, 99, 24)',
-                                    
-                                }}
-                            >
-                                Download invoice
-                            </Button>
+                <OrderPageContent>
+                    <StatusContainer>
+                        {parseStatus(status)}
+                    </StatusContainer>
+
+                    <OrderInfoContainer>
+                        <Typography variant="h6" sx={{margin: '0'}}>
+                            Order nr: <span style={{fontWeight: 'normal'}}>{order.orderIdentifier}</span>
+                        </Typography>
+                        <Typography variant="body1" sx={{margin: '0'}}>
+                            Date of purchase: <span style={{fontWeight: 'normal'}}>
+                                {format(dateCreated, "MMMM do, yyyy")}
+                            </span>
+                        </Typography>
+                        <Typography variant="body1" sx={{margin: '0'}}>
+                            Total order price: <span style={{color: theme => theme.palette.success.main}}>
+                                {totalPrice}$
+                            </span>
+                        </Typography>
+                    </OrderInfoContainer>
+
+                    {showDownloadInvoice && (
+                        <InvoiceContainer>
+                            <InvoiceInfo>
+                                <Typography variant="body1" sx={{fontWeight: 'bold'}}>
+                                    Download your invoice PDF:
+                                </Typography>
+                                <Typography variant="body2" sx={{maxWidth: '90%'}}>
+                                    {pdfFileName}
+                                </Typography>
+                            </InvoiceInfo>
+                            <Box sx={{width: '50%', textAlign: 'center'}}>
+                                <InvoiceButton
+                                    variant="outlined"
+                                    endIcon={<PictureAsPdfIcon/>}
+                                    onClick={downloadPdf}
+                                >
+                                    Download invoice
+                                </InvoiceButton>
                             </Box>
-                        </div>
+                        </InvoiceContainer>
+                    )}
 
-                        }
-                        <div className="my-order-left">
-                            <div className="order-details-header">
-                                <p style={{margin: '0', fontSize: '18px', fontWeight: 'bold'}}>Order details:</p>
-                            </div>
-                            <div className="order-personal-details">
-                                <p style={{margin: '0', fontSize: '14px'}}>{name} {surname}</p>
-                                <p style={{margin: '0', fontSize: '14px'}}>{email}</p>
-                                <p style={{margin: '0', fontSize: '14px'}}>{phone}</p>
-                            </div>
-                            <div className="order-delivery-header">
-                                <p style={{margin: '0', fontSize: '18px', fontWeight: 'bold'}}>Order delivery:</p>
-                            </div>
-                            <div className="order-delivery">
-                                <p style={{margin: '0', fontSize: '14px',}}>{country}</p>
-                                <p style={{margin: '0', fontSize: '14px',}}>{city}</p>
-                                <p style={{margin: '0', fontSize: '14px',}}>{street}</p>
-                                <p style={{margin: '0', fontSize: '14px',}}>{zipCode}</p>
-                            </div>
-                        </div>
-                        <div className="my-order-right">
-                            <p style={{margin: '0 0 0 0', fontSize: '18px', fontWeight: 'bold'}}>Order items:</p>
-                            {
-                                [...orderItems].map(item => (
-                                    <OrderProductItem key={item.id} item={item}/>
-                                ))
-                            }
-                        </div>
-                    </div>
-                </>
+                    <OrderLeftSection>
+                        <SectionHeader>Order details:</SectionHeader>
+                        <DetailsContainer>
+                            <DetailText>{name} {surname}</DetailText>
+                            <DetailText>{email}</DetailText>
+                            <DetailText>{phone}</DetailText>
+                        </DetailsContainer>
+
+                        <SectionHeader>Order delivery:</SectionHeader>
+                        <DeliveryContainer>
+                            <DetailText>{country}</DetailText>
+                            <DetailText>{city}</DetailText>
+                            <DetailText>{street}</DetailText>
+                            <DetailText>{zipCode}</DetailText>
+                        </DeliveryContainer>
+                    </OrderLeftSection>
+
+                    <OrderRightSection>
+                        <Typography variant="h6" sx={{margin: '0 0 16px 0'}}>
+                            Order items:
+                        </Typography>
+                        {orderItems.map(item => (
+                            <OrderProductItem key={item.id} item={item}/>
+                        ))}
+                    </OrderRightSection>
+                </OrderPageContent>
             )}
+
             {showNotFound && (
-                <>
-                    <div style={{
-                        width: '400px',
-                        display: 'flex',
-                        flexDirection: 'row',
-                        height: 'fit-content',
-                        padding: '16px',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        textAlign: 'center',
-                        borderRadius: '1em',
-                        boxShadow: '0 5px 15px rgba(0, 0, 0, 0.1)',
-                    }}>
-                        <p style={{margin: '0', fontSize: '20px', fontWeight: 'normal'}}>
-                            We have not found an order<br/>you are looking for.
-                        </p>
-                    </div>
-                </>
+                <NotFoundContainer>
+                    <NotFoundText>
+                        We have not found an order<br/>you are looking for.
+                    </NotFoundText>
+                </NotFoundContainer>
             )}
-
-
-        </div>
-    )
+        </MyOrderPageContainer>
+    );
 }
 
 export default MyOrderPage;

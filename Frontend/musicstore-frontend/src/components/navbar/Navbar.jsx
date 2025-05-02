@@ -417,7 +417,7 @@ function Navbar() {
                             <StyledUserListItem>
                                 <Tooltip title="Basket">
                                     <Link component={NavLink} to="/basket">
-                                        <Badge badgeContent={basketCount} color="success">
+                                        <Badge badgeContent={basketCount} color={'irish'}>
                                             <ShoppingCartOutlinedIcon />
                                         </Badge>
                                     </Link>

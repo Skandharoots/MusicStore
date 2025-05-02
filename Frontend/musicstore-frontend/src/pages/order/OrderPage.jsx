@@ -1,4 +1,3 @@
-import './style/OrderPage.scss';
 import React, {useEffect, useState} from "react";
 import axios from "axios";
 import LocalStorageHelper from "../../helpers/LocalStorageHelper.jsx";
@@ -6,7 +5,7 @@ import {Slide, toast} from "react-toastify";
 import OrderItem from "./components/OrderItem.jsx";
 import {
     Backdrop,
-    Box, Button,
+    Button,
     CircularProgress,
     Typography,
     TextField,

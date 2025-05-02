@@ -1,11 +1,9 @@
 import React, {useEffect, useState} from "react";
 import {Alert, AlertTitle, Backdrop, CircularProgress, Box, Button, Typography, Paper, styled} from '@mui/material';
 import CheckIcon from '@mui/icons-material/Check';
-import {Slide, toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import TextField from '@mui/material/TextField';
 import axios from "axios";
-import './style/PasswordResetRequest.scss';
 import { useNavigate } from "react-router-dom";
 import LocalStorageHelper from "../../helpers/LocalStorageHelper";
 

@@ -2,7 +2,6 @@ import {Backdrop, Box, Button, CircularProgress, Typography, TextField, styled} 
 import {useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
 import axios from "axios";
-import '../style/AddCategory.scss';
 import LocalStorageHelper from "../../../helpers/LocalStorageHelper.jsx";
 import {Slide, toast} from "react-toastify";
 

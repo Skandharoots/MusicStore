@@ -1,13 +1,111 @@
-import Tooltip from "@mui/material/Tooltip";
-import {useEffect, useState} from "react";
+import {
+    Box,
+    styled,
+    Tooltip,
+    Typography
+} from "@mui/material";
 import Grid from "@mui/material/Grid2";
+import {useEffect, useState} from "react";
 import axios from "axios";
-import { format } from "date-fns";
+import {format} from "date-fns";
 import {useNavigate} from "react-router-dom";
 
+const OrderItemContainer = styled(Grid)(({theme}) => ({
+    display: 'flex',
+    flexDirection: 'row',
+    height: 'fit-content',
+    minWidth: '100px',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    padding: '4px',
+    color: theme.palette.text.primary,
+    fontSize: '12px',
+    borderRadius: '1em',
+    boxShadow: '0 5px 15px ' + theme.palette.itemShadow.main,
+    boxSizing: 'border-box',
+    '&:hover': {
+        boxShadow: '0 5px 15px ' + theme.palette.itemShadow.light,
+        cursor: 'pointer',
+    },
+}));
+
+const OrderDetails = styled(Box)(({theme}) => ({
+    width: '50%',
+    display: 'block',
+    padding: '2%',
+}));
+
+const StatusText = styled(Typography)(({theme, status}) => ({
+    margin: '0',
+    fontSize: '18px',
+    fontWeight: 'bold',
+    overflow: 'hidden',
+    textWrap: 'nowrap',
+    color: status === 'RECEIVED' ? theme.palette.text.primary :
+           status === 'SENT' ? theme.palette.info.main :
+           status === 'COMPLETED' ? theme.palette.success.main :
+           status === 'CANCELED' ? theme.palette.warning.main :
+           status === 'RETURNED' ? theme.palette.error.main : theme.palette.text.primary,
+}));
+
+const DateText = styled(Typography)(({theme}) => ({
+    margin: '0',
+    fontSize: '12px',
+    fontWeight: 'bold',
+    overflow: 'hidden',
+    textWrap: 'nowrap',
+}));
+
+const PriceText = styled(Typography)(({theme}) => ({
+    margin: '0',
+    fontSize: '12px',
+    fontWeight: 'bold',
+    overflow: 'hidden',
+    textWrap: 'nowrap',
+}));
+
+const OrderIdText = styled(Typography)(({theme}) => ({
+    margin: '0',
+    overflow: 'hidden',
+    fontSize: '12px',
+}));
+
+const ImagesContainer = styled(Box)(({theme}) => ({
+    display: 'flex',
+    flexDirection: 'row',
+    height: '100%',
+    width: '50%',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+}));
+
+const ImageWrapper = styled(Box)(({theme}) => ({
+    height: "70px",
+    display: "flex",
+    overflow: "hidden",
+}));
+
+const ImageContainer = styled(Box)(({theme}) => ({
+    maxHeight: '70px',
+    aspectRatio: "10 / 6",
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundSize: 'cover',
+    flexShrink: '0',
+    flexGrow: '0',
+}));
+
+const StyledImage = styled('img')(({theme}) => ({
+    objectFit: 'cover',
+    maxWidth: '100%',
+    maxHeight: '100%',
+    display: 'block',
+    flexShrink: '0',
+    flexGrow: '0',
+}));
 
 function OrderUserItem(props) {
-
     const [images, setImages] = useState([]);
     const navigate = useNavigate();
 
@@ -15,163 +113,63 @@ function OrderUserItem(props) {
         if (props.item.orderItems !== null && props.item.orderItems !== undefined) {
             const promises = [];
             [...props.item.orderItems].map((item) => {
-                promises.push(axios.get(`api/azure/read?path=${item.productSkuId}/0`, {responseType: 'blob'}))
-
-            })
+                promises.push(axios.get(`api/azure/read?path=${item.productSkuId}/0`, {responseType: 'blob'}));
+            });
             Promise.all(promises.map(p => p.catch(e => e))).then(ordered_array => {
-                ordered_array.forEach( result => {
+                ordered_array.forEach(result => {
                     let blob = new Blob([result.data], {type: "image/*"});
                     let imgUrl = URL.createObjectURL(blob);
                     setImages(old => [...old, imgUrl]);
-                } );
+                });
             });
         }
     }, [props.item]);
 
     const parseStatus = (status) => {
-
-        let lastStatus = status[status.length - 1]
-
-        if (lastStatus === 'RECEIVED') {
-            return <p style={{
-                margin: '0',
-                fontSize: '18px',
-                fontWeight: 'bold',
-                overflow: 'hidden',
-                textWrap: 'nowrap',
-                color: 'black',
-            }}>Received</p>
-        } else if (lastStatus === 'SENT') {
-            return <p style={{
-                margin: '0',
-                fontSize: '18px',
-                fontWeight: 'bold',
-                overflow: 'hidden',
-                textWrap: 'nowrap',
-                color: 'rgb(20,120,143)'
-            }}>Sent</p>
-        } else if (lastStatus === 'COMPLETED') {
-            return <p style={{
-                margin: '0',
-                fontSize: '18px',
-                fontWeight: 'bold',
-                overflow: 'hidden',
-                textWrap: 'nowrap',
-                color: 'rgb(39,99,24)'
-            }}>Completed</p>
-        } else if (lastStatus === 'CANCELED') {
-            return <p style={{
-                margin: '0',
-                fontSize: '18px',
-                fontWeight: 'bold',
-                overflow: 'hidden',
-                textWrap: 'nowrap',
-                color: 'rgb(218,113,24)'
-            }}>Canceled</p>
-        } else if (lastStatus === 'RETURNED') {
-            return <p style={{
-                margin: '0',
-                fontSize: '18px',
-                fontWeight: 'bold',
-                overflow: 'hidden',
-                textWrap: 'nowrap',
-                color: 'rgb(159,20,20)'
-            }}>Order returned</p>
-        }
-    }
+        const lastStatus = status[status.length - 1];
+        return (
+            <StatusText status={lastStatus}>
+                {lastStatus === 'RECEIVED' ? 'Received' :
+                 lastStatus === 'SENT' ? 'Sent' :
+                 lastStatus === 'COMPLETED' ? 'Completed' :
+                 lastStatus === 'CANCELED' ? 'Canceled' :
+                 lastStatus === 'RETURNED' ? 'Order returned' : lastStatus}
+            </StatusText>
+        );
+    };
 
     return (
-        <Grid
+        <OrderItemContainer
             size={12}
-            sx={{
-                display: 'flex',
-                flexDirection: 'row',
-                height: 'fit-content',
-                minWidth: '100px',
-                alignItems: 'center',
-                justifyContent: 'flex-start',
-                padding: '4px',
-                color: 'black',
-                fontSize: '12px',
-                borderRadius: '1em',
-                boxShadow: '0 5px 15px rgba(0, 0, 0, 0.1)',
-                boxSizing: 'border-box',
-                transition: 'all 0.3s',
-                "&:hover": {
-                    boxShadow: '0 5px 15px rgba(0, 0, 0, 0.4)',
-                    cursor: 'pointer',
-                },
-            }}
             key={props.item.id}
-            onClick={() => {navigate(`/myorders/${props.item.orderIdentifier}`)}}
+            onClick={() => navigate(`/myorders/${props.item.orderIdentifier}`)}
         >
-            <div className="order-details"
-                 style={{
-                     width: '50%', display: 'block',
-                     padding: '2%',
-                 }}>
+            <OrderDetails>
                 {parseStatus(props.item.status)}
-                <p style={{
-                    margin: '0',
-                    fontSize: '12px',
-                    fontWeight: 'bold',
-                    overflow: 'hidden',
-                    textWrap: 'nowrap'
-                }}>{format(props.item.dateCreated, "MMMM do, yyyy")}</p>
-                <p style={{
-                    margin: '0',
-                    fontSize: '12px',
-                    fontWeight: 'bold',
-                    overflow: 'hidden',
-                    textWrap: 'nowrap'
-                }}>{props.item.totalPrice}$</p>
+                <DateText>
+                    {format(props.item.dateCreated, "MMMM do, yyyy")}
+                </DateText>
+                <PriceText>
+                    {props.item.totalPrice}$
+                </PriceText>
                 <Tooltip title={props.item.orderIdentifier}>
-                    <p style={{margin: '0', overflow: 'hidden', fontSize: '12px'}}>
-                        <b>nr: </b>{props.item.orderIdentifier}</p>
+                    <OrderIdText>
+                        <b>nr: </b>{props.item.orderIdentifier}
+                    </OrderIdText>
                 </Tooltip>
-            </div>
-            <div style={{
-                display: 'flex',
-                flexDirection: 'row',
-                height: '100%',
-                width: '50%',
-                justifyContent: 'flex-start',
-                alignItems: 'center',
-            }}>
-                {
-                    [...images].map((image, index) => (
-                        <div key={index*5} style={{
-                            height: "70px",
-                            display: "flex",
-                            overflow: "hidden",
-                        }}>
-                            <div
-                                className="order-item-img"
-                                key={index}
-                                style={{
-                                    maxHeight: '70px', aspectRatio: "10 / 6",
-                                    display: 'flex', justifyContent: 'center', alignItems: 'center',
-                                    backgroundSize: 'cover', flexShrink: '0',
-                                    flexGrow: '0',
-                                }}
-                            >
-                                <img alt={'No image'} src={image}
-                                     style={{
-                                         objectFit: 'cover',
-                                         maxWidth: '100%',
-                                         maxHeight: '100%',
-                                         display: 'block',
-                                         flexShrink: '0',
-                                         flexGrow: '0',
-                                     }}
-                                />
-                            </div>
-                        </div>
-                            ))
-                            }
-                        </div>
-                    </Grid>
-                    )
-                }
+            </OrderDetails>
 
-                export default OrderUserItem;
+            <ImagesContainer>
+                {images.map((image, index) => (
+                    <ImageWrapper key={index * 5}>
+                        <ImageContainer key={index}>
+                            <StyledImage alt="No image" src={image} />
+                        </ImageContainer>
+                    </ImageWrapper>
+                ))}
+            </ImagesContainer>
+        </OrderItemContainer>
+    );
+}
+
+export default OrderUserItem;

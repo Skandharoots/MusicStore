@@ -1,4 +1,3 @@
-import './style/Opinions.scss';
 import {useEffect, useState} from "react";
 import LocalStorageHelper from "../../helpers/LocalStorageHelper.jsx";
 import {useNavigate} from "react-router-dom";
@@ -8,6 +7,7 @@ import {
     CircularProgress,
     Pagination,
     Stack,
+    Typography,
     styled
 } from "@mui/material";
 import Grid from "@mui/material/Grid2";
@@ -23,6 +23,16 @@ const OpinionsContainer = styled(Box)(({theme}) => ({
     width: '100%',
     color: theme.palette.text.primary,
     borderLeft: `1px solid ${theme.palette.divider}`,
+}));
+
+const PageInfo = styled(Box)(({theme}) => ({
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    fontSize: '20px',
+    padding: '16px 16px',
+    borderBottom: `1px solid ${theme.palette.divider}`,
 }));
 
 const OpinionsGrid = styled(Grid)(({theme}) => ({
@@ -128,7 +138,9 @@ function Opinions() {
             >
                 <CircularProgress color="inherit" />
             </Backdrop>
-            
+            <PageInfo>
+                <Typography variant="h5">Opinions</Typography>
+            </PageInfo>
             <OpinionsGrid container>
                 {[...opinions].map((opinion) => (
                     <Opinion 

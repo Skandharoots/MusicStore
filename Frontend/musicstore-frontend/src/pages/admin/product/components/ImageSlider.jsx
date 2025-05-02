@@ -4,7 +4,7 @@ import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutl
 import LensOutlinedIcon from '@mui/icons-material/LensOutlined';
 import CircleIcon from '@mui/icons-material/Circle';
 import DeleteIcon from '@mui/icons-material/Delete';
-import "../../style/ImageSlider.scss";
+import "../style/ImageSlider.scss";
 import Tooltip from '@mui/material/Tooltip';
 
 export function ImageSlider({ imageBinaries, onDelete }) {

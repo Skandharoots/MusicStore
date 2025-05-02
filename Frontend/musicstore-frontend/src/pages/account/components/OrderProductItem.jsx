@@ -1,22 +1,85 @@
+import {
+    Box,
+    styled,
+    Tooltip,
+    Typography
+} from "@mui/material";
 import {useEffect, useState} from "react";
 import axios from "axios";
 import {Slide, toast} from "react-toastify";
-import Tooltip from "@mui/material/Tooltip";
-import '../style/OrderProductItem.scss';
 import {useNavigate} from "react-router-dom";
 
+const OrderItemContainer = styled(Box)(({theme}) => ({
+    width: '100%',
+    minWidth: '300px',
+    height: 'fit-content',
+    minHeight: '90px',
+    boxSizing: 'border-box',
+    padding: '2% 2%',
+    display: 'flex',
+    flexWrap: 'wrap',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    boxShadow: '0 5px 15px ' + theme.palette.itemShadow.main,
+    borderRadius: '1em',
+    marginBottom: '16px',
+}));
+
+const ItemImage = styled(Box)(({theme}) => ({
+    width: '100px',
+    maxHeight: '85px',
+    aspectRatio: "16 / 9",
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundSize: 'cover',
+}));
+
+const StyledImage = styled('img')(({theme}) => ({
+    objectFit: 'cover',
+    maxWidth: '100%',
+    maxHeight: '100%',
+    display: 'block',
+    flexShrink: '0',
+    flexGrow: '0',
+}));
+
+const ItemDetails = styled(Box)(({theme}) => ({
+    display: 'flex',
+    flexWrap: 'wrap',
+    flexDirection: 'column',
+    width: '60%',
+    height: '100%',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+}));
+
+const ProductName = styled(Typography)(({theme}) => ({
+    margin: '0',
+    fontSize: '16px',
+    overflow: 'hidden',
+    cursor: 'pointer',
+    '&:hover': {
+        color: theme.palette.primary.main,
+    },
+}));
+
+const ProductInfo = styled(Typography)(({theme}) => ({
+    margin: '0 8px 0 0',
+    fontSize: '14px',
+}));
 
 function OrderProductItem(props) {
     const [img, setImg] = useState(null);
     const navigate = useNavigate();
 
     useEffect(() => {
-
         axios.get(`api/azure/list?path=${props.item.productSkuId}`, {})
             .then((response) => {
                 axios.get(`api/azure/read?path=${response.data[0]}`, {responseType: 'blob'})
                     .then(res => {
-                        let blob = new Blob([res.data], { type: "image/*" });
+                        let blob = new Blob([res.data], {type: "image/*"});
                         setImg(URL.createObjectURL(blob));
                     }).catch((error) => {
                     toast.error(error.response.data.message, {
@@ -29,8 +92,8 @@ function OrderProductItem(props) {
                         progress: undefined,
                         theme: "light",
                         transition: Slide,
-                    })
-                })
+                    });
+                });
             }).catch(error => {
             toast.error(error.response.data.message, {
                 position: "bottom-center",
@@ -42,53 +105,29 @@ function OrderProductItem(props) {
                 progress: undefined,
                 theme: "light",
                 transition: Slide,
-            })
+            });
         });
-
-    }, [props.item])
+    }, [props.item]);
 
     return (
-        <div className="order-item">
-            <div className="item-img"
-                 style={{
-                     width: '100px', maxHeight: '85px', aspectRatio: "16 / 9",
-                     display: 'flex', justifyContent: 'center', alignItems: 'center',
-                     backgroundSize: 'cover',
-                 }}
-            >
-                <img alt={'No image'} src={img}
-                     style={{
-                         objectFit: 'cover',
-                         maxWidth: '100%',
-                         maxHeight: '100%',
-                         display: 'block',
-                         flexShrink: '0',
-                         flexGrow: '0',
-                     }}
-                />
-            </div>
-            <div style={{
-                display: 'flex',
-                flexWrap: 'wrap',
-                flexDirection: 'column',
-                width: '60%',
-                height: '100%',
-                justifyContent: 'flex-start',
-                alignItems: 'flex-start',
+        <OrderItemContainer>
+            <ItemImage>
+                <StyledImage alt="No image" src={img} />
+            </ItemImage>
 
-            }}>
-                <Tooltip title={`${props.item.productName}`}>
-                    <div className="item-name" onClick={() => {navigate(`/product/${props.item.productSkuId}/${props.item.productName}`)}}>
-                        <p style={{margin: '0', fontSize: '16px', overflow: 'hidden'}}>{props.item.productName}</p>
-                    </div>
+            <ItemDetails>
+                <Tooltip title={props.item.productName}>
+                    <ProductName 
+                        onClick={() => navigate(`/product/${props.item.productSkuId}/${props.item.productName}`)}
+                    >
+                        {props.item.productName}
+                    </ProductName>
                 </Tooltip>
-                <p style={{margin: '0 8px 0 0', fontSize: '14px'}}>Price: {props.item.unitPrice}$</p>
-                <p style={{margin: '0 8px 0 0', fontSize: '14px'}}>Quantity: {props.item.quantity}</p>
-            </div>
-
-        </div>
-    )
-
+                <ProductInfo>Price: {props.item.unitPrice}$</ProductInfo>
+                <ProductInfo>Quantity: {props.item.quantity}</ProductInfo>
+            </ItemDetails>
+        </OrderItemContainer>
+    );
 }
 
-export default OrderProductItem
+export default OrderProductItem;

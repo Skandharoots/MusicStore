@@ -476,25 +476,25 @@ function ProductDetailsPage() {
                 setTotalPages(res.data.totalPages);
             }
             let rating = 0;
-            [...res.data.content].forEach(opinion => {
-                if (opinion.rating === 'ONE') {
-                    rating += 1;
-                } else if (opinion.rating === 'TWO') {
-                    rating += 2;
-                } else if (opinion.rating === 'THREE') {
-                    rating += 3;
-                } else if (opinion.rating === 'FOUR') {
-                    rating += 4;
-                } else if (opinion.rating === 'FIVE') {
-                    rating += 5;
-                }
-                if (opinion.userId === LocalStorageHelper.GetActiveUser()) {
-                    setDisableOpinionSubmit(true);
-                }
+            axios.get(`api/opinions/get/product/${productId.productSkuId}`)
+            .then(res => {
+                res.data.forEach(opinion => {
+                    if (opinion.rating === 'ONE') {
+                        rating += 1;
+                    } else if (opinion.rating === 'TWO') {
+                        rating += 2;
+                    } else if (opinion.rating === 'THREE') {
+                        rating += 3;
+                    } else if (opinion.rating === 'FOUR') {
+                        rating += 4;
+                    } else if (opinion.rating === 'FIVE') {
+                        rating += 5;
+                    }
+                });
+                res.data.length > 0 ? setRating(rating / res.data.length) : setRating(0);
+            }).catch(() => {
+                setRating(0);
             });
-            let ratingResult = 0;
-            rating != 0 ? ratingResult = rating / res.data.content.length : ratingResult = 0;
-            setRating(parseFloat(ratingResult).toFixed(1));
         }).catch(() => {
             toast.error('Error getting opinions', {
                 position: "bottom-center",

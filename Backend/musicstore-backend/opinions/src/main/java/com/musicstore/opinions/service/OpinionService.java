@@ -3,6 +3,8 @@ package com.musicstore.opinions.service;
 import com.musicstore.opinions.dto.OpinionRequestDto;
 import com.musicstore.opinions.model.Opinion;
 import com.musicstore.opinions.repository.OpinionRepository;
+
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
@@ -73,6 +75,12 @@ public class OpinionService {
         Pageable pageable = PageRequest.of(page, pageSize, Sort.by("dateAdded").descending());
 
         return opinionRepository.findAllByProductUuid(productId, pageable);
+
+    }
+
+    public List<Opinion> getAllOpinionsByProductId(UUID productId) {
+
+        return opinionRepository.findAllByProductUuid(productId);
 
     }
 

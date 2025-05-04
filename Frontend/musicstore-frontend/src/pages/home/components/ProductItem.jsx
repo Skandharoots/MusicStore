@@ -16,13 +16,14 @@ import {
     Typography,
     Box,
     styled,
-    Paper
 } from "@mui/material";
 import AddShoppingCartOutlinedIcon from '@mui/icons-material/AddShoppingCartOutlined';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import LocalStorageHelper from "../../../helpers/LocalStorageHelper.jsx";
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
-
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import Rating from "@mui/material/Rating";
 
 const MyGrid = styled(Grid)(({ theme }) => ({
     display: 'flex',
@@ -35,11 +36,10 @@ const MyGrid = styled(Grid)(({ theme }) => ({
     color: 'black',
     borderRadius: '1em',
     fontSize: '12px',
-    boxSizing: 'border-box',
-    boxShadow: '0 5px 15px ' + theme.palette.itemShadow.main,
     transition: 'all 0.3s',
+    borderBottom: '1px solid ' + theme.palette.itemShadow.light,
     "&:hover": {
-        boxShadow: '0 5px 15px ' + theme.palette.itemShadow.light,
+        boxShadow: '0 0 0 1px ' + theme.palette.itemShadow.light,
         cursor: 'pointer',
     },
 }));
@@ -158,14 +158,48 @@ const FavoriteButton = styled(Button)(({ theme }) => ({
     }
 }));
 
+const StyledRating = styled(Rating)(({ theme }) => ({
+    '& .MuiRating-iconFilled': {
+        color: '#ff6d75',
+    },
+    '& .MuiRating-iconHover': {
+        color: '#ff3d47',
+    },
+}));
+
 function ProductItem(props) {
     const [img, setImg] = useState(null);
     const [opacity, setOpacity] = useState(0);
     const [disableBasket, setDisableBasket] = useState(false);
     const [open, setOpen] = useState(false);
     const [openBackdrop, setOpenBackdrop] = useState(false);
+    const [rating, setRating] = useState(0);
 
     const navigate = useNavigate();
+
+    useEffect(() => {
+        axios.get(`api/opinions/get/product/${props.item.productSkuId}`, {
+            //
+        }).then(res => {
+            let sum = 0;
+            res.data.forEach(item => {
+                if (item.rating === 'ONE') {
+                    sum += 1;
+                } else if (item.rating === 'TWO') {
+                    sum += 2;
+                } else if (item.rating === 'THREE') {
+                    sum += 3;
+                } else if (item.rating === 'FOUR') {
+                    sum += 4;
+                } else if (item.rating === 'FIVE') {
+                    sum += 5;
+                }
+            });
+            res.data.length > 0 ? setRating(sum / res.data.length) : setRating(0);
+        }).catch(() => {
+            setRating(0);
+        });
+    }, [props]);
 
     const handleClickOpen = (event) => {
         event.preventDefault();
@@ -462,18 +496,40 @@ function ProductItem(props) {
             >
                 <CircularProgress color="inherit" />
             </Backdrop>
-            {LocalStorageHelper.IsUserLogged() === true &&
-                <Tooltip title={"Add to favorites"}>
-                    <FavoriteButton
-                        variant={"outlined"}
-                        fullWidth={false}
-                        onClick={handleClickFavorites}
-                    >
-                        <FavoriteBorderOutlinedIcon size={"small"}
-                                                    sx={{color: 'rgb(158,26,96)', fontSize: '16px'}}/>
-                    </FavoriteButton>
-                </Tooltip>
-            }
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    width: '100%',
+                }}
+            >
+                <Box sx={{ '& > legend': { mt: 2 } }}>
+                    <StyledRating
+                        name="customized-color"
+                        value={rating}
+                        readOnly
+                        size="small"
+                        getLabelText={(value) => `${value} Heart${value !== 1 ? 's' : ''}`}
+                        precision={0.5}
+                        icon={<FavoriteIcon fontSize="inherit" />}
+                        emptyIcon={<FavoriteBorderIcon fontSize="inherit" />}
+                    />
+                </Box>
+                {LocalStorageHelper.IsUserLogged() === true &&
+                    <Tooltip title={"Add to favorites"}>
+                        <FavoriteButton
+                            variant={"outlined"}
+                            fullWidth={false}
+                            onClick={handleClickFavorites}
+                        >
+                            <FavoriteBorderOutlinedIcon size={"small"}
+                                                        sx={{color: 'rgb(158,26,96)', fontSize: '16px'}}/>
+                        </FavoriteButton>
+                    </Tooltip>
+                }
+                </Box>
             <ProductImageContainer>
                 <ProductImage
                     onClick={() => {

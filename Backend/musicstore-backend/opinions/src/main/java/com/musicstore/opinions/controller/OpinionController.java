@@ -5,6 +5,7 @@ import com.musicstore.opinions.model.Opinion;
 import com.musicstore.opinions.service.OpinionService;
 import jakarta.validation.Valid;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -44,6 +45,11 @@ public class OpinionController {
             @RequestParam Integer page,
             @RequestParam Integer pageSize) {
         return opinionService.getOpinionsByProductId(productId, page, pageSize);
+    }
+
+    @GetMapping("/get/product/{productId}")
+    public List<Opinion> getOpinionsByProductId(@PathVariable UUID productId) {
+        return opinionService.getAllOpinionsByProductId(productId);
     }
 
     @GetMapping("/get/user/{productId}/{userId}")

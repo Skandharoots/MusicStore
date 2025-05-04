@@ -51,7 +51,6 @@ const ProductImage = styled(Box)(({ theme }) => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    display: "flex",
     overflow: "hidden",
     backgroundColor: 'white',
     borderRadius: '1em',
@@ -69,7 +68,7 @@ const ProductImg = styled('img')(({ theme }) => ({
 
 const ProductName = styled(Box)(({ theme }) => ({
     width: '40%',
-    height: '90px',
+    height: '96%',
     overflow: 'hidden',
     margin: '0',
     display: 'flex',

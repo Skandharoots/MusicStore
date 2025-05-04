@@ -61,7 +61,7 @@ const StyledToolbar = styled(Toolbar)({
 
 });
 
-const StyledSearchForm = styled(Paper)(({ theme }) => ({
+const StyledSearchForm = styled(Paper)(() => ({
     width: '30%',
     minWidth: '200px',
     height: '50px',

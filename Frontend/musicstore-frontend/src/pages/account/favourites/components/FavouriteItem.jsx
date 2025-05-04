@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import axios from "axios";
 import {Slide, toast} from "react-toastify";
 import {
@@ -35,7 +35,7 @@ const FavoriteItemContainer = styled(Box)(({theme}) => ({
     flexWrap: 'wrap',
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'flex-start',
+    justifyContent: 'space-around',
     boxShadow: '0 5px 15px 0 ' + theme.palette.formShadow.main,
     borderRadius: '1em',
     marginBottom: '16px',
@@ -44,33 +44,19 @@ const FavoriteItemContainer = styled(Box)(({theme}) => ({
     },
 }));
 
-const ItemImageContainer = styled(Box)(({theme}) => ({
+const ItemImage = styled(Box)(() => ({
     maxWidth: '40%',
     height: '85px',
     aspectRatio: '16 / 9',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    display: "flex",
     overflow: "hidden",
     backgroundColor: 'white',
     borderRadius: '1em',
 }));
 
-const ItemImage = styled(Box)(({theme}) => ({
-    maxWidth: '40%',
-    height: '85px',
-    aspectRatio: '16 / 9',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    display: "flex",
-    overflow: "hidden",
-    backgroundColor: 'white',
-    borderRadius: '1em',
-}));
-
-const Image = styled('img')(({theme}) => ({
+const Image = styled('img')(() => ({
     objectFit: 'cover',
     maxWidth: '100%',
     maxHeight: '100%',
@@ -79,7 +65,7 @@ const Image = styled('img')(({theme}) => ({
     flexGrow: '0',
 }));
 
-const QuantityContainer = styled(Box)(({theme}) => ({
+const QuantityContainer = styled(Box)(() => ({
     width: 'fit-content',
     display: 'flex',
     flexDirection: 'column',
@@ -103,16 +89,16 @@ const StyledFormControl = styled(FormControl)(({theme}) => ({
     },
 }));
 
-const StyledSelect = styled(Select)(({theme}) => ({
+const StyledSelect = styled(Select)(() => ({
     height: '40px',
 }));
 
-const TextFields = styled(Box)(({theme}) => ({
+const TextFields = styled(Box)(() => ({
     display: 'flex',
     flexWrap: 'wrap',
     flexDirection: 'column',
     maxWidth: '60%',
-    height: '100%',
+    height: '96%',
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
     boxSizing: 'border-box',
@@ -120,7 +106,7 @@ const TextFields = styled(Box)(({theme}) => ({
     cursor: 'pointer',
 }));
 
-const ProductName = styled(Typography)(({theme}) => ({
+const ProductName = styled(Typography)(() => ({
     margin: '0',
     fontSize: '16px',
     maxWidth: '100%',
@@ -128,7 +114,7 @@ const ProductName = styled(Typography)(({theme}) => ({
     textWrap: 'wrap',
 }));
 
-const ProductInfo = styled(Typography)(({theme}) => ({
+const ProductInfo = styled(Typography)(() => ({
     margin: '0 8px 0 0',
     fontSize: '14px',
     maxWidth: '100%',
@@ -136,7 +122,7 @@ const ProductInfo = styled(Typography)(({theme}) => ({
     textWrap: 'nowrap',
 }));
 
-const ActionButtons = styled(Box)(({theme}) => ({
+const ActionButtons = styled(Box)(() => ({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -217,7 +203,6 @@ const BasketButton = styled(Button)(({theme}) => ({
     fontSize: '12px',
     color: theme.palette.mybutton.colorTwo,
     backgroundColor: theme.palette.irish.main,
-    color: theme.palette.mybutton.colorTwo,
     '&:hover': {
         backgroundColor: theme.palette.primary.light,
     },

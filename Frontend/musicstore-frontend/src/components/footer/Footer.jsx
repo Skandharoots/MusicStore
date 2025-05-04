@@ -1,8 +1,7 @@
-import { Box, Paper, Typography, styled} from '@mui/material';
+import { Box, Typography, styled} from '@mui/material';
 
-const FooterWrapper = styled(Box)(({ theme }) => ({
+const FooterWrapper = styled(Box)(() => ({
     height: 'fit-content',
-    minHeight: '13dvh',
     width: '100%',
     padding: 0,
     margin: 0,
@@ -44,13 +43,13 @@ const RightContainer = styled(Box)(({ theme }) => ({
     height: '100%',
 }));
 
-const FooterTitle = styled(Typography)(({ theme }) => ({
+const FooterTitle = styled(Typography)(() => ({
     fontSize: '14px',
     fontWeight: 'bold',
     marginBottom: '8px',
 }));
 
-const FooterText = styled(Typography)(({ theme }) => ({
+const FooterText = styled(Typography)(() => ({
     fontSize: '12px',
     lineHeight: '1.5',
 }));

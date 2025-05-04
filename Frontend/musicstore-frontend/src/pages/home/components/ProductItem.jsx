@@ -41,6 +41,7 @@ const MyGrid = styled(Grid)(({ theme }) => ({
     "&:hover": {
         boxShadow: '0 0 0 1px ' + theme.palette.itemShadow.light,
         cursor: 'pointer',
+        border: 'none',
     },
 }));
 

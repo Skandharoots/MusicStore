@@ -2,7 +2,6 @@ package com.musicstore.opinions.repository;
 
 import com.musicstore.opinions.model.Opinion;
 import jakarta.transaction.Transactional;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;

@@ -131,6 +131,31 @@ public class OpinionRepositoryTest {
     }
 
     @Test
+    public void findAllByProductUuidListTest() {
+        UUID productUuid = UUID.randomUUID();
+        UUID userId = UUID.randomUUID();
+        String username = "John Doe";
+        Rating rating = Rating.FIVE;
+        String comment = "This is a test comment";
+        String productName = "Strat";
+        Opinion opinion = new Opinion(productUuid, productName, userId, username, rating, comment);
+
+        entityManager.persist(opinion);
+        entityManager.flush();
+
+        List<Opinion> opinions = opinionRepository.findAllByProductUuid(productUuid);
+
+        Assertions.assertThat(opinions).isNotNull();
+        Assertions.assertThat(opinions).isNotEmpty();
+        Assertions.assertThat(opinions.get(0).getProductUuid()).isEqualTo(productUuid);
+        Assertions.assertThat(opinions.get(0).getUserId()).isEqualTo(userId);
+        Assertions.assertThat(opinions.get(0).getUsername()).isEqualTo(username);
+        Assertions.assertThat(opinions.get(0).getRating()).isEqualTo(rating);
+        Assertions.assertThat(opinions.get(0).getComment()).isEqualTo(comment);
+
+    }
+
+    @Test
     public void updateOpinionTest() {
 
         UUID productUuid = UUID.randomUUID();

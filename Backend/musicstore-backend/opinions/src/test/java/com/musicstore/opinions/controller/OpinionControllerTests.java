@@ -101,6 +101,25 @@ public class OpinionControllerTests {
         }
 
         @Test
+        public void getOpinionsByProductUuidTest() throws Exception {
+                UUID productId = UUID.randomUUID();
+                Opinion opinion = new Opinion(
+                        productId,
+                        "Strat",
+                        UUID.randomUUID(),
+                        "John Doe",
+                        Rating.FIVE,
+                        "This is a test comment");
+                List<Opinion> opinions = new ArrayList<>();
+                opinions.add(opinion);
+                when(opinionService.getAllOpinionsByProductId(productId)).thenReturn(opinions);
+
+                mockMvc.perform(get("/api/opinions/get/product/{productId}", productId))
+                        .andExpect(MockMvcResultMatchers.status().isOk())
+                        .andExpect(MockMvcResultMatchers.content().string(objectMapper.writeValueAsString(opinions)));
+        }
+
+        @Test
         public void getOpinionByProductIdAndUserIdTest() throws Exception {
                 UUID productId = UUID.randomUUID();
                 UUID userId = UUID.randomUUID();

@@ -135,6 +135,26 @@ public class OpinionServiceTests {
     }
 
     @Test
+    public void getAllOpinionsByProductUuidTest() {
+
+        UUID productUuid = UUID.randomUUID();
+        UUID userId = UUID.randomUUID();
+        String username = "John Doe";
+        Rating rating = Rating.FIVE;
+        String comment = "This is a test comment";
+        String productName = "Strat";
+        Opinion opinion = new Opinion(productUuid, productName, userId, username, rating, comment);
+        List<Opinion> opinions = new ArrayList<>();
+        opinions.add(opinion);
+
+        when(opinionRepository.findAllByProductUuid(productUuid)).thenReturn(opinions);
+        List<Opinion> result = opinionService.getAllOpinionsByProductId(productUuid);
+        Assertions.assertThat(result).isNotNull();
+        Assertions.assertThat(result).hasSize(1);
+
+    }
+
+    @Test
     public void getOpinionByIdTest() {
 
         UUID productUuid = UUID.randomUUID();

@@ -389,23 +389,29 @@ function Navbar() {
                                                 width: "180px",
                                                 marginTop: "2px",
                                                 padding: '4px',
+                                                fontSize: '12px',
+                                                fontWeight: 'normal',
+                                                '& .MuiMenuItem-root': {
+                                                    fontSize: '12px',
+                                                    fontWeight: 'normal',
+                                                },
                                             }
                                         }}
                                     >
                                         <MenuItem onClick={() => {handleClose(); navigate("/account")}}>
-                                            <ListItemIcon><SettingsIcon /></ListItemIcon>
+                                            <ListItemIcon><SettingsIcon fontSize='small'/></ListItemIcon>
                                             <ListItemText>My account</ListItemText>
                                         </MenuItem>
                                         <MenuItem onClick={() => {handleClose(); navigate("/myorders")}}>
-                                            <ListItemIcon><AssignmentOutlinedIcon /></ListItemIcon>
+                                            <ListItemIcon><AssignmentOutlinedIcon fontSize='small'/></ListItemIcon>
                                             <ListItemText>My orders</ListItemText>
-                                        </MenuItem>
+                                        </MenuItem> 
                                         <MenuItem onClick={() => {handleClose(); navigate("/myratings")}}>
-                                            <ListItemIcon><CommentIcon /></ListItemIcon>
+                                            <ListItemIcon><CommentIcon fontSize='small'/></ListItemIcon>
                                             <ListItemText>My opinions</ListItemText>
                                         </MenuItem>
                                         <MenuItem onClick={() => {handleClose(); navigate("/favourites")}}>
-                                            <ListItemIcon><FavoriteBorderOutlinedIcon /></ListItemIcon>
+                                            <ListItemIcon><FavoriteBorderOutlinedIcon fontSize='small'/></ListItemIcon>
                                             <ListItemText>Favorites</ListItemText>
                                         </MenuItem>
                                         <MenuItem>

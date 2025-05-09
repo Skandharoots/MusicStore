@@ -498,17 +498,7 @@ function ProductDetailsPage() {
                         setDisableOpinionSubmit(true);
                     }
                 }).catch(e => {
-                    toast.error(e.response.data.message, {
-                        position: "bottom-center",
-                        autoClose: 3000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: false,
-                        progress: undefined,
-                        theme: "light",
-                        transition: Slide,
-                    });
+                    //
                 });
             }).catch(() => {
                 setRating(0);

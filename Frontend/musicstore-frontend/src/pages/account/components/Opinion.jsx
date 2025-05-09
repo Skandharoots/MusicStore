@@ -35,8 +35,8 @@ const OpinionContainer = styled(Box)(({theme}) => ({
 }));
 
 const ItemImage = styled(Box)(({theme}) => ({
-    maxWidth: '30%',
-    minWidth: '30%',
+    maxWidth: '20%',
+    minWidth: '20%',
     height: '85px',
     aspectRatio: '16 / 9',
     display: 'flex',

@@ -301,6 +301,20 @@ public class ProductServiceTests {
     }
 
     @Test
+    public void getTopBoughtProductsTest() {
+        
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("boughtCount").descending());
+        List<Product> products = new ArrayList<>();
+        products.add(product);
+        Page<Product> productsPage = new PageImpl<>(products, pageable, products.size());
+
+        when(productRepository.findAll(pageable)).thenReturn(productsPage);
+        Page<Product> foundProducts = productService.getTopBoughtProducts(0, 10);
+        Assertions.assertThat(foundProducts.getTotalElements()).isEqualTo(1);
+        Assertions.assertThat(foundProducts.getContent().get(0).getProductSkuId()).isEqualTo(product.getProductSkuId());
+    }
+
+    @Test
     public void verifyAvailabilityOfOrderProductsAllAvailableTest() {
 
         UUID skuId = UUID.randomUUID();
@@ -500,6 +514,37 @@ public class ProductServiceTests {
 
         when(productRepository.findByProductSkuId(skuId)).thenReturn(Optional.empty());
         Assertions.assertThatThrownBy(() -> productService.updateProduct(token, skuId, productRequest));
+
+    }
+
+    @Test
+    public void updateProductBoughtCountTest() {
+
+        UUID skuId = UUID.randomUUID();
+        product.setProductSkuId(skuId);
+        ProductBoughtCountDto productBoughtCountDto = new ProductBoughtCountDto();
+        productBoughtCountDto.setBoughtCount(5L);
+
+        when(productRepository.findByProductSkuId(skuId)).thenReturn(Optional.of(product));
+        when(productRepository.save(Mockito.any(Product.class))).thenReturn(product);
+
+        ResponseEntity<String> response = productService.updateProductBoughtCount(skuId, productBoughtCountDto);
+        Assertions.assertThat(response).isNotNull();
+        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        Assertions.assertThat(response.getBody()).isEqualTo("Product bought count updated");
+
+    }
+
+    @Test
+    public void updateProductBoughtCountNotFoundTest() {
+
+        UUID skuId = UUID.randomUUID();
+        product.setProductSkuId(skuId);
+        ProductBoughtCountDto productBoughtCountDto = new ProductBoughtCountDto();
+        productBoughtCountDto.setBoughtCount(5L);
+
+        when(productRepository.findByProductSkuId(skuId)).thenReturn(Optional.empty());
+        Assertions.assertThatThrownBy(() -> productService.updateProductBoughtCount(skuId, productBoughtCountDto));
 
     }
 

@@ -148,12 +148,17 @@ function Basket() {
     const [basketItems, setBasketItems] = useState([]);
     const [totalCost, setTotalCost] = useState(0);
     const [totalItems, setTotalItems] = useState(0);
+    const [totalUpdated, setTotalUpdated] = useState(false);
     const [open, setOpen] = useState(false);
     const [openBackdrop, setOpenBackdrop] = useState(false);
     const [showBasketItems, setShowBasketItems] = useState(false);
     const [showBasketEmpty, setShowBasketEmpty] = useState(false);
 
     const navigate = useNavigate();
+
+    const updateTotal = () => {
+        setTotalUpdated(totalUpdated ? false : true);
+    }
 
     useEffect(() => {
         setOpenBackdrop(true);
@@ -205,7 +210,7 @@ function Basket() {
             items < 1 ? setShowBasketEmpty(true) : setShowBasketItems(true);
             setOpenBackdrop(false);
         }
-    }, [LocalStorageHelper.getBasketItems()]);
+    }, [LocalStorageHelper.getBasketItems(), totalUpdated]);
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -384,7 +389,7 @@ function Basket() {
                             </Dialog>
                         </BasketHeader>
                         {[...basketItems].map((item, index) => (
-                            <BasketItem key={index} id={item.id} item={item} onDelete={removeById} {...item} />
+                            <BasketItem key={index} id={item.id} item={item} onDelete={removeById} onUpdate={updateTotal} {...item} />
                         ))}
                     </BasketLeftSide>
                     <BasketRightSide>

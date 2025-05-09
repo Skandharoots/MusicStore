@@ -307,28 +307,53 @@ function OrderPage() {
             }).then(() => {
                 axios.get('api/users/csrf/token')
                 .then((response) => {
-                    axios.delete(`api/cart/clear/${LocalStorageHelper.GetActiveUser()}`, {
-                        headers: {
-                            'Authorization': 'Bearer ' + LocalStorageHelper.getJwtToken(),
-                            'X-XSRF-TOKEN': response.data.token,
-                        }
-                    }).then(() => {
-                        setOpenBackdrop(false);
-                        LocalStorageHelper.setClearBasketItems();
-                        window.dispatchEvent(new Event('basket'));
-                    }).catch(() => {
-                        setOpenBackdrop(false);
-                        toast.error('Could not clear basket', {
-                            position: "bottom-center",
-                            autoClose: 3000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: false,
-                            progress: undefined,
-                            theme: "light",
-                            transition: Slide,
-                        });
+                    basketItems.map((item) => {
+                        axios.put(`api/products/items/update/bought_count/${item.productSkuId}`, {
+                            boughtCount: item.quantity
+                        }, {
+                            headers: {
+                                'Authorization': 'Bearer ' + LocalStorageHelper.getJwtToken(),
+                                'X-XSRF-TOKEN': response.data.token,
+                                'Content-Type': 'application/json',
+                            }    
+                        }).then(() => {
+                            //
+                        }).catch(() => {
+                            toast.error('Could not update bought count', {
+                                position: "bottom-center",
+                                autoClose: 3000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: false,
+                                progress: undefined,
+                                theme: "light",
+                                transition: Slide,
+                            });
+                        })
+                        axios.delete(`api/cart/clear/${LocalStorageHelper.GetActiveUser()}`, {
+                            headers: {
+                                'Authorization': 'Bearer ' + LocalStorageHelper.getJwtToken(),
+                                'X-XSRF-TOKEN': response.data.token,
+                            }
+                        }).then(() => {
+                            setOpenBackdrop(false);
+                            LocalStorageHelper.setClearBasketItems();
+                            window.dispatchEvent(new Event('basket'));
+                        }).catch(() => {
+                            setOpenBackdrop(false);
+                            toast.error('Could not clear basket', {
+                                position: "bottom-center",
+                                autoClose: 3000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: false,
+                                progress: undefined,
+                                theme: "light",
+                                transition: Slide,
+                            });
+                        })
                     })
                 })
                 setOpenBackdrop(false);

@@ -233,6 +233,22 @@ public class ProductControllerTests {
     }
 
     @Test
+    public void getProductsByTopBoughtCountTest() throws Exception {
+
+        Pageable pageable = PageRequest.of(0, 8, Sort.by("boughtCount").descending());
+        List<Product> products = new ArrayList<>();
+        products.add(product);
+        Page<Product> productsPage = new PageImpl<>(products, pageable, products.size());
+
+        when(productService.getTopBoughtProducts(0, 8)).thenReturn(productsPage);
+
+        ResultActions resultActions = mockMvc.perform(get("/api/products/items/get/bought_count/top?page=0&pageSize=8"));
+        resultActions.andExpect(MockMvcResultMatchers.status().isOk());
+        resultActions.andExpect(MockMvcResultMatchers.content().string(objectMapper.writeValueAsString(productsPage)));
+
+    }
+
+    @Test
     public void verifyAvailabilityTest() throws Exception {
 
         OrderLineItemsDto orderLineItemsDTO = new OrderLineItemsDto();
@@ -335,6 +351,41 @@ public class ProductControllerTests {
                 .header("Authorization", token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(productRequest))
+        );
+
+        resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+
+    @Test
+    public void updateProductBoughtCountTest() throws Exception {
+
+        ProductBoughtCountDto productBoughtCountDto = new ProductBoughtCountDto();
+        productBoughtCountDto.setBoughtCount(10L);
+
+        UUID productSkuId = UUID.randomUUID();
+
+        when(productService.updateProductBoughtCount(productSkuId, productBoughtCountDto)).thenReturn(ResponseEntity.ok("Product bought count updated"));
+
+        ResultActions resultActions = mockMvc.perform(put("/api/products/items/update/bought_count/{productSkuId}", productSkuId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(productBoughtCountDto))
+        );
+
+        resultActions.andExpect(MockMvcResultMatchers.status().isOk());
+        resultActions.andExpect(MockMvcResultMatchers.content().string("Product bought count updated"));
+    }
+
+    @Test
+    public void updateProductBoughtCountBadRequestTest() throws Exception {
+
+        ProductBoughtCountDto productBoughtCountDto = new ProductBoughtCountDto();
+        productBoughtCountDto.setBoughtCount(0L);
+
+        UUID productSkuId = UUID.randomUUID();
+
+        ResultActions resultActions = mockMvc.perform(put("/api/products/items/update/bought_count/{productSkuId}", productSkuId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(productBoughtCountDto))
         );
 
         resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest());

@@ -291,6 +291,7 @@ function ProductItem(props) {
                 </Tooltip>
                 <ProductText><b>Price: </b>{props.item.productPrice.toFixed(2)}$</ProductText>
                 <ProductText><b>In stock: </b>{props.item.inStock}</ProductText>
+                <ProductText><b>Bought: </b>{props.item.boughtCount}</ProductText>
             </ProductMetrics>
             
             <ProductButtons>

@@ -10,7 +10,6 @@ import {
 } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import ProductItem from "./components/ProductItem.jsx";
-import banner from '../../assets/logo.svg';
 
 const StyledHome = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -49,22 +48,11 @@ const TopBannerHeader = styled(Box)({
     boxSizing: 'border-box',
 });
 
-const Banner = styled(Box)({
-    width: '40%',
-    maxHeight: '200px',
-    aspectRatio: '16 / 9',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundSize: 'cover',
-    boxSizing: 'border-box',
-});
-
 const HomeWrapper = styled(Box)({
     display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    justifyContent: 'center',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
     height: 'fit-content',
     boxSizing: 'border-box',
     marginTop: '32px',
@@ -92,8 +80,24 @@ const SectionTitle = styled(Box)({
     alignItems: 'flex-start',
 });
 
+const TopBoughtSection = styled(Paper)(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '796px',
+    height: 'fit-content',
+    boxShadow: '0 5px 15px rgba(0, 0, 0, 0.1)',
+    boxSizing: 'border-box',
+    borderRadius: '1em',
+    padding: '16px',
+    marginTop: '32px',
+    backgroundColor: theme.palette.background.paper,
+}));
+
 function Home() {
     const [newestProducts, setNewestProducts] = useState([]);
+    const [topBouthProducts, setTopBouthProducts] = useState([]);
     const [openBackdrop, setOpenBackdrop] = useState(false);
 
     useEffect(() => {
@@ -112,6 +116,18 @@ function Home() {
 
     }, [])
 
+    useEffect(() => {
+        setOpenBackdrop(true);
+        axios.get('api/products/items/get/bought_count/top?page=0&pageSize=8', {})
+        .then(res => {
+            setTopBouthProducts(res.data.content);
+            setOpenBackdrop(false);
+        }).catch(() => {
+            setOpenBackdrop(false);
+        });
+
+    }, []);
+
     return (
         <StyledHome>
             <Backdrop
@@ -124,33 +140,16 @@ function Home() {
             <TopBannerContainer>
                 <TopBannerHeader>
                     <Typography
-                        variant="h4"
+                        variant="h5"
                         sx={{
                             margin: 0,
                             fontStyle: 'italic',
                             fontWeight: 'normal',
                         }}
                     >
-                        Welcome to Fancy Strings!<br />
-                        Discover our products and<br />
-                        try them out yourself!
+                        Welcome to Fancy Strings! Discover our products or try them out yourself in our store.
                     </Typography>
                 </TopBannerHeader>
-                <Banner>
-                    <Box
-                        component="img"
-                        alt="Banner"
-                        src={banner}
-                        sx={{
-                            objectFit: 'cover',
-                            maxWidth: '100%',
-                            maxHeight: '100%',
-                            display: 'block',
-                            flexShrink: 0,
-                            flexGrow: 0,
-                        }}
-                    />
-                </Banner>
             </TopBannerContainer>
 
             <HomeWrapper>
@@ -180,6 +179,32 @@ function Home() {
                         ))}
                     </Grid>
                 </NewestSection>
+                <TopBoughtSection>
+                    <SectionTitle>
+                        <Typography
+                            variant="h5"
+                            sx={{
+                                margin: '0 0 16px 0',
+                                fontWeight: 'bold',
+                            }}
+                        >
+                            Top picks
+                        </Typography>
+                    </SectionTitle>
+                    <Grid
+                        container
+                        sx={{
+                            boxSizing: 'border-box',
+                            width: '100%',
+                        }}
+                        rowSpacing={2.7}
+                        columnSpacing={2.7}
+                    >
+                        {topBouthProducts.map((product) => (
+                            <ProductItem key={product.id} id={product.id} item={product} />
+                        ))}
+                    </Grid>
+                </TopBoughtSection>
             </HomeWrapper>
         </StyledHome>
     );

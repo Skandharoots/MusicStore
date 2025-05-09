@@ -340,20 +340,21 @@ function BasketItem(props) {
                     'Content-Type': 'application/json',
                     'X-XSRF-TOKEN': res.data.token,
                 }
-            }).then(() => {})
-                .catch(() => {
-                    toast.error('We could not update the item quantity', {
-                        position: "bottom-center",
-                        autoClose: 3000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: false,
-                        progress: undefined,
-                        theme: "light",
-                        transition: Slide,
-                    })
-                });
+            }).then(() => {
+                props.onUpdate();
+            }).catch(() => {
+                toast.error('We could not update the item quantity', {
+                    position: "bottom-center",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: false,
+                    progress: undefined,
+                    theme: "light",
+                    transition: Slide,
+                })
+            });
         }).catch(() => {
             toast.error('Cannot fetch token', {
                 position: "bottom-center",

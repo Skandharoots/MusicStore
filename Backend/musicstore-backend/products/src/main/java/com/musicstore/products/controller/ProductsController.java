@@ -3,6 +3,7 @@ package com.musicstore.products.controller;
 import com.musicstore.products.dto.CancelOrderRequest;
 import com.musicstore.products.dto.OrderAvailabilityResponse;
 import com.musicstore.products.dto.OrderRequest;
+import com.musicstore.products.dto.ProductBoughtCountDto;
 import com.musicstore.products.dto.ProductRequest;
 import com.musicstore.products.model.Product;
 import com.musicstore.products.service.ProductService;
@@ -110,6 +111,14 @@ public class ProductsController {
         return ResponseEntity.ok(productService.getAllProductsBySearchedPhrase(page, pageSize, searchPhrase));
     }
 
+    @GetMapping("/get/bought_count/top")
+    public Page<Product> getTopBoughtProducts(
+            @RequestParam(value = "page", defaultValue = "0", required = false) int page,
+            @RequestParam(value = "pageSize", defaultValue = "8", required = false) int pageSize
+    ) {
+        return productService.getTopBoughtProducts(page, pageSize);
+    }
+
     @PostMapping("/verify_availability")
     public ResponseEntity<OrderAvailabilityResponse> verifyAvailabilityOfOrderProducts(
             @RequestBody OrderRequest orderRequest
@@ -131,6 +140,14 @@ public class ProductsController {
             @Valid @RequestBody ProductRequest product
     ) {
         return productService.updateProduct(token, id, product);
+    }
+
+    @PutMapping("/update/bought_count/{productSkuId}")
+    public ResponseEntity<String> updateProductBoughtCount(
+            @PathVariable(name = "productSkuId") UUID id,
+            @Valid @RequestBody ProductBoughtCountDto product
+    ) {
+        return productService.updateProductBoughtCount(id, product);
     }
 
     @DeleteMapping("/delete/{productSkuId}")

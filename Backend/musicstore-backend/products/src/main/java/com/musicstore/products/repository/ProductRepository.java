@@ -34,4 +34,5 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             + "LEFT JOIN subcategory s ON p.subcategory_id = s.id "
             + "WHERE p.category_id = ?1 AND co.name LIKE %?2% AND ma.name LIKE %?3% AND s.name LIKE %?4%")
     BigDecimal findMaxProductPrice(Long category, String country, String manufacturer, String subcategory);
+
 }

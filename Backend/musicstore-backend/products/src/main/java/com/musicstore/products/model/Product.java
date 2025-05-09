@@ -47,6 +47,8 @@ public class Product {
 
     private Integer inStock = 0;
 
+    private Long boughtCount = 0L;
+
     @ManyToOne
     @JoinColumn(
             nullable = false,

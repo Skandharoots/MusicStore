@@ -4,6 +4,7 @@ import com.musicstore.products.dto.CancelOrderRequest;
 import com.musicstore.products.dto.OrderAvailabilityListItem;
 import com.musicstore.products.dto.OrderAvailabilityResponse;
 import com.musicstore.products.dto.OrderRequest;
+import com.musicstore.products.dto.ProductBoughtCountDto;
 import com.musicstore.products.dto.ProductRequest;
 import com.musicstore.products.model.Category;
 import com.musicstore.products.model.Country;
@@ -127,6 +128,14 @@ public class ProductService {
                     category, country, manufacturer, subcategory, lowPrice, highPrice, pageable);
     }
 
+    public Page<Product> getTopBoughtProducts(int page, int pageSize) {
+        
+        Pageable pageable = PageRequest.of(page, pageSize, Sort.by("boughtCount").descending());
+
+        return productRepository.findAll(pageable);
+
+    }
+
     public Page<Product> getAllProductsBySearchedPhrase(Integer page, Integer pageSize, String searchPhrase) {
 
         Pageable pageable = PageRequest.of(page, pageSize, Sort.by("dateAdded").descending());
@@ -247,6 +256,20 @@ public class ProductService {
     }
 
     @Transactional
+    public ResponseEntity<String> updateProductBoughtCount(UUID id, ProductBoughtCountDto product) {
+        
+        Product productToUpdate = productRepository.findByProductSkuId(id)
+                .orElseThrow(
+                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found")
+                );
+        productToUpdate.setBoughtCount(productToUpdate.getBoughtCount() + product.getBoughtCount());
+        productRepository.save(productToUpdate);
+        log.info("Product bought count updated: " + productToUpdate.getProductName() + " - " + productToUpdate.getProductSkuId());
+
+        return ResponseEntity.ok("Product bought count updated");
+    }
+
+    @Transactional
     public ResponseEntity<String> deleteProduct(String token, UUID id) {
 
         if (Boolean.FALSE.equals(doesUserHaveAdminAuthorities(token))) {
@@ -283,5 +306,7 @@ public class ProductService {
             .block();
 
     }
+
+    
 
 }

@@ -46,11 +46,12 @@ const StyledAppBar = styled(AppBar)(({ theme }) => ({
     boxSizing: 'border-box',
     margin: '0',
     padding: '0',
+    height: 'fit-content',
     minHeight: '10dvh',
 }));
 
 const StyledToolbar = styled(Toolbar)({
-    minHeight: '10dvh',
+    height: '100px',
     padding: '1% 10%',
     width: '100%',
     display: 'flex',
@@ -349,7 +350,7 @@ function Navbar() {
             <Box sx={{ width: '100%', height: 'fit-content', boxSizing: 'border-box', margin: '0', padding: '0' }}>
                 <StyledToolbar disableGutters>
                         <Link component={NavLink} to="/" sx={{ display: 'flex', alignItems: 'center' }}>
-                            <Box component="img" src={logo} alt="Fancy Strings Logo" sx={{ height: '100%' }} />
+                            <Box component="img" src={logo} alt="Fancy Strings Logo" sx={{ height: '100px', }} />
                         </Link>
                         <StyledSearchForm elevation={0} component="form" onSubmit={onSubmitSearch}>
                             <StyledSearchInput

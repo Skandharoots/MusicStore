@@ -59,11 +59,11 @@ axios.defaults.withCredentials = true;
 
 const Dashboard = () => {
     return (
-        <>
+        <Paper>
             <Navbar />
             <Outlet />
             <Footer />
-        </>
+        </Paper>
     );
 };
 

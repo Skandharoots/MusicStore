@@ -1,11 +1,12 @@
 import { Box, Typography, styled} from '@mui/material';
 
-const FooterWrapper = styled(Box)(() => ({
+const FooterWrapper = styled(Box)(({ theme }) => ({
     height: 'fit-content',
     width: '100%',
     padding: 0,
     margin: 0,
     minHeight: '10dvh',
+    backgroundColor: theme.palette.background.default,
 }));
 
 const FooterContainer = styled(Box)(({ theme }) => ({

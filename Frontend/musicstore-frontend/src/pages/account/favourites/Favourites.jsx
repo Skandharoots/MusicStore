@@ -114,7 +114,7 @@ function Favourites() {
                 <CircularProgress color="inherit"/>
             </Backdrop>
             <PageInfo>
-                <Typography variant="h5">Favorites</Typography>
+                <Typography variant="h6">Favorites</Typography>
             </PageInfo>
             <FavouritesGrid container>
                 {favorites.map((fav, index) => (

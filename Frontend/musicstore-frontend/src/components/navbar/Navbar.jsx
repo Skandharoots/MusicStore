@@ -23,6 +23,7 @@ import {
     ListItemIcon,
     ListItemText,
     InputBase,
+    useTheme,
 } from '@mui/material';
 import {
     SearchOutlined as SearchOutlinedIcon,
@@ -46,12 +47,11 @@ const StyledAppBar = styled(AppBar)(({ theme }) => ({
     boxSizing: 'border-box',
     margin: '0',
     padding: '0',
-    height: 'fit-content',
     minHeight: '10dvh',
 }));
 
 const StyledToolbar = styled(Toolbar)({
-    height: '100px',
+    minHeight: '10dvh',
     padding: '1% 10%',
     width: '100%',
     display: 'flex',
@@ -140,7 +140,10 @@ const StyledUserListItem = styled(ListItem)(({ theme }) => ({
     width: 'fit-content',
     fontSize: '12px',
     fontWeight: 'bold',
-    minWidth: '50px',
+    width: 'fit-content',
+    height: 'fit-content',
+    minWidth: '20px',
+    minHeight: '0',
     padding: 0,
     height: '50px',
     borderRadius: '1em',
@@ -237,6 +240,8 @@ function Navbar() {
         window.dispatchEvent(new Event('theme'));
         handleClose();
     }
+
+    const theme = useTheme();
 
     const MaterialUISwitch = styled(Switch)(({ theme }) => ({
         width: 62,
@@ -350,7 +355,7 @@ function Navbar() {
             <Box sx={{ width: '100%', height: 'fit-content', boxSizing: 'border-box', margin: '0', padding: '0' }}>
                 <StyledToolbar disableGutters>
                         <Link component={NavLink} to="/" sx={{ display: 'flex', alignItems: 'center' }}>
-                            <Box component="img" src={logo} alt="Fancy Strings Logo" sx={{ height: '100px', }} />
+                            <Box component="img" src={logo} alt="Fancy Strings Logo" sx={{ height: '100%' }} />
                         </Link>
                         <StyledSearchForm elevation={0} component="form" onSubmit={onSubmitSearch}>
                             <StyledSearchInput
@@ -375,7 +380,8 @@ function Navbar() {
                                         onClick={handleClick}
                                         endIcon={<PersonOutlineOutlinedIcon />}
                                     >
-                                        <Typography variant="body2" sx={{ maxWidth: '50px', overflow: 'hidden' }}>
+                                        <Typography variant="body2" sx={{ maxWidth: '50px', overflow: 'hidden', fontSize: '10px',
+ }}>
                                             Hi,<br/>{userName}
                                         </Typography>
                                     </StyledAccountButton>
@@ -391,6 +397,7 @@ function Navbar() {
                                                     width: "180px",
                                                     marginTop: "2px",
                                                     padding: '4px',
+                                                    fontSize: '10px',
                                                 }
                                             },
                                         }}
@@ -411,11 +418,19 @@ function Navbar() {
                                             <ListItemIcon><FavoriteBorderOutlinedIcon fontSize='small'/></ListItemIcon>
                                             <ListItemText>Favorites</ListItemText>
                                         </MenuItem>
-                                        <MenuItem>
+                                        <MenuItem sx={{borderBottom: '1px solid ' + theme.palette.divider, }}>
                                             <FormControlLabel
                                                 control={<MaterialUISwitch checked={checked} onChange={handleCheck} />}
                                             />
                                         </MenuItem>
+                                        {LocalStorageHelper.IsUserLogged() && (
+                                            <MenuItem>
+                                                <ListItemIcon>
+                                                    <Link component={NavLink} onClick={logoutUser}><LogoutOutlinedIcon fontSize='small'/></Link>
+                                                </ListItemIcon>
+                                                <ListItemText>Logout</ListItemText>
+                                            </MenuItem>
+                                        )}
                                     </Menu>
                                 </StyledUserListItem>
                             )}
@@ -424,7 +439,8 @@ function Navbar() {
                                 <StyledUserListItem>
                                     <Tooltip title="Login">
                                         <Link component={NavLink} to="/login" sx={{ display: 'flex', alignItems: 'center' }}>
-                                            <Typography variant="body2" sx={{ mr: 1, textAlign: 'left' }}>
+                                            <Typography variant="body2" sx={{ mr: 1, textAlign: 'left', fontSize: '10px',
+ }}>
                                                 Hi!<br/>Log in
                                             </Typography>
                                             <PersonOutlineOutlinedIcon />
@@ -437,7 +453,7 @@ function Navbar() {
                                 <Tooltip title="Basket">
                                     <Link component={NavLink} to="/basket">
                                         <Badge badgeContent={basketCount} showZero color={'irish'}>
-                                            <ShoppingCartOutlinedIcon />
+                                            <ShoppingCartOutlinedIcon fontSize='small'/>
                                         </Badge>
                                     </Link>
                                 </Tooltip>
@@ -447,7 +463,7 @@ function Navbar() {
                                 <StyledUserListItem>
                                     <Tooltip title="Favourites">
                                         <Link component={NavLink} to="/favourites">
-                                            <FavoriteBorderOutlinedIcon />
+                                            <FavoriteBorderOutlinedIcon fontSize='small'/>
                                         </Link>
                                     </Tooltip>
                                 </StyledUserListItem>
@@ -457,10 +473,10 @@ function Navbar() {
                                 <StyledUserListItem>
                                     <Tooltip title="Admin panel">
                                         <Link component={NavLink} to="/admin/category" sx={{ display: 'flex', alignItems: 'center', textDecoration: 'none', "&:hover": { textDecoration: 'none' } }}>
-                                            <Typography variant="body2" sx={{ mr: 1 }}>
+                                            <Typography variant="body2" sx={{ mr: 1, fontSize: '10px' }}>
                                                 Admin<br/>panel
                                             </Typography>
-                                            <AdminPanelSettingsOutlinedIcon />
+                                            <AdminPanelSettingsOutlinedIcon fontSize='small'/>
                                         </Link>
                                     </Tooltip>
                                 </StyledUserListItem>
@@ -470,21 +486,19 @@ function Navbar() {
                                 <StyledUserListItem>
                                     <Tooltip title="Login">
                                         <Link component={NavLink} to="/login">
-                                            <LoginOutlinedIcon />
+                                            <LoginOutlinedIcon fontSize='small'/>
                                         </Link>
                                     </Tooltip>
                                 </StyledUserListItem>
                             )}
 
-                            {LocalStorageHelper.IsUserLogged() && (
+                            {/* {LocalStorageHelper.IsUserLogged() && (
                                 <StyledUserListItem>
                                     <Tooltip title="Logout">
-                                        <Link component={NavLink} onClick={logoutUser}>
-                                            <LogoutOutlinedIcon />
-                                        </Link>
+                                        
                                     </Tooltip>
                                 </StyledUserListItem>
-                            )}
+                            )} */}
                         </StyledUserList>
                     </StyledUserContainer>
                 </StyledToolbar>

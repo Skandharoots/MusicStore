@@ -156,7 +156,7 @@ function MyOrders() {
             {showOrders && (
                 <>
                     <PageInfo>
-                        <Typography variant="h5">My orders</Typography>
+                        <Typography variant="h6">My orders</Typography>
                     </PageInfo>
                     <OrdersGrid container spacing={2.7}>
                         {orders.map((order) => (

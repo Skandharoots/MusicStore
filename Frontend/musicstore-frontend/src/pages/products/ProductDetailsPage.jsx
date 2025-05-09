@@ -43,6 +43,7 @@ const ProductDetailsContainer = styled(Box)(({ theme }) => ({
     alignItems: 'center',
     backgroundColor: theme.palette.background.default,
     minHeight: '80dvh',
+    height: 'fit-content',
     color: theme.palette.text.primary,
 }));
 
@@ -348,6 +349,7 @@ const OpinionsContainer = styled(Box)(({ theme }) => ({
     margin: '0 auto',
     borderTop: '1px solid ' + theme.palette.shadowLink.main,
     paddingTop: '16px',
+    backgroundColor: theme.palette.background.default,
 }));
 
 const OpinionsContent = styled(Box)(({ theme }) => ({

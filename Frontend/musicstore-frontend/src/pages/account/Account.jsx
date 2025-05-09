@@ -529,7 +529,7 @@ function Account() {
                 <CircularProgress color="inherit" />
             </Backdrop>
             <PageInfo>
-                <Typography variant="h5">Account Settings</Typography>
+                <Typography variant="h6">Account Settings</Typography>
             </PageInfo>
             <AccountInfo>
                 <InfoEdit>

@@ -201,7 +201,7 @@ function Home() {
                         columnSpacing={2.7}
                     >
                         {topBouthProducts.map((product) => (
-                            <ProductItem key={product.id} id={product.id} item={product} />
+                            <ProductItem key={product.id + 1000} id={product.id + 1000} item={product} />
                         ))}
                     </Grid>
                 </TopBoughtSection>

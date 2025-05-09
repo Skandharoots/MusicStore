@@ -37,12 +37,10 @@ const ProductItemContainer = styled(Grid)(({ theme }) => ({
     borderRadius: '1em',
     fontSize: '12px',
     boxSizing: 'border-box',
+    boxShadow: '0 5px 15px ' + theme.palette.itemShadow.main,
     transition: 'all 0.3s',
-    borderBottom: '1px solid ' + theme.palette.itemShadow.light,
     "&:hover": {
-        boxShadow: '0 0 0 1px ' + theme.palette.itemShadow.light,
-        cursor: 'pointer',
-        border: 'none',
+        boxShadow: '0 5px 15px ' + theme.palette.itemShadow.light,
     },
 }));
 
@@ -525,6 +523,7 @@ function ProductItem(props) {
                             display: 'block',
                             flexShrink: '0',
                             flexGrow: '0',
+                            borderRadius: '1em',
                         }}
                     />
                 </ProductImage>

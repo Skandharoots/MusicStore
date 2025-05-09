@@ -226,7 +226,7 @@ function Navbar() {
     const [search, setSearch] = React.useState('');
     const [userName, setUserName] = React.useState('');
     const [categories, setCategories] = React.useState([]);
-    const [basketCount, setBasketCount] = React.useState(0);
+    const [basketCount, setBasketCount] = React.useState(parseInt(0));
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [checked, setChecked] = React.useState(localStorage.getItem('theme') === 'dark' ? true : false);
 
@@ -313,7 +313,7 @@ function Navbar() {
     });
 
     window.addEventListener('basket', () => {
-        setBasketCount(parseInt(LocalStorageHelper.getBasketItems()))
+        setBasketCount(parseInt(LocalStorageHelper.getBasketItems().toString()));
     })
 
     window.addEventListener('category', () => {
@@ -349,7 +349,7 @@ function Navbar() {
             <Box sx={{ width: '100%', height: 'fit-content', boxSizing: 'border-box', margin: '0', padding: '0' }}>
                 <StyledToolbar disableGutters>
                         <Link component={NavLink} to="/" sx={{ display: 'flex', alignItems: 'center' }}>
-                            <Box component="img" src={logo} alt="Fancy Strings Logo" sx={{ height: 40 }} />
+                            <Box component="img" src={logo} alt="Fancy Strings Logo" sx={{ height: '100%' }} />
                         </Link>
                         <StyledSearchForm elevation={0} component="form" onSubmit={onSubmitSearch}>
                             <StyledSearchInput
@@ -383,19 +383,15 @@ function Navbar() {
                                         anchorEl={anchorEl}
                                         open={open}
                                         onClose={handleClose}
-                                        PaperProps={{
-                                            sx: {
-                                                borderRadius: '1em',
-                                                width: "180px",
-                                                marginTop: "2px",
-                                                padding: '4px',
-                                                fontSize: '12px',
-                                                fontWeight: 'normal',
-                                                '& .MuiMenuItem-root': {
-                                                    fontSize: '12px',
-                                                    fontWeight: 'normal',
-                                                },
-                                            }
+                                        slotProps={{
+                                            paper: {
+                                                sx: {
+                                                    borderRadius: '1em',
+                                                    width: "180px",
+                                                    marginTop: "2px",
+                                                    padding: '4px',
+                                                }
+                                            },
                                         }}
                                     >
                                         <MenuItem onClick={() => {handleClose(); navigate("/account")}}>
@@ -439,7 +435,7 @@ function Navbar() {
                             <StyledUserListItem>
                                 <Tooltip title="Basket">
                                     <Link component={NavLink} to="/basket">
-                                        <Badge badgeContent={basketCount} color={'irish'}>
+                                        <Badge badgeContent={basketCount} showZero color={'irish'}>
                                             <ShoppingCartOutlinedIcon />
                                         </Badge>
                                     </Link>

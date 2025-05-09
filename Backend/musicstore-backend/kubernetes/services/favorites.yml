@@ -1,70 +1,69 @@
-apiVersion: v1
-data:
-  security_user: YWRtaW4=
-  security_password: YWRtaW4=
-kind: Secret
-metadata:
-  name: gateway-secrets
-
----
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: apigateway
+  name: favorites
   labels:
-    app: apigateway
+    app: favorites
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: apigateway
+      app: favorites
   template:
     metadata:
       labels:
-        app: apigateway
+        app: favorites
     spec:
       containers:
-        - name: apigateway
-          image: skandharoots/apigateway:latest
+        - name: favorites
+          image: skandharoots/favorites:latest
           imagePullPolicy: Always
           ports:
-            - containerPort: 8222
+            - containerPort: 7070
           readinessProbe:
             tcpSocket:
-              port: 8222
+              port: 7070
             initialDelaySeconds: 90
             periodSeconds: 10
           livenessProbe:
             httpGet:
-              port: 8222
+              port: 7070
               path: /actuator/health
             initialDelaySeconds: 100
             periodSeconds: 10
           env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: kubernetes
             - name: SPRING_CONFIG_IMPORT
               valueFrom:
                 configMapKeyRef:
                   key: config-server-url
                   name: config-server-cm
-            - name: SPRING_PROFILES_ACTIVE
-              value: kubernetes
+            - name: SPRING_DATASOURCE_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: mysql_orders_url
+                  name: mysql-config
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  key: mysql_username
+                  name: mysql-secrets
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: mysql_root_password
+                  name: mysql-secrets
             - name: LOKI_URL
               valueFrom:
                 configMapKeyRef:
                   key: LOKI_URL
                   name: loki-cfg
-            - name: SECURITY_USER
-              valueFrom:
-                secretKeyRef:
-                  key: security_user
-                  name: gateway-secrets
-            - name: SECURITY_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  key: security_password
-                  name: gateway-secrets
       initContainers:
+        #Wait for mysql to show up
+        - name: wait-for-mysql
+          image: busybox
+          command: [ "sh", "-c", "until nc -zv mysql.default.svc.cluster.local 3306 > /dev/null; do echo Waiting for master.; sleep 2; done;" ]
           # Wait for discovery to show up
         - name: wait-for-discovery
           image: busybox
@@ -73,18 +72,19 @@ spec:
         - name: wait-for-config-server
           image: busybox
           command: [ "sh", "-c", "until nc -zv config-server-svc.default.svc.cluster.local 80 > /dev/null; do echo Waiting for master.; sleep 2; done;" ]
+
 ---
 
 kind: Service
 apiVersion: v1
 metadata:
-  name: apigateway-svc
+  name: favorites-svc
 spec:
   selector:
-    app: apigateway
-  type: LoadBalancer
+    app: favorites
+  type: ClusterIP
   ports:
     - port: 80
-      targetPort: 8222
+      targetPort: 7070
       protocol: TCP
 

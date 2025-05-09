@@ -23,13 +23,13 @@ spec:
           readinessProbe:
             tcpSocket:
               port: 8030
-            initialDelaySeconds: 15
+            initialDelaySeconds: 90
             periodSeconds: 10
           livenessProbe:
             httpGet:
               port: 8030
               path: /actuator/health
-            initialDelaySeconds: 40
+            initialDelaySeconds: 100
             periodSeconds: 10
           env:
             - name: SPRING_PROFILES_ACTIVE

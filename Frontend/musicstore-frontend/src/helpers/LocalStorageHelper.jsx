@@ -110,7 +110,6 @@ class LocalStorageHelper {
     static setBasketItems(diff) {
         let current = localStorage.getItem('inBasket');
         if (current) {
-            console.log(current, diff);
             let newCount = parseInt(current) + diff;
             localStorage.setItem('inBasket', newCount);
         } else {
@@ -120,7 +119,7 @@ class LocalStorageHelper {
     }
 
     static setClearBasketItems() {
-        localStorage.setItem('inBasket', 0);
+        localStorage.setItem('inBasket', parseInt(0));
     }
 
     static LoginUser(userUuid, userFirstName, jwt, userRole, refresh) {

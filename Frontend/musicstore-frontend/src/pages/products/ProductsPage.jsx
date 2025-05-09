@@ -18,8 +18,9 @@ import {
     Box,
     Stack,
     Pagination,
-    TextField
+    TextField,
 } from "@mui/material";
+import { useTheme } from "@mui/material";
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import Grid from "@mui/material/Grid2";
 import ProductItem from "./components/ProductItem.jsx"
@@ -214,6 +215,8 @@ function ProductsPage() {
     const [openBackdrop, setOpenBackdrop] = useState(false);
 
     const categoryId = useParams();
+
+    const theme = useTheme();
 
     useEffect(() => {
         document.title = `${categoryId.name}`;
@@ -577,7 +580,7 @@ function ProductsPage() {
                             paddingLeft: '16px',
                             width: '100%',
                             paddingBottom: '16px',
-                            borderBottom: '1px solid rgba(0, 0, 0, 0.1)'
+                            borderBottom: '1px solid ' + theme.palette.divider,
                         }}
                         rowSpacing={2.7}
                         columnSpacing={2.7}

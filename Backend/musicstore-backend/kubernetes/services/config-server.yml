@@ -23,7 +23,7 @@ spec:
           readinessProbe:
             tcpSocket:
               port: 8889
-            initialDelaySeconds: 15
+            initialDelaySeconds: 40
             periodSeconds: 10
           livenessProbe:
             httpGet:

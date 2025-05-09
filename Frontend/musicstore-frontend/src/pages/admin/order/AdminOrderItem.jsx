@@ -66,7 +66,7 @@ const OrderStatus = styled(Typography)(({theme, status}) => ({
            status === 'RETURNED' ? 'rgb(159,20,20)' : theme.palette.text.primary,
 }));
 
-const ImagesContainer = styled(Box)(({theme}) => ({
+const ImageWrapper = styled(Box)(({theme}) => ({
     display: 'flex',
     flexDirection: 'row',
     height: '100%',
@@ -75,23 +75,18 @@ const ImagesContainer = styled(Box)(({theme}) => ({
     alignItems: 'center',
 }));
 
-const ImageWrapper = styled(Box)(({theme}) => ({
-    height: '100px',
-    display: "flex",
-    overflow: "hidden",
-}));
-
 const ImageContainer = styled(Box)(({theme}) => ({
-    maxHeight: '100%',
-    aspectRatio: "10 / 6",
+    maxWidth: '40%',
+    height: '85px',
+    aspectRatio: '16 / 9',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundSize: 'cover',
-    flexShrink: '0',
-    flexGrow: '0',
+    display: "flex",
+    overflow: "hidden",
     backgroundColor: 'white',
     borderRadius: '1em',
+    marginRight: '16px',
 }));
 
 const OrderImage = styled('img')(({theme}) => ({
@@ -157,16 +152,13 @@ function AdminOrderItem(props) {
                     </OrderText>
                 </Tooltip>
             </OrderDetails>
-            
-            <ImagesContainer>
-                {[...images].map((image, index) => (
-                    <ImageWrapper key={index * 5}>
-                        <ImageContainer key={index}>
-                            <OrderImage alt={'No image'} src={image} />
-                        </ImageContainer>
-                    </ImageWrapper>
-                ))}
-            </ImagesContainer>
+            <ImageWrapper>
+            {[...images].map((image, index) => (
+                    <ImageContainer key={index}>
+                        <OrderImage alt={'No image'} src={image} />
+                </ImageContainer>
+            ))}
+            </ImageWrapper>
         </OrderItemContainer>
     );
 }

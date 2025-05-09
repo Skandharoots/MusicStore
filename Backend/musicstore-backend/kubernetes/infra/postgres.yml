@@ -98,8 +98,8 @@ kind: Secret
 metadata:
   name: postgres-secret-cred
 data:
-  postgres_username: c2thbmRoYQ==
-  postgres_password: bGFwdW5pYTIxMjE=
+  postgres_username: YWRtaW4=
+  postgres_password: YWRtaW4=
 
 ---
 

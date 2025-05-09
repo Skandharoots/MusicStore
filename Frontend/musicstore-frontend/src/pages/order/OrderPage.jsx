@@ -314,6 +314,8 @@ function OrderPage() {
                         }
                     }).then(() => {
                         setOpenBackdrop(false);
+                        LocalStorageHelper.setClearBasketItems();
+                        window.dispatchEvent(new Event('basket'));
                     }).catch(() => {
                         setOpenBackdrop(false);
                         toast.error('Could not clear basket', {

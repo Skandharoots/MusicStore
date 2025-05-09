@@ -210,6 +210,10 @@ public class ProductService {
                                             "Product not found")
                             );
                     product.setInStock(product.getInStock() + orderLineItemsDto.getQuantity());
+                    product.setBoughtCount(product.getBoughtCount() - orderLineItemsDto.getQuantity());
+                    productRepository.save(product);
+                    log.info("Product stock updated: " + product.getProductName() + " - " + product.getInStock()); 
+                    log.info("Product bought count updated: " + product.getProductName() + " - " + product.getBoughtCount());
                 });
 
         return ResponseEntity.ok(true);

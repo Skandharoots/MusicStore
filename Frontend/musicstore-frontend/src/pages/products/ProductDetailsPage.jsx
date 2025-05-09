@@ -1143,6 +1143,9 @@ function ProductDetailsPage() {
                                             emptyIcon={<FavoriteBorderIcon fontSize="inherit" />}
                                         />
                                     </Box>
+                                    <Typography variant="body2" sx={{margin: '8px 0 0 0', fontSize: '14px', color: 'rgb(97,97,97)'}}>
+                                        {productOpinion.length}/500
+                                    </Typography>
                                     <StyledTextField
                                         size={"small"}
                                         id="productOpinion"

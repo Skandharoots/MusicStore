@@ -101,6 +101,12 @@ function LeftSideAdminRibbon() {
                         Subcategories
                     </MenuLink>
                 </MenuItem>
+                <MenuItem>
+                    <MenuLink to="/admin/subcategory_tier_two">
+                        <TurnedInNotOutlinedIcon fontSize="medium"/>
+                        Subcategories tier two
+                    </MenuLink>
+                </MenuItem>
             </MenuList>
         </AdminRibbonContainer>
     );

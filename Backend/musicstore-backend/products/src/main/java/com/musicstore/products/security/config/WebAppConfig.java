@@ -75,7 +75,7 @@ public class WebAppConfig {
                         .requestMatchers(HttpMethod.GET, "/api/products/subcategories/get/**").permitAll()
                         .requestMatchers(HttpMethod.PUT, "/api/products/subcategories/update/**").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/api/products/subcategories/delete/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/products/subcategories/create").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/products/subcategory_tier_two/create").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/products/subcategory_tier_two/get").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/products/subcategory_tier_two/get/**").permitAll()
                         .requestMatchers(HttpMethod.PUT, "/api/products/subcategory_tier_two/update/**").permitAll()

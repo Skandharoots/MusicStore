@@ -121,6 +121,8 @@ function AddProduct() {
     const [selectedCountryId, setSelectedCountryId] = useState('');
     const [subcategories, setSubcategories] = useState([]);
     const [selectedSubcategoryId, setSelectedSubcategoryId] = useState('');
+    const [subcategoriesTierTwo, setSubcategoriesTierTwo] = useState([]);
+    const [selectedSubcategoryTierTwoId, setSelectedSubcategoryTierTwoId] = useState('');
     const [categories, setCategories] = useState([]);
     const [selectCategoryId, setSelectCategoryId] = useState('');
     const [productGalleryPhoto, setProductGalleryPhoto] = useState([]);
@@ -198,6 +200,38 @@ function AddProduct() {
     }, [selectCategoryId]);
 
     useEffect(() => {
+        if (selectedSubcategoryId) {
+            axios.get(`api/products/subcategory_tier_two/get/subcategory`, {
+                params: {
+                    subcategory: selectedSubcategoryId,
+                }
+            })
+                .then(res => {
+                    let subcats = [];
+                    let none = {
+                        id: '',
+                        name: 'None'
+                    };
+                    subcats.push(none);
+                    subcats.push(...res.data);
+                    setSubcategoriesTierTwo(subcats);
+                }).catch(error => {
+                toast.error(error.response.data.message, {
+                    position: "bottom-center",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: false,
+                    progress: undefined,
+                    theme: "light",
+                    transition: Slide,
+                });
+            })
+        }
+    }, [selectCategoryId, selectedSubcategoryId]);
+
+    useEffect(() => {
         axios.get(`api/products/manufacturers/get`, {})
         .then(res => {
             setManufacturers(res.data);
@@ -242,6 +276,10 @@ function AddProduct() {
 
     const handleSubcategoryChange = (event) => {
         setSelectedSubcategoryId(event.target.value);
+    }
+
+    const handleSubcategoryTierTwoChange = (event) => {
+        setSelectedSubcategoryTierTwoId(event.target.value);
     }
 
     const handleCountryChange = (event) => {
@@ -421,6 +459,8 @@ function AddProduct() {
         axios.get('api/users/csrf/token', {})
             .then((response) => {
                 setOpenBackdrop(true);
+                let id = null;
+                selectedSubcategoryTierTwoId === '' ? id = null : id = selectedSubcategoryId;
                 axios.post('api/products/items/create',
                     {
                         productName: productName,
@@ -431,6 +471,7 @@ function AddProduct() {
                         countryId: selectedCountryId,
                         categoryId: selectCategoryId,
                         subcategoryId: selectedSubcategoryId,
+                        subcategoryTierTwoId: id,
                     },
                     {
                         headers: {
@@ -615,6 +656,28 @@ function AddProduct() {
                         >
                             {subcategories.map(({id, name}) => (
                                 <MenuItem key={id} value={id}>{name}</MenuItem>
+                            ))}
+                        </Select>
+                        <FormHelperText>{subcategoryErrorMsg}</FormHelperText>
+                    </StyledFormControl>
+
+                    <StyledFormControl
+                        size="small"
+                        required
+                        noValidate
+                    >
+                        <InputLabel id="subcategoryTierTwoLabel">Select subcategory tier two</InputLabel>
+                        <Select
+                            labelId="subcategoryTierTwoLabel"
+                            id="subcategoryTierTwo"
+                            label={"Select subcategory tier two"}
+                            value={selectedSubcategoryTierTwoId}
+                            onChange={handleSubcategoryTierTwoChange}
+                            required
+                            variant={"outlined"}
+                        >
+                            {subcategoriesTierTwo.map(({id, name}, index) => (
+                                <MenuItem key={index} value={id}>{name}</MenuItem>
                             ))}
                         </Select>
                         <FormHelperText>{subcategoryErrorMsg}</FormHelperText>

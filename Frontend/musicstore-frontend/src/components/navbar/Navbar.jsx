@@ -112,7 +112,7 @@ const StyledSearchButton = styled(IconButton)(({ theme }) => ({
 
 const StyledUserContainer = styled(Box)({
     display: 'flex',
-    width: 'fit-content',
+    width: '500px',
     minHeight: '50px',
     height: 'fit-content',
     padding: 0,
@@ -140,8 +140,6 @@ const StyledUserListItem = styled(ListItem)(({ theme }) => ({
     width: 'fit-content',
     fontSize: '12px',
     fontWeight: 'bold',
-    width: 'fit-content',
-    height: 'fit-content',
     minWidth: '20px',
     minHeight: '0',
     padding: 0,
@@ -210,6 +208,8 @@ const StyledCategoryLink = styled(Link)(({ theme }) => ({
 const StyledAccountButton = styled(Button)(({ theme }) => ({
     color: theme.palette.text.primary,
     borderRadius: '1em',
+    height: '50px',
+    margin: '0',
     boxShadow: '0 5px 15px ' + theme.palette.shadowLink.main,
     transition: 'background-color 0.3s ease-in-out',
     textAlign: 'left',
@@ -355,7 +355,7 @@ function Navbar() {
             <Box sx={{ width: '100%', height: 'fit-content', boxSizing: 'border-box', margin: '0', padding: '0' }}>
                 <StyledToolbar disableGutters>
                         <Link component={NavLink} to="/" sx={{ display: 'flex', alignItems: 'center' }}>
-                            <Box component="img" src={logo} alt="Fancy Strings Logo" sx={{ height: '100%' }} />
+                            <Box component="img" src={logo} alt="Fancy Strings Logo" sx={{ height: '100%', width: '500px' }} />
                         </Link>
                         <StyledSearchForm elevation={0} component="form" onSubmit={onSubmitSearch}>
                             <StyledSearchInput
@@ -424,9 +424,9 @@ function Navbar() {
                                             />
                                         </MenuItem>
                                         {LocalStorageHelper.IsUserLogged() && (
-                                            <MenuItem>
+                                            <MenuItem onClick={logoutUser}>
                                                 <ListItemIcon>
-                                                    <Link component={NavLink} onClick={logoutUser}><LogoutOutlinedIcon fontSize='small'/></Link>
+                                                    <Link component={NavLink} ><LogoutOutlinedIcon fontSize='small'/></Link>
                                                 </ListItemIcon>
                                                 <ListItemText>Logout</ListItemText>
                                             </MenuItem>

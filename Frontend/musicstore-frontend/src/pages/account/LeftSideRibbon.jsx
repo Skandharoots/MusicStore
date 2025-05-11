@@ -22,7 +22,6 @@ const LeftSideContainer = styled(Box)(({theme}) => ({
 const WelcomeText = styled(Typography)(({theme}) => ({
     color: theme.palette.text.primary,
     marginLeft: theme.spacing(1.75),
-    borderBottom: `1px solid ${theme.palette.divider}`,
     fontSize: '16px',
 }));
 
@@ -62,6 +61,9 @@ const MenuLink = styled(NavLink)(({theme}) => ({
 function LeftSideRibbon() {
     return (
         <LeftSideContainer>
+            <WelcomeText>
+                <Typography variant="h5">Welcome to <br/>your account</Typography>
+            </WelcomeText>
             <MenuList>
                 <MenuItem>
                     <MenuLink to="/myorders">

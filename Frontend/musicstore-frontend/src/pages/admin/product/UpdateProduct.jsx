@@ -122,6 +122,8 @@ function UpdateProduct() {
     const [selectedCountryId, setSelectedCountryId] = useState('');
     const [subcategories, setSubcategories] = useState([]);
     const [selectedSubcategoryId, setSelectedSubcategoryId] = useState('');
+    const [subcategoriesTierTwo, setSubcategoriesTierTwo] = useState([]);
+    const [selectedSubcategoryTierTwoId, setSelectedSubcategoryTierTwoId] = useState('');
     const [categories, setCategories] = useState([]);
     const [selectCategoryId, setSelectCategoryId] = useState('');
     const [productGalleryPhoto, setProductGalleryPhoto] = useState([]);
@@ -225,6 +227,7 @@ function UpdateProduct() {
                 setSelectedSubcategoryId(res.data.subcategory.id);
                 setSelectedManufacturerId(res.data.manufacturer.id);
                 setSelectedCountryId(res.data.builtinCountry.id);
+                setSelectedSubcategoryTierTwoId(res.data.subcategoryTierTwo === null ? '' : res.data.subcategoryTierTwo.id);
             }).catch(() => {
             toast.error("Cannot find product, redirecting", {
                 position: "bottom-center",
@@ -285,6 +288,38 @@ function UpdateProduct() {
         }
     }, [selectCategoryId]);
 
+    useEffect(() => {
+        if (selectedSubcategoryId) {
+            axios.get(`api/products/subcategory_tier_two/get/subcategory`, {
+                params: {
+                    subcategory: selectedSubcategoryId,
+                }
+            })
+                .then(res => {
+                    let subcats = [];
+                    let none = {
+                        id: '',
+                        name: 'None'
+                    };
+                    subcats.push(none);
+                    subcats.push(...res.data);
+                    setSubcategoriesTierTwo(subcats);
+                }).catch(error => {
+                toast.error(error.response.data.message, {
+                    position: "bottom-center",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: false,
+                    progress: undefined,
+                    theme: "light",
+                    transition: Slide,
+                });
+            })
+        }
+    }, [selectCategoryId, selectedSubcategoryId]);
+
     const handleCategoryChange = (event) => {
         setSelectCategoryId(event.target.value);
         setSelectedSubcategoryId('');
@@ -292,6 +327,10 @@ function UpdateProduct() {
 
     const handleSubcategoryChange = (event) => {
         setSelectedSubcategoryId(event.target.value);
+    }
+
+    const handleSubcategoryTierTwoChange = (event) => {
+        setSelectedSubcategoryTierTwoId(event.target.value);
     }
 
     const handleCountryChange = (event) => {
@@ -500,6 +539,8 @@ function UpdateProduct() {
             axios.get('api/users/csrf/token', {})
                 .then((response) => {
                     setOpenBackdrop(true);
+                    let id = null;
+                    selectedSubcategoryTierTwoId === '' ? id = null : id = selectedSubcategoryTierTwoId;
                     axios.put(`api/products/items/update/${skuId.skuId}`,
                         {
                             productName: productName,
@@ -510,6 +551,7 @@ function UpdateProduct() {
                             countryId: selectedCountryId,
                             categoryId: selectCategoryId,
                             subcategoryId: selectedSubcategoryId,
+                            subcategoryTierTwoId: id,
                         },
                         {
                             headers: {
@@ -627,6 +669,8 @@ function UpdateProduct() {
             axios.get('api/users/csrf/token', {})
                 .then((response) => {
                     setOpenBackdrop(true);
+                    let id = null;
+                    selectedSubcategoryTierTwoId === '' ? id = null : id = selectedSubcategoryTierTwoId;
                     axios.put(`api/products/items/update/${skuId.skuId}`,
                         {
                             productName: productName,
@@ -637,6 +681,7 @@ function UpdateProduct() {
                             countryId: selectedCountryId,
                             categoryId: selectCategoryId,
                             subcategoryId: selectedSubcategoryId,
+                            subcategoryTierTwoId: id,
                         },
                         {
                             headers: {
@@ -759,7 +804,27 @@ function UpdateProduct() {
                         </Select>
                         <FormHelperText>{subcategoryErrorMsg}</FormHelperText>
                     </StyledFormControl>
-
+                    <StyledFormControl
+                        size="small"
+                        required
+                        noValidate
+                    >
+                        <InputLabel id="subcategoryTierTwoLabel">Select subcategory tier two</InputLabel>
+                        <Select
+                            labelId="subcategoryTierTwoLabel"
+                            id="subcategoryTierTwo"
+                            label={"Select subcategory tier two"}
+                            value={selectedSubcategoryTierTwoId}
+                            onChange={handleSubcategoryTierTwoChange}
+                            required
+                            variant={"outlined"}
+                        >
+                            {subcategoriesTierTwo.map(({id, name}, index) => (
+                                <MenuItem key={index} value={id}>{name}</MenuItem>
+                            ))}
+                        </Select>
+                        <FormHelperText>{subcategoryErrorMsg}</FormHelperText>
+                    </StyledFormControl>
                     <StyledFormControl
                         size="small"
                         required

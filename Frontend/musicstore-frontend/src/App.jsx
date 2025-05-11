@@ -4,7 +4,7 @@ import {
     RouterProvider,
     Outlet,
 } from "react-router-dom";
-import React, {useState} from "react";
+import {useState} from "react";
 import Navbar from './components/navbar/Navbar.jsx';
 import Footer from './components/footer/Footer.jsx';
 import Home from './pages/home/Home.jsx';
@@ -48,6 +48,9 @@ import Favourites from './pages/account/favourites/Favourites.jsx';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { Paper, Box } from '@mui/material';
+import AddSubcategoryTierTwo from "./pages/admin/subcategoryTierTwo/AddSubcategoryTierTwo.jsx";
+import SubcategoryTierTwo from "./pages/admin/subcategoryTierTwo/SubcategoryTierTwo.jsx";
+import UpdateSubcategoryTierTwo from "./pages/admin/subcategoryTierTwo/UpdateSubcategoryTierTwo.jsx";
 
 
 
@@ -248,6 +251,18 @@ const router = createBrowserRouter([
                     {
                         path: '/admin/subcategory/update/:id',
                         element: <UpdateSubcategory />,
+                    },
+                    {
+                        path: '/admin/subcategory_tier_two',
+                        element: <SubcategoryTierTwo />,
+                    },
+                    {
+                        path: '/admin/subcategory_tier_two/add',
+                        element: <AddSubcategoryTierTwo />,
+                    },
+                    {
+                        path: '/admin/subcategory_tier_two/update/:id',
+                        element: <UpdateSubcategoryTierTwo />,
                     },
                 ]
             },

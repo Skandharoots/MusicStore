@@ -21,7 +21,7 @@ public interface CountryRepository extends JpaRepository<Country, Long> {
         + "JOIN manufacturer m ON p.manufacturer_id=m.id "
         + "JOIN category ca ON p.category_id=ca.id "
         + "JOIN subcategory s ON p.subcategory_id=s.id "
-        + "JOIN subcategory_tier_two st ON p.subcategory_tier_two_id=st.id "
+        + "JOIN subcategory_tier_two st ON (p.subcategory_tier_two_id IS NULL OR (p.subcategory_tier_two_id IS NOT NULL AND p.subcategory_tier_two_id = st.id)) "
         + "WHERE ca.id = ?1 AND m.name LIKE %?2% AND s.name LIKE %?3% AND st.name LIKE %?4%")
     List<Country> findAllBySearchParameters(Long categoryId, String manufacturer, String subcategory, String subcategoryTierTwo);
 

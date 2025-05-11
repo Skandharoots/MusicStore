@@ -134,7 +134,7 @@ public class ProductService {
 
 
         return productRepository
-            .findAllByCategory_IdAndBuiltinCountry_NameContainingAndManufacturer_NameContainingAndSubcategory_NameContainingAndSubcategoryTierTwo_NameContainingAndProductPriceBetween(
+            .findAllBySearchParametersAndPrice(
                     category, country, manufacturer, subcategory, subcategoryTierTwo, lowPrice, highPrice, pageable);
     }
 

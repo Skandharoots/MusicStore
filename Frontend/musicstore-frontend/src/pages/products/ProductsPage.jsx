@@ -200,12 +200,15 @@ function ProductsPage() {
     const [selectedCountryName, setSelectedCountryName] = useState('');
     const [subcategories, setSubcategories] = useState([]);
     const [selectedSubcategoryName, setSelectedSubcategoryName] = useState('');
+    const [subcategoriesTierTwo, setSubcategoriesTierTwo] = useState([]);
+    const [selectedSubcategoryTierTwoName, setSelectedSubcategoryTierTwoName] = useState('');
     const [totalPages, setTotalPages] = useState(1);
     const [currentPage, setCurrentPage] = useState(1);
     const [perPage, setPerPage] = useState(20);
+    const [disableSubcategory, setDisableSubcategory] = useState(false);
 
     const [products, setProducts] = useState([]);
-    const [sortBy, setSortBy] = useState(JSON.stringify({sortBy: 'dateAdded', direction: 'desc'}));
+    const [sortBy, setSortBy] = useState(JSON.stringify({sortBy: 'date_added', direction: 'desc'}));
     const [sliderValue, setSliderValue] = useState([0, 1]);
     const [sliderMaxValue, setSliderMaxValue] = useState(1);
     const [lowPrice, setLowPrice] = useState(0);
@@ -242,45 +245,61 @@ function ProductsPage() {
                 country: selectedCountryName,
                 manufacturer: selectedManufacturerName,
                 subcategory: selectedSubcategoryName,
+                subcategoryTierTwo: selectedSubcategoryTierTwoName
             }
         }).then(res => {
                 setSliderValue([0, res.data]);
                 setSliderMaxValue(res.data);
             }).catch(() => {})
-    }, [selectedSubcategoryName, selectedCountryName, selectedManufacturerName, categoryId.categoryId])
+    }, [selectedSubcategoryName, selectedCountryName, selectedManufacturerName, selectedSubcategoryTierTwoName, categoryId.categoryId])
 
     useEffect(() => {
         axios.get(`api/products/subcategories/get/search/${categoryId.categoryId}`, {
             params: {
                 country: selectedCountryName,
                 manufacturer: selectedManufacturerName,
+                subcategoryTierTwo: selectedSubcategoryTierTwoName
             }
         }).then((response) => {
                 setSubcategories(response.data);
             }).catch(() => {});
-    }, [selectedManufacturerName, selectedCountryName, categoryId.categoryId]);
+    }, [selectedManufacturerName, selectedCountryName, selectedSubcategoryTierTwoName, categoryId.categoryId]);
 
     useEffect(() => {
         axios.get(`api/products/countries/get/search/${categoryId.categoryId}`, {
             params: {
                 subcategory: selectedSubcategoryName,
                 manufacturer: selectedManufacturerName,
+                subcategoryTierTwo: selectedSubcategoryTierTwoName
             }
         }).then((response) => {
                 setCountries(response.data);
             }).catch(() => {});
-    }, [selectedSubcategoryName, selectedManufacturerName, categoryId.categoryId]);
+    }, [selectedSubcategoryName, selectedManufacturerName, selectedSubcategoryTierTwoName, categoryId.categoryId]);
 
     useEffect(() => {
         axios.get(`api/products/manufacturers/get/search/${categoryId.categoryId}`, {
             params: {
                 country: selectedCountryName,
                 subcategory: selectedSubcategoryName,
+                subcategoryTierTwo: selectedSubcategoryTierTwoName
             }
         }).then((response) => {
                 setManufacturers(response.data);
             }).catch(() => {});
-    }, [selectedSubcategoryName, selectedCountryName, categoryId.categoryId]);
+    }, [selectedSubcategoryName, selectedCountryName, selectedSubcategoryTierTwoName, categoryId.categoryId]);
+
+    useEffect(() => {
+        axios.get(`api/products/subcategory_tier_two/get/search/${categoryId.categoryId}`, {
+            params: {
+                subcategory: selectedSubcategoryName,
+                country: selectedCountryName,
+                manufacturer: selectedManufacturerName,
+            }
+        }).then((response) => {
+            setSubcategoriesTierTwo(response.data);
+        }).catch(() => {});
+    }, [selectedSubcategoryName, selectedCountryName, selectedManufacturerName, categoryId.categoryId]);
 
     useEffect(() => {
         setOpenBackdrop(true);
@@ -290,6 +309,7 @@ function ProductsPage() {
                 country: selectedCountryName,
                 manufacturer: selectedManufacturerName,
                 subcategory: selectedSubcategoryName,
+                subcategoryTierTwo: selectedSubcategoryTierTwoName,
                 lowPrice: lowPrice,
                 highPrice: highPrice,
                 sortBy: sorting.sortBy,
@@ -308,7 +328,7 @@ function ProductsPage() {
             setOpenBackdrop(false);
         });
 
-    }, [sortBy, selectedSubcategoryName, selectedCountryName, selectedManufacturerName, lowPrice, highPrice , categoryId.categoryId, perPage, currentPage]);
+    }, [sortBy, selectedSubcategoryName, selectedCountryName, selectedManufacturerName, selectedSubcategoryTierTwoName, lowPrice, highPrice , categoryId.categoryId, perPage, currentPage]);
 
 
     const changePage = (event, value) => {
@@ -367,7 +387,7 @@ function ProductsPage() {
                         <Typography variant="h6" sx={{ margin: '4px 0' }}>Subcategories</Typography>
                         <StyledButton
                             endIcon={<CloseOutlinedIcon fontSize="small"/>}
-                            onClick={() => setSelectedSubcategoryName('')}
+                            onClick={() => {setSelectedSubcategoryName(''); setDisableSubcategory(false)}}
                         >
                             Clear
                         </StyledButton>
@@ -375,11 +395,12 @@ function ProductsPage() {
                     <StyledFormControl>
                         <RadioGroup
                             value={selectedSubcategoryName}
-                            onChange={e => setSelectedSubcategoryName(e.target.value)}
+                            onChange={e => {setSelectedSubcategoryName(e.target.value); setDisableSubcategory(true)}}
                             name="radio-buttons-subcategory"
                         >
                             {[...subcategories].map((subcat, index) => (
                                 <FormControlLabel
+                                    disabled={disableSubcategory}
                                     value={subcat.name}
                                     key={subcat.id}
                                     id={index}
@@ -390,6 +411,44 @@ function ProductsPage() {
                         </RadioGroup>
                     </StyledFormControl>
                 </RibbonSection>
+                {(disableSubcategory && subcategoriesTierTwo.length > 0) && (
+                        <RibbonSection>
+                            <Box sx={{
+                                display: "flex",
+                                justifyContent: "space-between",
+                                alignItems: "center",
+                                width: "100%",
+                                height: 'fit-content',
+                                padding: "0",
+                            }}>
+                                <Typography variant="h7" sx={{ margin: '4px 0' }}>Sub subcategories</Typography>
+                                <StyledButton
+                                    endIcon={<CloseOutlinedIcon fontSize="small"/>}
+                                    onClick={() => {setSelectedSubcategoryTierTwoName('');}}
+                                >
+                                    Clear
+                                </StyledButton>
+                            </Box>
+                            <StyledFormControl>
+                                <RadioGroup
+                                    value={selectedSubcategoryTierTwoName}
+                                    onChange={e => {setSelectedSubcategoryTierTwoName(e.target.value)}}
+                                    name="radio-buttons-subcategory"
+                                >
+                                    {[...subcategoriesTierTwo].map((subcat, index) => (
+                                        <FormControlLabel
+                                            value={subcat.name}
+                                            key={subcat.id}
+                                            id={index}
+                                            control={<Radio size={"small"} color="success"/>}
+                                            label={<Typography variant="body2" color="textSecondary">{subcat.name}</Typography>}
+                                        />
+                                    ))}
+                                </RadioGroup>
+                            </StyledFormControl>
+                        </RibbonSection>
+                )
+                }
                 <RibbonSection>
                     <Box sx={{
                         display: "flex",
@@ -545,9 +604,9 @@ function ProductsPage() {
                             onChange={e => setSortBy(e.target.value)}
                             variant={"outlined"}
                         >
-                            <MenuItem value={JSON.stringify({sortBy: 'dateAdded', direction: 'desc'})}>Newest (default)</MenuItem>
-                            <MenuItem value={JSON.stringify({sortBy: 'productPrice', direction: 'desc'})}>Price: highest to lowest</MenuItem>
-                            <MenuItem value={JSON.stringify({sortBy: 'productPrice', direction: 'asc'})}>Price: lowest to highest</MenuItem>
+                            <MenuItem value={JSON.stringify({sortBy: 'date_added', direction: 'desc'})}>Newest (default)</MenuItem>
+                            <MenuItem value={JSON.stringify({sortBy: 'product_price', direction: 'desc'})}>Price: highest to lowest</MenuItem>
+                            <MenuItem value={JSON.stringify({sortBy: 'product_price', direction: 'asc'})}>Price: lowest to highest</MenuItem>
                         </Select>
                     </StyledFormControl>
                     <StyledFormControl size="small" sx={{ m: 1, width: 100, maxWidth: 100 }}>

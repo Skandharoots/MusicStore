@@ -19,8 +19,16 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     Optional<Product> findByProductSkuId(UUID id);
 
-    Page<Product> findAllByCategory_IdAndBuiltinCountry_NameContainingAndManufacturer_NameContainingAndSubcategory_NameContainingAndSubcategoryTierTwo_NameContainingAndProductPriceBetween(
-        Long category, String country, String manufacturer, String subcategory, String subcategoryTierTwo, BigDecimal lp, BigDecimal hp, Pageable pageable
+    @Query(nativeQuery = true, value = "SELECT DISTINCT p.* FROM product p "
+            + "LEFT JOIN category ca ON p.category_id = ca.id "
+            + "LEFT JOIN country co ON p.country_id = co.id "
+            + "LEFT JOIN manufacturer ma ON p.manufacturer_id = ma.id "
+            + "LEFT JOIN subcategory s ON p.subcategory_id = s.id "
+            + "LEFT JOIN subcategory_tier_two st ON (p.subcategory_tier_two_id IS NULL OR (p.subcategory_tier_two_id IS NOT NULL AND p.subcategory_tier_two_id = st.id)) "
+            + "WHERE p.category_id = ?1 AND co.name LIKE %?2% AND ma.name LIKE %?3% AND s.name LIKE %?4% AND st.name LIKE %?5%"
+    )
+    Page<Product> findAllBySearchParametersAndPrice(
+            Long category, String country, String manufacturer, String subcategory, String subcategoryTierTwo, BigDecimal lp, BigDecimal hp, Pageable pageable
     );
 
     Page<Product> findAllByProductNameContainingIgnoreCaseOrProductDescriptionContainingIgnoreCase(
@@ -32,7 +40,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             + "LEFT JOIN country co ON p.country_id = co.id "
             + "LEFT JOIN manufacturer ma ON p.manufacturer_id = ma.id "
             + "LEFT JOIN subcategory s ON p.subcategory_id = s.id "
-            + "LEFT JOIN subcategory_tier_two st ON p.subcategory_tier_two_id = st.id "
+            + "LEFT JOIN subcategory_tier_two st ON (p.subcategory_tier_two_id IS NULL OR (p.subcategory_tier_two_id IS NOT NULL AND p.subcategory_tier_two_id = st.id)) "
             + "WHERE p.category_id = ?1 AND co.name LIKE %?2% AND ma.name LIKE %?3% AND s.name LIKE %?4% AND st.name LIKE %?5%")
     BigDecimal findMaxProductPrice(Long category, String country, String manufacturer, String subcategory, String subcategoryTierTwo);
 

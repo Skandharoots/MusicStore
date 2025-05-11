@@ -68,7 +68,7 @@ public class SubcategoryTierTwoController {
             @RequestParam(value = "manufacturer") String manufacturer,
             @RequestParam(value = "subcategory") String subcategory
     ) {
-        return subcategoryTierTwoService.findAllBySearchParameters(categoryId, country, manufacturer, subcategory);
+        return subcategoryTierTwoService.findAllBySearchParameters(categoryId, country, subcategory, manufacturer);
     }
 
     @PutMapping("/update/{subcategoryId}")

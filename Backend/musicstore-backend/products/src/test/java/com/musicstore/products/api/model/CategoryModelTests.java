@@ -1,14 +1,9 @@
 package com.musicstore.products.api.model;
 
 import com.musicstore.products.model.Category;
-import com.musicstore.products.model.Subcategory;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 
 @SpringBootTest
 public class CategoryModelTests {

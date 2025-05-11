@@ -47,6 +47,9 @@ public class ProductServiceTests {
     private SubcategoryService subcategoryService;
 
     @Mock
+    private SubcategoryTierTwoService subcategoryTierTwoService;
+
+    @Mock
     private VariablesConfiguration variablesConfiguration;
 
     @Mock
@@ -76,6 +79,8 @@ public class ProductServiceTests {
     private Manufacturer manufacturer;
 
     private Subcategory subcategory;
+
+    private SubcategoryTierTwo subcategoryTierTwo;
 
     private ProductRequest productRequest;
 
@@ -107,6 +112,11 @@ public class ProductServiceTests {
         subcategory.setCategory(category);
         subcategory.setName("Electric");
 
+        subcategoryTierTwo = new SubcategoryTierTwo();
+        subcategoryTierTwo.setId(id);
+        subcategoryTierTwo.setSubcategory(subcategory);
+        subcategoryTierTwo.setName("Electronic");
+
         product = new Product(
                 "Stratocaster Player MX",
                 "Something about this guitar",
@@ -115,7 +125,8 @@ public class ProductServiceTests {
                 manufacturer,
                 country,
                 category,
-                subcategory
+                subcategory,
+                subcategoryTierTwo
         );
 
         product.setId(id);
@@ -125,6 +136,7 @@ public class ProductServiceTests {
                 "Desc",
                 price,
                 57,
+                1L,
                 1L,
                 1L,
                 1L,
@@ -222,22 +234,24 @@ public class ProductServiceTests {
         BigDecimal hp = BigDecimal.valueOf(2699.99);
         BigDecimal lp = BigDecimal.valueOf(100.00);
         when(productRepository
-                .findAllByCategory_IdAndBuiltinCountry_NameContainingAndManufacturer_NameContainingAndSubcategory_NameContainingAndProductPriceBetween(
+                .findAllByCategory_IdAndBuiltinCountry_NameContainingAndManufacturer_NameContainingAndSubcategory_NameContainingAndSubcategoryTierTwo_NameContainingAndProductPriceBetween(
                 1L,
                         "USA",
                         "Fender",
                         "Electric",
+                        "Electronic",
                         lp,
                         hp,
                         pageable1
 
         )).thenReturn(productsPage1);
         when(productRepository
-                .findAllByCategory_IdAndBuiltinCountry_NameContainingAndManufacturer_NameContainingAndSubcategory_NameContainingAndProductPriceBetween(
+                .findAllByCategory_IdAndBuiltinCountry_NameContainingAndManufacturer_NameContainingAndSubcategory_NameContainingAndSubcategoryTierTwo_NameContainingAndProductPriceBetween(
                         1L,
                         "USA",
                         "Fender",
                         "Electric",
+                        "Electronic",
                         lp,
                         hp,
                         pageable2
@@ -245,7 +259,7 @@ public class ProductServiceTests {
                 )).thenReturn(productsPage2);
 
         Page<Product> foundProducts1 = productService
-                .getAllProductsByCategoryAndCountryAndManufacturerAndSubcategory(
+                .getAllProductsByCategoryAndCountryAndManufacturerAndSubcategoryAndSubcategoryTierTwo(
                       0,
                       10,
                       "dateAdded",
@@ -254,11 +268,12 @@ public class ProductServiceTests {
                       "USA",
                       "Fender",
                       "Electric",
+                      "Electronic",
                       lp,
                       hp
                 );
         Page<Product> foundProducts2 = productService
-                .getAllProductsByCategoryAndCountryAndManufacturerAndSubcategory(
+                .getAllProductsByCategoryAndCountryAndManufacturerAndSubcategoryAndSubcategoryTierTwo(
                         0,
                         10,
                         "dateAdded",
@@ -267,6 +282,7 @@ public class ProductServiceTests {
                         "USA",
                         "Fender",
                         "Electric",
+                        "Electronic",
                         lp,
                         hp
                 );
@@ -452,8 +468,8 @@ public class ProductServiceTests {
     @Test
     public void getMaxPriceForProductTest() {
 
-        when(productRepository.findMaxProductPrice(1L, "USA", "Fender", "Electric")).thenReturn(BigDecimal.valueOf(2699.99));
-        ResponseEntity<BigDecimal> result = productService.getMaxPriceForProducts(1L, "USA", "Fender", "Electric");
+        when(productRepository.findMaxProductPrice(1L, "USA", "Fender", "Electric", "Electronic")).thenReturn(BigDecimal.valueOf(2699.99));
+        ResponseEntity<BigDecimal> result = productService.getMaxPriceForProducts(1L, "USA", "Fender", "Electric", "Electronic");
 
         Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
         Assertions.assertThat(result.getBody()).isEqualTo(BigDecimal.valueOf(2699.99));

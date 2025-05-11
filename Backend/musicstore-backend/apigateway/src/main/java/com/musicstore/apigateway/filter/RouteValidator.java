@@ -27,6 +27,8 @@ public class RouteValidator {
                         "/api/products/manufacturers/get/**",
                         "/api/products/subcategories/get/**",
                         "/api/products/subcategories/get",
+                        "/api/products/subcategory_tier_two/get/**",
+                        "/api/products/subcategory_tier_two/get",
                         "/api/cart/get/**",
                         "/api/opinions/get",
                         "/api/opinions/get/user",

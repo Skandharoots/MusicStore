@@ -120,9 +120,9 @@ public class CountryControllerTests {
         List<Country> countries = new ArrayList<>();
         countries.add(country);
 
-        when(countryService.findAllBySearchParameters(1L, "Fender", "Electric")).thenReturn(countries);
+        when(countryService.findAllBySearchParameters(1L, "Fender", "Electric", "Humbuckers")).thenReturn(countries);
 
-        ResultActions resultActions = mockMvc.perform(get("/api/products/countries/get/search/{category}?manufacturer=Fender&subcategory=Electric",1L));
+        ResultActions resultActions = mockMvc.perform(get("/api/products/countries/get/search/{category}?manufacturer=Fender&subcategory=Electric&subcategoryTierTwo=Humbuckers",1L));
         resultActions.andExpect(MockMvcResultMatchers.status().isOk());
         resultActions.andExpect(MockMvcResultMatchers.content().string(objectMapper.writeValueAsString(countries)));
 

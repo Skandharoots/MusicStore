@@ -136,8 +136,8 @@ public class ManufacturerServiceTests {
         List<Manufacturer> manufacturers = new ArrayList<>();
         manufacturers.add(manufacturer);
 
-        when(manufacturerRepository.findAllBySearchParameters(1L, "USA", "Electric")).thenReturn(manufacturers);
-        List<Manufacturer> response = manufacturerService.findAllBySearchParameters(1L, "USA", "Electric");
+        when(manufacturerRepository.findAllBySearchParameters(1L, "USA", "Electric", "Humbucker")).thenReturn(manufacturers);
+        List<Manufacturer> response = manufacturerService.findAllBySearchParameters(1L, "USA", "Electric", "Humbucker");
         Assertions.assertThat(response).isNotNull();
         Assertions.assertThat(response.size()).isEqualTo(1);
         Assertions.assertThat(response.get(0)).isEqualTo(manufacturer);

@@ -65,8 +65,8 @@ public class SubcategoryService {
                 );
     }
 
-    public List<Subcategory> findAllBySearchParameters(Long categoryId, String country, String manufacturer) {
-        return subcategoryRepository.findAllBySearchParameters(categoryId, country, manufacturer);
+    public List<Subcategory> findAllBySearchParameters(Long categoryId, String country, String manufacturer, String subcategoryTierTwo) {
+        return subcategoryRepository.findAllBySearchParameters(categoryId, country, manufacturer, subcategoryTierTwo);
     }
 
     @Transactional

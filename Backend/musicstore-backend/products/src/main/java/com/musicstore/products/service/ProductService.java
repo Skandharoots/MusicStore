@@ -11,6 +11,7 @@ import com.musicstore.products.model.Country;
 import com.musicstore.products.model.Manufacturer;
 import com.musicstore.products.model.Product;
 import com.musicstore.products.model.Subcategory;
+import com.musicstore.products.model.SubcategoryTierTwo;
 import com.musicstore.products.repository.ProductRepository;
 import com.musicstore.products.security.config.VariablesConfiguration;
 import jakarta.transaction.Transactional;
@@ -47,6 +48,8 @@ public class ProductService {
 
     private final SubcategoryService subcategoryService;
 
+    private final SubcategoryTierTwoService subcategoryTierTwoService;
+
     private final WebClient.Builder webClient;
 
     private final VariablesConfiguration variablesConfiguration;
@@ -67,6 +70,12 @@ public class ProductService {
 
         Subcategory subcategory = subcategoryService.getSubcategoryById(productRequest.getSubcategoryId());
 
+        SubcategoryTierTwo subcategoryTierTwo = null;
+
+        if (productRequest.getSubcategoryTierTwoId() != null) {
+            subcategoryTierTwo = subcategoryTierTwoService.getSubcategoryTierTwoById(productRequest.getSubcategoryTierTwoId());
+        }
+
         Product product = new Product(
             productRequest.getProductName(),
             productRequest.getDescription(),
@@ -75,12 +84,12 @@ public class ProductService {
             manufacturer,
             country,
             category,
-            subcategory
+            subcategory,
+            subcategoryTierTwo
         );
 
         Product savedProduct = productRepository.save(product);
         log.info("Product created: " + savedProduct.getProductName());
-
 
         return savedProduct.getProductSkuId();
     }
@@ -102,7 +111,7 @@ public class ProductService {
         return ResponseEntity.ok(product);
     }
 
-    public Page<Product> getAllProductsByCategoryAndCountryAndManufacturerAndSubcategory(
+    public Page<Product> getAllProductsByCategoryAndCountryAndManufacturerAndSubcategoryAndSubcategoryTierTwo(
             Integer page,
             Integer pageSize,
             String sortBy,
@@ -111,6 +120,7 @@ public class ProductService {
             String country,
             String manufacturer,
             String subcategory,
+            String subcategoryTierTwo,
             BigDecimal lowPrice,
             BigDecimal highPrice
     ) {
@@ -124,8 +134,8 @@ public class ProductService {
 
 
         return productRepository
-            .findAllByCategory_IdAndBuiltinCountry_NameContainingAndManufacturer_NameContainingAndSubcategory_NameContainingAndProductPriceBetween(
-                    category, country, manufacturer, subcategory, lowPrice, highPrice, pageable);
+            .findAllByCategory_IdAndBuiltinCountry_NameContainingAndManufacturer_NameContainingAndSubcategory_NameContainingAndSubcategoryTierTwo_NameContainingAndProductPriceBetween(
+                    category, country, manufacturer, subcategory, subcategoryTierTwo, lowPrice, highPrice, pageable);
     }
 
     public Page<Product> getTopBoughtProducts(int page, int pageSize) {
@@ -219,13 +229,15 @@ public class ProductService {
         return ResponseEntity.ok(true);
     }
 
-    public ResponseEntity<BigDecimal> getMaxPriceForProducts(Long category, String country, String manufacturer, String subcategory) {
+    public ResponseEntity<BigDecimal> getMaxPriceForProducts(Long category, String country, String manufacturer, String subcategory, String subcategoryTierTwo) {
         return ResponseEntity.ok(productRepository
             .findMaxProductPrice(
                     category,
                     country,
                     manufacturer,
-                    subcategory
+                    subcategory,
+                    subcategoryTierTwo
+
             )
         );
     }
@@ -251,7 +263,11 @@ public class ProductService {
         productToUpdate.setCategory(categoryService.getCategoryById(product.getCategoryId()));
         productToUpdate.setManufacturer(manufacturerService.getManufacturerById(product.getManufacturerId()));
         productToUpdate.setSubcategory(subcategoryService.getSubcategoryById(product.getSubcategoryId()));
-
+        if (product.getSubcategoryTierTwoId() != null) {
+            productToUpdate.setSubcategoryTierTwo(subcategoryTierTwoService.getSubcategoryTierTwoById(product.getSubcategoryTierTwoId()));
+        } else {
+            productToUpdate.setSubcategoryTierTwo(null);
+        }
         productRepository.save(productToUpdate);
         log.info("Product updated: " + productToUpdate.getProductName());
 

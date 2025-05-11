@@ -1,8 +1,9 @@
 package com.musicstore.products.controller;
 
-import com.musicstore.products.dto.CountryRequest;
-import com.musicstore.products.model.Country;
-import com.musicstore.products.service.CountryService;
+import com.musicstore.products.dto.SubcategoryTierTwoRequest;
+import com.musicstore.products.dto.SubcategoryTierTwoUpdateRequest;
+import com.musicstore.products.model.SubcategoryTierTwo;
+import com.musicstore.products.service.SubcategoryTierTwoService;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.core.HttpHeaders;
 import java.util.HashMap;
@@ -26,56 +27,65 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
-@RequestMapping("/api/products/countries")
-@AllArgsConstructor
-public class CountryController {
 
-    private final CountryService countryService;
+@RestController
+@AllArgsConstructor
+@RequestMapping("/api/products/subcategory_tier_two")
+public class SubcategoryTierTwoController {
+
+    private final SubcategoryTierTwoService subcategoryTierTwoService;
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-    public String addCountry(
+    public String addSubcategory(
             @RequestHeader(HttpHeaders.AUTHORIZATION) String token,
-            @Valid @RequestBody CountryRequest countryRequest
+            @Valid @RequestBody SubcategoryTierTwoRequest subcategoryRequest
     ) {
-        return countryService.createCountry(token, countryRequest);
+        return subcategoryTierTwoService.createSubcategoryTierTwo(token, subcategoryRequest);
     }
 
     @GetMapping("/get")
-    public List<Country> getAllCountries() {
-        return countryService.getAllCountries();
+    public List<SubcategoryTierTwo> getSubcategoriesTierTwo() {
+        return subcategoryTierTwoService.getAll();
+    }
+
+    @GetMapping("/get/subcategory")
+    public List<SubcategoryTierTwo> getAllSubcategoriesTierTwoBySubcategoryId(
+            @RequestParam(name = "subcategory") Long subcategoryId
+    ) {
+        return subcategoryTierTwoService.getAllSubcategoriesTierTwo(subcategoryId);
     }
 
     @GetMapping("/get/{id}")
-    public Country getCountryById(@PathVariable(name = "id") Long id) {
-        return countryService.getCountryById(id);
+    public SubcategoryTierTwo getSubcategoryById(@PathVariable(name = "id") Long id) {
+        return subcategoryTierTwoService.getSubcategoryTierTwoById(id);
     }
 
     @GetMapping("/get/search/{category}")
-    public List<Country> getCountryBySearchParameters(
+    public List<SubcategoryTierTwo> getAllBySearchParameters(
             @PathVariable(value = "category") Long categoryId,
+            @RequestParam(value = "country") String country,
             @RequestParam(value = "manufacturer") String manufacturer,
-            @RequestParam(value = "subcategory") String subcategory,
-            @RequestParam(value = "subcategoryTierTwo") String subcategoryTierTwo
+            @RequestParam(value = "subcategory") String subcategory
     ) {
-        return countryService.findAllBySearchParameters(categoryId, manufacturer, subcategory, subcategoryTierTwo);
+        return subcategoryTierTwoService.findAllBySearchParameters(categoryId, country, manufacturer, subcategory);
     }
 
-    @PutMapping("/update/{countryId}")
-    public ResponseEntity<String> updateCountry(
+    @PutMapping("/update/{subcategoryId}")
+    public ResponseEntity<String> updateCategory(
             @RequestHeader(HttpHeaders.AUTHORIZATION) String token,
-            @PathVariable(name = "countryId") Long id,
-            @Valid @RequestBody CountryRequest country
+            @PathVariable(name = "subcategoryId") Long id,
+            @Valid @RequestBody SubcategoryTierTwoUpdateRequest subcategory
     ) {
-        return countryService.updateCountry(token, id, country);
+        return subcategoryTierTwoService.updateSubcategoryTierTwo(token, id, subcategory);
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteCountry(
+    public ResponseEntity<String> deleteSubcategory(
             @RequestHeader(HttpHeaders.AUTHORIZATION) String token,
-            @PathVariable(name = "id") Long id) {
-        return countryService.deleteCountry(token, id);
+            @PathVariable(name = "id") Long id
+    ) {
+        return subcategoryTierTwoService.deleteSubcategoryTierTwo(token, id);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -90,4 +100,5 @@ public class CountryController {
         });
         return errors;
     }
+
 }

@@ -76,6 +76,12 @@ public class Product {
     )
     private Subcategory subcategory;
 
+    @ManyToOne
+    @JoinColumn(
+            name = "subcategory_tier_two_id"
+    )
+    private SubcategoryTierTwo subcategoryTierTwo;
+
     public Product(
             String productName,
             String productDescription,
@@ -84,7 +90,8 @@ public class Product {
             Manufacturer manufacturer,
             Country builtInCountry,
             Category category,
-            Subcategory subcategory
+            Subcategory subcategory,
+            SubcategoryTierTwo subcategoryTierTwo
     ) {
         this.productName = productName;
         this.productDescription = productDescription;
@@ -94,6 +101,7 @@ public class Product {
         this.builtinCountry = builtInCountry;
         this.category = category;
         this.subcategory = subcategory;
+        this.subcategoryTierTwo = subcategoryTierTwo;
     }
 
 

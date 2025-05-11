@@ -58,6 +58,8 @@ public class ProductControllerTests {
 
     private Country country;
 
+    private SubcategoryTierTwo subcategoryTierTwo;
+
     private String token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpX" +
             "VCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI" +
             "6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.S" +
@@ -83,6 +85,10 @@ public class ProductControllerTests {
         subcategory.setCategory(category);
         subcategory.setName("Electric");
 
+        subcategoryTierTwo = new SubcategoryTierTwo();
+        subcategoryTierTwo.setName("Humbucker");
+        subcategoryTierTwo.setSubcategory(subcategory);
+
         product = new Product(
                 "Stratocaster Player MX",
                 "Something about this guitar",
@@ -91,7 +97,8 @@ public class ProductControllerTests {
                 manufacturer,
                 country,
                 category,
-                subcategory
+                subcategory,
+                subcategoryTierTwo
         );
         product.setDateAdded(LocalDateTime.now());
         product.setProductSkuId(UUID.randomUUID());
@@ -178,9 +185,9 @@ public class ProductControllerTests {
     @Test
     public void getMaxPriceTest() throws Exception {
 
-        when(productService.getMaxPriceForProducts(1L, "USA", "Fender", "Electric")).thenReturn(ResponseEntity.ok(BigDecimal.valueOf(299.99)));
+        when(productService.getMaxPriceForProducts(1L, "USA", "Fender", "Electric", "Humbucker")).thenReturn(ResponseEntity.ok(BigDecimal.valueOf(299.99)));
 
-        ResultActions resultActions = mockMvc.perform(get("/api/products/items/get/max_price/{category}?country=USA&manufacturer=Fender&subcategory=Electric", 1L));
+        ResultActions resultActions = mockMvc.perform(get("/api/products/items/get/max_price/{category}?country=USA&manufacturer=Fender&subcategory=Electric&subcategoryTierTwo=Humbucker", 1L));
         resultActions.andExpect(MockMvcResultMatchers.status().isOk());
         resultActions.andExpect(MockMvcResultMatchers.content().string("299.99"));
 
@@ -194,7 +201,7 @@ public class ProductControllerTests {
         products.add(product);
         Page<Product> productsPage = new PageImpl<>(products, pageable, products.size());
 
-        when(productService.getAllProductsByCategoryAndCountryAndManufacturerAndSubcategory(
+        when(productService.getAllProductsByCategoryAndCountryAndManufacturerAndSubcategoryAndSubcategoryTierTwo(
                 0,
                 10,
                 "dateAdded",
@@ -203,13 +210,14 @@ public class ProductControllerTests {
                 "Poland",
                 "Fender",
                 "Electric",
+                "Humbucker",
                 new BigDecimal("100.00"),
                 new BigDecimal("4000.00")
         )).thenReturn(productsPage);
 
         ResultActions resultActions = mockMvc
                 .perform(get("/api/products/items/get/values/{category}?country=Poland" +
-                        "&manufacturer=Fender&subcategory=Electric&lowPrice=100.00&highPrice=4000.00" +
+                        "&manufacturer=Fender&subcategory=Electric&subcategoryTierTwo=Humbucker&lowPrice=100.00&highPrice=4000.00" +
                         "&sortBy=dateAdded&sortDir=asc&page=0&pageSize=10", 1L));
 
         resultActions.andExpect(MockMvcResultMatchers.status().isOk());

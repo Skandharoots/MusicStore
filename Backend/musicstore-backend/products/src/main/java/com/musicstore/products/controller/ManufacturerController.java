@@ -56,9 +56,10 @@ public class ManufacturerController {
     public List<Manufacturer> getAllBySearchParameters(
             @PathVariable(value = "category") Long categoryId,
             @RequestParam(value = "country") String country,
-            @RequestParam(value = "subcategory") String subcategory
+            @RequestParam(value = "subcategory") String subcategory,
+            @RequestParam(value = "subcategoryTierTwo") String subcategoryTierTwo
     ) {
-        return manufacturerService.findAllBySearchParameters(categoryId, country, subcategory);
+        return manufacturerService.findAllBySearchParameters(categoryId, country, subcategory, subcategoryTierTwo);
     }
 
     @PutMapping("/update/{manufacturerId}")

@@ -141,9 +141,9 @@ public class SubcategoryControllerTests {
         List<Subcategory> subcategories = new ArrayList<>();
         subcategories.add(subcategory);
 
-        when(subcategoryService.findAllBySearchParameters(1L, "USA", "Fender")).thenReturn(subcategories);
+        when(subcategoryService.findAllBySearchParameters(1L, "USA", "Fender", "Electric")).thenReturn(subcategories);
 
-        ResultActions resultActions = mockMvc.perform(get("/api/products/subcategories/get/search/{category}?country=USA&manufacturer=Fender", 1L));
+        ResultActions resultActions = mockMvc.perform(get("/api/products/subcategories/get/search/{category}?country=USA&manufacturer=Fender&subcategoryTierTwo=Electric", 1L));
         resultActions.andExpect(MockMvcResultMatchers.status().isOk());
         resultActions.andExpect(MockMvcResultMatchers.content().string(objectMapper.writeValueAsString(subcategories)));
 

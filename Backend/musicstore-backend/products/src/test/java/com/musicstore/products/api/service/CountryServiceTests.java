@@ -139,8 +139,8 @@ public class CountryServiceTests {
         List<Country> countries = new ArrayList<>();
         countries.add(country);
 
-        when(countryRepository.findAllBySearchParameters(1L, "Fender", "Electric")).thenReturn(countries);
-        List<Country> response = countryService.findAllBySearchParameters(1L, "Fender", "Electric");
+        when(countryRepository.findAllBySearchParameters(1L, "Fender", "Electric", "Humbucker")).thenReturn(countries);
+        List<Country> response = countryService.findAllBySearchParameters(1L, "Fender", "Electric", "Humbucker");
         Assertions.assertThat(response).isNotNull();
         Assertions.assertThat(response.size()).isEqualTo(1);
         Assertions.assertThat(response.get(0)).isEqualTo(country);

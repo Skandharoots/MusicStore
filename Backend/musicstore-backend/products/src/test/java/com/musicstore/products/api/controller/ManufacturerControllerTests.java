@@ -124,8 +124,8 @@ public class ManufacturerControllerTests {
         List<Manufacturer> manufacturers = new ArrayList<>();
         manufacturers.add(manufacturer);
 
-        when(manufacturerService.findAllBySearchParameters(1L, "USA", "Electric")).thenReturn(manufacturers);
-        ResultActions resultActions = mockMvc.perform(get("/api/products/manufacturers/get/search/{category}?country=USA&subcategory=Electric", 1L));
+        when(manufacturerService.findAllBySearchParameters(1L, "USA", "Electric", "Humbuckers")).thenReturn(manufacturers);
+        ResultActions resultActions = mockMvc.perform(get("/api/products/manufacturers/get/search/{category}?country=USA&subcategory=Electric&subcategoryTierTwo=Humbuckers", 1L));
         resultActions.andExpect(MockMvcResultMatchers.status().isOk());
         resultActions.andExpect(MockMvcResultMatchers.content().string(objectMapper.writeValueAsString(manufacturers)));
 

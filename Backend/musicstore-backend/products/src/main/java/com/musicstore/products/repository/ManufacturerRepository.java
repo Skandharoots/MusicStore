@@ -21,6 +21,7 @@ public interface ManufacturerRepository extends JpaRepository<Manufacturer, Long
         + "JOIN category ca ON p.category_id = ca.id "
         + "JOIN country c ON p.country_id = c.id "
         + "JOIN subcategory s ON p.subcategory_id=s.id "
-        + "WHERE ca.id = ?1 AND c.name LIKE %?2% AND s.name LIKE %?3%")
-    List<Manufacturer> findAllBySearchParameters(Long categoryId, String country, String subcategory);
+        + "JOIN subcategory_tier_two st ON p.subcategory_tier_two_id=st.id "
+        + "WHERE ca.id = ?1 AND c.name LIKE %?2% AND s.name LIKE %?3% AND st.name LIKE %?4%")
+    List<Manufacturer> findAllBySearchParameters(Long categoryId, String country, String subcategory, String subcategoryTierTwo);
 }

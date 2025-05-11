@@ -51,4 +51,7 @@ public class ProductRequest {
     @NotNull(message = "Product subcategory is mandatory.")
     private Long subcategoryId;
 
+    private Long subcategoryTierTwoId;
+
+
 }

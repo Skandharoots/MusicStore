@@ -79,7 +79,6 @@ public class SubcategoryServiceTests {
     @Test
     public void addSubcategoryTest() {
 
-
         SubcategoryRequest subcategoryRequest = new SubcategoryRequest();
         subcategoryRequest.setName("Electric");
         subcategoryRequest.setCategoryId(1L);
@@ -172,8 +171,8 @@ public class SubcategoryServiceTests {
         List<Subcategory> categories = new ArrayList<>();
         categories.add(subcategory);
 
-        when(subcategoryRepository.findAllBySearchParameters(1L, "USA", "Fender")).thenReturn(categories);
-        List<Subcategory> response = subcategoryService.findAllBySearchParameters(1L, "USA", "Fender");
+        when(subcategoryRepository.findAllBySearchParameters(1L, "USA", "Fender", "Electric")).thenReturn(categories);
+        List<Subcategory> response = subcategoryService.findAllBySearchParameters(1L, "USA", "Fender", "Electric");
         Assertions.assertThat(response).isNotNull();
         Assertions.assertThat(response.size()).isEqualTo(1);
         Assertions.assertThat(response.get(0)).isEqualTo(subcategory);

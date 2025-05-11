@@ -68,9 +68,10 @@ public class ProductsController {
             @PathVariable(value = "category") Long category,
             @RequestParam(value = "country") String country,
             @RequestParam(value = "manufacturer") String manufacturer,
-            @RequestParam(value = "subcategory") String subcategory
+            @RequestParam(value = "subcategory") String subcategory,
+            @RequestParam(value = "subcategoryTierTwo") String subcategoryTierTwo
     ) {
-        return productService.getMaxPriceForProducts(category, country, manufacturer, subcategory);
+        return productService.getMaxPriceForProducts(category, country, manufacturer, subcategory, subcategoryTierTwo);
     }
 
     @GetMapping("/get/values/{category}")
@@ -79,6 +80,7 @@ public class ProductsController {
             @RequestParam(value = "country") String country,
             @RequestParam(value = "manufacturer") String manufacturer,
             @RequestParam(value = "subcategory") String subcategory,
+            @RequestParam(value = "subcategoryTierTwo") String subcategoryTierTwo,
             @RequestParam(value = "lowPrice", defaultValue = "0.00", required = false) BigDecimal lp,
             @RequestParam(value = "highPrice", defaultValue = "1000000.00", required = false) BigDecimal hp,
             @RequestParam(value = "sortBy", defaultValue = "id", required = false) String sortBy,
@@ -87,7 +89,7 @@ public class ProductsController {
             @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize
     ) {
         return ResponseEntity.ok(productService
-                .getAllProductsByCategoryAndCountryAndManufacturerAndSubcategory(
+                .getAllProductsByCategoryAndCountryAndManufacturerAndSubcategoryAndSubcategoryTierTwo(
                         page,
                         pageSize,
                         sortBy,
@@ -96,6 +98,7 @@ public class ProductsController {
                         country,
                         manufacturer,
                         subcategory,
+                        subcategoryTierTwo,
                         lp,
                         hp
                 )

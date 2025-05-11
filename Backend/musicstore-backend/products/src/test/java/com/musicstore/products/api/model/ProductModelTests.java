@@ -32,6 +32,11 @@ public class ProductModelTests {
         subcategory.setCategory(category);
         subcategory.setName("Electric");
 
+        SubcategoryTierTwo subcategoryTierTwo = new SubcategoryTierTwo();
+        subcategoryTierTwo.setId(id);
+        subcategoryTierTwo.setSubcategory(subcategory);
+        subcategoryTierTwo.setName("Electronic");
+
         Product product = new Product(
                 "Stratocaster Player MX",
                 "Something about this guitar",
@@ -40,7 +45,8 @@ public class ProductModelTests {
                 manufacturer,
                 country,
                 category,
-                subcategory
+                subcategory,
+                subcategoryTierTwo
         );
 
         product.setId(id);

@@ -52,8 +52,8 @@ public class CountryService {
                 );
     }
 
-    public List<Country> findAllBySearchParameters(Long categoryId, String manufacturer, String subcategory) {
-        return countryRepository.findAllBySearchParameters(categoryId, manufacturer, subcategory);
+    public List<Country> findAllBySearchParameters(Long categoryId, String manufacturer, String subcategory, String subcategoryTierTwo) {
+        return countryRepository.findAllBySearchParameters(categoryId, manufacturer, subcategory, subcategoryTierTwo);
     }
 
     @Transactional

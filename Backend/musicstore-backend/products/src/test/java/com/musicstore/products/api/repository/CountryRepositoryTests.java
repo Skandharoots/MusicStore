@@ -32,7 +32,11 @@ public class CountryRepositoryTests {
     private CountryRepository countryRepository;
 
     @Autowired
+    private SubcategoryTierTwoRepository subcategoryTierTwoRepository;
+
+    @Autowired
     private EntityManager entityManager;
+
     @Autowired
     private SubcategoryRepository subcategoryRepository;
 
@@ -94,6 +98,12 @@ public class CountryRepositoryTests {
         Subcategory subcategory = new Subcategory("Electric");
         subcategory.setCategory(category);
         subcategoryRepository.save(subcategory);
+
+        SubcategoryTierTwo subcategoryTierTwo = new SubcategoryTierTwo();
+        subcategoryTierTwo.setName("SubcategoryTierTwo");
+        subcategoryTierTwo.setSubcategory(subcategory);
+        subcategoryTierTwoRepository.save(subcategoryTierTwo);
+
         Product product = new Product(
                 "Stratocaster Player MX",
                 "Something about this guitar",
@@ -102,11 +112,12 @@ public class CountryRepositoryTests {
                 manufacturer,
                 country,
                 category,
-                subcategory
+                subcategory,
+                subcategoryTierTwo
         );
         productRepository.save(product);
 
-        List<Country> countries = countryRepository.findAllBySearchParameters(category.getId(), "Fender", "Electric");
+        List<Country> countries = countryRepository.findAllBySearchParameters(category.getId(), "Fender", "Electric", "SubcategoryTierTwo");
         Assertions.assertThat(countries).isNotEmpty();
         Assertions.assertThat(countries.size()).isEqualTo(1);
         Assertions.assertThat(countries.get(0).getName()).isEqualTo("Poland");

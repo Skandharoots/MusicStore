@@ -45,6 +45,11 @@ public class ProductRepositoryTests {
         Country country = new Country("USA");
         entityManager.persist(country);
 
+        SubcategoryTierTwo subcategoryTierTwo = new SubcategoryTierTwo();
+        subcategoryTierTwo.setName("SubcategoryTierTwo");
+        subcategoryTierTwo.setSubcategory(subcategory);
+        entityManager.persist(subcategoryTierTwo);
+
         BigDecimal price = BigDecimal.valueOf(2699.99);
         Product product = new Product(
                 "Stratocaster",
@@ -54,7 +59,8 @@ public class ProductRepositoryTests {
                 manufacturer,
                 country,
                 category,
-                subcategory
+                subcategory,
+                subcategoryTierTwo
         );
 
         Product savedProduct = productRepository.save(product);
@@ -90,6 +96,11 @@ public class ProductRepositoryTests {
         Country country = new Country("USA");
         entityManager.persist(country);
 
+        SubcategoryTierTwo subcategoryTierTwo = new SubcategoryTierTwo();
+        subcategoryTierTwo.setName("SubcategoryTierTwo");
+        subcategoryTierTwo.setSubcategory(subcategory);
+        entityManager.persist(subcategoryTierTwo);
+
         BigDecimal price = BigDecimal.valueOf(2699.99);
         Product product = new Product(
                 "Stratocaster",
@@ -99,7 +110,8 @@ public class ProductRepositoryTests {
                 manufacturer,
                 country,
                 category,
-                subcategory
+                subcategory,
+                subcategoryTierTwo
         );
         entityManager.persist(product);
 
@@ -128,6 +140,11 @@ public class ProductRepositoryTests {
         Country country = new Country("USA");
         entityManager.persist(country);
 
+        SubcategoryTierTwo subcategoryTierTwo = new SubcategoryTierTwo();
+        subcategoryTierTwo.setName("SubcategoryTierTwo");
+        subcategoryTierTwo.setSubcategory(subcategory);
+        entityManager.persist(subcategoryTierTwo);
+
         BigDecimal price = BigDecimal.valueOf(2699.99);
         Product product = new Product(
                 "Stratocaster",
@@ -137,7 +154,8 @@ public class ProductRepositoryTests {
                 manufacturer,
                 country,
                 category,
-                subcategory
+                subcategory,
+                subcategoryTierTwo
         );
         UUID skuId = UUID.randomUUID();
         product.setProductSkuId(skuId);
@@ -166,6 +184,11 @@ public class ProductRepositoryTests {
         Country country = new Country("USA");
         entityManager.persist(country);
 
+        SubcategoryTierTwo subcategoryTierTwo = new SubcategoryTierTwo();
+        subcategoryTierTwo.setName("SubcategoryTierTwo");
+        subcategoryTierTwo.setSubcategory(subcategory);
+        entityManager.persist(subcategoryTierTwo);
+
         BigDecimal price = BigDecimal.valueOf(2699.99);
         Product product = new Product(
                 "Stratocaster",
@@ -175,7 +198,8 @@ public class ProductRepositoryTests {
                 manufacturer,
                 country,
                 category,
-                subcategory
+                subcategory,
+                subcategoryTierTwo
         );
         UUID skuId = UUID.randomUUID();
         product.setProductSkuId(skuId);
@@ -186,11 +210,12 @@ public class ProductRepositoryTests {
         Pageable pageable = (Pageable) PageRequest.of(0, 10, Sort.by("productPrice").ascending());
 
         Page<Product> foundProducts =
-                productRepository.findAllByCategory_IdAndBuiltinCountry_NameContainingAndManufacturer_NameContainingAndSubcategory_NameContainingAndProductPriceBetween(
+                productRepository.findAllByCategory_IdAndBuiltinCountry_NameContainingAndManufacturer_NameContainingAndSubcategory_NameContainingAndSubcategoryTierTwo_NameContainingAndProductPriceBetween(
                         category.getId(),
                         country.getName(),
                         manufacturer.getName(),
                         subcategory.getName(),
+                        subcategoryTierTwo.getName(),
                         lp,
                         hp,
                         pageable
@@ -217,6 +242,11 @@ public class ProductRepositoryTests {
         Country country = new Country("USA");
         entityManager.persist(country);
 
+        SubcategoryTierTwo subcategoryTierTwo = new SubcategoryTierTwo();
+        subcategoryTierTwo.setName("SubcategoryTierTwo");
+        subcategoryTierTwo.setSubcategory(subcategory);
+        entityManager.persist(subcategoryTierTwo);
+
         BigDecimal price = BigDecimal.valueOf(2699.99);
         Product product = new Product(
                 "Stratocaster",
@@ -226,7 +256,8 @@ public class ProductRepositoryTests {
                 manufacturer,
                 country,
                 category,
-                subcategory
+                subcategory,
+                subcategoryTierTwo
         );
         UUID skuId = UUID.randomUUID();
         product.setProductSkuId(skuId);
@@ -262,6 +293,11 @@ public class ProductRepositoryTests {
         Country country = new Country("USA");
         entityManager.persist(country);
 
+        SubcategoryTierTwo subcategoryTierTwo = new SubcategoryTierTwo();
+        subcategoryTierTwo.setName("SubcategoryTierTwo");
+        subcategoryTierTwo.setSubcategory(subcategory);
+        entityManager.persist(subcategoryTierTwo);
+
         BigDecimal price = BigDecimal.valueOf(2699.99);
         Product product = new Product(
                 "Stratocaster",
@@ -271,14 +307,15 @@ public class ProductRepositoryTests {
                 manufacturer,
                 country,
                 category,
-                subcategory
+                subcategory,
+                subcategoryTierTwo
         );
         UUID skuId = UUID.randomUUID();
         product.setProductSkuId(skuId);
         entityManager.persist(product);
 
         BigDecimal maxPrice = productRepository
-                .findMaxProductPrice(category.getId(), country.getName(), manufacturer.getName(), subcategory.getName());
+                .findMaxProductPrice(category.getId(), country.getName(), manufacturer.getName(), subcategory.getName(), subcategoryTierTwo.getName());
 
         Assertions.assertThat(maxPrice).isEqualTo(price);
 

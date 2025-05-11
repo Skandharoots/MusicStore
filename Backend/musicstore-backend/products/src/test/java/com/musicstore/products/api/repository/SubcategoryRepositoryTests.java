@@ -112,6 +112,11 @@ public class SubcategoryRepositoryTests {
         Country country = new Country("USA");
         entityManager.persist(country);
 
+        SubcategoryTierTwo subcategoryTierTwo = new SubcategoryTierTwo();
+        subcategoryTierTwo.setName("SubcategoryTierTwo");
+        subcategoryTierTwo.setSubcategory(subcategory);
+        entityManager.persist(subcategoryTierTwo);
+
         BigDecimal price = new BigDecimal(2669.99);
         Product product = new Product(
                 "Stratocaster",
@@ -121,11 +126,12 @@ public class SubcategoryRepositoryTests {
                 manufacturer,
                 country,
                 category,
-                subcategory
+                subcategory,
+                subcategoryTierTwo
         );
         entityManager.persist(product);
 
-        List<Subcategory> subcats = subcategoryRepository.findAllBySearchParameters(category.getId(), "USA", "Fender");
+        List<Subcategory> subcats = subcategoryRepository.findAllBySearchParameters(category.getId(), "USA", "Fender", "SubcategoryTierTwo");
         Assertions.assertThat(subcats).hasSize(1);
         Assertions.assertThat(subcats.get(0).getName()).isEqualTo("Subcategory");
         Assertions.assertThat(subcats.get(0).getCategory()).isEqualTo(category);

@@ -53,8 +53,8 @@ public class ManufacturerService {
                 );
     }
 
-    public List<Manufacturer> findAllBySearchParameters(Long categoryId, String country, String subcategory) {
-        return manufacturerRepository.findAllBySearchParameters(categoryId, country, subcategory);
+    public List<Manufacturer> findAllBySearchParameters(Long categoryId, String country, String subcategory, String subcategoryTierTwo) {
+        return manufacturerRepository.findAllBySearchParameters(categoryId, country, subcategory, subcategoryTierTwo);
     }
 
     @Transactional

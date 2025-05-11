@@ -34,6 +34,9 @@ public class ManufacturerRespositoryTests {
     private SubcategoryRepository subcategoryRepository;
 
     @Autowired
+    private SubcategoryTierTwoRepository subcategoryTierTwoRepository;
+
+    @Autowired
     private EntityManager entityManager;
 
     @Test
@@ -95,6 +98,11 @@ public class ManufacturerRespositoryTests {
         subcategory.setCategory(category);
         subcategoryRepository.save(subcategory);
 
+        SubcategoryTierTwo subcategoryTierTwo = new SubcategoryTierTwo();
+        subcategoryTierTwo.setName("SubcategoryTierTwo");
+        subcategoryTierTwo.setSubcategory(subcategory);
+        subcategoryTierTwoRepository.save(subcategoryTierTwo);
+
         Product product = new Product(
                 "Stratocaster Player MX",
                 "Something about this guitar",
@@ -103,12 +111,13 @@ public class ManufacturerRespositoryTests {
                 manufacturer,
                 country,
                 category,
-                subcategory
+                subcategory,
+                subcategoryTierTwo
         );
         productRepository.save(product);
         entityManager.flush();
 
-        List<Manufacturer> foundManufacturers = manufacturerRepository.findAllBySearchParameters(category.getId(), "Poland", "Electric");
+        List<Manufacturer> foundManufacturers = manufacturerRepository.findAllBySearchParameters(category.getId(), "Poland", "Electric", "SubcategoryTierTwo");
         Assertions.assertThat(foundManufacturers).isNotEmpty();
         Assertions.assertThat(foundManufacturers.get(0).getName()).isEqualTo("Fender");
 

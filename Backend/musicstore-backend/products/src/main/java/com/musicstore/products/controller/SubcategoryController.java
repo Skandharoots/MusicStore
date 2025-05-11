@@ -65,9 +65,10 @@ public class SubcategoryController {
     public List<Subcategory> getAllBySearchParameters(
             @PathVariable(value = "category") Long categoryId,
             @RequestParam(value = "country") String country,
-            @RequestParam(value = "manufacturer") String manufacturer
+            @RequestParam(value = "manufacturer") String manufacturer,
+            @RequestParam(value = "subcategoryTierTwo") String subcategoryTierTwo
     ) {
-        return subcategoryService.findAllBySearchParameters(categoryId, country, manufacturer);
+        return subcategoryService.findAllBySearchParameters(categoryId, country, manufacturer, subcategoryTierTwo);
     }
 
     @PutMapping("/update/{subcategoryId}")

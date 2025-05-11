@@ -2,6 +2,7 @@ package com.musicstore.products;
 
 import com.musicstore.products.controller.*;
 import com.musicstore.products.service.*;
+import jakarta.inject.Inject;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -44,6 +45,11 @@ class ProductsApplicationTests {
 
 	@InjectMocks
 	private SubcategoryController subcategoryController;
+
+	@Mock
+	private SubcategoryTierTwoService subcategoryTierTwoService;
+
+	@InjectMocks SubcategoryTierTwoController subcategoryTierTwoController;
 
 	@Test
 	void contextLoads() {

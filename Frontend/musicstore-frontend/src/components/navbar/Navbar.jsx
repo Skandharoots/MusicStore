@@ -112,7 +112,7 @@ const StyledSearchButton = styled(IconButton)(({ theme }) => ({
 
 const StyledUserContainer = styled(Box)({
     display: 'flex',
-    width: '500px',
+    width: '400px',
     minHeight: '50px',
     height: 'fit-content',
     padding: 0,
@@ -355,7 +355,7 @@ function Navbar() {
             <Box sx={{ width: '100%', height: 'fit-content', boxSizing: 'border-box', margin: '0', padding: '0' }}>
                 <StyledToolbar disableGutters>
                         <Link component={NavLink} to="/" sx={{ display: 'flex', alignItems: 'center' }}>
-                            <Box component="img" src={logo} alt="Fancy Strings Logo" sx={{ height: '100%', width: '500px' }} />
+                            <Box component="img" src={logo} alt="Fancy Strings Logo" sx={{ height: '100%', width: '400px' }} />
                         </Link>
                         <StyledSearchForm elevation={0} component="form" onSubmit={onSubmitSearch}>
                             <StyledSearchInput

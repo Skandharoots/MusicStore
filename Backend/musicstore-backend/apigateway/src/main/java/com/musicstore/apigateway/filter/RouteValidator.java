@@ -52,7 +52,8 @@ public class RouteValidator {
                         "/azure-svc/v3/api-docs",
                         "/cart-svc/v3/api-docs",
                         "/products-svc/v3/api-docs",
-                        "/opinions-svc/v3/api-docs"
+                        "/opinions-svc/v3/api-docs",
+                        "/favorites-svc/v3/api-docs"
 
         );
 

@@ -198,6 +198,8 @@ springdoc:
         name: API Gateway Service
       - url: /azure-svc/v3/api-docs
         name: Azure Service
+      - url: /invoice-svc/v3/api-docs
+        name: Azure Invoice Service
       - url: /order-svc/v3/api-docs
         name: Order Service
       - url: /products-svc/v3/api-docs
@@ -206,6 +208,10 @@ springdoc:
         name: Shopping Cart Service
       - url: /users-svc/v3/api-docs
         name: User Service
+      - url: /opinions-svc/v3/api-docs
+        name: Opinions Service
+      - url: /favorites-svc/v3/api-docs
+        name: Favorites Service
 management:
   endpoints:
     web:

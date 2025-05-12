@@ -183,8 +183,9 @@ public class SubcategoryTierTwoControllerTests {
         when(subcategoryTierTwoService
                 .findAllBySearchParameters(1L,
                         "USA",
-                        "Fender",
-                        "Acoustic"))
+                        "Acoustic",
+                        "Fender"
+                        ))
                 .thenReturn(subcategories);
 
         mockMvc.perform(get("/api/products/subcategory_tier_two/get/search/{category}?country=USA&manufacturer=Fender&subcategory=Acoustic", 1L))

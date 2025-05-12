@@ -207,10 +207,10 @@ public class ProductRepositoryTests {
 
         BigDecimal lp = new BigDecimal("200.00");
         BigDecimal hp = new BigDecimal("3000.00");
-        Pageable pageable = (Pageable) PageRequest.of(0, 10, Sort.by("productPrice").ascending());
+        Pageable pageable = (Pageable) PageRequest.of(0, 10, Sort.by("product_price").ascending());
 
         Page<Product> foundProducts =
-                productRepository.findAllByCategory_IdAndBuiltinCountry_NameContainingAndManufacturer_NameContainingAndSubcategory_NameContainingAndSubcategoryTierTwo_NameContainingAndProductPriceBetween(
+                productRepository.findAllBySearchParametersAndPrice(
                         category.getId(),
                         country.getName(),
                         manufacturer.getName(),

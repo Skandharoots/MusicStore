@@ -32,6 +32,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.server.ResponseStatusException;
+
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -73,6 +75,8 @@ public class UserServiceTests {
 
     @Mock
     private ObjectMapper objectMapper;
+
+    private BCryptPasswordEncoder myEncoder = new BCryptPasswordEncoder();
 
     @Test
     public void loadUserByUsernameExceptionTest() {
@@ -200,21 +204,24 @@ public class UserServiceTests {
     @Test
     public void updateUserTestReturnsSuccessMessage() {
 
+        String passEnc = myEncoder.encode("testingPassword");
+
         Users user = new Users(
                 "Marek",
                 "Kopania",
                 "test@test.com",
-                "testpasswd",
+                passEnc,
                 UserRole.USER);
-        Optional<Users> userOptional = Optional.of(user);
+
         RegisterRequest registerRequest = new RegisterRequest(
                 "Marek",
                 "Kopania",
                 "test@test.com",
-                "testpasswd");
+                "testingPassword");
 
-        when(userRepository.findByUuid(user.getUuid())).thenReturn(userOptional);
-        when(userRepository.findByEmail(user.getEmail())).thenReturn(userOptional);
+        when(userRepository.findByUuid(user.getUuid())).thenReturn(Optional.of(user));
+        when(bCryptPasswordEncoder.matches(Mockito.anyString(), Mockito.anyString())).thenReturn(true);
+        when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
 
         LoginResponse loginResponse = userService.updateUser(user.getUuid(), registerRequest);
         Assertions.assertThat(loginResponse).isNotNull();
@@ -231,6 +238,31 @@ public class UserServiceTests {
 
         when(userRepository.findByUuid(user.getUuid())).thenReturn(Optional.empty());
         Assertions.assertThatThrownBy(() -> userService.updateUser(user.getUuid(), null)).isNotNull();
+    }
+
+    @Test
+    public void updateUserExceptionInvalidPasswordTest() {
+
+        String passEnc = myEncoder.encode("testingPassword");
+
+        Users user = new Users(
+                "Marek",
+                "Kopania",
+                "test@test.com",
+                passEnc,
+                UserRole.USER);
+
+        RegisterRequest registerRequest = new RegisterRequest(
+                "Marek",
+                "Kopania",
+                "test@test.com",
+                "testingPassword");
+
+        when(userRepository.findByUuid(user.getUuid())).thenReturn(Optional.of(user));
+        when(bCryptPasswordEncoder.matches(Mockito.anyString(), Mockito.anyString())).thenReturn(false);
+        Assertions.assertThatThrownBy(() -> userService.updateUser(user.getUuid(), registerRequest))
+                .isInstanceOf(ResponseStatusException.class)
+                .hasMessageContaining("Unauthorized user update request. Password does not match.");
     }
 
     @Test

@@ -234,7 +234,7 @@ public class ProductServiceTests {
         BigDecimal hp = BigDecimal.valueOf(2699.99);
         BigDecimal lp = BigDecimal.valueOf(100.00);
         when(productRepository
-                .findAllByCategory_IdAndBuiltinCountry_NameContainingAndManufacturer_NameContainingAndSubcategory_NameContainingAndSubcategoryTierTwo_NameContainingAndProductPriceBetween(
+                .findAllBySearchParametersAndPrice(
                 1L,
                         "USA",
                         "Fender",
@@ -246,7 +246,7 @@ public class ProductServiceTests {
 
         )).thenReturn(productsPage1);
         when(productRepository
-                .findAllByCategory_IdAndBuiltinCountry_NameContainingAndManufacturer_NameContainingAndSubcategory_NameContainingAndSubcategoryTierTwo_NameContainingAndProductPriceBetween(
+                .findAllBySearchParametersAndPrice(
                         1L,
                         "USA",
                         "Fender",
@@ -492,8 +492,47 @@ public class ProductServiceTests {
         when(countryService.getCountryById(1L)).thenReturn(country);
         when(manufacturerService.getManufacturerById(1L)).thenReturn(manufacturer);
         when(subcategoryService.getSubcategoryById(1L)).thenReturn(subcategory);
+        when(subcategoryTierTwoService.getSubcategoryTierTwoById(1L)).thenReturn(subcategoryTierTwo);
 
         ResponseEntity<String> response = productService.updateProduct(token, skuId, productRequest);
+
+        Assertions.assertThat(response).isNotNull();
+        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        Assertions.assertThat(response.getBody()).isEqualTo("Product updated");
+
+    }
+
+    @Test
+    public void updateProductNullSubcategoryTierTwoTest() {
+
+        UUID skuId = UUID.randomUUID();
+
+        when(webClientBuilder.build()).thenReturn(webClient);
+        when(webClient.get()).thenReturn(requestHeadersUriSpec);
+        when(requestHeadersUriSpec.uri(variablesConfiguration.getAdminUrl() + token.substring(7))).thenReturn(requestHeadersSpec);
+        when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+        when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
+
+        when(productRepository.findByProductSkuId(skuId)).thenReturn(Optional.of(product));
+        when(categoryService.getCategoryById(1L)).thenReturn(category);
+        when(countryService.getCountryById(1L)).thenReturn(country);
+        when(manufacturerService.getManufacturerById(1L)).thenReturn(manufacturer);
+        when(subcategoryService.getSubcategoryById(1L)).thenReturn(subcategory);
+
+        ProductRequest productRequest2 = new ProductRequest(
+                "Strat",
+                "Desc",
+                BigDecimal.valueOf(2699.99),
+                57,
+                1L,
+                1L,
+                1L,
+                1L,
+                null
+        );
+
+
+        ResponseEntity<String> response = productService.updateProduct(token, skuId, productRequest2);
 
         Assertions.assertThat(response).isNotNull();
         Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);

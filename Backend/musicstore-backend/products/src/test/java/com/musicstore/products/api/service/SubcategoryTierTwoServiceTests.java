@@ -162,6 +162,14 @@ public class SubcategoryTierTwoServiceTests {
     }
 
     @Test
+    public void getSubcategoryTierTwoByIdNotFoundTest() {
+        when(subcategoryTierTwoRepository.findById(1L)).thenReturn(Optional.empty());
+        Assertions.assertThatThrownBy(() -> subcategoryTierTwoService.getSubcategoryTierTwoById(1L))
+                .isInstanceOf(ResponseStatusException.class)
+                .hasMessageContaining("Subcategory tier two not found");
+    }
+
+    @Test
     public void findAllBySearchParametersTest() {
         List<SubcategoryTierTwo> subcategoryTierTwoList = new ArrayList<>();
         subcategoryTierTwoList.add(subcategoryTierTwo);

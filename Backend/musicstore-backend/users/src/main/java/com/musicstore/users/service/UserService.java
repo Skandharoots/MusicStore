@@ -143,17 +143,23 @@ public class UserService implements UserDetailsService {
         @Transactional
         public LoginResponse updateUser(UUID uuid, RegisterRequest request) {
 
-                boolean userExists = userRepository.findByUuid(uuid).isPresent();
+                Optional<Users> user = userRepository.findByUuid(uuid);
 
-                if (!userExists) {
+                if (user.isEmpty()) {
                         log.error("User with id \"" + uuid + "\" not found.");
                         throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                                         "Cannot update user, user not found");
                 }
 
+                if (!bcryptPasswordEncoder.matches(request.getPassword(), user.get().getPassword())) {
+                        log.error("Password does not match for user UUID {}. Account update failed.", uuid);
+                        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,
+                                "Unauthorized user update request. Password does not match.");
+                }
+
                 userRepository.updateUser(uuid, request.getFirstName(),
-                                request.getLastName(), request.getEmail(),
-                                bcryptPasswordEncoder.encode(request.getPassword()));
+                                request.getLastName(), request.getEmail()
+                                );
 
                 var updatedUser = userRepository.findByUuid(uuid);
                 var userDetails = loadUserByUsername(request.getEmail());

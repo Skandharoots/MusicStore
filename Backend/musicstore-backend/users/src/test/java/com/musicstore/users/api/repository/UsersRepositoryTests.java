@@ -81,8 +81,8 @@ public class UsersRepositoryTests {
                 user.getUuid(),
                 "Konrad",
                 "Kurzejamski",
-                "test@test.com",
-                "testpasswd");
+                "test@test.com"
+                );
         testEntityManager.clear();
         Optional<Users> updatedUser = userRepository.findByEmail(savedUser.get().getEmail());
         Assertions.assertThat(updatedUser.isPresent()).isTrue();

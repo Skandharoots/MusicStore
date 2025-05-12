@@ -1,5 +1,16 @@
 import React, {useEffect, useState} from "react";
-import {Alert, AlertTitle, Backdrop, CircularProgress, Box, Button, Typography, Paper, styled} from '@mui/material';
+import {
+    Alert,
+    AlertTitle,
+    Backdrop,
+    CircularProgress,
+    Box,
+    Button,
+    Typography,
+    Paper,
+    styled,
+    useTheme
+} from '@mui/material';
 import CheckIcon from '@mui/icons-material/Check';
 import 'react-toastify/dist/ReactToastify.css';
 import TextField from '@mui/material/TextField';
@@ -30,11 +41,12 @@ const PasswordForm = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
 }));
 
-const StyledAlert = styled(Alert)({
+const StyledAlert = styled(Alert)(({ theme }) => ({
     width: '400px',
     margin: '32px auto 0 auto',
     padding: '0 2%',
-});
+    color: theme.palette.mybutton.colorTwo,
+}));
 
 const StyledButton = styled(Button)(({ theme }) => ({
     width: '70%',
@@ -53,6 +65,7 @@ function PasswordResetRequest() {
     const [showSuccessMsg, setShowSucessMsg] = useState('none');
 
     const navigate = useNavigate();
+    const theme = useTheme();
 
     useEffect(() => {
         document.title = 'Reset password request';

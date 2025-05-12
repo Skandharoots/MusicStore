@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import {Slide, toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {useState} from "react";
-import {Alert, Backdrop, Box, Button, CircularProgress, Typography, Paper, styled} from "@mui/material";
+import {Alert, Backdrop, Box, Button, CircularProgress, Typography, Paper, styled, useTheme} from "@mui/material";
 import axios from "axios";
 import TextField from '@mui/material/TextField';
 import LocalStorageHelper from "../../helpers/LocalStorageHelper";
@@ -78,6 +78,7 @@ function PasswordResetLanding() {
 
     const navigate = useNavigate();
     const param = useParams();
+    const theme=useTheme();
 
     useEffect(() => {
         document.title = 'Reset password';
@@ -106,19 +107,19 @@ function PasswordResetLanding() {
     const showButton = () => {
         if (showRequestButton) {
             return (
-                <Button color="inherit" size="small" onClick={() => navigate('/password')}>
+                <Button color="inherit" size="small" sx={{color: theme.palette.mybutton.colorOne}} onClick={() => navigate('/password')}>
                     Request again
                 </Button>
             )
         } else if (showLoginButton) {
             return (
-                <Button color="inherit" size="small" onClick={() => navigate('/login')}>
+                <Button color="inherit" size="small" sx={{color: theme.palette.mybutton.colorOne}} onClick={() => navigate('/login')}>
                     Login
                 </Button>
             )
         } else {
             return (
-                <Button color="inherit" size="small" onClick={() => navigate('/login')}>
+                <Button color="inherit" size="small" sx={{color: theme.palette.mybutton.colorOne}} onClick={() => navigate('/login')}>
                     Login
                 </Button>
             )
@@ -271,7 +272,7 @@ function PasswordResetLanding() {
                         severity="success"
                         hidden={hideSuccess}
                         action={
-                            <Button color="inherit" size="small" onClick={() => navigate('/login')}>
+                            <Button color="inherit" size="small" sx={{color: theme.palette.mybutton.colorOne}} onClick={() => navigate('/login')}>
                                 LOGIN NOW
                             </Button>
                         }
@@ -292,7 +293,7 @@ function PasswordResetLanding() {
                     hidden={hideCountdown} 
                     variant="body1" 
                     color="black" 
-                    sx={{width: '70%'}}
+                    sx={{width: '70%', color: theme.palette.mybutton.colorOne}}
                 >
                     We&apos;ll redirect you to the login page in - {countDown}
                 </Typography>

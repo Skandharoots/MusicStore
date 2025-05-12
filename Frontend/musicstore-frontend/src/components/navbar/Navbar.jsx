@@ -441,8 +441,8 @@ function Navbar() {
                                 <StyledUserListItem>
                                     <Tooltip title="Login">
                                         <Link component={NavLink} to="/login" sx={{ display: 'flex', alignItems: 'center' }}>
-                                            <Typography variant="body2" sx={{ mr: 1, textAlign: 'left', fontSize: '10px',
- }}>
+                                            <Typography variant="body2" sx={{ mr: 1, textAlign: 'left', fontSize: '12px',
+                                                fontWeight: 'bold'}}>
                                                 Hi!<br/>Log in
                                             </Typography>
                                             <PersonOutlineOutlinedIcon />

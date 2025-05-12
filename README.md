@@ -148,4 +148,37 @@ and change the image locations for your Docker Hub user repositories
 
 ## Useful additional software
 Kube Forwarder - available for download at https://kube-forwarder.pixelpoint.io/ \
-Microsoft Azure Explorer - available for download at https://azure.microsoft.com/en-us/products/storage/storage-explorer
+Microsoft Azure Explorer - available for download at https://azure.microsoft.com/en-us/products/storage/storage-explorer\
+\
+\
+\
+\
+![Screenshot 2025-05-12 at 14-02-38 Fancy Strings](https://github.com/user-attachments/assets/0a37eeeb-8925-48f2-8359-e79daf9a4dce)
+![Screenshot 2025-05-12 at 14-02-52 Guitars](https://github.com/user-attachments/assets/92d39674-ae70-4c1b-a6bb-246bba6c2db6)
+![Screenshot 2025-05-12 at 14-04-04 Place an order](https://github.com/user-attachments/assets/39161c2e-19ff-465a-adde-7362ba6b9daf)
+![Screenshot 2025-05-12 at 14-04-04 Place an order](https://github.com/user-attachments/assets/949842af-c245-42aa-af47-9cc439c08fae)
+
+![Screenshot 2025-05-12 at 14-03-06 Guitars](https://github.com/user-attachments/assets/4a38c68f-7e82-40fa-85c9-f6b5dbfee428)
+![Screenshot 2025-05-12 at 14-04-04 Place an order](https://github.com/user-attachments/assets/5d1e0748-96d3-44aa-bf51-a2fb3311642b)
+![Screenshot 2025-05-12 at 14-04-04 Place an order](https://github.com/user-attachments/assets/ef1466a4-3649-4fcf-b72d-b73d00136fcf)
+![Screenshot 2025-05-12 at 14-04-42 My orders](https://github.com/user-attachments/assets/f5aca09b-850c-4d91-83c3-e82ab77967f8)
+![Screenshot 2025-05-12 at 14-04-55 My orders](https://github.com/user-attachments/assets/97721c7e-f3b5-4695-a34c-20aa01e9c51d)
+![Screenshot 2025-05-12 at 14-05-14 My orders](https://github.com/user-attachments/assets/5c93facb-019b-47fa-8392-ab982bdd8805)
+![Screenshot 2025-05-12 at 14-05-25 My opinions](https://github.com/user-attachments/assets/ac4df52b-8f83-471a-88d4-bdb39fb7bbef)
+![Screenshot 2025-05-12 at 14-05-48 Product - Fender Stratocaster Player Redburst](https://github.com/user-attachments/assets/0caa51f4-d2d4-442a-a193-b7579032b61f)
+![Screenshot 2025-05-12 at 14-06-07 Account Settings](https://github.com/user-attachments/assets/2a1a9774-5443-41e2-b58e-e0fbc1502360)
+![Screenshot 2025-05-12 at 14-06-17 Account Settings](https://github.com/user-attachments/assets/b612e828-724c-4dd7-853f-786c9fb9095a)
+![Screenshot 2025-05-12 at 14-06-27 Account Settings](https://github.com/user-attachments/assets/a17b74a0-5331-4680-adbc-a4c40cf8ce49)
+![Screenshot 2025-05-12 at 14-06-50 Fancy Strings](https://github.com/user-attachments/assets/22f62073-b823-4c30-ae3c-8aa728556cc8)
+![Screenshot 2025-05-12 at 14-07-08 Manufacturer management](https://github.com/user-attachments/assets/1ce4e5f5-56bd-423d-838f-f9eea605ea77)
+![Screenshot 2025-05-12 at 14-07-24 Orders management](https://github.com/user-attachments/assets/89595f23-0764-4083-910f-c123e2361cf3)
+![Screenshot 2025-05-12 at 14-08-02 Orders management](https://github.com/user-attachments/assets/bf76db00-e19d-413c-a073-d830bfde6bf2)
+![Screenshot 2025-05-12 at 14-08-21 Product management](https://github.com/user-attachments/assets/d491ac5e-f5cc-4b04-b907-008d2a645b34)
+![Screenshot 2025-05-12 at 14-08-31 Edit Product](https://github.com/user-attachments/assets/2c91dbda-6ddc-4b4f-8d5d-4fec57268536)
+![Screenshot 2025-05-12 at 14-08-57 Product management](https://github.com/user-attachments/assets/9e53c129-be5c-43c6-813d-a8a4b71f7039)
+![Screenshot 2025-05-12 at 14-09-17 Product search - a](https://github.com/user-attachments/assets/4fb3c365-c3c6-45d8-a138-46d5852d1c7f)
+![Screenshot 2025-05-12 at 14-12-41 Swagger UI](https://github.com/user-attachments/assets/e93885eb-b0b3-46a9-a178-6ec1ff896d7a)
+![Screenshot 2025-05-12 at 14-13-01 Eureka](https://github.com/user-attachments/assets/5010af64-dd9b-4f9e-890f-24ec25c24363)
+![Screenshot 2025-05-12 at 14-14-30 Explore - Loki - Grafana](https://github.com/user-attachments/assets/f5fdb813-7392-4ea7-8c81-7b5483b93c02)
+![Screenshot 2025-05-12 at 14-15-39 Spring Boot Statistics - Dashboards - Grafana](https://github.com/user-attachments/assets/d727f5c4-3552-4276-8fef-e36b339ba256)
+![Screenshot 2025-05-12 at 14-15-52 Spring Boot Statistics - Dashboards - Grafana](https://github.com/user-attachments/assets/88f648a3-6f1c-4ef4-a6d9-8af61e788c72)

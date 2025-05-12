@@ -175,6 +175,7 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
 
 const StyledFormControl = styled(FormControl)(({ theme }) => ({
     color: theme.palette.text.primary,
+    width: '100%',
     "& label.Mui-focused": {
         color: 'rgb(39, 99, 24)'
     },
@@ -213,8 +214,6 @@ function ProductsPage() {
     const [sliderMaxValue, setSliderMaxValue] = useState(1);
     const [lowPrice, setLowPrice] = useState(0);
     const [highPrice, setHighPrice] = useState(100000);
-
-
     const [openBackdrop, setOpenBackdrop] = useState(false);
 
     const categoryId = useParams();
@@ -298,6 +297,7 @@ function ProductsPage() {
             }
         }).then((response) => {
             setSubcategoriesTierTwo(response.data);
+            (response.data.length > 0 && selectedSubcategoryName !== '') ? setDisableSubcategory(true) : setDisableSubcategory(false);
         }).catch(() => {});
     }, [selectedSubcategoryName, selectedCountryName, selectedManufacturerName, categoryId.categoryId]);
 
@@ -387,31 +387,54 @@ function ProductsPage() {
                         <Typography variant="h6" sx={{ margin: '4px 0' }}>Subcategories</Typography>
                         <StyledButton
                             endIcon={<CloseOutlinedIcon fontSize="small"/>}
-                            onClick={() => {setSelectedSubcategoryName(''); setDisableSubcategory(false)}}
+                            onClick={() => {setSelectedSubcategoryName(''); setSelectedSubcategoryTierTwoName('');}}
                         >
                             Clear
                         </StyledButton>
                     </Box>
                     <StyledFormControl>
-                        <RadioGroup
-                            value={selectedSubcategoryName}
-                            onChange={e => {setSelectedSubcategoryName(e.target.value); setDisableSubcategory(true)}}
-                            name="radio-buttons-subcategory"
+                        <Box
+                            sx={{
+                                maxHeight: '200px',
+                                height: 'fit-content',
+                                width: '100%',
+                                scrollbarWidth: '1px',
+                                scrollbarGutterWidth: '1px',
+                                overflow: 'hidden',
+                                overflowY: 'auto',
+                                scrollbarColor: theme.palette.irish.main + ' ' + theme.palette.background.paper,
+                                '&::-webkit-scrollbar': {
+                                    width: '5px !important',
+                                },
+                                '&::-webkit-scrollbar-track': {
+                                    backgroundColor: theme.palette.background.paper + ' !important',
+                                    borderRadius: '180px',
+                                },
+                                '&::-webkit-scrollbar-thumb': {
+                                    backgroundColor: theme.palette.irish.main + ' !important',
+                                    borderRadius: '180px !important',
+                                }
+                            }}
                         >
-                            {[...subcategories].map((subcat, index) => (
-                                <FormControlLabel
-                                    disabled={disableSubcategory}
-                                    value={subcat.name}
-                                    key={subcat.id}
-                                    id={index}
-                                    control={<Radio size={"small"} color="success"/>}
-                                    label={<Typography variant="body2" color="textSecondary">{subcat.name}</Typography>}
-                                />
-                            ))}
-                        </RadioGroup>
+                            <RadioGroup
+                                value={selectedSubcategoryName}
+                                onChange={e => {setSelectedSubcategoryName(e.target.value);}}
+                                name="radio-buttons-subcategory"
+                            >
+                                {[...subcategories].map((subcat, index) => (
+                                    <FormControlLabel
+                                        value={subcat.name}
+                                        key={subcat.id}
+                                        id={index}
+                                        control={<Radio size={"small"} color="success"/>}
+                                        label={<Typography variant="body2" color="textSecondary">{subcat.name}</Typography>}
+                                    />
+                                ))}
+                            </RadioGroup>
+                        </Box>
                     </StyledFormControl>
                 </RibbonSection>
-                {(disableSubcategory && subcategoriesTierTwo.length > 0) && (
+                {disableSubcategory && (
                         <RibbonSection>
                             <Box sx={{
                                 display: "flex",
@@ -429,23 +452,47 @@ function ProductsPage() {
                                     Clear
                                 </StyledButton>
                             </Box>
-                            <StyledFormControl>
-                                <RadioGroup
-                                    value={selectedSubcategoryTierTwoName}
-                                    onChange={e => {setSelectedSubcategoryTierTwoName(e.target.value)}}
-                                    name="radio-buttons-subcategory"
-                                >
-                                    {[...subcategoriesTierTwo].map((subcat, index) => (
-                                        <FormControlLabel
-                                            value={subcat.name}
-                                            key={subcat.id}
-                                            id={index}
-                                            control={<Radio size={"small"} color="success"/>}
-                                            label={<Typography variant="body2" color="textSecondary">{subcat.name}</Typography>}
-                                        />
-                                    ))}
-                                </RadioGroup>
-                            </StyledFormControl>
+                            <Box
+                                sx={{
+                                    maxHeight: '200px',
+                                    height: 'fit-content',
+                                    width: '100%',
+                                    scrollbarWidth: '1px',
+                                    scrollbarGutterWidth: '1px',
+                                    overflow: 'hidden',
+                                    overflowY: 'auto',
+                                    scrollbarColor: theme.palette.irish.main + ' ' + theme.palette.background.paper,
+                                    '&::-webkit-scrollbar': {
+                                        width: '5px !important',
+                                    },
+                                    '&::-webkit-scrollbar-track': {
+                                        backgroundColor: theme.palette.background.paper + ' !important',
+                                        borderRadius: '180px',
+                                    },
+                                    '&::-webkit-scrollbar-thumb': {
+                                        backgroundColor: theme.palette.irish.main + ' !important',
+                                        borderRadius: '180px !important',
+                                    }
+                                }}
+                            >
+                                <StyledFormControl>
+                                    <RadioGroup
+                                        value={selectedSubcategoryTierTwoName}
+                                        onChange={e => {setSelectedSubcategoryTierTwoName(e.target.value)}}
+                                        name="radio-buttons-subcategory"
+                                    >
+                                        {[...subcategoriesTierTwo].map((subcat, index) => (
+                                            <FormControlLabel
+                                                value={subcat.name}
+                                                key={subcat.id}
+                                                id={index}
+                                                control={<Radio size={"small"} color="success"/>}
+                                                label={<Typography variant="body2" color="textSecondary">{subcat.name}</Typography>}
+                                            />
+                                        ))}
+                                    </RadioGroup>
+                                </StyledFormControl>
+                            </Box>
                         </RibbonSection>
                 )
                 }
@@ -464,23 +511,47 @@ function ProductsPage() {
                             Clear
                         </StyledButton>
                     </Box>
-                    <StyledFormControl>
-                        <RadioGroup
-                            value={selectedManufacturerName}
-                            onChange={e => setSelectedManufacturerName(e.target.value)}
-                            name="radio-buttons-manufacturer"
-                        >
-                            {[...manufacturers].map((man, index) => (
-                                <FormControlLabel
-                                    value={man.name}
-                                    key={man.id}
-                                    id={index}
-                                    control={<Radio size={"small"} color="success"/>}
-                                    label={<Typography variant="body2" color="textSecondary">{man.name}</Typography>}
-                                />
-                            ))}
-                        </RadioGroup>
-                    </StyledFormControl>
+                    <Box
+                        sx={{
+                            maxHeight: '200px',
+                            height: 'fit-content',
+                            width: '100%',
+                            scrollbarWidth: '1px',
+                            scrollbarGutterWidth: '1px',
+                            overflow: 'hidden',
+                            overflowY: 'auto',
+                            scrollbarColor: theme.palette.irish.main + ' ' + theme.palette.background.paper,
+                            '&::-webkit-scrollbar': {
+                                width: '5px !important',
+                            },
+                            '&::-webkit-scrollbar-track': {
+                                backgroundColor: theme.palette.background.paper + ' !important',
+                                borderRadius: '180px',
+                            },
+                            '&::-webkit-scrollbar-thumb': {
+                                backgroundColor: theme.palette.irish.main + ' !important',
+                                borderRadius: '180px !important',
+                            }
+                        }}
+                    >
+                        <StyledFormControl>
+                            <RadioGroup
+                                value={selectedManufacturerName}
+                                onChange={e => setSelectedManufacturerName(e.target.value)}
+                                name="radio-buttons-manufacturer"
+                            >
+                                {[...manufacturers].map((man, index) => (
+                                    <FormControlLabel
+                                        value={man.name}
+                                        key={man.id}
+                                        id={index}
+                                        control={<Radio size={"small"} color="success"/>}
+                                        label={<Typography variant="body2" color="textSecondary">{man.name}</Typography>}
+                                    />
+                                ))}
+                            </RadioGroup>
+                        </StyledFormControl>
+                    </Box>
                 </RibbonSection>
                 <RibbonSection>
                     <Box sx={{
@@ -497,23 +568,47 @@ function ProductsPage() {
                             Clear
                         </StyledButton>
                     </Box>
-                    <StyledFormControl>
-                        <RadioGroup
-                            value={selectedCountryName}
-                            onChange={e => setSelectedCountryName(e.target.value)}
-                            name="radio-buttons-manufacturer"
-                        >
-                            {[...countries].map((count, index) => (
-                                <FormControlLabel
-                                    value={count.name}
-                                    key={count.id}
-                                    id={index}
-                                    control={<Radio size={"small"} color="success"/>}
-                                    label={<Typography variant="body2" color="textSecondary">{count.name}</Typography>}
-                                />
-                            ))}
-                        </RadioGroup>
-                    </StyledFormControl>
+                    <Box
+                        sx={{
+                            maxHeight: '200px',
+                            height: 'fit-content',
+                            width: '100%',
+                            scrollbarWidth: '1px',
+                            scrollbarGutterWidth: '1px',
+                            overflow: 'hidden',
+                            overflowY: 'auto',
+                            scrollbarColor: theme.palette.irish.main + ' ' + theme.palette.background.paper,
+                            '&::-webkit-scrollbar': {
+                                width: '5px !important',
+                            },
+                            '&::-webkit-scrollbar-track': {
+                                backgroundColor: theme.palette.background.paper + ' !important',
+                                borderRadius: '180px',
+                            },
+                            '&::-webkit-scrollbar-thumb': {
+                                backgroundColor: theme.palette.irish.main + ' !important',
+                                borderRadius: '180px !important',
+                            }
+                        }}
+                    >
+                        <StyledFormControl>
+                            <RadioGroup
+                                value={selectedCountryName}
+                                onChange={e => setSelectedCountryName(e.target.value)}
+                                name="radio-buttons-manufacturer"
+                            >
+                                {[...countries].map((count, index) => (
+                                    <FormControlLabel
+                                        value={count.name}
+                                        key={count.id}
+                                        id={index}
+                                        control={<Radio size={"small"} color="success"/>}
+                                        label={<Typography variant="body2" color="textSecondary">{count.name}</Typography>}
+                                    />
+                                ))}
+                            </RadioGroup>
+                        </StyledFormControl>
+                    </Box>
                 </RibbonSection>
                 <RibbonSection>
                     <Typography variant="h6" sx={{ margin: '4px 0' }}>Price range</Typography>

@@ -52,7 +52,7 @@ const StyledAppBar = styled(AppBar)(({ theme }) => ({
 
 const StyledToolbar = styled(Toolbar)({
     minHeight: '10dvh',
-    padding: '1% 10%',
+    padding: '2% 5%',
     width: '100%',
     display: 'flex',
     flexWrap: 'wrap',

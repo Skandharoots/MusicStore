@@ -171,7 +171,7 @@ function ProductItem(props) {
         }).catch(() => {
             setRating(0);
         });
-    }, [props]);
+    }, [props.item]);
 
     const handleClickOpen = (event) => {
         event.preventDefault();
@@ -383,7 +383,7 @@ function ProductItem(props) {
                     transition: Slide,
                 })
             })
-    }, [])
+    }, [props.item.productSkuId])
 
     useEffect(() => {
         if (props.item.inStock === 0) {
@@ -392,7 +392,7 @@ function ProductItem(props) {
         } else {
             setOpacity(1);
         }
-    }, [])
+    }, [props.item.inStock])
 
     const handleClickFavorites = (e) => {
         e.preventDefault();

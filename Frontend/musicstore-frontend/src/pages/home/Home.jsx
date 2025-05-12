@@ -106,7 +106,7 @@ function Home() {
 
     useEffect(() => {
         setOpenBackdrop(true);
-        axios.get('api/products/items/get?page=0&pageSize=8', {})
+        axios.get('api/products/items/get?page=0&pageSize=9', {})
         .then(res => {
             setNewestProducts(res.data.content);
             setOpenBackdrop(false);
@@ -118,7 +118,7 @@ function Home() {
 
     useEffect(() => {
         setOpenBackdrop(true);
-        axios.get('api/products/items/get/bought_count/top?page=0&pageSize=8', {})
+        axios.get('api/products/items/get/bought_count/top?page=0&pageSize=9', {})
         .then(res => {
             setTopBouthProducts(res.data.content);
             setOpenBackdrop(false);
@@ -145,9 +145,10 @@ function Home() {
                             margin: 0,
                             fontStyle: 'italic',
                             fontWeight: 'normal',
+                            textAlign: 'center',
                         }}
                     >
-                        Welcome to Fancy Strings! Discover our products or try them out yourself in our store.
+                        Welcome to Fancy Strings!<br/>Discover our products or try them out yourself in our store.
                     </Typography>
                 </TopBannerHeader>
             </TopBannerContainer>

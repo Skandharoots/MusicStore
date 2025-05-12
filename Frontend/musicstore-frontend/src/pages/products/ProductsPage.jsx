@@ -260,7 +260,7 @@ function ProductsPage() {
                 subcategoryTierTwo: selectedSubcategoryTierTwoName
             }
         }).then((response) => {
-                setSubcategories(response.data);
+                setSubcategories(response.data.sort((a, b) => a.name.localeCompare(b.name)));
             }).catch(() => {});
     }, [selectedManufacturerName, selectedCountryName, selectedSubcategoryTierTwoName, categoryId.categoryId]);
 
@@ -272,7 +272,7 @@ function ProductsPage() {
                 subcategoryTierTwo: selectedSubcategoryTierTwoName
             }
         }).then((response) => {
-                setCountries(response.data);
+                setCountries(response.data.sort((a, b) => a.name.localeCompare(b.name)));
             }).catch(() => {});
     }, [selectedSubcategoryName, selectedManufacturerName, selectedSubcategoryTierTwoName, categoryId.categoryId]);
 
@@ -284,7 +284,7 @@ function ProductsPage() {
                 subcategoryTierTwo: selectedSubcategoryTierTwoName
             }
         }).then((response) => {
-                setManufacturers(response.data);
+                setManufacturers(response.data.sort((a, b) => a.name.localeCompare(b.name)));
             }).catch(() => {});
     }, [selectedSubcategoryName, selectedCountryName, selectedSubcategoryTierTwoName, categoryId.categoryId]);
 
@@ -296,7 +296,7 @@ function ProductsPage() {
                 manufacturer: selectedManufacturerName,
             }
         }).then((response) => {
-            setSubcategoriesTierTwo(response.data);
+            setSubcategoriesTierTwo(response.data.sort((a, b) => a.name.localeCompare(b.name)));
             (response.data.length > 0 && selectedSubcategoryName !== '') ? setDisableSubcategory(true) : setDisableSubcategory(false);
         }).catch(() => {});
     }, [selectedSubcategoryName, selectedCountryName, selectedManufacturerName, categoryId.categoryId]);

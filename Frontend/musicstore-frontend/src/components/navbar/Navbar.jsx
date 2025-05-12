@@ -124,6 +124,8 @@ const StyledUserList = styled(List)({
     display: 'flex',
     flexWrap: 'wrap',
     alignItems: 'center',
+    fontSize: '14px',
+    fontWeight: 'bold',
     justifyContent: 'center',
     margin: 0,
     padding: 0,
@@ -138,7 +140,7 @@ const StyledUserListItem = styled(ListItem)(({ theme }) => ({
     justifyContent: 'center',
     alignItems: 'center',
     width: 'fit-content',
-    fontSize: '12px',
+    fontSize: '14px',
     fontWeight: 'bold',
     minWidth: '20px',
     minHeight: '0',
@@ -380,7 +382,7 @@ function Navbar() {
                                         onClick={handleClick}
                                         endIcon={<PersonOutlineOutlinedIcon />}
                                     >
-                                        <Typography variant="body2" sx={{ maxWidth: '50px', overflow: 'hidden', fontSize: '10px',
+                                        <Typography variant="body2" sx={{ maxWidth: '50px', overflow: 'hidden', fontSize: '12px', fontWeight: 'bold',
  }}>
                                             Hi,<br/>{userName}
                                         </Typography>
@@ -397,7 +399,7 @@ function Navbar() {
                                                     width: "180px",
                                                     marginTop: "2px",
                                                     padding: '4px',
-                                                    fontSize: '10px',
+                                                    fontSize: '14px',
                                                 }
                                             },
                                         }}
@@ -473,7 +475,7 @@ function Navbar() {
                                 <StyledUserListItem>
                                     <Tooltip title="Admin panel">
                                         <Link component={NavLink} to="/admin/category" sx={{ display: 'flex', alignItems: 'center', textDecoration: 'none', "&:hover": { textDecoration: 'none' } }}>
-                                            <Typography variant="body2" sx={{ mr: 1, fontSize: '10px' }}>
+                                            <Typography variant="body2" sx={{ mr: 1, fontSize: '12px', fontWeight: 'bold' }}>
                                                 Admin<br/>panel
                                             </Typography>
                                             <AdminPanelSettingsOutlinedIcon fontSize='small'/>

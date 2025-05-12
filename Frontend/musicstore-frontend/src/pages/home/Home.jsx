@@ -6,7 +6,7 @@ import {
     Box,
     Paper,
     Typography,
-    styled
+    styled, useTheme
 } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import ProductItem from "./components/ProductItem.jsx";
@@ -30,7 +30,7 @@ const TopBannerContainer = styled(Paper)(({ theme }) => ({
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
-    maxWidth: '796px',
+    maxWidth: '816px',
     height: 'fit-content',
     borderRadius: '1em',
     boxSizing: 'border-box',
@@ -64,7 +64,7 @@ const NewestSection = styled(Paper)(({ theme }) => ({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    width: '796px',
+    width: '816px',
     height: 'fit-content',
     boxShadow: '0 5px 15px rgba(0, 0, 0, 0.1)',
     boxSizing: 'border-box',
@@ -85,7 +85,7 @@ const TopBoughtSection = styled(Paper)(({ theme }) => ({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    width: '796px',
+    width: '816px',
     height: 'fit-content',
     boxShadow: '0 5px 15px rgba(0, 0, 0, 0.1)',
     boxSizing: 'border-box',
@@ -100,13 +100,15 @@ function Home() {
     const [topBouthProducts, setTopBouthProducts] = useState([]);
     const [openBackdrop, setOpenBackdrop] = useState(false);
 
+    const theme = useTheme();
+
     useEffect(() => {
         document.title = 'Fancy Strings';
     }, []);
 
     useEffect(() => {
         setOpenBackdrop(true);
-        axios.get('api/products/items/get?page=0&pageSize=9', {})
+        axios.get('api/products/items/get?page=0&pageSize=8', {})
         .then(res => {
             setNewestProducts(res.data.content);
             setOpenBackdrop(false);
@@ -118,7 +120,7 @@ function Home() {
 
     useEffect(() => {
         setOpenBackdrop(true);
-        axios.get('api/products/items/get/bought_count/top?page=0&pageSize=9', {})
+        axios.get('api/products/items/get/bought_count/top?page=0&pageSize=8', {})
         .then(res => {
             setTopBouthProducts(res.data.content);
             setOpenBackdrop(false);
@@ -166,19 +168,42 @@ function Home() {
                             Newest additions
                         </Typography>
                     </SectionTitle>
-                    <Grid
-                        container
+                    <Box
                         sx={{
-                            boxSizing: 'border-box',
                             width: '100%',
+                            height: '360px',
+                            padding: '8px',
+                            overflow: 'hidden',
+                            overflowX: 'auto',
+                            scrollbarColor: theme.palette.irish.main + ' ' + theme.palette.background.paper,
+                            '&::-webkit-scrollbar': {
+                                width: '5px !important',
+                            },
+                            '&::-webkit-scrollbar-track': {
+                                backgroundColor: theme.palette.background.paper + ' !important',
+                                borderRadius: '180px',
+                            },
+                            '&::-webkit-scrollbar-thumb': {
+                                backgroundColor: theme.palette.irish.main + ' !important',
+                                borderRadius: '180px !important',
+                            }
                         }}
-                        rowSpacing={2.7}
-                        columnSpacing={2.7}
                     >
-                        {newestProducts.map((product) => (
-                            <ProductItem key={product.id} id={product.id} item={product} />
-                        ))}
-                    </Grid>
+                        <Grid
+                            container
+                            sx={{
+                                boxSizing: 'border-box',
+                                width: '2072px',
+                                height: '340px',
+
+                            }}
+                            columnSpacing={2.7}
+                        >
+                            {newestProducts.map((product) => (
+                                <ProductItem key={product.id} id={product.id} item={product} />
+                            ))}
+                        </Grid>
+                    </Box>
                 </NewestSection>
                 <TopBoughtSection>
                     <SectionTitle>
@@ -192,19 +217,42 @@ function Home() {
                             Top picks
                         </Typography>
                     </SectionTitle>
-                    <Grid
-                        container
+                    <Box
                         sx={{
-                            boxSizing: 'border-box',
                             width: '100%',
+                            height: '360px',
+                            padding: '8px',
+                            overflow: 'hidden',
+                            overflowX: 'auto',
+                            scrollbarColor: theme.palette.irish.main + ' ' + theme.palette.background.paper,
+                            '&::-webkit-scrollbar': {
+                                width: '5px !important',
+                            },
+                            '&::-webkit-scrollbar-track': {
+                                backgroundColor: theme.palette.background.paper + ' !important',
+                                borderRadius: '180px',
+                            },
+                            '&::-webkit-scrollbar-thumb': {
+                                backgroundColor: theme.palette.irish.main + ' !important',
+                                borderRadius: '180px !important',
+                            }
                         }}
-                        rowSpacing={2.7}
-                        columnSpacing={2.7}
                     >
-                        {topBouthProducts.map((product) => (
-                            <ProductItem key={product.id + 1000} id={product.id + 1000} item={product} />
-                        ))}
-                    </Grid>
+                        <Grid
+                            container
+                            sx={{
+                                boxSizing: 'border-box',
+                                width: '2072px',
+                                height: '340px',
+                            }}
+                            rowSpacing={2.7}
+                            columnSpacing={2.7}
+                        >
+                            {topBouthProducts.map((product) => (
+                                <ProductItem key={product.id + 1000} id={product.id + 1000} item={product} />
+                            ))}
+                        </Grid>
+                    </Box>
                 </TopBoughtSection>
             </HomeWrapper>
         </StyledHome>

@@ -307,6 +307,10 @@ function App() {
                 main: 'rgb(11,108,128)',
                 light: 'rgb(16,147,177)',
             },
+            downloadBtn: {
+                main: 'rgb(117,31,131)',
+                light: 'rgb(174,68,189)',
+            },
             account: {
                 main: 'rgb(0, 0, 0)',
                 dark: 'rgb(255, 255, 255)',

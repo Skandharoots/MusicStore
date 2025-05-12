@@ -460,7 +460,7 @@ function AddProduct() {
             .then((response) => {
                 setOpenBackdrop(true);
                 let id = null;
-                selectedSubcategoryTierTwoId === '' ? id = null : id = selectedSubcategoryId;
+                selectedSubcategoryTierTwoId === '' ? id = null : id = selectedSubcategoryTierTwoId;
                 axios.post('api/products/items/create',
                     {
                         productName: productName,

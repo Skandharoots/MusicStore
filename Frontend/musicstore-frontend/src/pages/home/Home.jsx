@@ -10,6 +10,8 @@ import {
 } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import ProductItem from "./components/ProductItem.jsx";
+import {Gallery} from "./components/Gallery.jsx";
+import banner from "../../assets/shure_100_years.webp";
 
 const StyledHome = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -35,6 +37,7 @@ const TopBannerContainer = styled(Paper)(({ theme }) => ({
     borderRadius: '1em',
     boxSizing: 'border-box',
     padding: '2%',
+    marginBottom: '32px',
     boxShadow: '0 5px 15px rgba(0, 0, 0, 0.1)',
     backgroundColor: theme.palette.background.paper,
 }));
@@ -55,7 +58,6 @@ const HomeWrapper = styled(Box)({
     justifyContent: 'flex-start',
     height: 'fit-content',
     boxSizing: 'border-box',
-    marginTop: '32px',
     width: '100%',
 });
 
@@ -99,12 +101,22 @@ function Home() {
     const [newestProducts, setNewestProducts] = useState([]);
     const [topBouthProducts, setTopBouthProducts] = useState([]);
     const [openBackdrop, setOpenBackdrop] = useState(false);
+    const [images, setImages] = useState([]);
 
     const theme = useTheme();
 
     useEffect(() => {
         document.title = 'Fancy Strings';
     }, []);
+
+    useEffect(() => {
+        let imgs = [];
+        imgs.push("https://thumbs.static-thomann.de/thumb//txteaser1000--56ff9b8b88b7dcea9b0f8bfcaff252d7/pics/cms/image/teasertool/en/14073/best_of_lighting_equipment.webp?d=ODRDS2RHVml0RU5send1YlB6T0hFZk1abkRXRFlzd0VxSUdLMjZQUi8vVlpNNFppV2lPOGNIbVRoUzZ6aDlSNCswZllhT3ZlY1FNUDNQOUc4eDBKZ2hUNXJhMHpXaHI5QW1UVkM0S2RSUkN2QWQxK2lSV3VpOW5uMjlMUHNPOXlnUnAxdkVBNFpLL3VMTEFoMjBYb1ZxUEsyZE9lRnVrQysraTFuQURobDJmOXk3bEZjY083aXliTlEyQUpZZExjVEUrbG5RQWlXVGF5UnRrSStrR1hNY3k0YmhKa3BXNGJzNEhCTkJyaDdUZWdYdTllWEVPRTJJelJrcVpOTVlxMzIybnBnakltZ3BNNFU3WWlwV2s2NlpaU0hPTVhaM210WWdvT2hqYzdiMDZiYjB5cXNlVEx6czVIRUZvd2pubmtURGtuTFdHK0paZz0%3D");
+        imgs.push("https://thumbs.static-thomann.de/thumb//txteaser1000--ae7b16f7d68b76d9d1207677c7fd7e95/pics/cms/image/teasertool/en/14073/shure_100_years.webp?d=OWpURE1BSndueFZJMUlOOHJ5VUhEUE1abkRXRFlzd0VuQVowVEpWazNJR0hZN3pqS0Iya2ZIbVRoUzZ6aDlSNCswZllhT3ZlY1FNUDNQOUc4eDBKZ2hUNXJhMHpXaHI5QW1UVkM0S2RSUkFGU3FHR0hWTlR1ZG5uMjlMUHNPOXlnUnAxdkVBNFpLL3VMTEFoMjBYb1ZxUEsyZE9lRnVrQ0l3Y24rWjhyaXFjY3J5ZVMyLzdleW03UGxrbHNpeUl5YUlaY2tseThVOTIvR1I0bUw0RXhpd2FZQ1F1bXZzM0R3TDdRNDZuTldDOEV4ejVyOHVVNS95TzA5UTBsZWE0WHcvbHVlNXFpVk1xVEFpZWJCQU55WnJBemJvZWdDdkR0VzU0QURrbmFKMWZLTWhxZVo0VFpTSElrM21zd2tRNlg%3D");
+        imgs.push("https://thumbs.static-thomann.de/thumb//txteaser1000--8cf6819b7ed5339a6189bfd13baa02c1/pics/cms/image/teasertool/en/14073/best_of_pa_speakers.webp?d=V3E5ZVBpdnVHRCttTjVLTlMwQitmR2d0bGE1WVNzTUVZT1NZMEJZRVNKTHpHWncxZzJMTUJNU1pWSlpQK1JHVXNvbHdLV3o2cHhaNWs0VXVzNGZVZVB0SDJHanIzbkVERDl6L1J2TWRDWUlVK2EydE0xb2EvUUprMVF1Q25VVVFyd0hkZm9rVnJvdlo1OXZTejdEdmNvRWFkYnhBT0dTdjdpeXdJZHRGNkZic1Y4aXRKdDdYN21CMk9kYllrMHhnTitXZXNtMkxCTkc2VkwwL2g4MGp4VlNPa2twZkN5djFWYjJMN0ZSZk02Rm1UNWdaQlJINm02L21CbDVPMEtuWnNnR25wSU5xUjJiL2JYd2VNM3Faa3FpQml0dWowZi8xWVpLcFJSRTM0NmZYQXBLc2FUbW8rNEZLb3lQYXdwWXRBdDFoN1NVQ3VpND0%3D");
+        imgs.push("https://thumbs.static-thomann.de/thumb/thumb1000x/pics/cms/image/teasertool/en/14073/synth_days_2025_en.webp");
+        setImages(imgs);
+    }, [])
 
     useEffect(() => {
         setOpenBackdrop(true);
@@ -154,7 +166,20 @@ function Home() {
                     </Typography>
                 </TopBannerHeader>
             </TopBannerContainer>
-
+            <TopBannerContainer>
+                <Box
+                    sx={{
+                        maxWidth: '100%',
+                        width: 'fit-content',
+                        maxHeight: '300px',
+                        aspectRatio: '21/9',
+                        flexGrow: 0,
+                        flexShrink: 0,
+                    }}
+                >
+                    <Gallery imageBinaries={images} />
+                </Box>
+            </TopBannerContainer>
             <HomeWrapper>
                 <NewestSection>
                     <SectionTitle>

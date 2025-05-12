@@ -78,6 +78,7 @@ const SearchButton = styled(IconButton)(({theme}) => ({
     width: '40px',
     height: '40px',
     margin: 'auto -10px',
+    color: 'white',
     zIndex: 1,
     backgroundColor: theme.palette.irish.main,
     border: '1px solid ' + theme.palette.irish.main,

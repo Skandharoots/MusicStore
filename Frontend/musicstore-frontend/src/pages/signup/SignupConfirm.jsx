@@ -1,6 +1,7 @@
 import {Alert, Box, Button, Typography, styled} from "@mui/material";
 import {useNavigate, useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
+import LocalStorageHelper from "../../helpers/LocalStorageHelper.jsx";
 import axios from "axios";
 
 const SignupConfirmContainer = styled(Box)(({ theme }) => ({

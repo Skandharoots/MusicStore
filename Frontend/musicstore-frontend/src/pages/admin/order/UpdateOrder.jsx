@@ -17,7 +17,7 @@ import {
     TextField,
     Stepper,
     Step,
-    StepLabel
+    StepLabel, useTheme
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import {format} from "date-fns";
@@ -204,6 +204,7 @@ function UpdateOrder() {
 
     const iden = useParams();
 
+    const theme = useTheme();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -450,8 +451,8 @@ function UpdateOrder() {
             setPdfFileErrorMessage('Please enter a well formed file name. It should only contain the following pattern: FS_23_02_2024_askdj-asd23-asd23-djdkls56');
             isValid = false;
         } else {
-            setProductNameError(false);
-            setProductNameErrorMsg('');
+            setPdfFileError(false);
+            setPdfFileErrorMessage('');
         }
 
         if (pdfFile.length <= 0) {
@@ -914,8 +915,8 @@ function UpdateOrder() {
                             sx={{
                                 width: '100%',
                                 color: 'white',
-                                backgroundColor: 'rgb(17, 128, 138)',
-                                "&:hover": {backgroundColor: 'rgb(18, 154, 167)'}
+                                backgroundColor: theme.palette.blueBtn.main,
+                                "&:hover": {backgroundColor: theme.palette.blueBtn.light}
                             }}
                         >
                             Upload Pdf
@@ -950,8 +951,8 @@ function UpdateOrder() {
                                 sx={{
                                     width: '47%',
                                     color: 'white',
-                                    backgroundColor: 'rgb(159, 20, 20)',
-                                    "&:hover": {backgroundColor: 'rgb(193, 56, 56)'}
+                                    backgroundColor: theme.palette.errorBtn.main,
+                                    "&:hover": {backgroundColor: theme.palette.errorBtn.light}
                                 }}
                             >
                                 Delete
@@ -969,8 +970,8 @@ function UpdateOrder() {
                                 sx={{
                                     width: generateWidth(),
                                     color: 'white',
-                                    backgroundColor: 'rgb(94, 48, 89)',
-                                    "&:hover": {backgroundColor: 'rgb(127, 79, 121)'}
+                                    backgroundColor: theme.palette.downloadBtn.main,
+                                    "&:hover": {backgroundColor: theme.palette.downloadBtn.light}
                                 }}
                             >
                                 Download

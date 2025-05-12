@@ -74,13 +74,13 @@ const AccountDeletion = styled(Box)(({theme}) => ({
 const StyledTextField = styled(TextField)(({theme}) => ({
     width: '70%',
     margin: '0 auto 5% auto',
-    '& label.Mui-focused': {
-        color: theme.palette.primary.main,
+    "& label.Mui-focused": {
+        color: theme.palette.irish.main,
     },
-    '& .MuiOutlinedInput-root': {
-        '&.Mui-focused fieldset': {
-            borderColor: theme.palette.primary.main,
-        },
+    "& .MuiOutlinedInput-root": {
+        "&.Mui-focused fieldset": {
+            borderColor: theme.palette.irish.main,
+        }
     },
 }));
 

@@ -218,7 +218,12 @@ function Home() {
                             container
                             sx={{
                                 boxSizing: 'border-box',
-                                width: '2072px',
+                                display: 'flex',
+                                flexDirection: 'row',
+                                flexWrap: 'nowrap',
+                                justifyContent: 'flex-start',
+                                alignItems: 'center',
+                                width: 'fit-content',
                                 height: '340px',
 
                             }}
@@ -267,7 +272,12 @@ function Home() {
                             container
                             sx={{
                                 boxSizing: 'border-box',
-                                width: '2072px',
+                                display: 'flex',
+                                flexDirection: 'row',
+                                flexWrap: 'nowrap',
+                                justifyContent: 'flex-start',
+                                alignItems: 'center',
+                                width: 'fit-content',
                                 height: '340px',
                             }}
                             rowSpacing={2.7}

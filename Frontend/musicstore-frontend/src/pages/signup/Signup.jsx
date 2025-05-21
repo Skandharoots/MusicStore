@@ -56,6 +56,7 @@ const StyledAlert = styled(Alert)(({ theme }) => ({
   width: '400px',
   margin: '32px auto 0 auto',
   padding: '0 2%',
+  color: theme.palette.mybutton.colorTwo,
 }));
 
 function Signup() {

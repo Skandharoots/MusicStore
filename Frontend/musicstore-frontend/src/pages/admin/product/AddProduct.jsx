@@ -388,10 +388,10 @@ function AddProduct() {
         }
 
         if (!productName
-            || !/^[A-Za-z0-9][A-Za-z0-9&' :+=#?%()/"\-]{1,99}$/i.test(productName)) {
+            || !/^[A-Za-z0-9][A-Za-z0-9&' .:+=#?%()/"\-]{1,99}$/i.test(productName)) {
             setProductNameError(true);
             setProductNameErrorMsg('Please enter a valid product name. Can contain capital and ' +
-                'lowercase letters and numbers. Permitted special characters: &\':+=#?()%/"-');
+                'lowercase letters and numbers. Permitted special characters: &\':.+=#?()%/"-');
             isValid = false;
         } else {
             setProductNameError(false);

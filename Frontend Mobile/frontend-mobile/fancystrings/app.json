@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "frontend-mobile",
-    "slug": "frontend-mobile",
+    "name": "fancystrings",
+    "slug": "fancystrings",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "frontendmobile",
+    "scheme": "fancystrings",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {

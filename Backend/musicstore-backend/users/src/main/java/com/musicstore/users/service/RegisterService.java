@@ -33,6 +33,18 @@ public class RegisterService {
         );
     }
 
+    public String registerMobile(RegisterRequest request) {
+        return userService.signupUserMobile(
+                new Users(
+                        request.getFirstName(),
+                        request.getLastName(),
+                        request.getEmail(),
+                        request.getPassword(),
+                        UserRole.USER
+                )
+        );
+    }
+
     @Transactional
     public String confirmToken(String token) {
         ConfirmationToken confirmationToken = confirmationTokenService

@@ -58,6 +58,7 @@ public class WebSecurityConfig {
                                                 .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler()))
                                 .authorizeHttpRequests((requests) -> requests
                                                 .requestMatchers(HttpMethod.POST, "/api/users/register").permitAll()
+                                                .requestMatchers(HttpMethod.POST, "/api/users/mobile/register").permitAll()
                                                 .requestMatchers(HttpMethod.GET, "/api/users/register/**").permitAll()
                                                 .requestMatchers(HttpMethod.GET, "/api/users/validate").permitAll()
                                                 .requestMatchers(HttpMethod.POST, "/api/users/login").permitAll()

@@ -54,6 +54,12 @@ public class RegisterController {
         return registerService.register(request);
     }
 
+    @PostMapping("/mobile/register")
+    @ResponseStatus(HttpStatus.CREATED)
+    public String registerMobile(@Valid @RequestBody RegisterRequest request) {
+        return registerService.registerMobile(request);
+    }
+
     @GetMapping("/register/confirm")
     @ResponseStatus(HttpStatus.OK)
     public String confirm(@RequestParam("token") String token) {

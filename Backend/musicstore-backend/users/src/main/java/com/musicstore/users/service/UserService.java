@@ -124,6 +124,76 @@ public class UserService implements UserDetailsService {
                 }
         }
 
+        public String signupUserMobile(Users users) {
+
+                boolean userExists = userRepository
+                                .findByEmail(users.getEmail())
+                                .isPresent();
+
+                if (userExists) {
+                        Users existingUser = userRepository.findByEmail(users.getEmail()).get();
+                        if (!existingUser.isEnabled()) {
+                                Optional<ConfirmationToken> token = confirmationTokenService
+                                                .getConfirmationTokenByUserUuid(existingUser.getUuid());
+                                if (token.isPresent()) {
+                                        ConfirmationToken confirmationToken = token.get();
+
+                                        String link = variablesConfiguration.getAccountConfirmMobileUrl()
+                                                        + confirmationToken.getToken();
+
+                                        emailService.send(existingUser.getEmail(),
+                                                        buildEmail(existingUser.getFirstName(), link));
+
+                                        return confirmationToken.getToken();
+                                } else {
+                                        log.error(
+                                                        "Confirmation token not found for user \""
+                                                                        + users.getEmail() + "\".");
+                                        throw new ResponseStatusException(
+                                                        HttpStatus.BAD_REQUEST,
+                                                        "Confirmation token not found");
+                                }
+                        } else {
+                                log.error("User with email \""
+                                                + users.getEmail()
+                                                + "\" already exists.");
+                                throw new ResponseStatusException(
+                                                HttpStatus.BAD_REQUEST, "Email already taken");
+                        }
+                } else {
+                        String encodedPassword = bcryptPasswordEncoder
+                                        .encode(users.getPassword());
+
+                        users.setPassword(encodedPassword);
+
+                        userRepository.save(users);
+
+                        log.info("User with email \""
+                                        + users.getEmail()
+                                        + "\" has been registered successfully.");
+
+                        String tokenUuid = UUID.randomUUID().toString();
+
+                        ConfirmationToken token = new ConfirmationToken(
+                                        tokenUuid,
+                                        LocalDateTime.now(),
+                                        LocalDateTime.now().plusMinutes(20),
+                                        users);
+
+                        confirmationTokenService.saveConfirmationToken(token);
+
+                        String link = variablesConfiguration.getAccountConfirmMobileUrl() + token.getToken();
+
+                        emailService.send(
+                                        users.getEmail(),
+                                        buildEmail(users.getFirstName(),
+                                                        link));
+
+                        return tokenUuid;
+                }
+
+        }
+
         public UserInformationResponse getUserInfo(UUID uuid) {
 
                 Users user = userRepository.findByUuid(uuid).orElseThrow(
@@ -389,6 +459,7 @@ public class UserService implements UserDetailsService {
                                 + "        body {\n"
                                 + "            margin: 0;\n"
                                 + "            padding: 0;\n"
+                                + "            background-color: rgb(255, 255, 255)\n"
                                 + "        }\n"
                                 + "\n"
                                 + "        a[x-apple-data-detectors] {\n"
@@ -620,6 +691,7 @@ public class UserService implements UserDetailsService {
                                 + "        body {\n"
                                 + "            margin: 0;\n"
                                 + "            padding: 0;\n"
+                                + "            background-color: rgb(255, 255, 255)\n"
                                 + "        }\n"
                                 + "\n"
                                 + "        a[x-apple-data-detectors] {\n"

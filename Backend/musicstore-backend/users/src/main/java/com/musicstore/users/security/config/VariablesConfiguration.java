@@ -22,6 +22,9 @@ public class VariablesConfiguration {
     @Value("${my.pass_reset_url}")
     private String passResUrl;
 
+    @Value("${my.account_confirm_mobile_url}")
+    private String accountConfirmMobileUrl;
+
     @Bean
     public String getJwtSecret() {
         return jwtSecret;
@@ -45,5 +48,10 @@ public class VariablesConfiguration {
     @Bean
     public String getPassResetUrl() {
         return passResUrl;
+    }
+
+    @Bean
+    public String getAccountConfirmMobileUrl() {
+        return accountConfirmMobileUrl;
     }
 }

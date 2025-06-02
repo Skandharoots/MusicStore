@@ -18,4 +18,5 @@ my:
   refresh-token:
     expires: 2629746000
   account_confirm_url: http://localhost:4000/signup/confirm/
+  account_confirm_mobile_url: fancystrings://(tabs)/(account)/confirm/
   pass_reset_url: http://localhost:4000/password/reset/

@@ -116,7 +116,7 @@ export const AuthProvider = ({children}: any) => {
     const register = async (firstName: string, lastName: string, email: string, password: string) => {
         try {
             const xsrf = await axios.get('/api/users/csrf/token');
-            return await axios.post(`/api/users/register`, {
+            return await axios.post(`/api/users/mobile/register`, {
                 firstName,
                 lastName,
                 email,

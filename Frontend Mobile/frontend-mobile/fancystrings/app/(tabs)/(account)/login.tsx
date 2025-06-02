@@ -13,16 +13,15 @@ export default function Login() {
     const [password, setPassword] = useState('');
 
     const router = useRouter();
-    const { onLogin } = useAuth();
+    const { authState, onLogin } = useAuth();
     
 
     const login = async () => {
         const result = await onLogin!(email, password);
-        console.info(result);
         if (result && result.error) {
             alert(result.msg);
         } else {
-            router.navigate('/(tabs)');
+            router.navigate('/(tabs)/(account)/account');
         }
     }
 

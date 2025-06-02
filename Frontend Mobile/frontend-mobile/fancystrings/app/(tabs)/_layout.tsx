@@ -1,7 +1,7 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Tabs } from "expo-router";
 import { Appearance } from "react-native";
-import { AuthProvider, useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/AuthContext';
 
 
 const _Layout = () => {
@@ -10,7 +10,6 @@ const _Layout = () => {
     const { authState, onLogout } = useAuth();
 
     return (
-        <AuthProvider>
             <Tabs
                 screenOptions={{
                     headerShown: false, 
@@ -70,7 +69,6 @@ const _Layout = () => {
                 }}
                 />
             </Tabs>
-        </AuthProvider>
     )
 }
 

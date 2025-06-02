@@ -1,13 +1,23 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { Tabs } from "expo-router";
+import { useEffect, useState } from "react";
 import { Appearance } from "react-native";
-import { AuthProvider } from "../../context/AuthContext";
+import { useAuth } from "../../context/AuthContext";
 
-const _Layout = () => {
+function _Layout() {
 
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const { authState, onLogout } = useAuth();
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const [auth, setAuth] = useState(false);
+
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    useEffect(() => {
+        // eslint-disable-next-line no-unused-expressions
+        authState?.authenticated ? setAuth(true) : setAuth(false);
+    }, [authState?.authenticated, authState])
     
     return (
-        <AuthProvider>
             <Tabs
                 screenOptions={{
                     headerShown: false, 
@@ -26,12 +36,22 @@ const _Layout = () => {
                     },
                 }}  
             >
-                <Tabs.Screen
+                {authState?.authenticated !== null ? (
+                    <Tabs.Screen
+                    name="account"
+                    options={{
+                        title: 'Account',
+                        }}
+                />
+                ) : (
+                    <Tabs.Screen
                     name="login"
                     options={{
                         title: 'Login',
                         }}
                 />
+                )
+                }
                 <Tabs.Screen
                     name="register"
                     options={{
@@ -39,7 +59,6 @@ const _Layout = () => {
                     }}
                 />
             </Tabs>
-        </AuthProvider>
     )
 }
 

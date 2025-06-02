@@ -4,7 +4,7 @@ import { Appearance } from "react-native";
 import { useAuth } from '../context/AuthContext';
 
 
-const _Layout = () => {
+export default function _Layout() {
 
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const { authState, onLogout } = useAuth();
@@ -71,6 +71,3 @@ const _Layout = () => {
             </Tabs>
     )
 }
-
-export default _Layout;
-

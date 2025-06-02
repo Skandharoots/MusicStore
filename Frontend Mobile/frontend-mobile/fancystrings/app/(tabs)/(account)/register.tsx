@@ -1,54 +1,144 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useRouter } from "expo-router";
 import React, { Fragment, useState } from "react";
-import { Appearance, SafeAreaView, Text, View } from "react-native";
+import { Appearance, Platform, SafeAreaView, ScrollView, StatusBar, Text, View } from "react-native";
 import ThemedButton from "../../components/ThemedButtonIrish";
 import ThemedTextInput from "../../components/ThemedTextInput";
 import { useAuth } from "../../context/AuthContext";
 
 
-const Register = () => {
+export default function Register() {
 
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [passwordConfirmation, setPasswordConfirmation] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+
+    const [emailError, setEmailError] = useState(false);
+    const [emailErrorMessage, setEmailErrorMessage] = useState('');
+    const [passwordError, setPasswordError] = useState(false);
+    const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
+    const [confirmPasswordError, setConfirmPasswordError] = useState(false);
+    const [confirmPasswordErrorMessage, setConfirmPasswordErrorMessage] = useState('');
+    const [firstNameError, setFirstNameError] = useState(false);
+    const [firstNameErrorMessage, setFirstNameErrorMessage] = useState('');
+    const [lastNameError, setLastNameError] = useState(false);
+    const [lastNameErrorMessage, setLastNameErrorMessage] = useState('');
 
     const router = useRouter();
     const { onRegister } = useAuth();
 
+    const validate = () => {
+        let isValid = true;
+
+        if (!firstName
+            || !/^(?=.{1,50}$)[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ]+(?:[-'_.\s][A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ]+)*$/i.test(firstName)) {
+            setFirstNameError(true);
+            setFirstNameErrorMessage('Please enter a valid first name. Must be from 1 to 50 characters long. It can contain and must start with a capital letter,' +
+                ' it can contain lowercase letters, spaces and special characters -\'_.');
+            isValid = false;
+        } else {
+            setFirstNameError(false);
+            setFirstNameErrorMessage('');
+        }
+
+        if (!lastName
+            || !/^(?=.{1,50}$)[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ]+(?:[-'_.\s][A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ]+)*$/i.test(lastName)) {
+            setLastNameError(true);
+            setLastNameErrorMessage('Please enter a valid last name. Must be from 1 to 50 characters long. It can contain and must start with a capital letter,' +
+                ' it can contain lowercase letters, spaces and special characters -\'_.');
+            isValid = false;
+        } else {
+            setLastNameError(false);
+            setLastNameErrorMessage('');
+        }
+
+        if (!email || !/^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i.test(email)) {
+            setEmailError(true);
+            setEmailErrorMessage('Please enter a valid email address.');
+            isValid = false;
+        } else {
+            setEmailError(false);
+            setEmailErrorMessage('');
+        }
+
+        if (!password || password.length < 6 || password.length > 50) {
+            setPasswordError(true);
+            setPasswordErrorMessage('Password must be at least 6 and at max 50 characters long.');
+            isValid = false;
+        } else if (!/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–\[{}\]:;',?/*~$^+=<>]).{6,50}$/.test(password)) {
+            setPasswordError(true);
+            setPasswordErrorMessage('Password must contain one lower and upper case letter, one number and one special character.');
+            isValid = false;
+        } else {
+            setPasswordError(false);
+            setPasswordErrorMessage('');
+        }
+
+        if (!confirmPassword || password !== confirmPassword) {
+            setConfirmPasswordError(true);
+            setConfirmPasswordErrorMessage('Password confirmation does not match.');
+            isValid = false;
+        } else {
+            setConfirmPasswordError(false);
+            setConfirmPasswordErrorMessage('');
+        }
+
+        return isValid;
+    }
+
     const register = async () => {
+        if (!validate()) {
+            return;
+        }
         const result = await onRegister!(firstName, lastName, email, password);
         if (result && result.error) {
             alert(result.msg);
         } else {
-            router.navigate('/(tabs)');
+            alert('Welcome! ' + result.data)
+            router.navigate('/(tabs)/(account)/login');
         }
     }
 
     return (
         <Fragment>
-            <SafeAreaView className="bg-background-light dark:bg-background-dark" />
-            <SafeAreaView className="flex-1 w-['100%'] bg-background-light dark:bg-background-dark items-center justify-center">
-            <View className="flex-row w-['100%'] h-['5%'] pl-4 pr-4 items-center justify-between bg-background-light dark:bg-background-dark " >
+            <SafeAreaView style={{flex: 1, margin: 0, backgroundColor: Appearance.getColorScheme() === 'dark' ?  'rgb(20, 20, 20)' : 'rgb(255, 255, 255)', paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0}}>
+            <ScrollView>
+                <View className="flex-row w-['100%'] pl-4 pr-4 items-center justify-between bg-background-light dark:bg-background-dark " >
                 <Text onPress={() => router.navigate('/(tabs)/(account)/login')} className="w-['33%']"><Ionicons name="arrow-back-outline" size={28} color={Appearance.getColorScheme() === 'dark' ? 'white' : 'black'}/></Text>
             </View>
             <View className="flex-1 w-['100%'] h-['100%'] mt-8 items-center justify-start bg-background-light dark:bg-background-dark " >
                 <View className="w-['95%'] h-['95%'] items-center justify-start mb-10 rounded-2xl p-8">
                     <Text className="text-4xl font-semibold text-text-light dark:text-text-dark mb-10 ">Register</Text>
                     <ThemedTextInput autoCapitalize="none" placeholder={"First name"} value={firstName} onChangeText={setFirstName} keyboard={"email-address"}/>
+                    {firstNameError &&
+                        <Text className="text-xl w-['95%'] text-errorBtn-light">{firstNameErrorMessage}</Text>
+                    }
                     <ThemedTextInput autoCapitalize="none" placeholder={"Last name"} value={lastName} onChangeText={setLastName} keyboard={"email-address"}/>
+                    {lastNameError &&
+                        <Text className="text-xl w-['95%'] text-errorBtn-light">{lastNameErrorMessage}</Text>
+                    }
                     <ThemedTextInput autoCapitalize="none" placeholder={"Email"} value={email} onChangeText={setEmail} keyboard={"email-address"}/>
+                    {emailError &&
+                        <Text className="text-xl w-['95%'] text-errorBtn-light">{emailErrorMessage}</Text>
+                    }
                     <ThemedTextInput placeholder={"Password"} value={password} onChangeText={setPassword} secureTextEntry={true}/>
-                    <ThemedButton title={"Register"} icon={<Ionicons name="log-in-outline" size={28} />} onPress={register}/>
+                    {passwordError &&
+                        <Text className="text-xl w-['95%'] text-errorBtn-light">{passwordErrorMessage}</Text>
+                    }
+                    <ThemedTextInput placeholder={"Confirm password"} value={confirmPassword} onChangeText={setConfirmPassword} secureTextEntry={true}/>
+                    {confirmPasswordError &&
+                        <Text className="text-xl w-['95%'] mb-4 text-errorBtn-light">{confirmPasswordErrorMessage}</Text>
+                    }
+                    <ThemedButton title={"Register"} icon={<Ionicons name="log-in-outline" size={18} />} onPress={register}/>
                 </View>
             </View>
+            </ScrollView>
+            
         </SafeAreaView>
         </Fragment>
         
         
     )
 }
-
-export default Register;

@@ -1,8 +1,9 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useRouter } from 'expo-router';
 import React, { Fragment, useState } from "react";
-import { SafeAreaView, Text, View } from "react-native";
+import { Appearance, Platform, SafeAreaView, StatusBar, Text, View } from "react-native";
 import ThemedButton from '../../components/ThemedButtonIrish';
+import ThemedButtonWhiteOutline from "../../components/ThemedButtonWhiteOutline";
 import ThemedTextInput from '../../components/ThemedTextInput';
 import { useAuth } from "../../context/AuthContext";
 
@@ -12,11 +13,46 @@ export default function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
+    const [emailError, setEmailError] = useState(false);
+    const [emailErrorMessage, setEmailErrorMessage] = useState('');
+    const [passwordError, setPasswordError] = useState(false);
+    const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
+
     const router = useRouter();
     const { authState, onLogin } = useAuth();
     
+    const validate = () => {
+        let isValid = true;
+
+        if (!email || !/^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i.test(email)) {
+            setEmailError(true);
+            setEmailErrorMessage('Please enter a valid email address.');
+            isValid = false;
+        } else {
+            setEmailError(false);
+            setEmailErrorMessage('');
+        }
+
+        if (!password || password.length < 6 || password.length > 50) {
+            setPasswordError(true);
+            setPasswordErrorMessage('Password must be at least 6 and at max 50 characters long.');
+            isValid = false;
+        } else if (!/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–\[{}\]:;',?/*~$^+=<>]).{6,50}$/.test(password)) {
+            setPasswordError(true);
+            setPasswordErrorMessage('Password must contain one lower and upper case letter, one number and one special character.');
+            isValid = false;
+        } else {
+            setPasswordError(false);
+            setPasswordErrorMessage('');
+        }
+
+        return isValid;
+    }
 
     const login = async () => {
+        if (!validate()) {
+            return;
+        }
         const result = await onLogin!(email, password);
         if (result && result.error) {
             alert(result.msg);
@@ -27,17 +63,22 @@ export default function Login() {
 
     return (
         <Fragment>
-            <SafeAreaView className="bg-background-light dark:bg-background-dark" />
-            <SafeAreaView className="flex-1 w-['100%'] h-['100%'] bg-background-light dark:bg-background-dark items-start justify-center">
+                <SafeAreaView style={{flex: 1, margin: 0, backgroundColor: Appearance.getColorScheme() === 'dark' ?  'rgb(20, 20, 20)' : 'rgb(255, 255, 255)', paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0}}>
                 <View className="flex-1 w-['100%'] h-['100%'] items-center justify-start bg-background-light dark:bg-background-dark " >
-                    <View className="w-['95%'] h-['50%'] items-center justify-center mb-10 rounded-2xl p-8">
+                    <View className="w-['95%'] h-['50%'] items-center justify-center rounded-2xl p-8">
                         <Text className="text-4xl font-semibold text-text-light dark:text-text-dark mb-10 ">Login</Text>
                         <ThemedTextInput autoCapitalize="none" placeholder={"Email"} value={email} onChangeText={setEmail} keyboard={"email-address"}/>
+                        {emailError &&
+                            <Text className="text-xl w-['95%'] text-errorBtn-light">{emailErrorMessage}</Text>
+                        }
                         <ThemedTextInput placeholder={"Password"} value={password} onChangeText={setPassword} secureTextEntry={true}/>
-                        <ThemedButton title={"Login"} icon={<Ionicons name="log-in-outline" size={28} />} onPress={login}/>
+                        {passwordError &&
+                            <Text className="text-xl w-['95%'] mb-4 text-errorBtn-light">{passwordErrorMessage}</Text>
+                        }
+                        <ThemedButton title={"Login"} icon={<Ionicons name="log-in-outline" size={22} />} onPress={login}/>
                     </View>
-                    <View className="w-['95%'] h-['40%'] items-center justify-end mb-11 rounded-2xl p-8">
-                        <ThemedButton title={"Register"} icon={<Ionicons name="person-add-outline" size={28} />} onPress={() => router.navigate('/(tabs)/(account)/register')}/>
+                    <View className="w-['95%'] h-['40%'] items-center justify-end rounded-2xl p-8">
+                        <ThemedButtonWhiteOutline title={"Register"} icon={<Ionicons name="person-add-outline" size={22} />} onPress={() => router.navigate('/(tabs)/(account)/register')}/>
                         <Text className="text-text-light dark:text-text-dark text-center mt-4">Don&apos;t have an account? Register now!</Text>
                     </View>
                 </View>

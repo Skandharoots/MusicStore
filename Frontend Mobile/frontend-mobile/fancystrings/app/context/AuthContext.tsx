@@ -121,6 +121,10 @@ export const AuthProvider = ({children}: any) => {
                 lastName,
                 email,
                 password
+            }, {
+                headers: {
+                    'X-XSRF-TOKEN': xsrf.data.token,
+                }
             });
         } catch (error) {
             return { error: true, msg: (error as any).response.data.message }

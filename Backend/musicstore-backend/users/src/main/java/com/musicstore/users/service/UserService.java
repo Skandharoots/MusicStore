@@ -124,76 +124,6 @@ public class UserService implements UserDetailsService {
                 }
         }
 
-        public String signupUserMobile(Users users) {
-
-                boolean userExists = userRepository
-                                .findByEmail(users.getEmail())
-                                .isPresent();
-
-                if (userExists) {
-                        Users existingUser = userRepository.findByEmail(users.getEmail()).get();
-                        if (!existingUser.isEnabled()) {
-                                Optional<ConfirmationToken> token = confirmationTokenService
-                                                .getConfirmationTokenByUserUuid(existingUser.getUuid());
-                                if (token.isPresent()) {
-                                        ConfirmationToken confirmationToken = token.get();
-
-                                        String link = variablesConfiguration.getAccountConfirmMobileUrl()
-                                                        + confirmationToken.getToken();
-
-                                        emailService.send(existingUser.getEmail(),
-                                                        buildEmail(existingUser.getFirstName(), link));
-
-                                        return confirmationToken.getToken();
-                                } else {
-                                        log.error(
-                                                        "Confirmation token not found for user \""
-                                                                        + users.getEmail() + "\".");
-                                        throw new ResponseStatusException(
-                                                        HttpStatus.BAD_REQUEST,
-                                                        "Confirmation token not found");
-                                }
-                        } else {
-                                log.error("User with email \""
-                                                + users.getEmail()
-                                                + "\" already exists.");
-                                throw new ResponseStatusException(
-                                                HttpStatus.BAD_REQUEST, "Email already taken");
-                        }
-                } else {
-                        String encodedPassword = bcryptPasswordEncoder
-                                        .encode(users.getPassword());
-
-                        users.setPassword(encodedPassword);
-
-                        userRepository.save(users);
-
-                        log.info("User with email \""
-                                        + users.getEmail()
-                                        + "\" has been registered successfully.");
-
-                        String tokenUuid = UUID.randomUUID().toString();
-
-                        ConfirmationToken token = new ConfirmationToken(
-                                        tokenUuid,
-                                        LocalDateTime.now(),
-                                        LocalDateTime.now().plusMinutes(20),
-                                        users);
-
-                        confirmationTokenService.saveConfirmationToken(token);
-
-                        String link = variablesConfiguration.getAccountConfirmMobileUrl() + token.getToken();
-
-                        emailService.send(
-                                        users.getEmail(),
-                                        buildEmail(users.getFirstName(),
-                                                        link));
-
-                        return tokenUuid;
-                }
-
-        }
-
         public UserInformationResponse getUserInfo(UUID uuid) {
 
                 Users user = userRepository.findByUuid(uuid).orElseThrow(
@@ -224,12 +154,11 @@ public class UserService implements UserDetailsService {
                 if (!bcryptPasswordEncoder.matches(request.getPassword(), user.get().getPassword())) {
                         log.error("Password does not match for user UUID {}. Account update failed.", uuid);
                         throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,
-                                "Unauthorized user update request. Password does not match.");
+                                        "Unauthorized user update request. Password does not match.");
                 }
 
                 userRepository.updateUser(uuid, request.getFirstName(),
-                                request.getLastName(), request.getEmail()
-                                );
+                                request.getLastName(), request.getEmail());
 
                 var updatedUser = userRepository.findByUuid(uuid);
                 var userDetails = loadUserByUsername(request.getEmail());

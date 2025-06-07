@@ -54,12 +54,6 @@ public class RegisterController {
         return registerService.register(request);
     }
 
-    @PostMapping("/mobile/register")
-    @ResponseStatus(HttpStatus.CREATED)
-    public String registerMobile(@Valid @RequestBody RegisterRequest request) {
-        return registerService.registerMobile(request);
-    }
-
     @GetMapping("/register/confirm")
     @ResponseStatus(HttpStatus.OK)
     public String confirm(@RequestParam("token") String token) {
@@ -124,8 +118,7 @@ public class RegisterController {
 
     @GetMapping("/password/email/{email}")
     public String getPasswordResetEmail(
-        @PathVariable(name = "email") String email
-    ) {
+            @PathVariable(name = "email") String email) {
         return userService.generatePasswordResetToken(email);
     }
 
@@ -133,12 +126,11 @@ public class RegisterController {
     public String resetPasswordEmail(@Valid @RequestBody PasswordResetRequest request) {
         return userService.resetPasswordEmail(request);
     }
-    
+
     @PutMapping("/password/settings/reset")
     public String resetPasswordSettings(
-        @RequestHeader(HttpHeaders.AUTHORIZATION) String token,
-        @Valid @RequestBody PasswordResetRequestSettings request
-    ) {
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String token,
+            @Valid @RequestBody PasswordResetRequestSettings request) {
         return userService.resetPasswordSettings(request, token);
     }
 

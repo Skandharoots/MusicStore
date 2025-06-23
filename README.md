@@ -72,7 +72,9 @@ This is only required for running application locally
 
     `CREATE DATABASE shoppingcarts`\
     `CREATE DATABASE orders`\
-    `CREATE DATABASE products`
+    `CREATE DATABASE products`\
+    `CREATE DATABASE favorites`\
+    `CREATE DATABASE opinions`\
    
 ## Gaining admin account
 
